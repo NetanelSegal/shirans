@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Basic Headings */
+.heading-lg {
+  @apply text-4xl font-bold text-gray-800;
+}
+
+.heading-md {
+  @apply text-3xl font-semibold text-gray-700;
+}
+
+.heading-sm {
+  @apply text-2xl font-medium text-gray-600;
+}
+
+.heading-xs {
+  @apply text-xl font-medium text-gray-500;
+}
+
+/* Basic Paragraph */
+.paragraph {
+  @apply text-base text-gray-600 leading-relaxed;
+}
+
+/* Padding Utilities */
+.padding-sm {
+  @apply p-2;
+}
+
+.padding-md {
+  @apply p-4;
+}
+
+.padding-lg {
+  @apply p-6;
+}
+
+.padding-xl {
+  @apply p-8;
+}
+
+/* Margin Utilities */
+.margin-sm {
+  @apply m-2;
+}
+
+.margin-md {
+  @apply m-4;
+}
+
+.margin-lg {
+  @apply m-6;
+}
+
+.margin-xl {
+  @apply m-8;
+}
+
+/* Button Styles */
+.button-primary {
+  @apply px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600;
+}
+
+.button-secondary {
+  @apply px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400;
+}
+
+/* Container Styles */
+.container {
+  @apply max-w-screen-lg mx-auto px-4;
+}
+
+.container-center {
+  @apply flex justify-center items-center;
+}
+
+/* Card Styles */
+.card {
+  @apply p-4 bg-white shadow-lg rounded-lg border border-gray-200;
+}
