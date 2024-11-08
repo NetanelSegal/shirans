@@ -2,81 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Basic Headings */
-.heading-lg {
-  @apply text-4xl font-bold text-gray-800;
+* {
+  font-family: 'Assistant', sans-serif;
 }
 
-.heading-md {
-  @apply text-3xl font-semibold text-gray-700;
+body {
+  overflow-x: hidden;
 }
 
-.heading-sm {
-  @apply text-2xl font-medium text-gray-600;
+button {
+  @apply rounded-xl bg-slate-500 px-6 py-2 font-bold text-white transition-all duration-150 ease-in-out;
+
+  &:hover {
+    @apply scale-105;
+  }
 }
 
-.heading-xs {
-  @apply text-xl font-medium text-gray-500;
+.px-page-all {
+  @apply 2xl:px-page-2xl px-page-sm md:px-page-md lg:px-page-lg xl:px-page-xl;
 }
 
-/* Basic Paragraph */
+.py-section-all {
+  @apply py-page-md md:py-page-lg lg:py-page-xl;
+}
+
+.heading {
+  @apply text-4xl md:text-5xl lg:text-6xl;
+}
+
 .paragraph {
-  @apply text-base text-gray-600 leading-relaxed;
+  @apply text-lg md:text-xl lg:text-2xl;
 }
 
-/* Padding Utilities */
-.padding-sm {
-  @apply p-2;
+/* section > * {
+  outline: 1px solid red;
+} */
+/* 
+.text-size-lg {
+  @apply text-lg md:text-xl lg:text-2xl xl:text-3xl;
 }
 
-.padding-md {
-  @apply p-4;
+.text-size-md {
+  @apply text-base md:text-lg lg:text-xl xl:text-2xl;
 }
 
-.padding-lg {
-  @apply p-6;
+.text-size-sm {
+  @apply text-sm md:text-base lg:text-lg xl:text-xl;
 }
 
-.padding-xl {
-  @apply p-8;
-}
-
-/* Margin Utilities */
-.margin-sm {
-  @apply m-2;
-}
-
-.margin-md {
-  @apply m-4;
-}
-
-.margin-lg {
-  @apply m-6;
-}
-
-.margin-xl {
-  @apply m-8;
-}
-
-/* Button Styles */
-.button-primary {
-  @apply px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600;
-}
-
-.button-secondary {
-  @apply px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400;
-}
-
-/* Container Styles */
-.container {
-  @apply max-w-screen-lg mx-auto px-4;
-}
-
-.container-center {
-  @apply flex justify-center items-center;
-}
-
-/* Card Styles */
-.card {
-  @apply p-4 bg-white shadow-lg rounded-lg border border-gray-200;
-}
+.text-size-xs {
+  @apply text-xs md:text-sm lg:text-base xl:text-lg;
+} */
