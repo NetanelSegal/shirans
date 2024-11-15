@@ -16,16 +16,18 @@ const ScreenContext = createContext<null | IScreenContext>(null);
 export default function ScreenProvider({ children }: { children: ReactNode }) {
   const [screenWidth, setScreenWidth] = useState<number>(window.innerWidth);
 
+  function handleResize() {
+    setScreenWidth(window.innerWidth);
+  }
+
   useEffect(() => {
-    function handleResize() {
-      setScreenWidth(window.innerWidth);
-    }
     window.addEventListener('resize', handleResize);
     handleResize();
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
   return (
     <ScreenContext.Provider
       value={{ screenWidth, isSmallScreen: screenWidth < 768 }}

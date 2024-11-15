@@ -6,28 +6,32 @@
   font-family: 'Assistant', sans-serif;
 }
 
-body {
-  overflow-x: hidden;
-}
-
 button {
-  @apply rounded-xl bg-slate-500 px-6 py-2 font-bold text-white transition-all duration-150 ease-in-out;
+  @apply rounded-xl bg-slate-500 px-6 py-2 text-xl font-semibold text-white transition-all duration-150 ease-in-out;
 
   &:hover {
     @apply scale-105;
   }
 }
-
+ 
 .px-page-all {
-  @apply 2xl:px-page-2xl px-page-sm md:px-page-md lg:px-page-lg xl:px-page-xl;
+  @apply px-page-sm md:px-page-md lg:px-page-lg xl:px-page-xl 2xl:px-page-2xl;
 }
 
 .py-section-all {
   @apply py-page-md md:py-page-lg lg:py-page-xl;
 }
 
+.breakout-x-padding {
+  @apply -mx-page-sm md:-mx-page-md lg:-mx-page-lg xl:-mx-page-xl 2xl:-mx-page-2xl;
+}
+
 .heading {
   @apply text-4xl md:text-5xl lg:text-6xl;
+}
+
+.subheading {
+  @apply text-2xl md:text-3xl lg:text-4xl;
 }
 
 .paragraph {

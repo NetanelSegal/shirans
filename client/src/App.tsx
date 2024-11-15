@@ -37,6 +37,11 @@ export const appRoutes = [
     title: 'צור קשר',
     element: <div>Contact</div>,
   },
+  {
+    path: '*',
+    title: '404',
+    element: <div>404</div>,
+  },
 ];
 
 const router = createBrowserRouter([

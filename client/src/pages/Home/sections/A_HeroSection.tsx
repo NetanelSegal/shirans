@@ -1,6 +1,6 @@
 export default function HeroSection() {
   return (
-    <section className='2xl:-mx-page-2xl relative -z-50 -mx-page-sm h-[75dvh] overflow-hidden md:-mx-page-md lg:-mx-page-lg xl:-mx-page-xl'>
+    <section className='breakout-x-padding relative -z-50 h-[75dvh] overflow-hidden 2xl:-mx-page-2xl'>
       <iframe
         className='size-full'
         src='https://www.youtube.com/embed/0H6n5fXKwXs'

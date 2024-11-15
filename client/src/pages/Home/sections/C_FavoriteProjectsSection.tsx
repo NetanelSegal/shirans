@@ -18,7 +18,7 @@ interface IProject {
 
 const data: IProject[] = [
   {
-    _id: '6723e461b0a875a1848156eb',
+    _id: '000',
     title: 'Community Park Project',
     categories: ['publicSpaces'],
     description: 'A new community park with green spaces and playgrounds.',
@@ -32,7 +32,7 @@ const data: IProject[] = [
     favourite: true,
   },
   {
-    _id: '6723e461b0a875a1848156f1',
+    _id: '001',
     title: 'City Park Development',
     categories: ['publicSpaces'],
     description: 'A modern public park with walking trails and benches.',
@@ -46,7 +46,7 @@ const data: IProject[] = [
     favourite: true,
   },
   {
-    _id: '6723e461b0a875a1848156e9',
+    _id: '002',
     title: 'Villa in Green Hills',
     categories: ['privateHouses'],
     description: 'A luxurious private villa with expansive gardens.',
@@ -60,31 +60,31 @@ const data: IProject[] = [
     favourite: true,
   },
   {
-    _id: '6723e461b0a875a1848156ec',
-    title: 'Seaside Apartments',
-    categories: ['apartments'],
-    description: 'Beachfront apartments with stunning ocean views.',
-    mainImage: 'https://placehold.co/850x500',
-    images: ['https://placehold.co/750x450'],
-    plans: ['https://placehold.co/800x500', 'https://placehold.co/950x650'],
-    location: 'Ocean Drive 2',
-    client: 'Coastal Living Inc.',
+    _id: '003',
+    title: 'Modern Apartment Building',
+    categories: ['privateHouses'],
+    description: 'A contemporary apartment building with modern architecture.',
+    mainImage: 'https://placehold.co/1000x600',
+    images: ['https://placehold.co/800x500', 'https://placehold.co/600x400'],
+    plans: ['https://placehold.co/900x600', 'https://placehold.co/700x450'],
+    location: '456 City Street',
+    client: 'Jane Smith',
     isCompleted: false,
-    constructionArea: 1600,
+    constructionArea: 1200,
     favourite: true,
   },
   {
-    _id: '6723e461b0a875a1848156ee',
-    title: 'City Plaza Public Space',
-    categories: ['publicSpaces'],
-    description: 'A public plaza with shops, cafes, and open-air seating.',
-    mainImage: 'https://placehold.co/1000x650',
-    images: ['https://placehold.co/850x550'],
-    plans: ['https://placehold.co/950x600', 'https://placehold.co/700x400'],
-    location: 'Downtown Square',
-    client: 'City Council',
-    isCompleted: false,
-    constructionArea: 2500,
+    _id: '004',
+    title: 'Residential Building',
+    categories: ['privateHouses'],
+    description: 'A residential building with a modern facade.',
+    mainImage: 'https://placehold.co/1000x600',
+    images: ['https://placehold.co/800x500', 'https://placehold.co/600x400'],
+    plans: ['https://placehold.co/900x600', 'https://placehold.co/700x450'],
+    location: '789 Main Street',
+    client: 'Michael Johnson',
+    isCompleted: true,
+    constructionArea: 1800,
     favourite: true,
   },
 ];
@@ -95,11 +95,11 @@ export default function FavoriteProjectsSection() {
     <section className='py-section-all'>
       <h2 className='heading mb-2 font-semibold'>הפרוייקטים שלנו</h2>
 
-      <DataCarousel<IProject>
+      <DataCarousel
         keyProperty='_id'
         dataArray={data}
         singleItem={({ mainImage, _id }) => (
-          <div className='mb-2 aspect-video size-full overflow-hidden rounded-xl'>
+          <div className='relative mb-2 aspect-video size-full overflow-hidden rounded-xl'>
             <Image
               key={_id}
               onClick={() => nav(`/projects/${_id}`)}
@@ -110,9 +110,9 @@ export default function FavoriteProjectsSection() {
             />
           </div>
         )}
-        carouselNavigation={(incrementIndex, decrementIndex, { title }) => (
+        carouselNavigation={({ title }, incrementIndex, decrementIndex) => (
           <div className='flex flex-wrap gap-1'>
-            <div className='flex h-10 grow items-center rounded-xl bg-primary px-6 text-white'>
+            <div className='flex h-10 grow basis-1/2 items-center rounded-xl bg-primary px-6 text-white'>
               <span className='paragraph'>{title}</span>
             </div>
             <div className='mx-auto flex w-fit items-center gap-2'>
@@ -123,7 +123,7 @@ export default function FavoriteProjectsSection() {
                 <i className='fa-solid fa-arrow-left'></i>
               </button>
               <button
-                className='bg-secondary w-fit shrink text-nowrap text-black'
+                className='w-fit shrink text-nowrap bg-secondary text-black'
                 onClick={() => nav('/projects')}
               >
                 כל הפרוייקטים

@@ -22,7 +22,7 @@ export default function Navbar() {
           className='bg-none p-0'
           onClick={() => setToggle((prev) => !prev)}
         >
-          <i className='fa-solid fa-bars bg-secondary flex size-8 items-center justify-center rounded-xl text-primary' />
+          <i className='fa-solid fa-bars flex size-8 items-center justify-center rounded-xl bg-secondary text-primary' />
         </button>
       )}
       <ul
@@ -32,24 +32,29 @@ export default function Navbar() {
             : 'text-white'
         }`}
       >
-        {appRoutes.map(({ title, path }) => (
-          <li key={path}>
-            <NavLink
-              to={path}
-              className={({ isActive }) =>
-                isActive
-                  ? 'font-bold'
-                  : `font-semibold ${path !== 'contact' && 'opacity-90'}`
-              }
-            >
-              {path === 'contact' ? (
-                <button className='bg-secondary text-primary'>{title}</button>
-              ) : (
-                title
-              )}
-            </NavLink>
-          </li>
-        ))}
+        {appRoutes.map(
+          ({ title, path }) =>
+            path !== '*' && (
+              <li key={path}>
+                <NavLink
+                  to={path}
+                  className={({ isActive }) =>
+                    isActive
+                      ? 'font-bold'
+                      : `font-semibold ${path !== 'contact' && 'opacity-90'}`
+                  }
+                >
+                  {path === 'contact' ? (
+                    <button className='bg-secondary text-primary'>
+                      {title}
+                    </button>
+                  ) : (
+                    title
+                  )}
+                </NavLink>
+              </li>
+            ),
+        )}
       </ul>
     </nav>
   );
