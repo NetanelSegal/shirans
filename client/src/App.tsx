@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from './components/Layout';
 import ScreenProvider from './contexts/ScreenProvider';
 import Home from './pages/Home';
+import Process from './pages/Process';
 
 function App() {
   return (
@@ -25,7 +26,7 @@ export const appRoutes = [
   {
     path: 'the-process',
     title: 'התהליך',
-    element: <div>The Process</div>,
+    element: <Process />,
   },
   {
     path: 'projects',

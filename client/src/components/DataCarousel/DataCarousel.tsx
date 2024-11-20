@@ -2,7 +2,6 @@ import { ReactNode, useRef } from 'react';
 import useCarousel from './hooks/useCarousel';
 
 interface IDataCarouselProps<T> {
-  className?: string;
   keyProperty: keyof T;
   dataArray: T[];
   animationDuration?: number;
@@ -21,7 +20,6 @@ interface IDataCarouselProps<T> {
 }
 
 export default function DataCarousel<T>({
-  className = '',
   keyProperty,
   dataArray,
   animationDuration = 500,
@@ -44,8 +42,11 @@ export default function DataCarousel<T>({
     <div className={`w-full`}>
       <div
         ref={ref}
-        style={{ translate: `${translatePrecent}% 0` }}
-        className={`flex gap-[1%] transition-all duration-[${animationDuration || 500}ms] ease-in-out`}
+        style={{
+          translate: `${translatePrecent}% 0`,
+          transitionDuration: `${animationDuration}ms`,
+        }}
+        className={`flex gap-[1%] transition-all ease-in-out`}
       >
         {displayedData.map((item, index) => (
           <div

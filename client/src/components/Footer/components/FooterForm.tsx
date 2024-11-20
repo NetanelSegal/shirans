@@ -37,6 +37,7 @@ export default function FooterForm() {
     console.log(formState);
     // TODO: implement email send
   };
+  console.log('isFocused', isFocused);
 
   return (
     <form

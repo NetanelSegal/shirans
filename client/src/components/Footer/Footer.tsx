@@ -4,7 +4,6 @@ import ContactInfo from './components/ContactInfo';
 import FooterNavigation from './components/FooterNavigation';
 
 export default function Footer() {
-  
   return (
     <footer className='px-page-all py-section-all bg-primary'>
       <div className='mb-5 xl:flex'>

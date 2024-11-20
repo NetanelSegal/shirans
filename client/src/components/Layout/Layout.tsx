@@ -5,7 +5,9 @@ export default function Layout() {
   return (
     <>
       <Navbar />
-      <Outlet />
+      <div className='px-page-all overflow-hidden'>
+        <Outlet />
+      </div>
       <Footer />
     </>
   );
