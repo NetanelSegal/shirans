@@ -39,7 +39,7 @@ const createParagraphWithBold = (p: string) => {
     word = word.trim();
     if (word.startsWith('**')) {
       return (
-        <span className='font-semibold text-primary'>
+        <span key={word} className='font-semibold text-primary'>
           {' '}
           {word.slice(2, -2)}{' '}
         </span>

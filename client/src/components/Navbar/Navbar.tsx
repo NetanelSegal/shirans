@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { appRoutes } from '../../App';
 import srcShiranLogo from '../../assets/shiran_logo.svg';
 import { useScreenContext } from '../../contexts/ScreenProvider';
@@ -6,27 +6,31 @@ import { useEffect, useRef, useState } from 'react';
 
 export default function Navbar() {
   const { isSmallScreen } = useScreenContext();
+  const location = useLocation();
   const [toggle, setToggle] = useState(false);
+
   const navRef = useRef<HTMLUListElement>(null);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (toggle && !navRef.current?.contains(event.target as Node)) {
-        console.log('navRef.current', navRef.current);
-        console.log('event.target', event.target);
-        console.log(
-          'event.target',
-          navRef.current?.contains(event.target as Node),
-        );
-        setToggle(false);
+        setToggle((prev) => !prev);
       }
     };
+
     if (isSmallScreen) {
       document.addEventListener('click', handleClickOutside);
     }
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      if (isSmallScreen) {
+        document.removeEventListener('click', handleClickOutside);
+      }
     };
-  }, [isSmallScreen]);
+  }, [isSmallScreen, toggle]);
+
+  useEffect(() => {
+    setToggle(false);
+  }, [location]);
 
   return (
     <nav
