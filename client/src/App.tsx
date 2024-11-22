@@ -44,7 +44,7 @@ export const appRoutes = [
   {
     path: 'contact',
     title: 'צור קשר',
-    element: <div>Contact</div>,
+    element: <div></div>,
   },
   {
     path: '*',

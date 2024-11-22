@@ -20,11 +20,11 @@ export default function Project() {
   return (
     <>
       <div className='breakout-x-padding relative mb-10'>
-        <h3 className='absolute bottom-5 right-5 z-20 font-semibold text-white drop-shadow-[0_0_5px_rgba(0,0,0,0.3)] sm:text-6xl lg:text-8xl'>
+        <h3 className='heading absolute bottom-5 right-5 z-20 font-semibold text-white drop-shadow-[0_0_5px_rgba(0,0,0,0.3)]'>
           {project.title}
         </h3>
         <ImageScaleHover
-          containerClassName='w-full lg:w-auto lg:h-[500px] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
+          containerClassName='w-full h-[75vh] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
           src={project.mainImage}
         />
       </div>
