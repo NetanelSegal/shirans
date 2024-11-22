@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import WhoIsShiranImage from './B_WhoIsShiranImage';
+import WhoIsShiranImage from '../components/B_WhoIsShiranImage';
 
 export default function WhoIsShiranSection() {
   const nav = useNavigate();
@@ -19,9 +19,9 @@ export default function WhoIsShiranSection() {
           בין חללים מדוייקים המתאימים לצרכים שלכם עם אסטטיקה עיצובית ופרקטיקה.
         </p>
         <div className='flex gap-2'>
-          <button className='bg-primary' onClick={() => nav('/about')}>
+          {/* <button className='bg-primary' onClick={() => nav('/about')}>
             עוד עלי
-          </button>
+          </button> */}
           <button
             className='bg-secondary text-black'
             onClick={() => nav('/projects')}

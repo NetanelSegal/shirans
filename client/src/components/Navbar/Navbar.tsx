@@ -9,7 +9,7 @@ export default function Navbar() {
   const [toggle, setToggle] = useState(false);
 
   return (
-    <nav className='px-page-all sticky top-0 z-10 flex items-center justify-between py-2'>
+    <nav className='px-page-all sticky top-0 z-50 flex items-center justify-between py-2'>
       {/* blue backgound div */}
       <div className='absolute inset-0 -z-10 bg-primary'></div>
 

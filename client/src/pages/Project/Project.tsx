@@ -3,18 +3,18 @@ import FavoriteProjects from '@/components/FavoriteProjects';
 import Image from '@/components/Image';
 import ImageScaleHover from '@/components/ImageScaleHover';
 import { IProject } from '@/data/shiran.projects';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
+import { useLocation } from 'react-router-dom';
 
 interface ILocationRes {
   state: {
     project: IProject;
-    categoriesObj: any;
   };
 }
 
 export default function Project() {
   const {
-    state: { categoriesObj, project },
+    state: { project },
   }: ILocationRes = useLocation();
 
   return (
@@ -39,8 +39,8 @@ export default function Project() {
                   <div className='flex gap-2'>
                     {project.categories.map((catCode) => (
                       <CategoryLabel
-                        label={categoriesObj[catCode]}
-                        key={categoriesObj[catCode]}
+                        label={categoriesCodeToTitleMap[catCode]}
+                        key={categoriesCodeToTitleMap[catCode]}
                       />
                     ))}
                   </div>
@@ -100,7 +100,7 @@ export default function Project() {
           ))}
         </div>
       </div>
-      <div className=''>
+      <div className='py-section-all'>
         <FavoriteProjects />
       </div>
     </>

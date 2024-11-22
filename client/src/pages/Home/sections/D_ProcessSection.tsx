@@ -1,10 +1,17 @@
 import { content } from '@/data/process-info.ts';
 import ProcessItemSection from '../components/ProcessItemSection.tsx';
 import { Fragment, useRef } from 'react';
-
 import AnimatedProcessSectionPath from '../components/AnimatedProcessSectionPath.tsx';
 import useGetProcessCenters from '../hooks/useGetProcessCenters.tsx';
 import usePathPrecatgentInView from '../hooks/usePathPrecatgentInView.tsx';
+import { Link } from 'react-router-dom';
+import shapeSrc1 from '../assets/processShapes/1.svg';
+import shapeSrc2 from '../assets/processShapes/2.svg';
+import shapeSrc3 from '../assets/processShapes/3.svg';
+import shapeSrc4 from '../assets/processShapes/4.svg';
+import shapeSrc5 from '../assets/processShapes/5.svg';
+
+const shapeSrcs = [shapeSrc1, shapeSrc2, shapeSrc3, shapeSrc4, shapeSrc5];
 
 export default function D_ProcessSection() {
   const shapesRefs = useRef<HTMLDivElement[]>([]);
@@ -18,6 +25,7 @@ export default function D_ProcessSection() {
       {content.map((section, index) => (
         <Fragment key={section.title}>
           <ProcessItemSection
+            shapeSrc={shapeSrcs[index]}
             i={index}
             {...section}
             key={section.title}
@@ -29,7 +37,9 @@ export default function D_ProcessSection() {
             }}
           />
           {index === content.length - 1 && (
-            <button className='mt-2 bg-primary'>עוד על התהליך</button>
+            <Link to={'/process'}>
+              <button className='mt-2 bg-primary'>עוד על התהליך</button>
+            </Link>
           )}
         </Fragment>
       ))}

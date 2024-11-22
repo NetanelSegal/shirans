@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 
 interface IProcessItemSectionProps {
+  shapeSrc: string;
   i: number;
   title: string;
   shortText: string;
@@ -11,30 +12,32 @@ interface IProcessItemSectionProps {
   isLeft?: boolean;
 }
 
-const ProcessItemSection = forwardRef<HTMLDivElement, IProcessItemSectionProps>(
-  ({ shortText, title, time, isLeft, i }, ref) => {
-    return (
-      <div
-        className={`flex items-center gap-5 ${isLeft ? 'flex-row-reverse' : ''}`}
-      >
-        <div className='w-1/2 lg:w-2/5'>
-          <div className='flex flex-col items-start gap-1 lg:flex-row lg:gap-2'>
-            <h3 className='subheading font-semibold'>{title}</h3>
-            {time && <ProcessItemSectionTime time={time} />}
-          </div>
-          <p className='paragraph'>{shortText}</p>
+const ProcessItemSection = forwardRef<
+  HTMLImageElement,
+  IProcessItemSectionProps
+>(({ shortText, title, time, isLeft, i, shapeSrc }, ref) => {
+  return (
+    <div
+      className={`flex items-center gap-5 ${isLeft ? 'flex-row-reverse' : ''}`}
+    >
+      <div className='w-1/2 lg:w-2/5'>
+        <div className='flex flex-col items-start gap-1 lg:flex-row lg:gap-2'>
+          <h3 className='subheading font-semibold'>{title}</h3>
+          {time && <ProcessItemSectionTime time={time} />}
         </div>
-        <div
-          ref={ref}
-          id={`${i}-${title}`}
-          className='size-10 rounded-full bg-secondary'
-        >
-          {/* TODO add shape for each item */}
-        </div>
+        <p className='paragraph'>{shortText}</p>
       </div>
-    );
-  },
-);
+      <img
+        ref={ref}
+        id={`${i}-${title}`}
+        className='h-10 max-w-14 object-contain object-center'
+        src={shapeSrc}
+        alt=''
+      />
+      {/* TODO add shape for each item */}
+    </div>
+  );
+});
 
 const ProcessItemSectionTime = ({
   time,

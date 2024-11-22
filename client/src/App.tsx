@@ -27,7 +27,7 @@ export const appRoutes = [
   //   element: <About />,
   // },
   {
-    path: 'the-process',
+    path: 'process',
     title: 'התהליך',
     element: <Process />,
   },
