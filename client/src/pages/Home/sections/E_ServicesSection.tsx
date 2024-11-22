@@ -11,7 +11,7 @@ export default function E_ServicesSection() {
       <div className='px-page-all'>
         <h2 className='heading mb-10 font-semibold'>השירותים שלי</h2>
         <div className='flex flex-col items-center justify-center gap-5 sm:flex-row sm:flex-wrap sm:items-stretch'>
-          {data.map((item, index) => (
+          {data.map((item) => (
             <div className='h-[100px] w-[300px] content-center rounded-2xl bg-primary p-5 text-white'>
               <p className='paragraph'>{item}</p>
             </div>
