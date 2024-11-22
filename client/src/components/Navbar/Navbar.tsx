@@ -30,6 +30,7 @@ export default function Navbar() {
 
   useEffect(() => {
     setToggle(false);
+    window.scrollTo(0, 0);
   }, [location]);
 
   return (
