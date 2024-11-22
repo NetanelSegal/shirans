@@ -12,8 +12,8 @@ export default function FooterNavigation() {
               className='flex justify-center gap-5 text-center sm:flex-col sm:gap-0'
             >
               {appRoutes.slice(index, index + 3).map(
-                ({ title, path }) =>
-                  path !== '*' && (
+                ({ title, path, notNavigateable }) =>
+                  !notNavigateable && (
                     <Link key={title} className='sm:text-start' to={path}>
                       <p>{title}</p>
                     </Link>

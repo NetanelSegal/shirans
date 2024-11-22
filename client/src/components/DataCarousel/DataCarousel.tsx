@@ -39,7 +39,7 @@ export default function DataCarousel<T>({
   const translatePrecent = currentIndex * (100 + 1);
 
   return (
-    <div className={`w-full`}>
+    <div className='w-full'>
       <div
         ref={ref}
         style={{

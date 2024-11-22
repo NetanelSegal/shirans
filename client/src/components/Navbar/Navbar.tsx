@@ -22,7 +22,7 @@ export default function Navbar() {
           className='bg-none p-0'
           onClick={() => setToggle((prev) => !prev)}
         >
-          <i className='fa-solid fa-bars flex size-8 items-center justify-center rounded-xl bg-secondary text-primary' />
+          <i className='fa-solid fa-bars flex size-8 items-center justify-center rounded-xl bg-secondary text-black' />
         </button>
       )}
       <ul
@@ -33,8 +33,8 @@ export default function Navbar() {
         }`}
       >
         {appRoutes.map(
-          ({ title, path }) =>
-            path !== '*' && (
+          ({ title, path, notNavigateable }) =>
+            !notNavigateable && (
               <li key={path}>
                 <NavLink
                   to={path}
@@ -45,9 +45,7 @@ export default function Navbar() {
                   }
                 >
                   {path === 'contact' ? (
-                    <button className='bg-secondary text-primary'>
-                      {title}
-                    </button>
+                    <button className='bg-secondary text-black'>{title}</button>
                   ) : (
                     title
                   )}

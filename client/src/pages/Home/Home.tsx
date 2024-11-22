@@ -6,12 +6,10 @@ import ProcessSection from './sections/D_ProcessSection';
 export default function Home() {
   return (
     <>
-      {/* <div className='px-page-all overflow-hidden'> */}
       <HeroSection />
       <WhoIsShiranSection />
       <FavoriteProjectsSection />
       <ProcessSection />
-      {/* </div> */}
     </>
   );
 }

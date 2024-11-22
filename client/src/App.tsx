@@ -3,6 +3,9 @@ import Layout from './components/Layout';
 import ScreenProvider from './contexts/ScreenProvider';
 import Home from './pages/Home';
 import Process from './pages/Process';
+import Projects from './pages/Projects';
+import Project from './pages/Project';
+// import About from './pages/About';
 
 function App() {
   return (
@@ -18,11 +21,11 @@ export const appRoutes = [
     title: 'בית',
     element: <Home />,
   },
-  {
-    path: 'about',
-    title: 'עוד עלי',
-    element: <div>About</div>,
-  },
+  // {
+  //   path: 'about',
+  //   title: 'עוד עלי',
+  //   element: <About />,
+  // },
   {
     path: 'the-process',
     title: 'התהליך',
@@ -31,7 +34,12 @@ export const appRoutes = [
   {
     path: 'projects',
     title: 'פרויקטים',
-    element: <div>Projects</div>,
+    element: <Projects />,
+  },
+  {
+    path: 'projects/:id',
+    element: <Project />,
+    notNavigateable: true,
   },
   {
     path: 'contact',
@@ -42,6 +50,7 @@ export const appRoutes = [
     path: '*',
     title: '404',
     element: <div>404</div>,
+    notNavigateable: true,
   },
 ];
 

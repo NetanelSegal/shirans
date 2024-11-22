@@ -7,13 +7,13 @@
 }
 
 button {
-  @apply rounded-xl bg-slate-500 px-6 py-2 text-xl font-semibold text-white transition-all duration-150 ease-in-out;
+  @apply rounded-xl bg-slate-500 px-6 py-2 text-lg font-semibold text-white transition-all duration-150 ease-in-out;
 
   &:hover {
     @apply scale-105;
   }
 }
- 
+
 .px-page-all {
   @apply px-page-sm md:px-page-md lg:px-page-lg xl:px-page-xl 2xl:px-page-2xl;
 }
@@ -35,25 +35,5 @@ button {
 }
 
 .paragraph {
-  @apply text-lg md:text-xl lg:text-2xl;
+  @apply text-lg leading-tight;
 }
-
-/* section > * {
-  outline: 1px solid red;
-} */
-/* 
-.text-size-lg {
-  @apply text-lg md:text-xl lg:text-2xl xl:text-3xl;
-}
-
-.text-size-md {
-  @apply text-base md:text-lg lg:text-xl xl:text-2xl;
-}
-
-.text-size-sm {
-  @apply text-sm md:text-base lg:text-lg xl:text-xl;
-}
-
-.text-size-xs {
-  @apply text-xs md:text-sm lg:text-base xl:text-lg;
-} */
