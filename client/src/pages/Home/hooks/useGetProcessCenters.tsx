@@ -12,8 +12,6 @@ export default function useGetProcessCenters(
 
   useEffect(() => {
     setTimeout(() => {
-      console.log('running useEffect');
-
       if (sectionRef.current) {
         const computedCenters = shapesRef.map((r) =>
           getCenterOfElementInContainer(r, sectionRef.current!),
