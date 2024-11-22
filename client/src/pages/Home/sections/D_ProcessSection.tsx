@@ -22,6 +22,7 @@ export default function D_ProcessSection() {
 
   return (
     <section ref={sectionRef} className='py-section-all relative'>
+      <h2 className='heading mb-4 font-semibold'>התהליך מתחילתו ועד סופו</h2>
       {content.map((section, index) => (
         <Fragment key={section.title}>
           <ProcessItemSection
@@ -43,18 +44,20 @@ export default function D_ProcessSection() {
           )}
         </Fragment>
       ))}
-      <svg ref={svgRef} className='absolute top-0 -z-10 size-full'>
-        {centers.map((c, i) => {
-          return i === centers.length - 1 ? null : (
-            <AnimatedProcessSectionPath
-              key={c.y}
-              startPoint={c}
-              endPoint={centers[i + 1]}
-              strokeDashoffsetPercentage={pathsPrecentInView[i] || 0}
-            />
-          );
-        })}
-      </svg>
+      {centers.length !== 0 && (
+        <svg ref={svgRef} className='absolute top-0 -z-10 size-full'>
+          {centers.map((c, i) => {
+            return i === centers.length - 1 ? null : (
+              <AnimatedProcessSectionPath
+                key={c.y}
+                startPoint={c}
+                endPoint={centers[i + 1]}
+                strokeDashoffsetPercentage={pathsPrecentInView[i] || 0}
+              />
+            );
+          })}
+        </svg>
+      )}
     </section>
   );
 }
