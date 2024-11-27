@@ -3,28 +3,28 @@ import FavoriteProjects from '@/components/FavoriteProjects';
 import Image from '@/components/Image';
 import ImageScaleHover from '@/components/ImageScaleHover';
 import { IProject } from '@/data/shiran.projects';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
+import { useLocation } from 'react-router-dom';
 
 interface ILocationRes {
   state: {
     project: IProject;
-    categoriesObj: any;
   };
 }
 
 export default function Project() {
   const {
-    state: { categoriesObj, project },
+    state: { project },
   }: ILocationRes = useLocation();
 
   return (
     <>
       <div className='breakout-x-padding relative mb-10'>
-        <h3 className='absolute bottom-5 right-5 z-20 font-semibold text-white drop-shadow-[0_0_5px_rgba(0,0,0,0.3)] sm:text-6xl lg:text-8xl'>
+        <h3 className='heading absolute bottom-5 right-5 z-20 font-semibold text-white drop-shadow-[0_0_5px_rgba(0,0,0,0.3)]'>
           {project.title}
         </h3>
         <ImageScaleHover
-          containerClassName='w-full lg:w-auto lg:h-[500px] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
+          containerClassName='w-full h-[75vh] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
           src={project.mainImage}
         />
       </div>
@@ -39,8 +39,8 @@ export default function Project() {
                   <div className='flex gap-2'>
                     {project.categories.map((catCode) => (
                       <CategoryLabel
-                        label={categoriesObj[catCode]}
-                        key={categoriesObj[catCode]}
+                        label={categoriesCodeToTitleMap[catCode]}
+                        key={categoriesCodeToTitleMap[catCode]}
                       />
                     ))}
                   </div>
@@ -100,7 +100,7 @@ export default function Project() {
           ))}
         </div>
       </div>
-      <div className=''>
+      <div className='py-section-all'>
         <FavoriteProjects />
       </div>
     </>

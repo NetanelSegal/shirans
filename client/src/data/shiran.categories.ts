@@ -56,3 +56,11 @@ export const categories: ICategory[] = [
     __v: 0,
   },
 ];
+
+export const categoriesCodeToTitleMap = categories.reduce(
+  (acc: Record<string, string>, e) => {
+    acc[e.urlCode] = e.title;
+    return acc;
+  },
+  {},
+);

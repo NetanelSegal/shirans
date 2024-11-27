@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface IAnimatedProcessPathProps {
   startPoint: { x: number; y: number };

@@ -11,6 +11,18 @@ export default function useGetProcessCenters(
   const [centers, setCenters] = useState<{ x: number; y: number }[]>([]);
 
   useEffect(() => {
+    setTimeout(() => {
+      if (sectionRef.current) {
+        const computedCenters = shapesRef.map((r) =>
+          getCenterOfElementInContainer(r, sectionRef.current!),
+        );
+
+        setCenters(computedCenters);
+      }
+    }, 50);
+  }, []);
+
+  useEffect(() => {
     if (sectionRef.current) {
       const computedCenters = shapesRef.map((r) =>
         getCenterOfElementInContainer(r, sectionRef.current!),

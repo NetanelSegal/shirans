@@ -1,15 +1,43 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { appRoutes } from '../../App';
 import srcShiranLogo from '../../assets/shiran_logo.svg';
 import { useScreenContext } from '../../contexts/ScreenProvider';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Navbar() {
   const { isSmallScreen } = useScreenContext();
+  const location = useLocation();
   const [toggle, setToggle] = useState(false);
 
+  const navRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (toggle && !navRef.current?.contains(event.target as Node)) {
+        setToggle((prev) => !prev);
+      }
+    };
+
+    if (isSmallScreen) {
+      document.addEventListener('click', handleClickOutside);
+    }
+    return () => {
+      if (isSmallScreen) {
+        document.removeEventListener('click', handleClickOutside);
+      }
+    };
+  }, [isSmallScreen, toggle]);
+
+  useEffect(() => {
+    setToggle(false);
+    window.scrollTo(0, 0);
+  }, [location]);
+
   return (
-    <nav className='px-page-all sticky top-0 z-10 flex items-center justify-between py-2'>
+    <nav
+      ref={navRef}
+      className='px-page-all sticky top-0 z-50 flex items-center justify-between py-2'
+    >
       {/* blue backgound div */}
       <div className='absolute inset-0 -z-10 bg-primary'></div>
 
@@ -26,6 +54,7 @@ export default function Navbar() {
         </button>
       )}
       <ul
+        ref={navRef}
         className={`flex items-center gap-5 ${
           isSmallScreen
             ? `fixed left-0 right-0 top-14 -z-20 ${!toggle && '-translate-y-[150%]'} flex-col bg-white p-5 text-primary transition-all duration-300 ease-in-out`

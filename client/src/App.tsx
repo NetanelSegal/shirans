@@ -27,7 +27,7 @@ export const appRoutes = [
   //   element: <About />,
   // },
   {
-    path: 'the-process',
+    path: 'process',
     title: 'התהליך',
     element: <Process />,
   },
@@ -44,7 +44,7 @@ export const appRoutes = [
   {
     path: 'contact',
     title: 'צור קשר',
-    element: <div>Contact</div>,
+    element: <div></div>,
   },
   {
     path: '*',

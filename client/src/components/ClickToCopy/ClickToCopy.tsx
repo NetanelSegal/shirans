@@ -1,10 +1,4 @@
-import {
-  MouseEvent,
-  MouseEventHandler,
-  ReactNode,
-  useRef,
-  useState,
-} from 'react';
+import { MouseEvent, ReactNode, useRef, useState } from 'react';
 
 const ClickToCopy = ({ children }: { children: ReactNode }) => {
   const [isHover, setIsHover] = useState<boolean>();
