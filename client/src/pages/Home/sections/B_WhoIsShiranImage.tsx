@@ -10,7 +10,7 @@ export default function WhoIsShiranImage() {
         style={{ clipPath: 'url(#clipPath)' }}
         className='size-full object-cover'
         src={srcShiranImage}
-        alt='Image of Shiran'
+        alt='שירן גלעד - אדריכלית ומעצבת פנים'
       />
     </div>
   );
