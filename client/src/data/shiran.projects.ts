@@ -1,3 +1,13 @@
+import p1_img1 from './project1/images/1.png';
+import p1_img2 from './project1/images/2.png';
+import p1_img3 from './project1/images/3.png';
+import p1_img4 from './project1/images/4.png';
+import p1_img5 from './project1/images/5.png';
+import p1_img6 from './project1/images/6.png';
+import p1_img7 from './project1/images/7.png';
+import p1_imgMain from './project1/images/main.png';
+import p1_plan1 from './project1/plans/1.png';
+
 export interface IProject {
   _id: string;
   title: string;
@@ -23,16 +33,23 @@ export interface IProject {
 export const projects: IProject[] = [
   {
     _id: '6723e461b0a875a1848156e9',
-    title: 'Villa in Green Hills',
+    title:
+      'זוג צעיר ומקסים הגיע למשרדי לאחר תהליך כואב ומתסכל עם אדריכלית קודמת, שלא הצליחה לפתור את האתגרים שעמדו בפניהם.',
     categories: ['privateHouses'],
-    description: 'A luxurious private villa with expansive gardens.',
-    mainImage: 'https://placehold.co/1000x600',
-    images: ['https://placehold.co/800x500', 'https://placehold.co/600x400'],
-    plans: ['https://placehold.co/900x600', 'https://placehold.co/700x450'],
-    location: '123 Green Hill Road',
-    client: 'John Doe',
+    description: `אחרי שנים של חיסכון ועבודה קשה, הם חלמו לבנות את ביתם במושב ילדותם. זכיתי לקחת חלק במסע
+הזה ולעזור להם להפוך את החלום למציאות.
+התמודדנו עם אתגרים לא פשוטים: שטחי בנייה מוגבלים מול רצונות רבים, מציאת קבלן בחודשי
+המלחמה הראשונים, עליית מחירים מתמדת, ודרישותמורכבות שהביאו עמן חששות .
+בעזרת תכנון מדויק, חשיבה יצירתית ושיתוף פעולה מלא, הצלחתי לפתור את כל הבעיות שלא קיבלו
+מענה לפני כן. בסופו של דבר, בנינו עבורם בית שמגלם את כל מה שחלמו עליו–מקום חמים,
+פונקציונלי ומיוחד, שמשקף את האישיות והחלומות שלהם.`,
+    mainImage: p1_imgMain,
+    images: [p1_img1, p1_img2, p1_img3, p1_img4, p1_img5, p1_img6, p1_img7],
+    plans: [p1_plan1],
+    location: 'שכניה',
+    client: 'זוג + 1',
     isCompleted: true,
-    constructionArea: 450,
+    constructionArea: 74 + 45,
     favourite: true,
   },
   {

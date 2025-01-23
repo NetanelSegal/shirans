@@ -8,6 +8,8 @@ export default function Image({
     <img
       {...rest}
       onError={(e: SyntheticEvent<HTMLImageElement, Event>) => {
+        console.log((e.target as HTMLImageElement).src);
+
         (e.target as HTMLImageElement).src = image404src;
       }}
     />

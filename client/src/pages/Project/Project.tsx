@@ -79,7 +79,7 @@ export default function Project() {
           {project.plans.map((img) => (
             <Image
               key={img}
-              src={`${'urls.assets'}/${img}`}
+              src={img}
               alt={`${img}`}
               className='aspect-video shrink grow rounded-xl border-2 border-secondary object-contain p-2 md:w-1/3 md:flex-shrink'
             />
@@ -93,7 +93,7 @@ export default function Project() {
           {project.images.map((img) => (
             <Image
               key={img}
-              src={`${'urls.assets'}/${img}`}
+              src={img}
               alt={`${img}`}
               className='aspect-video min-w-0 grow rounded-xl border-2 border-secondary object-cover md:w-1/3'
             />
