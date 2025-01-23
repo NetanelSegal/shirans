@@ -4,18 +4,26 @@ import Image from '@/components/Image';
 import ImageScaleHover from '@/components/ImageScaleHover';
 import { IProject } from '@/data/shiran.projects';
 import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
-import { useLocation } from 'react-router-dom';
-
-interface ILocationRes {
-  state: {
-    project: IProject;
-  };
-}
+import { useLocation, useNavigate } from 'react-router-dom';
+import Modal from '@/components/Modal';
+import { useEffect, useState } from 'react';
 
 export default function Project() {
-  const {
-    state: { project },
-  }: ILocationRes = useLocation();
+  const { state } = useLocation();
+
+  const nav = useNavigate();
+
+  useEffect(() => {
+    if (!state) {
+      nav('/projects');
+    }
+  }, []);
+
+  if (!state) {
+    return null;
+  }
+
+  const { project } = state as { project: IProject };
 
   return (
     <>
@@ -67,7 +75,12 @@ export default function Project() {
             </tbody>
           </table>
           <p className='mt-10 w-full break-words pl-[30%]'>
-            {project.description}
+            {project.description.split('\n').map((line, i) => (
+              <>
+                {line}
+                <br />
+              </>
+            ))}
           </p>
         </div>
 
@@ -77,12 +90,7 @@ export default function Project() {
           {!project.images.length && <p>אין תוכניות עדיין</p>}
 
           {project.plans.map((img) => (
-            <Image
-              key={img}
-              src={img}
-              alt={`${img}`}
-              className='aspect-video shrink grow rounded-xl border-2 border-secondary object-contain p-2 md:w-1/3 md:flex-shrink'
-            />
+            <ImageClickModal img={img} key={img} />
           ))}
         </div>
 
@@ -91,18 +99,43 @@ export default function Project() {
         <div className='my-5 mb-10 flex w-full flex-col justify-between gap-2 md:flex-row'>
           {!project.images.length && <p>אין תמונות עדיין</p>}
           {project.images.map((img) => (
-            <Image
-              key={img}
-              src={img}
-              alt={`${img}`}
-              className='aspect-video min-w-0 grow rounded-xl border-2 border-secondary object-cover md:w-1/3'
-            />
+            <ImageClickModal img={img} key={img} />
           ))}
         </div>
       </div>
       <div className='py-section-all'>
+        <h2 className='heading mb-10 font-semibold'>פרוייקטים נבחרים</h2>
         <FavoriteProjects />
       </div>
     </>
   );
 }
+
+const ImageClickModal = ({ img }: { img: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <Image
+        onClick={() => setIsOpen(true)}
+        key={img}
+        src={img}
+        alt={`${img}`}
+        className='aspect-video min-w-0 grow cursor-pointer rounded-xl border-2 border-secondary object-cover md:w-1/3'
+      />
+      <Modal
+        containerClassName='aspect-video w-4/5 max-h-[80vh] md:w-4/6'
+        open={isOpen}
+        onBackdropClick={() => setIsOpen(false)}
+        center
+      >
+        <Image
+          key={img}
+          src={img}
+          alt={`${img}`}
+          className='size-full rounded-xl border-2 border-secondary object-cover'
+        />
+      </Modal>
+    </>
+  );
+};
