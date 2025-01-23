@@ -75,7 +75,7 @@ export default function Project() {
             </tbody>
           </table>
           <p className='mt-10 w-full break-words pl-[30%]'>
-            {project.description.split('\n').map((line, i) => (
+            {project.description.split('\n').map((line) => (
               <>
                 {line}
                 <br />

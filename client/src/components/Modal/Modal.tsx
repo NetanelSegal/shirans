@@ -1,25 +1,5 @@
-import {
-  CSSProperties,
-  FC,
-  MouseEvent,
-  ReactNode,
-  RefObject,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { FC, MouseEvent, ReactNode, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-
-type ModalAnchor =
-  | 'center'
-  | 'top'
-  | 'top-right'
-  | 'right'
-  | 'bottom-right'
-  | 'bottom'
-  | 'bottom-left'
-  | 'left'
-  | 'top-left';
 
 type ModalProps = {
   backgroundClassname?: string;
