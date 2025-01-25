@@ -1,12 +1,11 @@
 import { CategoryLabel } from '@/components/CategoryLabel';
 import FavoriteProjects from '@/components/FavoriteProjects';
-import Image from '@/components/Image';
 import ImageScaleHover from '@/components/ImageScaleHover';
 import { IProject } from '@/data/shiran.projects';
 import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Modal from '@/components/Modal';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect } from 'react';
+import ImgOrPlansShowcase from './components/ImgOrPlanShowcase';
 
 export default function Project() {
   const { state } = useLocation();
@@ -76,66 +75,25 @@ export default function Project() {
           </table>
           <p className='mt-10 w-full break-words pl-[30%]'>
             {project.description.split('\n').map((line) => (
-              <>
+              <Fragment key={line}>
                 {line}
                 <br />
-              </>
+              </Fragment>
             ))}
           </p>
         </div>
 
         {/* תוכניות */}
         <h3>תוכניות</h3>
-        <div className='my-5 flex w-full flex-col gap-2 md:flex-row'>
-          {!project.images.length && <p>אין תוכניות עדיין</p>}
-
-          {project.plans.map((img) => (
-            <ImageClickModal img={img} key={img} />
-          ))}
-        </div>
+        <ImgOrPlansShowcase arr={project.plans} />
 
         {/* תמונות */}
         <h3>תמונות</h3>
-        <div className='my-5 mb-10 flex w-full flex-col justify-between gap-2 md:flex-row'>
-          {!project.images.length && <p>אין תמונות עדיין</p>}
-          {project.images.map((img) => (
-            <ImageClickModal img={img} key={img} />
-          ))}
-        </div>
+        <ImgOrPlansShowcase arr={project.images} />
       </div>
       <div className='py-section-all'>
-        <h2 className='heading mb-10 font-semibold'>פרוייקטים נבחרים</h2>
         <FavoriteProjects />
       </div>
     </>
   );
 }
-
-const ImageClickModal = ({ img }: { img: string }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <>
-      <Image
-        onClick={() => setIsOpen(true)}
-        key={img}
-        src={img}
-        alt={`${img}`}
-        className='aspect-video min-w-0 grow cursor-pointer rounded-xl border-2 border-secondary object-cover md:w-1/3'
-      />
-      <Modal
-        containerClassName='aspect-video w-4/5 max-h-[80vh] md:w-4/6'
-        open={isOpen}
-        onBackdropClick={() => setIsOpen(false)}
-        center
-      >
-        <Image
-          key={img}
-          src={img}
-          alt={`${img}`}
-          className='size-full rounded-xl border-2 border-secondary object-cover'
-        />
-      </Modal>
-    </>
-  );
-};

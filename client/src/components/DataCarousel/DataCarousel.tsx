@@ -5,6 +5,7 @@ interface IDataCarouselProps<T> {
   keyProperty: keyof T;
   dataArray: T[];
   animationDuration?: number;
+  containerClassname?: string;
   singleItem: (
     data: T,
     index: number,
@@ -22,6 +23,7 @@ interface IDataCarouselProps<T> {
 export default function DataCarousel<T>({
   keyProperty,
   dataArray,
+  containerClassname = '',
   animationDuration = 500,
   singleItem,
   carouselNavigation,
@@ -39,7 +41,7 @@ export default function DataCarousel<T>({
   const translatePrecent = currentIndex * (100 + 1);
 
   return (
-    <div className='w-full'>
+    <div className={`w-full ${containerClassname}`}>
       <div
         ref={ref}
         style={{
