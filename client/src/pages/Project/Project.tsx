@@ -5,7 +5,7 @@ import { IProject } from '@/data/shiran.projects';
 import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Fragment, useEffect } from 'react';
-import ImgOrPlansShowcase from './components/ImgOrPlanShowcase';
+import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
 
 export default function Project() {
   const { state } = useLocation();
@@ -73,7 +73,7 @@ export default function Project() {
               </tr>
             </tbody>
           </table>
-          <p className='mt-10 w-full break-words pl-[30%]'>
+          <p className='mt-10 w-full break-words md:pl-[30%]'>
             {project.description.split('\n').map((line) => (
               <Fragment key={line}>
                 {line}
@@ -85,11 +85,11 @@ export default function Project() {
 
         {/* תוכניות */}
         <h3>תוכניות</h3>
-        <ImgOrPlansShowcase arr={project.plans} />
+        <ProjectImagePlanShowcase arr={project.plans} />
 
         {/* תמונות */}
         <h3>תמונות</h3>
-        <ImgOrPlansShowcase arr={project.images} />
+        <ProjectImagePlanShowcase arr={project.images} />
       </div>
       <div className='py-section-all'>
         <FavoriteProjects />

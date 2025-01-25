@@ -1,6 +1,5 @@
 import Image from '@/components/Image';
 import Modal from '@/components/Modal';
-
 interface IImageClickModalProps {
   img: string;
   open: boolean;
