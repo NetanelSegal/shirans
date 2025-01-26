@@ -3,7 +3,13 @@ import ImageClickModal from './ImageClickModal';
 import useCounter from '@/hooks/useCounter';
 import arrowIconSrc from '@/assets/icons/select-arrow.svg';
 
-export default function ProjectImagePlanShowcase({ arr }: { arr: string[] }) {
+interface IProjectImagePlanShowcaseProps {
+  arr: string[];
+}
+
+export default function ProjectImagePlanShowcase({
+  arr,
+}: IProjectImagePlanShowcaseProps) {
   const { count, reset, setCount, decrement, increment } = useCounter({
     initialValue: -1,
     max: arr.length - 1,
@@ -33,7 +39,7 @@ export default function ProjectImagePlanShowcase({ arr }: { arr: string[] }) {
   return (
     <>
       {count !== -1 && (
-        <div className='px-page-all fixed left-0 top-1/2 z-30 flex w-full -translate-y-1/2 justify-between'>
+        <div className='fixed left-0 right-0 top-1/2 z-30 flex -translate-y-1/2 items-center justify-between px-page-sm md:px-page-md lg:px-page-lg xl:px-page-xl'>
           <button onClick={decrement} className='bg-primary px-3'>
             <img className='h-8' src={arrowIconSrc} alt='' />
           </button>
@@ -43,7 +49,7 @@ export default function ProjectImagePlanShowcase({ arr }: { arr: string[] }) {
         </div>
       )}
 
-      <div className='my-5 mb-10 flex w-full justify-start gap-2 overflow-x-scroll md:flex-row'>
+      <div className='my-5 mb-10 flex w-full flex-wrap justify-start gap-2 overflow-x-scroll sm:flex-nowrap md:flex-row'>
         {arr.map((item, index) => (
           <ImageClickModal
             onClick={() => setCount(index)}

@@ -84,11 +84,11 @@ export default function Project() {
         </div>
 
         {/* תוכניות */}
-        <h3>תוכניות</h3>
+        <h3 className='heading'>תוכניות</h3>
         <ProjectImagePlanShowcase arr={project.plans} />
 
         {/* תמונות */}
-        <h3>תמונות</h3>
+        <h3 className='heading'>תמונות</h3>
         <ProjectImagePlanShowcase arr={project.images} />
       </div>
       <div className='py-section-all'>
