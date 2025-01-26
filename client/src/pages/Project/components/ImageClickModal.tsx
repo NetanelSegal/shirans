@@ -23,7 +23,7 @@ export default function ImageClickModal({
         className='aspect-video shrink-0 cursor-pointer overflow-hidden rounded-xl border-2 border-secondary object-cover sm:basis-[32%]'
       />
       <Modal
-        containerClassName='sm:w-4/5 w-[90vw]  md:w-4/6'
+        containerClassName='sm:w-4/5 w-[60vw] md:w-4/6'
         open={open}
         onBackdropClick={close}
         center
