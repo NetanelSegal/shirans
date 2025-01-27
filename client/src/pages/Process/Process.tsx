@@ -1,3 +1,4 @@
+import EnterAnimation from '@/components/animations/EnterAnimation';
 import SectionContent from './components/SectionContent';
 import { content } from '@/data/process-info';
 
@@ -819,14 +820,16 @@ export default function Process() {
     <>
       <h1 className='heading py-10 text-center font-bold'>התהליך</h1>
       {content.map(({ title, longText }, i) => (
-        <div key={title} className={`${i !== 0 ? 'py-20' : 'pb-20'}`}>
-          <SectionContent
-            heading={title}
-            paragraph={longText}
-            svg={svgs[i]}
-            i={i}
-          />
-        </div>
+        <EnterAnimation key={title}>
+          <div className={`${i !== 0 ? 'py-20' : 'pb-20'}`}>
+            <SectionContent
+              heading={title}
+              paragraph={longText}
+              svg={svgs[i]}
+              i={i}
+            />
+          </div>
+        </EnterAnimation>
       ))}
     </>
   );

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import DataCarousel from '../DataCarousel';
-import Image from '../Image';
+import Image from '../ui/Image';
 import { projects } from '@/data/shiran.projects';
 
 interface IProject {

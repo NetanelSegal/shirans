@@ -1,4 +1,4 @@
-import ClickToCopy from '@/components/ClickToCopy';
+import ClickToCopy from '@/components/ui/ClickToCopy';
 import { info as contactInfo } from '@/data/contact-info';
 import getIcon from '@/utils/icons.utils';
 export default function ContactInfo() {

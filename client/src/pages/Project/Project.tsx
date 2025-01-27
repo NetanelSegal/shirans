@@ -1,6 +1,6 @@
 import { CategoryLabel } from '@/components/CategoryLabel';
 import FavoriteProjects from '@/components/FavoriteProjects';
-import ImageScaleHover from '@/components/ImageScaleHover';
+import ImageScaleHover from '@/components/ui/ImageScaleHover';
 import { IProject } from '@/data/shiran.projects';
 import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -85,7 +85,6 @@ export default function Project() {
           </p>
         </div>
       </div>
-
 
       {/* תוכניות */}
       <div className='py-10'>
