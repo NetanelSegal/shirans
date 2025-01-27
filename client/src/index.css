@@ -19,7 +19,7 @@ button {
 }
 
 .py-section-all {
-  @apply py-page-md md:py-page-lg lg:py-page-xl;
+  @apply py-page-md lg:py-page-lg;
 }
 
 .breakout-x-padding {
