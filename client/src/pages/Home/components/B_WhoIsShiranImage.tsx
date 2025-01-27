@@ -1,4 +1,4 @@
-import Image from '@/components/Image';
+import Image from '@/components/ui/Image';
 import srcShiranImage from '../assets/shiranImage.png';
 
 export default function WhoIsShiranImage() {

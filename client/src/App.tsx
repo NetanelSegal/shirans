@@ -1,11 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Layout from './components/Layout';
+import { lazy } from 'react';
 import ScreenProvider from './contexts/ScreenProvider';
-import Home from './pages/Home';
-import Process from './pages/Process';
-import Projects from './pages/Projects';
-import Project from './pages/Project';
-// import About from './pages/About';
+
+const Layout = lazy(() => import('./components/Layout'));
+const Home = lazy(() => import('./pages/Home'));
+const Process = lazy(() => import('./pages/Process'));
+const Projects = lazy(() => import('./pages/Projects'));
+const Project = lazy(() => import('./pages/Project'));
 
 function App() {
   return (
@@ -21,11 +22,6 @@ export const appRoutes = [
     title: 'בית',
     element: <Home />,
   },
-  // {
-  //   path: 'about',
-  //   title: 'עוד עלי',
-  //   element: <About />,
-  // },
   {
     path: 'process',
     title: 'התהליך',
@@ -66,7 +62,7 @@ const router = createBrowserRouter([
 ]);
 
 const AppRoutes = () => {
-  return <RouterProvider router={router}></RouterProvider>;
+  return <RouterProvider router={router} />;
 };
 
 export default App;

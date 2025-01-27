@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { IProject } from '@/data/shiran.projects';
-import ImageScaleHover from '@/components/ImageScaleHover';
+import ImageScaleHover from '@/components/ui/ImageScaleHover';
 import { CategoryLabel } from '@/components/CategoryLabel';
 import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
 interface IProjectProps {

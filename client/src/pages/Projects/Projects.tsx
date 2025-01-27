@@ -1,5 +1,6 @@
 import { IProject, projects as projectsData } from '@/data/shiran.projects';
 import Project from './components/Project';
+import EnterAnimation from '@/components/animations/EnterAnimation';
 
 export default function Projects() {
   return (
@@ -12,9 +13,11 @@ export default function Projects() {
         </p>
       </div>
       {projectsData.map((e: IProject, i) => (
-        <div key={e._id} className={`${i !== 0 ? 'py-20' : 'pb-20'}`}>
-          <Project project={e} i={i} key={e._id} />
-        </div>
+        <EnterAnimation key={e._id}>
+          <div className={`${i !== 0 ? 'py-20' : 'pb-20'}`}>
+            <Project project={e} i={i} />
+          </div>
+        </EnterAnimation>
       ))}
     </>
   );

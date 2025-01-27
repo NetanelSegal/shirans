@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import ImageClickModal from './ImageClickModal';
 import useCounter from '@/hooks/useCounter';
 import arrowIconSrc from '@/assets/icons/select-arrow.svg';
-import Image from '@/components/Image';
-import Modal from '@/components/Modal';
+import Image from '@/components/ui/Image';
+import Modal from '@/components/ui/Modal';
 
 interface IProjectImagePlanShowcaseProps {
   arr: string[];
