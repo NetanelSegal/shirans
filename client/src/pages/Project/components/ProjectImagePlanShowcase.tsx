@@ -2,19 +2,27 @@ import { useEffect } from 'react';
 import ImageClickModal from './ImageClickModal';
 import useCounter from '@/hooks/useCounter';
 import arrowIconSrc from '@/assets/icons/select-arrow.svg';
+import Image from '@/components/Image';
+import Modal from '@/components/Modal';
 
 interface IProjectImagePlanShowcaseProps {
   arr: string[];
+  containerClassname?: string;
+  imageClassname?: string;
 }
 
 export default function ProjectImagePlanShowcase({
   arr,
+  containerClassname = '',
+  imageClassname = '',
 }: IProjectImagePlanShowcaseProps) {
   const { count, reset, setCount, decrement, increment } = useCounter({
     initialValue: -1,
     max: arr.length - 1,
     min: 0,
   });
+
+  const singleImageClassname = `aspect-video cursor-pointer border-2 border-secondary rounded-xl object-cover ${imageClassname}`;
 
   const handleKeyPress = (e: KeyboardEvent) => {
     switch (e.key) {
@@ -23,6 +31,9 @@ export default function ProjectImagePlanShowcase({
         break;
       case 'ArrowRight':
         decrement();
+        break;
+      case 'Escape':
+        reset();
         break;
     }
   };
@@ -36,32 +47,55 @@ export default function ProjectImagePlanShowcase({
   if (!arr.length) {
     return <p>אין תוכן עדיין</p>;
   }
+
   return (
     <>
+      {/* arrows of images slider when open */}
       {count !== -1 && (
-        <div className='fixed left-0 right-0 top-1/2 z-30 flex -translate-y-1/2 items-center justify-between px-page-sm md:px-page-md lg:px-page-lg xl:px-page-xl'>
-          <button onClick={decrement} className='bg-primary px-3'>
-            <img className='h-8' src={arrowIconSrc} alt='' />
-          </button>
-          <button onClick={increment} className='bg-primary px-3'>
-            <img className='h-8 rotate-180' src={arrowIconSrc} alt='' />
-          </button>
-        </div>
+        <>
+          <div className='px-page-all fixed left-0 top-1/2 z-30 flex w-full -translate-y-1/2 justify-between'>
+            <button onClick={decrement} className='bg-primary px-3'>
+              <img className='h-8' src={arrowIconSrc} alt='' />
+            </button>
+            <button onClick={increment} className='bg-primary px-3'>
+              <img className='h-8 rotate-180' src={arrowIconSrc} alt='' />
+            </button>
+          </div>
+        </>
       )}
 
-      <div className='my-5 mb-10 flex w-full flex-wrap justify-start gap-2 overflow-x-scroll sm:flex-nowrap md:flex-row'>
+      <div className={containerClassname}>
         {arr.map((item, index) => (
           <ImageClickModal
+            imageClassname={`${singleImageClassname} ${arr.length % 2 == 1 ? (index + 1 === arr.length ? 'sm:basis-auto grow' : '') : ''}`} // if lenght is odd, the last image should be full width
             onClick={() => setCount(index)}
-            close={() => {
-              reset();
-            }}
-            open={count === index}
             img={item}
             key={item}
           />
         ))}
       </div>
+
+      <Modal
+        containerClassName='w-[70vw] sm:w-fit'
+        open={count !== -1}
+        onBackdropClick={() => reset()}
+        center
+      >
+        <Image
+          key={arr[count]}
+          src={arr[count]}
+          alt={`${arr[count]}`}
+          className='size-full max-h-[80vh] sm:translate-y-6'
+        />
+        <div className='absolute bottom-2 left-0 right-0 flex items-center justify-center gap-1 sm:translate-y-6 md:bottom-5'>
+          {arr.map((_, index) => (
+            <div
+              className={`size-2.5 rounded-full ${index === count ? 'bg-primary' : 'bg-white'}`}
+              key={index}
+            ></div>
+          ))}
+        </div>
+      </Modal>
     </>
   );
 }

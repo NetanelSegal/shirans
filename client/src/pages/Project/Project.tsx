@@ -26,8 +26,9 @@ export default function Project() {
 
   return (
     <>
+      {/* main image */}
       <div className='breakout-x-padding relative mb-10'>
-        <h3 className='heading absolute bottom-5 right-5 z-20 font-semibold text-white drop-shadow-[0_0_5px_rgba(0,0,0,0.3)]'>
+        <h3 className='px-page-all heading absolute bottom-5 z-20 font-semibold text-white drop-shadow-[0_0_8px_rgba(0,0,0,0.8)]'>
           {project.title}
         </h3>
         <ImageScaleHover
@@ -35,9 +36,10 @@ export default function Project() {
           src={project.mainImage}
         />
       </div>
-      <div className='section'>
-        {/* info table */}
-        <div className='mb-10 flex flex-col items-center'>
+
+      {/* info table */}
+      <div className='py-10'>
+        <div className='flex flex-col items-center'>
           <table className='mb-12 w-full max-w-3xl border-collapse rounded-2xl text-lg'>
             <tbody>
               <tr className='border-b-2 border-secondary'>
@@ -73,7 +75,7 @@ export default function Project() {
               </tr>
             </tbody>
           </table>
-          <p className='mt-10 w-full break-words md:pl-[30%]'>
+          <p className='w-full break-words md:pl-[30%]'>
             {project.description.split('\n').map((line) => (
               <Fragment key={line}>
                 {line}
@@ -82,15 +84,29 @@ export default function Project() {
             ))}
           </p>
         </div>
-
-        {/* תוכניות */}
-        <h3 className='heading'>תוכניות</h3>
-        <ProjectImagePlanShowcase arr={project.plans} />
-
-        {/* תמונות */}
-        <h3 className='heading'>תמונות</h3>
-        <ProjectImagePlanShowcase arr={project.images} />
       </div>
+
+
+      {/* תוכניות */}
+      <div className='py-10'>
+        <h3 className='subheading mb-5'>תוכניות</h3>
+        <ProjectImagePlanShowcase
+          imageClassname='w-full'
+          containerClassname=' flex w-full flex-col sm:flex-row justify-start gap-2'
+          arr={project.plans}
+        />
+      </div>
+
+      {/* תמונות */}
+      <div className='py-10'>
+        <h3 className='subheading mb-5'>תמונות</h3>
+        <ProjectImagePlanShowcase
+          imageClassname='shrink-0 overflow-hidden sm:basis-[calc(50%-4px)]'
+          containerClassname='flex w-full flex-wrap justify-start gap-2 md:flex-row md:overflow-x-auto justify-between'
+          arr={project.images}
+        />
+      </div>
+
       <div className='py-section-all'>
         <FavoriteProjects />
       </div>
