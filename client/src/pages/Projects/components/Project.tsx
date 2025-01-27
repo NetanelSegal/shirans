@@ -40,12 +40,15 @@ const Project = ({ project, i }: IProjectProps) => {
         <p className='break-words'>
           <strong>תיאור הפרוייקט: </strong>
           <br />
-          {project.description.split('\n').map((line) => (
-            <>
-              {line}
-              <br />
-            </>
-          ))}
+          {project.description
+            .trim()
+            .split('\n')
+            .map((line) => (
+              <>
+                {line}
+                <br />
+              </>
+            ))}
           <Link
             to={`/projects/${project._id}`}
             state={{ project }}
