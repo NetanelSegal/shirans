@@ -86,6 +86,7 @@ export default function Project() {
         </div>
       </div>
 
+
       {/* תוכניות */}
       <div className='py-10'>
         <h3 className='subheading mb-5'>תוכניות</h3>
