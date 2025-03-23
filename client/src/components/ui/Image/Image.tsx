@@ -6,6 +6,7 @@ export default function Image({
 }: ImgHTMLAttributes<HTMLImageElement>) {
   return (
     <img
+      loading='lazy'
       {...rest}
       onError={(e: SyntheticEvent<HTMLImageElement, Event>) => {
         console.log((e.target as HTMLImageElement).src);

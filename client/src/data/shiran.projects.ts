@@ -20,6 +20,19 @@ import p2_img9 from './project2/images/9.png';
 import p2_imgMain from './project2/images/main.png';
 import p2_plan1 from './project2/plans/1.png';
 
+import p3_img1 from './project3/images/1.jpg';
+import p3_img2 from './project3/images/2.jpg';
+import p3_img3 from './project3/images/3.jpg';
+import p3_img4 from './project3/images/4.jpg';
+import p3_img5 from './project3/images/5.jpg';
+import p3_img6 from './project3/images/6.jpg';
+import p3_img7 from './project3/images/7.jpg';
+import p3_img8 from './project3/images/8.jpg';
+import p3_img9 from './project3/images/9.jpg';
+import p3_imgMain from './project3/images/main.jpg';
+import p3_plan1 from './project3/plans/1.jpg';
+import p3_plan2 from './project3/plans/2.jpg';
+
 export interface IProject {
   _id: string;
   title: string;
@@ -82,9 +95,37 @@ export const projects: IProject[] = [
     ],
     plans: [p2_plan1],
     location: 'גן שורק',
-    client: 'זוג + 1.',
+    client: 'זוג + 1',
     isCompleted: true,
     constructionArea: 110,
+    favourite: true,
+  },
+  {
+    _id: '6723e461b0a875a1848156eb',
+    title: 'בית של חלומות, בים של חיים - מחכה להתגשם',
+    categories: ['privateHouses'],
+    description: `זוג מקסים עם ארבעה ילדים פנה אליי ללוות אותם בתכנון בית חלומותיהם בפרדס חנה הכפרית. 
+אחרי שנים של חיסכון ועבודה קשה, הם היו מוכנים להגשים את חלומם ולבנות בית פרטי, מרווח ומותאם בדיוק לצרכיהם.
+בית רחב ידיים, עם חדר לכל ילד, מרחב אישי לצד אזורים משפחתיים מחבקים, וחיבור טבעי בין הפנים לחוץ. התכנון שם דגש על אור, אוויר, זרימה טבעית ונוחות מקסימלית - בית שמרגיש חם, פונקציונלי ומלא השראה.
+בעקבות המצב הביטחוני בארץ, הפרויקט טרם הסתיים, אך התכנון כבר מוכן ומחכה לרגע שבו המשפחה תוכל סוף סוף לראות את החלום שלהם קורם עור וגידים
+זהו בית של אהבה, שורשים, התחלה חדשה - ומקום שבו כל דלת שנפתחת תספר על העתיד שנבנה כאן, ביום הנכון.`,
+    mainImage: p3_imgMain,
+    images: [
+      p3_img1,
+      p3_img2,
+      p3_img3,
+      p3_img4,
+      p3_img5,
+      p3_img6,
+      p3_img7,
+      p3_img8,
+      p3_img9,
+    ],
+    plans: [p3_plan1, p3_plan2],
+    location: 'פרדס חנה',
+    client: 'זוג + 4',
+    isCompleted: false,
+    constructionArea: 160,
     favourite: true,
   },
 ];
