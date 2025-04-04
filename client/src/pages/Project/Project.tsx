@@ -6,6 +6,7 @@ import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Fragment, useEffect } from 'react';
 import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
+import VideoComponent from '@/components/VideoComponent';
 
 export default function Project() {
   const { state } = useLocation();
@@ -86,12 +87,24 @@ export default function Project() {
         </div>
       </div>
 
+      {/* סרטונים */}
+      {project.videos && (
+        <div className='py-10'>
+          <h3 className='subheading mb-5'>סרטונים</h3>
+          <div className='flex w-full flex-col flex-wrap justify-evenly gap-2 sm:flex-row'>
+            {project.videos.map((v) => (
+              <VideoComponent src={v} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* תוכניות */}
       <div className='py-10'>
         <h3 className='subheading mb-5'>תוכניות</h3>
         <ProjectImagePlanShowcase
           imageClassname='w-full'
-          containerClassname=' flex w-full flex-col sm:flex-row justify-start gap-2'
+          containerClassname='flex w-full flex-col sm:flex-row justify-start gap-2'
           arr={project.plans}
         />
       </div>

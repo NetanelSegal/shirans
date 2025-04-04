@@ -33,6 +33,17 @@ import p3_imgMain from './project3/images/main.jpg';
 import p3_plan1 from './project3/plans/1.jpg';
 import p3_plan2 from './project3/plans/2.jpg';
 
+import p4_img1 from './project4/images/1.jpg';
+import p4_img2 from './project4/images/2.jpg';
+import p4_img3 from './project4/images/3.jpg';
+import p4_img4 from './project4/images/4.jpg';
+import p4_img5 from './project4/images/5.jpg';
+import p4_img6 from './project4/images/6.jpg';
+import p4_imgMain from './project4/images/1.jpg';
+import p4_plan1 from './project4/plans/2.jpg';
+import p4_video1 from './project4/videos/1.mov';
+import p4_video2 from './project4/videos/2.mov';
+
 export interface IProject {
   _id: string;
   title: string;
@@ -41,6 +52,7 @@ export interface IProject {
   mainImage: string;
   images: string[];
   plans: string[];
+  videos?: string[];
   location: string;
   client: string;
   isCompleted: boolean;
@@ -127,5 +139,23 @@ export const projects: IProject[] = [
     isCompleted: false,
     constructionArea: 160,
     favourite: true,
+  },
+  {
+    _id: '6723e461b0a875a184815123',
+    categories: ['privateHouses'],
+    client: 'זוג + 2',
+    isCompleted: true,
+    constructionArea: 130,
+    favourite: true,
+    location: 'גן שורק',
+    title: 'להעניק חיים חדשים לבית של סבתא',
+    description: `יש בתים שמספרים היסטוריה, שנושאים איתם זיכרונות, דור אחרי דור. הזוג המקסים הזה, יחד עם שני ילדיהם, קיבלו לידיהם את ביתה הישן של סבתא - בית בן 100 שנה, מלא באופי, אבל גם במציאות לא פשוטה: קירות מתפוררים, גג לא יציב וחללים צפופים שלא תואמים את צורכי המשפחה המודרנית.
+החלום שלהם היה ברור - להפיח חיים חדשים בבית הזה, לשמר את הנשמה שבו, אבל להפוך אותו לבית מרווח, מואר ופונקציונלי שיתאים לשגרת החיים שלהם. תכננתי עבורם בית שעונה בדיוק על הצרכים שלהם: לכל ילד חדר משלו, משרד ביתי שישתלב בנוחות בחלל, מרפסת רחבה שפונה אל הנוף המרהיב של גן שורק, ושילוב חכם בין ישן לחדש - בין זיכרונות העבר לאורח החיים העכשווי.
+זהו פרויקט שמביא איתו לא רק תכנון ועיצוב, אלא גם רגש עמוק וכבוד לשורשים המשפחתיים. בית חדש שקם מתוך הישן, עם כל מה שחשוב באמת: מרחב, אור, אוויר - והרבה אהבה.
+`,
+    plans: [p4_plan1],
+    images: [p4_img1, p4_img2, p4_img3, p4_img4, p4_img5, p4_img6],
+    videos: [p4_video1, p4_video2],
+    mainImage: p4_imgMain,
   },
 ];

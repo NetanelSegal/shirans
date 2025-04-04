@@ -1,4 +1,5 @@
 import Image from '@/components/ui/Image';
+
 interface IImageClickModalProps {
   img: string;
   onClick?: () => void;

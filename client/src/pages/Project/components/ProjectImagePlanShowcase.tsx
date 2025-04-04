@@ -67,7 +67,7 @@ export default function ProjectImagePlanShowcase({
       <div className={containerClassname}>
         {arr.map((item, index) => (
           <ImageClickModal
-            imageClassname={`${singleImageClassname} ${arr.length % 2 == 1 ? (index + 1 === arr.length ? 'sm:basis-auto grow' : '') : ''}`} // if lenght is odd, the last image should be full width
+            imageClassname={`${singleImageClassname} ${arr.length % 2 == 1 ? (index + 1 === arr.length ? 'sm:basis-auto grow' : '') : ''}`} // if length is odd, the last image should be full width
             onClick={() => setCount(index)}
             img={item}
             key={item}
@@ -87,6 +87,7 @@ export default function ProjectImagePlanShowcase({
           alt={`${arr[count]}`}
           className='size-full max-h-[80vh] sm:translate-y-6'
         />
+
         <div className='absolute bottom-2 left-0 right-0 flex items-center justify-center gap-1 sm:translate-y-6 md:bottom-5'>
           {arr.map((_, index) => (
             <div
