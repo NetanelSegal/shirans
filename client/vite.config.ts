@@ -9,5 +9,5 @@ export default defineConfig({
       '@': '/src',
     },
   },
-  assetsInclude: ['**/*.MOV'],
+  assetsInclude: ['**/*.MOV', '**/*.mov'],
 });
