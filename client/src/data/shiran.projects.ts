@@ -41,8 +41,8 @@ import p4_img5 from './project4/images/5.jpg';
 import p4_img6 from './project4/images/6.jpg';
 import p4_imgMain from './project4/images/1.jpg';
 import p4_plan1 from './project4/plans/2.jpg';
-import p4_video1 from './project4/videos/1.mov';
-import p4_video2 from './project4/videos/2.mov';
+import p4_video1 from './project4/videos/1.mp4';
+import p4_video2 from './project4/videos/2.mp4';
 
 export interface IProject {
   _id: string;
