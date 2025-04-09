@@ -41,8 +41,6 @@ import p4_img5 from './project4/images/5.jpg';
 import p4_img6 from './project4/images/6.jpg';
 import p4_imgMain from './project4/images/1.jpg';
 import p4_plan1 from './project4/plans/2.jpg';
-import p4_video1 from './project4/videos/1.mp4';
-import p4_video2 from './project4/videos/2.mp4';
 
 export interface IProject {
   _id: string;
@@ -155,7 +153,10 @@ export const projects: IProject[] = [
 `,
     plans: [p4_plan1],
     images: [p4_img1, p4_img2, p4_img3, p4_img4, p4_img5, p4_img6],
-    videos: [p4_video1, p4_video2],
+    videos: [
+      'https://www.youtube.com/embed/XPgwUDZXKkk',
+      'https://www.youtube.com/embed/Kn7jyqiiHck',
+    ],
     mainImage: p4_imgMain,
   },
 ];
