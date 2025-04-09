@@ -6,7 +6,6 @@ import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Fragment, useEffect } from 'react';
 import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
-import VideoComponent from '@/components/VideoComponent';
 
 export default function Project() {
   const { state } = useLocation();
@@ -87,18 +86,6 @@ export default function Project() {
         </div>
       </div>
 
-      {/* סרטונים */}
-      {project.videos && (
-        <div className='py-10'>
-          <h3 className='subheading mb-5'>סרטונים</h3>
-          <div className='flex w-full flex-col flex-wrap justify-evenly gap-2 sm:flex-row'>
-            {project.videos.map((v) => (
-              <VideoComponent src={v} />
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* תוכניות */}
       <div className='py-10'>
         <h3 className='subheading mb-5'>תוכניות</h3>
@@ -108,6 +95,23 @@ export default function Project() {
           arr={project.plans}
         />
       </div>
+
+      {/* סרטונים */}
+      {project.videos && (
+        <div className='py-10'>
+          <h3 className='subheading mb-5'>סרטונים</h3>
+          <div className='flex w-full flex-wrap justify-center gap-2 sm:flex-row'>
+            {project.videos.map((src) => (
+              <iframe
+                key={src}
+                src={`${src}?autoplay=1&mute=1&controls=0&loop=1`}
+                className='aspect-[9/16] w-72 rounded-2xl border-2 border-secondary shadow-[0_0_5px_0_rgba(0,0,0,0.2)]'
+                title='YouTube video player'
+              ></iframe>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* תמונות */}
       <div className='py-10'>
