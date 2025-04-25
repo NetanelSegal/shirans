@@ -14,8 +14,9 @@ export default {
         'page-2xl': '20rem',
       },
       colors: {
-        'primary': '#002b49',
-        'secondary': '#ccbebc',
+        'primary': '#152b44',
+        // 'secondary': '#F0EDE4', light color option
+        'secondary': '#F2EDE9',
       },
     },
   },

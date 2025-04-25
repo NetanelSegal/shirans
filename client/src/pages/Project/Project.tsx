@@ -67,7 +67,9 @@ export default function Project() {
               </tr>
               <tr className='border-b-2 border-secondary'>
                 <td className='p-2 text-right'>שטח בנייה:</td>
-                <th className='p-2 text-right'> {project.constructionArea}</th>
+                <th className='p-2 text-right'>
+                  {project.constructionArea} מ"ר
+                </th>
               </tr>
               <tr className=''>
                 <td className='p-2 text-right'>מיקום:</td>
