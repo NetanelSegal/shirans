@@ -51,7 +51,6 @@ const Project = ({ project, i }: IProjectProps) => {
             ))}
           <Link
             to={`/projects/${project._id}`}
-            state={{ project }}
             className='font-semibold underline'
           >
             עוד על הפרויקט

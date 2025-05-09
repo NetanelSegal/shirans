@@ -6,7 +6,7 @@ export default function WhoIsShiranSection() {
   return (
     <section
       aria-labelledby='who-is-shiran-heading'
-      className='py-section-all flex w-full flex-col items-end md:flex-row'
+      className='py-section-all flex w-full flex-col items-end justify-center md:flex-row'
     >
       {/* image container */}
       <div className='basis-1/2 self-center'>

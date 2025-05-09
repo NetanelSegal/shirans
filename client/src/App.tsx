@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy } from 'react';
 import ScreenProvider from './contexts/ScreenProvider';
+import { ProjectsProvider } from './contexts/ProjectsContext';
 
 const Layout = lazy(() => import('./components/Layout'));
 const Home = lazy(() => import('./pages/Home'));
@@ -10,9 +11,11 @@ const Project = lazy(() => import('./pages/Project'));
 
 function App() {
   return (
-    <ScreenProvider>
-      <AppRoutes />
-    </ScreenProvider>
+    <ProjectsProvider>
+      <ScreenProvider>
+        <AppRoutes />
+      </ScreenProvider>
+    </ProjectsProvider>
   );
 }
 

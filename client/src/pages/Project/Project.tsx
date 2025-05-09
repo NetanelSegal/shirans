@@ -1,28 +1,19 @@
 import { CategoryLabel } from '@/components/CategoryLabel';
 import FavoriteProjects from '@/components/FavoriteProjects';
 import ImageScaleHover from '@/components/ui/ImageScaleHover';
-import { IProject } from '@/data/shiran.projects';
 import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Fragment, useEffect } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
 import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
+import { useProjects } from '@/contexts/ProjectsContext';
+import { Fragment } from 'react/jsx-runtime';
 
 export default function Project() {
-  const { state } = useLocation();
+  const { id } = useParams<{ id: string }>();
+  const { projects } = useProjects();
 
-  const nav = useNavigate();
+  const project = projects.find((p) => p._id === id);
 
-  useEffect(() => {
-    if (!state) {
-      nav('/projects');
-    }
-  }, []);
-
-  if (!state) {
-    return null;
-  }
-
-  const { project } = state as { project: IProject };
+  if (!project) return <Navigate to='/projects' />;
 
   return (
     <>
