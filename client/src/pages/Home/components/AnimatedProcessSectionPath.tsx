@@ -32,7 +32,7 @@ const AnimatedProcessSectionPath = ({
       <mask id={`mask-${startPoint.y}`}>
         <path
           ref={pathRef}
-          className='transition-all duration-500 ease-in-out'
+          className='transition-all duration-500'
           d={initialPathData}
           stroke={`white`}
           strokeWidth='4'
