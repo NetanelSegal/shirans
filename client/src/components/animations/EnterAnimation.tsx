@@ -1,16 +1,39 @@
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
 
-interface IEnterAnimationProps {
+interface CommonProps {
   children: ReactNode;
   opacity?: boolean;
   translateY?: boolean;
+  duration?: number;
+
+  delay?: number;
 }
+
+interface AnimateWhileInViewProps {
+  dontAnimateWhileInView?: never;
+  runAnimation?: never;
+  once?: boolean;
+}
+
+interface NotAnimateWhileInViewProps {
+  dontAnimateWhileInView?: boolean;
+  runAnimation?: boolean;
+  once?: never;
+}
+
+type IEnterAnimationProps = CommonProps &
+  (AnimateWhileInViewProps | NotAnimateWhileInViewProps);
 
 export default function EnterAnimation({
   children,
   opacity = true,
   translateY = true,
+  duration = 1,
+  once = true,
+  delay = 0,
+  runAnimation,
+  dontAnimateWhileInView,
 }: IEnterAnimationProps) {
   const animationVariants = {
     initial: {
@@ -23,13 +46,16 @@ export default function EnterAnimation({
     },
   };
 
+  console.log('runAnimation', runAnimation);
+
   return (
     <motion.div
       variants={animationVariants}
       initial='initial'
-      whileInView='animate'
-      viewport={{ once: true }}
-      transition={{ duration: 1 }}
+      {...(dontAnimateWhileInView
+        ? { animate: runAnimation ? 'animate' : 'initial' }
+        : { whileInView: 'animate', viewport: { once } })}
+      transition={{ duration, delay }}
     >
       {children}
     </motion.div>
