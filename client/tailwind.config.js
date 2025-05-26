@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       spacing: {
@@ -14,11 +11,11 @@ export default {
         'page-2xl': '20rem',
       },
       colors: {
-        'primary': '#152b44',
+        primary: '#152b44',
         // 'secondary': '#F0EDE4', light color option
-        'secondary': '#F2EDE9',
+        secondary: '#F2EDE9',
       },
     },
   },
   plugins: [],
-}
+};
