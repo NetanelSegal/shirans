@@ -6,7 +6,7 @@ import FooterNavigation from './components/FooterNavigation';
 export default function Footer() {
   return (
     <footer className='px-page-all py-section-all bg-primary'>
-      <div className='mb-5 xl:flex'>
+      <div className='mb-5 mt-6 xl:flex'>
         <h2 className='heading -mt-4 mb-2 pl-5 text-white xl:w-1/3'>
           להשארת פרטים לחזרה
         </h2>

@@ -14,7 +14,7 @@ export default function Projects() {
       </div>
       {projectsData.map((e: IProject, i) => (
         <EnterAnimation key={e._id}>
-          <div className={`${i !== 0 ? 'py-20' : 'pb-20'}`}>
+          <div className={`${i !== 0 ? 'py-5 lg:py-10' : 'py-5 lg:pb-10'}`}>
             <Project project={e} i={i} />
           </div>
         </EnterAnimation>
