@@ -8,16 +8,15 @@ import p1_img7 from './project1/images/7.png';
 import p1_imgMain from './project1/images/main.png';
 import p1_plan1 from './project1/plans/1.png';
 
-import p2_img1 from './project2/images/1.png';
+import p2_img1 from './project2/images/1.jpg';
 import p2_img2 from './project2/images/2.png';
-import p2_img3 from './project2/images/3.png';
+import p2_img3 from './project2/images/3.jpg';
 import p2_img4 from './project2/images/4.png';
-import p2_img5 from './project2/images/5.png';
+import p2_img5 from './project2/images/5.jpg';
 import p2_img6 from './project2/images/6.png';
-import p2_img7 from './project2/images/7.png';
+import p2_img7 from './project2/images/7.jpg';
 import p2_img8 from './project2/images/8.png';
-import p2_img9 from './project2/images/9.png';
-import p2_imgMain from './project2/images/main.png';
+import p2_imgMain from './project2/images/main.jpg';
 import p2_plan1 from './project2/plans/1.png';
 
 import p3_img1 from './project3/images/1.jpg';
@@ -101,7 +100,6 @@ export const projects: IProject[] = [
       p2_img6,
       p2_img7,
       p2_img8,
-      p2_img9,
     ],
     plans: [p2_plan1],
     location: 'גן שורק',
