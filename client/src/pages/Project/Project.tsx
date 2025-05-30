@@ -6,6 +6,7 @@ import { Navigate, useParams } from 'react-router-dom';
 import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
 import { useProjects } from '@/contexts/ProjectsContext';
 import { Fragment } from 'react/jsx-runtime';
+import BeforeAfterImage from '@/components/ui/BeforeAfterImage/BeforeAfterImage';
 
 export default function Project() {
   const { id } = useParams<{ id: string }>();
