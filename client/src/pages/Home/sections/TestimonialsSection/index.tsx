@@ -1,3 +1,3 @@
 // src/components/FeedbackCarousel/index.ts
-import FeedbackCarousel from './FeedbackCarousel';
+import FeedbackCarousel from './TestimonialsSection';
 export default FeedbackCarousel;

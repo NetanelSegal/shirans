@@ -4,7 +4,7 @@ import WhoIsShiranSection from './sections/WhoIsShiranSection';
 import FavoriteProjectsSection from './sections/FavoriteProjectsSection';
 import ProcessSection from './sections/ProcessSection';
 import ServicesSection from './sections/ServicesSection';
-import FeedbackCarousel from '@/pages/Home/sections/FeedbackCarousel';
+import FeedbackCarousel from '@/pages/Home/sections/TestimonialsSection';
 
 export default function Home() {
   return (
@@ -22,10 +22,10 @@ export default function Home() {
         <ServicesSection />
       </EnterAnimation>
       <EnterAnimation>
-        <ProcessSection />
+        <FeedbackCarousel />
       </EnterAnimation>
       <EnterAnimation>
-        <FeedbackCarousel feedbacks={feedbacks} />
+        <ProcessSection />
       </EnterAnimation>
     </>
   );
