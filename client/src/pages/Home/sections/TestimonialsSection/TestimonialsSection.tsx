@@ -2,10 +2,8 @@ import Testimonials from '../../components/Testimonials';
 
 const TestimonialsSection = () => {
   return (
-    <section
-      className={`py-section-all breakout-x-padding relative overflow-hidden`}
-    >
-      <h2 className='heading mb-4 text-center font-semibold'>
+    <section className={`breakout-x-padding relative overflow-hidden py-12`}>
+      <h2 className='heading my-6 text-center font-semibold'>
         מה אומרים עלינו
       </h2>
 
