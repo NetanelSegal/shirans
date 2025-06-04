@@ -83,8 +83,8 @@ export default function Project() {
       <div className='py-10'>
         <h3 className='subheading mb-5'>תוכניות</h3>
         <ProjectImagePlanShowcase
-          imageClassname='w-full'
-          containerClassname='flex w-full flex-col sm:flex-row justify-start gap-2'
+          imageClassname='shrink-0 overflow-hidden sm:basis-[calc(50%-4px)]'
+          containerClassname='flex w-full flex-wrap justify-start gap-2 md:flex-row md:overflow-x-auto justify-between'
           arr={project.plans}
         />
       </div>

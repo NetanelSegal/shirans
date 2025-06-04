@@ -58,7 +58,7 @@ export default function E_ServicesSection() {
     >
       <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
         <motion.h2
-          className='my-6 text-center text-3xl font-bold md:mb-16 md:text-4xl'
+          className='heading mb-4 text-center font-semibold'
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

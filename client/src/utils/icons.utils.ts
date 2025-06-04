@@ -9,7 +9,7 @@ import newspaper from '@/assets/icons/newspaper-solid.svg';
 import archway from '@/assets/icons/archway-solid.svg';
 import city from '@/assets/icons/city-solid.svg';
 import comments from '@/assets/icons/comments-solid.svg';
-import { ServiceName } from '@/pages/Home/sections/E_ServicesSection';
+import { ServiceName } from '@/pages/Home/sections/ServicesSection';
 
 const servicesIcons: Record<ServiceName, string> = {
   'private-construction': house,

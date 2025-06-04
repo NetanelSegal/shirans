@@ -46,8 +46,6 @@ export default function EnterAnimation({
     },
   };
 
-  console.log('runAnimation', runAnimation);
-
   return (
     <motion.div
       variants={animationVariants}

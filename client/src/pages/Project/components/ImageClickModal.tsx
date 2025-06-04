@@ -14,7 +14,6 @@ export default function ImageClickModal({
   return (
     <Image
       onClick={onClick}
-      key={img}
       src={img}
       alt={`${img}`}
       className={`${imageClassname}`}
