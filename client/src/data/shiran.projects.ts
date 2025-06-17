@@ -8,15 +8,18 @@ import p1_img7 from './project1/images/7.png';
 import p1_imgMain from './project1/images/main.png';
 import p1_plan1 from './project1/plans/1.png';
 
-import p2_img1 from './project2/images/1.jpg';
+import p2_img1 from './project2/images/1.png';
 import p2_img2 from './project2/images/2.png';
-import p2_img3 from './project2/images/3.jpg';
+import p2_img3 from './project2/images/3.png';
 import p2_img4 from './project2/images/4.png';
-import p2_img5 from './project2/images/5.jpg';
+import p2_img5 from './project2/images/5.png';
 import p2_img6 from './project2/images/6.png';
-import p2_img7 from './project2/images/7.jpg';
+import p2_img7 from './project2/images/7.png';
 import p2_img8 from './project2/images/8.png';
-import p2_imgMain from './project2/images/main.jpg';
+import p2_img9 from './project2/images/9.png';
+import p2_img10 from './project2/images/10.png';
+import p2_img11 from './project2/images/11.png';
+import p2_imgMain from './project2/images/main.png';
 import p2_plan1 from './project2/plans/1.png';
 
 import p3_img1 from './project3/images/1.jpg';
@@ -33,22 +36,36 @@ import p3_plan1 from './project3/plans/1.jpg';
 import p3_plan2 from './project3/plans/2.jpg';
 
 import p4_img1 from './project4/images/1.jpg';
-import p4_img2 from './project4/images/2.jpg';
+import p4_img2 from './project4/images/2.png';
 import p4_img3 from './project4/images/3.jpg';
-import p4_img4 from './project4/images/4.jpg';
+import p4_img4 from './project4/images/4.png';
 import p4_img5 from './project4/images/5.jpg';
-import p4_img6 from './project4/images/6.jpg';
-import p4_imgMain from './project4/images/1.jpg';
+import p4_img6 from './project4/images/6.png';
+import p4_img7 from './project4/images/7.jpg';
+import p4_img8 from './project4/images/8.png';
+import p4_imgMain from './project4/images/main.png';
 import p4_plan1 from './project4/plans/2.jpg';
+
+import p5_img1 from './project5/images/1.jpg';
+import p5_img2 from './project5/images/2.jpg';
+import p5_img3 from './project5/images/3.jpg';
+import p5_img4 from './project5/images/4.jpg';
+import p5_imgMain from './project5/images/main.jpg';
+
+import p6_img1 from './project6/images/1.jpg';
+import p6_img2 from './project6/images/2.png';
+import p6_img3 from './project6/images/3.jpg';
+import p6_imgMain from './project6/images/main.jpg';
+import { CategoryUrlCode } from './shiran.categories';
 
 export interface IProject {
   _id: string;
   title: string;
-  categories: string[];
+  categories: CategoryUrlCode[];
   description: string;
   mainImage: string;
   images: string[];
-  plans: string[];
+  plans?: string[];
   videos?: string[];
   location: string;
   client: string;
@@ -66,7 +83,7 @@ export interface IProject {
 
 export const projects: IProject[] = [
   {
-    _id: '6723e461b0a875a1848156e9',
+    _id: '1',
     title: 'תכנון ובנייה של בית מגורים לזוג צעיר במושב ילדותם',
     categories: ['privateHouses'],
     description: `זוג צעיר ומקסים הגיע למשרדי לאחר תהליך כואב ומתסכל עם אדריכלית קודמת, שלא הצליחה לפתור את האתגרים שעמדו בפניהם.
@@ -83,7 +100,7 @@ export const projects: IProject[] = [
     favourite: true,
   },
   {
-    _id: '6723e461b0a875a1848156ea',
+    _id: '2',
     title: 'משפחה, חיבור ועיצוב שמספר סיפור',
     categories: ['privateHouses'],
     description: `זוג צעיר ומקסים, שכבר זכיתי לתכנן עבורם את ביתם הראשון, פנו אליי שוב עם בקשה ייחודית ומלאת משמעות: לתכנן ולעצב עבורם בית חדש, מחובר לבית של אמא אך עם כניסה נפרדת ועצמאות מלאה.
@@ -100,6 +117,9 @@ export const projects: IProject[] = [
       p2_img6,
       p2_img7,
       p2_img8,
+      p2_img9,
+      p2_img10,
+      p2_img11,
     ],
     plans: [p2_plan1],
     location: 'גן שורק',
@@ -109,7 +129,7 @@ export const projects: IProject[] = [
     favourite: true,
   },
   {
-    _id: '6723e461b0a875a1848156eb',
+    _id: '3',
     title: 'בית של חלומות, בים של חיים - מחכה להתגשם',
     categories: ['privateHouses'],
     description: `זוג מקסים עם ארבעה ילדים פנה אליי ללוות אותם בתכנון בית חלומותיהם בפרדס חנה הכפרית. 
@@ -137,7 +157,7 @@ export const projects: IProject[] = [
     favourite: true,
   },
   {
-    _id: '6723e461b0a875a184815123',
+    _id: '4',
     categories: ['privateHouses'],
     client: 'זוג + 2',
     isCompleted: true,
@@ -150,11 +170,48 @@ export const projects: IProject[] = [
 זהו פרויקט שמביא איתו לא רק תכנון ועיצוב, אלא גם רגש עמוק וכבוד לשורשים המשפחתיים. בית חדש שקם מתוך הישן, עם כל מה שחשוב באמת: מרחב, אור, אוויר - והרבה אהבה.
 `,
     plans: [p4_plan1],
-    images: [p4_img1, p4_img2, p4_img3, p4_img4, p4_img5, p4_img6],
+    images: [
+      p4_img1,
+      p4_img2,
+      p4_img3,
+      p4_img4,
+      p4_img5,
+      p4_img6,
+      p4_img7,
+      p4_img8,
+    ],
     videos: [
       'https://www.youtube.com/embed/XPgwUDZXKkk',
       'https://www.youtube.com/embed/Kn7jyqiiHck',
     ],
     mainImage: p4_imgMain,
+  },
+  {
+    _id: '5',
+    categories: ['privateHouses'],
+    client: 'זוג',
+    isCompleted: true,
+    constructionArea: 130,
+    favourite: true,
+    location: 'בנימינה',
+    title: 'בית הסבא בבנימינה - חידוש ממוקד בלב של בית',
+    description: `בכל בית יש זיכרונות, אבל בבית של סבא - יש שורשים.
+הבית הישן בבנימינה, שעמד במשך עשרות שנים עם כל ההיסטוריה והקסם שבו, עבר חידוש מדויק שהתמקד בלב הפועם של כל בית: המטבח והמקלחת.
+`,
+    images: [p5_img1, p5_img2, p5_img3, p5_img4],
+    mainImage: p5_imgMain,
+  },
+  {
+    _id: '6',
+    categories: ['privateHouses'],
+    client: 'דירת שותפים',
+    isCompleted: true,
+    constructionArea: 130,
+    favourite: true,
+    location: 'תל אביב',
+    title: 'דירת שותפים ישנה בלב תל אביב - מהפך צעיר, פרקטי ומרשים',
+    description: `דירה תל אביבית ישנה, בקומה ראשונה בלי מעלית, עם מטבח מתקלף, קירות סדוקים ומרווחים צפופים - הפכה תוך זמן קצר לדירת שותפים עדכנית, מרווחת ונעימה שכולם רוצים לגור בה.`,
+    images: [p6_img1, p6_img2, p6_img3],
+    mainImage: p6_imgMain,
   },
 ];

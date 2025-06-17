@@ -80,14 +80,16 @@ export default function Project() {
       </div>
 
       {/* תוכניות */}
-      <div className='py-10'>
-        <h3 className='subheading mb-5'>תוכניות</h3>
-        <ProjectImagePlanShowcase
-          imageClassname='shrink-0 overflow-hidden sm:basis-[calc(50%-4px)]'
-          containerClassname='flex w-full flex-wrap justify-start gap-2 md:flex-row md:overflow-x-auto justify-between'
-          arr={project.plans}
-        />
-      </div>
+      {project.plans && (
+        <div className='py-10'>
+          <h3 className='subheading mb-5'>תוכניות</h3>
+          <ProjectImagePlanShowcase
+            imageClassname='shrink-0 overflow-hidden sm:basis-[calc(50%-4px)]'
+            containerClassname='flex w-full flex-wrap justify-start gap-2 md:flex-row md:overflow-x-auto justify-between'
+            arr={project.plans}
+          />
+        </div>
+      )}
 
       {/* סרטונים */}
       {project.videos && (

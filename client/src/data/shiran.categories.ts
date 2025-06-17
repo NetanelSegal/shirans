@@ -1,16 +1,11 @@
+export type CategoryUrlCode = 'privateHouses' | 'apartments' | 'publicSpaces';
+
 export interface ICategory {
   _id: {
     $oid: string;
   };
   title: string;
-  urlCode: string;
-  createdAt: {
-    $date: string;
-  };
-  updatedAt: {
-    $date: string;
-  };
-  __v: number;
+  urlCode: CategoryUrlCode;
 }
 export const categories: ICategory[] = [
   {
@@ -19,13 +14,6 @@ export const categories: ICategory[] = [
     },
     title: 'תכנון ועיצוב בתים',
     urlCode: 'privateHouses',
-    createdAt: {
-      $date: '2024-02-09T08:20:34.023Z',
-    },
-    updatedAt: {
-      $date: '2024-02-09T08:20:34.023Z',
-    },
-    __v: 0,
   },
   {
     _id: {
@@ -33,13 +21,6 @@ export const categories: ICategory[] = [
     },
     title: 'שיפוץ ועיצוב דירות',
     urlCode: 'apartments',
-    createdAt: {
-      $date: '2024-02-09T08:21:21.739Z',
-    },
-    updatedAt: {
-      $date: '2024-02-09T08:21:21.739Z',
-    },
-    __v: 0,
   },
   {
     _id: {
@@ -47,20 +28,13 @@ export const categories: ICategory[] = [
     },
     title: 'תכנון ועיצוב חללים מסחריים',
     urlCode: 'publicSpaces',
-    createdAt: {
-      $date: '2024-02-09T08:21:45.644Z',
-    },
-    updatedAt: {
-      $date: '2024-02-09T08:21:45.644Z',
-    },
-    __v: 0,
   },
 ];
 
 export const categoriesCodeToTitleMap = categories.reduce(
-  (acc: Record<string, string>, e) => {
+  (acc: Record<CategoryUrlCode, string>, e) => {
     acc[e.urlCode] = e.title;
     return acc;
   },
-  {},
+  {} as Record<CategoryUrlCode, string>,
 );
