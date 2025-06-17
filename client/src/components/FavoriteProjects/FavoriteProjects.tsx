@@ -1,22 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import DataCarousel from '../DataCarousel';
 import Image from '../ui/Image';
-import { projects } from '@/data/shiran.projects';
-
-interface IProject {
-  _id: string;
-  title: string;
-  categories: string[];
-  description: string;
-  mainImage: string;
-  images: string[];
-  plans: string[];
-  location: string;
-  client: string;
-  isCompleted: boolean;
-  constructionArea: number;
-  favourite: boolean;
-}
+import { projects, IProject } from '@/data/shiran.projects';
 
 const data: IProject[] = projects.filter((p) => p.favourite);
 
