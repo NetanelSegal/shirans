@@ -1,4 +1,5 @@
-import { forwardRef } from 'react';
+import { useScroll } from 'motion/react';
+import { forwardRef, useEffect } from 'react';
 
 interface IProcessItemSectionProps {
   shapeSrc: string;
@@ -34,7 +35,6 @@ const ProcessItemSection = forwardRef<
         src={shapeSrc}
         alt=''
       />
-      {/* TODO add shape for each item */}
     </div>
   );
 });

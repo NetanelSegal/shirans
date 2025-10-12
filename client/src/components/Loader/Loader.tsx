@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, Transition } from 'motion/react';
 
 const LoadingDot = {
   display: 'block',
@@ -37,9 +37,10 @@ const DotVariants = {
   },
 };
 
-const DotTransition = {
+const DotTransition: Transition = {
   duration: 0.5,
-  yoyo: Infinity,
+  repeat: Infinity,
+  repeatType: 'mirror',
   ease: 'easeInOut',
 };
 

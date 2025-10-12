@@ -3,7 +3,7 @@ import ProcessItemSection from '../components/ProcessItemSection.tsx';
 import { Fragment, useRef } from 'react';
 import AnimatedProcessSectionPath from '../components/AnimatedProcessSectionPath.tsx';
 import useGetProcessCenters from '../hooks/useGetProcessCenters.tsx';
-import usePathPrecatgentInView from '../hooks/usePathPrecatgentInView.tsx';
+import usePathPrecentageInView from '../hooks/usePathPrecentageInView.tsx';
 import { Link } from 'react-router-dom';
 import shapeSrc1 from '../assets/processShapes/1.svg';
 import shapeSrc2 from '../assets/processShapes/2.svg';
@@ -18,7 +18,7 @@ export default function D_ProcessSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const { centers } = useGetProcessCenters(shapesRefs.current, sectionRef);
-  const { pathsPrecentInView } = usePathPrecatgentInView(svgRef, [centers]);
+  const { pathsPrecentageInView } = usePathPrecentageInView(svgRef, [centers]);
 
   return (
     <section ref={sectionRef} className='py-section-all relative'>
@@ -52,7 +52,7 @@ export default function D_ProcessSection() {
                 key={c.y}
                 startPoint={c}
                 endPoint={centers[i + 1]}
-                strokeDashoffsetPercentage={pathsPrecentInView[i] || 0}
+                strokeDashoffsetPercentage={pathsPrecentageInView[i] || 0}
               />
             );
           })}

@@ -3,6 +3,7 @@ import { IProject } from '@/data/shiran.projects';
 import ImageScaleHover from '@/components/ui/ImageScaleHover';
 import { CategoryLabel } from '@/components/CategoryLabel';
 import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
+import { Fragment } from 'react/jsx-runtime';
 interface IProjectProps {
   project: IProject;
   i: number;
@@ -44,10 +45,10 @@ const Project = ({ project, i }: IProjectProps) => {
             .trim()
             .split('\n')
             .map((line) => (
-              <>
+              <Fragment key={line}>
                 {line}
                 <br />
-              </>
+              </Fragment>
             ))}
           <Link
             to={`/projects/${project._id}`}

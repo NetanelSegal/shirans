@@ -1,4 +1,4 @@
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView } from 'motion/react';
 import getIcon from '@/utils/icons.utils';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import { useRef } from 'react';
