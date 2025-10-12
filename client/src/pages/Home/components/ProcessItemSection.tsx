@@ -1,5 +1,4 @@
-import { useScroll } from 'motion/react';
-import { forwardRef, useEffect } from 'react';
+import { forwardRef } from 'react';
 
 interface IProcessItemSectionProps {
   shapeSrc: string;
