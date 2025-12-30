@@ -23,7 +23,7 @@ export default function FavoriteProjects() {
                 key={_id}
                 draggable='false'
                 className='size-full object-cover object-center transition-all duration-300 ease-in-out hover:scale-105'
-                src={`${mainImage}`}
+                src={mainImage}
                 alt=''
               />
             </Link>
