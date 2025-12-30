@@ -4,7 +4,6 @@ import p1_img3 from './project1/images/3.png';
 import p1_img4 from './project1/images/4.png';
 import p1_img5 from './project1/images/5.png';
 import p1_img6 from './project1/images/6.png';
-import p1_img7 from './project1/images/7.png';
 import p1_imgMain from './project1/images/main.png';
 import p1_plan1 from './project1/plans/1.png';
 
@@ -91,7 +90,7 @@ export const projects: IProject[] = [
 התמודדנו עם אתגרים לא פשוטים: שטחי בנייה מוגבלים מול רצונות רבים, מציאת קבלן בחודשי המלחמה הראשונים, עליית מחירים מתמדת, ודרישות מורכבות שהביאו עמן חששות.
 בעזרת תכנון מדויק, חשיבה יצירתית ושיתוף פעולה מלא, הצלחתי לפתור את כל הבעיות שלא קיבלו מענה לפני כן. בסופו של דבר, בנינו עבורם בית שמגלם את כל מה שחלמו עליו - מקום חמים, פונקציונלי ומיוחד, שמשקף את האישיות והחלומות שלהם`,
     mainImage: p1_imgMain,
-    images: [p1_img1, p1_img2, p1_img3, p1_img4, p1_img5, p1_img6, p1_img7],
+    images: [p1_img1, p1_img2, p1_img3, p1_img4, p1_img5, p1_img6],
     plans: [p1_plan1],
     location: 'שכניה',
     client: 'זוג + 1',
