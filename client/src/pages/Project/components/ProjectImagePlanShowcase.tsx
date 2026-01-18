@@ -3,13 +3,26 @@ import ImageClickModal from './ImageClickModal';
 import useCounter from '@/hooks/useCounter';
 import arrowIconSrc from '@/assets/icons/select-arrow.svg';
 import Image from '@/components/ui/Image';
+import type { ResponsiveImage } from '@/components/ui/Image';
 import Modal from '@/components/ui/Modal';
 
 interface IProjectImagePlanShowcaseProps {
-  arr: string[];
+  arr: (string | ResponsiveImage)[];
   containerClassname?: string;
   imageClassname?: string;
 }
+
+// Helper function to get a unique key from image (string or ResponsiveImage)
+const getImageKey = (
+  image: string | ResponsiveImage,
+  index: number,
+): string => {
+  if (typeof image === 'string') {
+    return image;
+  }
+  // For ResponsiveImage, use desktop URL as key
+  return image.desktop || `image-${index}`;
+};
 
 export default function ProjectImagePlanShowcase({
   arr,
@@ -70,23 +83,27 @@ export default function ProjectImagePlanShowcase({
             imageClassname={`${singleImageClassname} ${arr.length % 2 == 1 ? (index + 1 === arr.length ? 'sm:basis-auto grow' : '') : ''}`} // if length is odd, the last image should be full width
             onClick={() => setCount(index)}
             img={item}
-            key={item}
+            key={getImageKey(item, index)}
           />
         ))}
       </div>
 
       <Modal
         containerClassName='w-[70vw] sm:w-fit'
-        open={count !== -1}
+        open={count !== -1 && count >= 0 && count < arr.length}
         onBackdropClick={() => reset()}
         center
       >
-        <Image
-          key={arr[count]}
-          src={arr[count]}
-          alt={`${arr[count]}`}
-          className='size-full max-h-[80vh] sm:translate-y-6'
-        />
+        {count >= 0 && count < arr.length && arr[count] && (
+          <Image
+            key={getImageKey(arr[count], count)}
+            src={arr[count]}
+            alt={
+              typeof arr[count] === 'string' ? arr[count] : arr[count].desktop
+            }
+            className='size-full max-h-[80vh] sm:translate-y-6'
+          />
+        )}
 
         <div className='absolute bottom-2 left-0 right-0 flex items-center justify-center gap-1 sm:translate-y-6 md:bottom-5'>
           {arr.map((_, index) => (

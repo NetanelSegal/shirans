@@ -1,70 +1,510 @@
-import p1_img1 from './project1/images/1.png';
-import p1_img2 from './project1/images/2.png';
-import p1_img3 from './project1/images/3.png';
-import p1_img4 from './project1/images/4.png';
-import p1_img5 from './project1/images/5.png';
-import p1_img6 from './project1/images/6.png';
-import p1_imgMain from './project1/images/main.png';
-import p1_plan1 from './project1/plans/1.png';
-
-import p2_img1 from './project2/images/1.png';
-import p2_img2 from './project2/images/2.png';
-import p2_img3 from './project2/images/3.png';
-import p2_img4 from './project2/images/4.png';
-import p2_img5 from './project2/images/5.png';
-import p2_img6 from './project2/images/6.png';
-import p2_img7 from './project2/images/7.png';
-import p2_img8 from './project2/images/8.png';
-import p2_img9 from './project2/images/9.png';
-import p2_img10 from './project2/images/10.png';
-import p2_img11 from './project2/images/11.png';
-import p2_imgMain from './project2/images/main.png';
-import p2_plan1 from './project2/plans/1.png';
-
-import p3_img1 from './project3/images/1.jpg';
-import p3_img2 from './project3/images/2.jpg';
-import p3_img3 from './project3/images/3.jpg';
-import p3_img4 from './project3/images/4.jpg';
-import p3_img5 from './project3/images/5.jpg';
-import p3_img6 from './project3/images/6.jpg';
-import p3_img7 from './project3/images/7.jpg';
-import p3_img8 from './project3/images/8.jpg';
-import p3_img9 from './project3/images/9.jpg';
-import p3_imgMain from './project3/images/main.jpg';
-import p3_plan1 from './project3/plans/1.jpg';
-import p3_plan2 from './project3/plans/2.jpg';
-
-import p4_img1 from './project4/images/1.jpg';
-import p4_img2 from './project4/images/2.png';
-import p4_img3 from './project4/images/3.jpg';
-import p4_img4 from './project4/images/4.png';
-import p4_img5 from './project4/images/5.jpg';
-import p4_img6 from './project4/images/6.png';
-import p4_img7 from './project4/images/7.jpg';
-import p4_img8 from './project4/images/8.png';
-import p4_imgMain from './project4/images/main.png';
-import p4_plan1 from './project4/plans/2.jpg';
-
-import p5_img1 from './project5/images/1.jpg';
-import p5_img2 from './project5/images/2.jpg';
-import p5_img3 from './project5/images/3.jpg';
-import p5_img4 from './project5/images/4.jpg';
-import p5_imgMain from './project5/images/main.jpg';
-
-import p6_img1 from './project6/images/1.jpg';
-import p6_img2 from './project6/images/2.png';
-import p6_img3 from './project6/images/3.jpg';
-import p6_imgMain from './project6/images/main.jpg';
 import { CategoryUrlCode } from './shiran.categories';
+import type { ResponsiveImage } from '@/components/ui/Image';
 
+// Helper function ליצירת responsive image object
+const createResponsiveImage = (
+  mobile: string,
+  tablet: string,
+  desktop: string,
+): ResponsiveImage => ({
+  mobile,
+  tablet,
+  desktop,
+});
+
+// ========== PROJECT 1 ==========
+// Images
+import p1_img1_mobile from './project1/images/output/1_mobile.webp';
+import p1_img1_tablet from './project1/images/output/1_tablet.webp';
+import p1_img1_desktop from './project1/images/output/1_desktop.webp';
+const p1_img1 = createResponsiveImage(
+  p1_img1_mobile,
+  p1_img1_tablet,
+  p1_img1_desktop,
+);
+
+import p1_img2_mobile from './project1/images/output/2_mobile.webp';
+import p1_img2_tablet from './project1/images/output/2_tablet.webp';
+import p1_img2_desktop from './project1/images/output/2_desktop.webp';
+const p1_img2 = createResponsiveImage(
+  p1_img2_mobile,
+  p1_img2_tablet,
+  p1_img2_desktop,
+);
+
+import p1_img3_mobile from './project1/images/output/3_mobile.webp';
+import p1_img3_tablet from './project1/images/output/3_tablet.webp';
+import p1_img3_desktop from './project1/images/output/3_desktop.webp';
+const p1_img3 = createResponsiveImage(
+  p1_img3_mobile,
+  p1_img3_tablet,
+  p1_img3_desktop,
+);
+
+import p1_img4_mobile from './project1/images/output/4_mobile.webp';
+import p1_img4_tablet from './project1/images/output/4_tablet.webp';
+import p1_img4_desktop from './project1/images/output/4_desktop.webp';
+const p1_img4 = createResponsiveImage(
+  p1_img4_mobile,
+  p1_img4_tablet,
+  p1_img4_desktop,
+);
+
+import p1_img5_mobile from './project1/images/output/5_mobile.webp';
+import p1_img5_tablet from './project1/images/output/5_tablet.webp';
+import p1_img5_desktop from './project1/images/output/5_desktop.webp';
+const p1_img5 = createResponsiveImage(
+  p1_img5_mobile,
+  p1_img5_tablet,
+  p1_img5_desktop,
+);
+
+import p1_img6_mobile from './project1/images/output/6_mobile.webp';
+import p1_img6_tablet from './project1/images/output/6_tablet.webp';
+import p1_img6_desktop from './project1/images/output/6_desktop.webp';
+const p1_img6 = createResponsiveImage(
+  p1_img6_mobile,
+  p1_img6_tablet,
+  p1_img6_desktop,
+);
+
+import p1_imgMain_mobile from './project1/images/output/main_mobile.webp';
+import p1_imgMain_tablet from './project1/images/output/main_tablet.webp';
+import p1_imgMain_desktop from './project1/images/output/main_desktop.webp';
+const p1_imgMain = createResponsiveImage(
+  p1_imgMain_mobile,
+  p1_imgMain_tablet,
+  p1_imgMain_desktop,
+);
+
+// Plans
+import p1_plan1_mobile from './project1/plans/output/1_mobile.webp';
+import p1_plan1_tablet from './project1/plans/output/1_tablet.webp';
+import p1_plan1_desktop from './project1/plans/output/1_desktop.webp';
+const p1_plan1 = createResponsiveImage(
+  p1_plan1_mobile,
+  p1_plan1_tablet,
+  p1_plan1_desktop,
+);
+
+// ========== PROJECT 2 ==========
+// Images
+import p2_img1_mobile from './project2/images/output/1_mobile.webp';
+import p2_img1_tablet from './project2/images/output/1_tablet.webp';
+import p2_img1_desktop from './project2/images/output/1_desktop.webp';
+const p2_img1 = createResponsiveImage(
+  p2_img1_mobile,
+  p2_img1_tablet,
+  p2_img1_desktop,
+);
+
+import p2_img2_mobile from './project2/images/output/2_mobile.webp';
+import p2_img2_tablet from './project2/images/output/2_tablet.webp';
+import p2_img2_desktop from './project2/images/output/2_desktop.webp';
+const p2_img2 = createResponsiveImage(
+  p2_img2_mobile,
+  p2_img2_tablet,
+  p2_img2_desktop,
+);
+
+import p2_img3_mobile from './project2/images/output/3_mobile.webp';
+import p2_img3_tablet from './project2/images/output/3_tablet.webp';
+import p2_img3_desktop from './project2/images/output/3_desktop.webp';
+const p2_img3 = createResponsiveImage(
+  p2_img3_mobile,
+  p2_img3_tablet,
+  p2_img3_desktop,
+);
+
+import p2_img4_mobile from './project2/images/output/4_mobile.webp';
+import p2_img4_tablet from './project2/images/output/4_tablet.webp';
+import p2_img4_desktop from './project2/images/output/4_desktop.webp';
+const p2_img4 = createResponsiveImage(
+  p2_img4_mobile,
+  p2_img4_tablet,
+  p2_img4_desktop,
+);
+
+import p2_img5_mobile from './project2/images/output/5_mobile.webp';
+import p2_img5_tablet from './project2/images/output/5_tablet.webp';
+import p2_img5_desktop from './project2/images/output/5_desktop.webp';
+const p2_img5 = createResponsiveImage(
+  p2_img5_mobile,
+  p2_img5_tablet,
+  p2_img5_desktop,
+);
+
+import p2_img6_mobile from './project2/images/output/6_mobile.webp';
+import p2_img6_tablet from './project2/images/output/6_tablet.webp';
+import p2_img6_desktop from './project2/images/output/6_desktop.webp';
+const p2_img6 = createResponsiveImage(
+  p2_img6_mobile,
+  p2_img6_tablet,
+  p2_img6_desktop,
+);
+
+import p2_img7_mobile from './project2/images/output/7_mobile.webp';
+import p2_img7_tablet from './project2/images/output/7_tablet.webp';
+import p2_img7_desktop from './project2/images/output/7_desktop.webp';
+const p2_img7 = createResponsiveImage(
+  p2_img7_mobile,
+  p2_img7_tablet,
+  p2_img7_desktop,
+);
+
+import p2_img8_mobile from './project2/images/output/8_mobile.webp';
+import p2_img8_tablet from './project2/images/output/8_tablet.webp';
+import p2_img8_desktop from './project2/images/output/8_desktop.webp';
+const p2_img8 = createResponsiveImage(
+  p2_img8_mobile,
+  p2_img8_tablet,
+  p2_img8_desktop,
+);
+
+import p2_img9_mobile from './project2/images/output/9_mobile.webp';
+import p2_img9_tablet from './project2/images/output/9_tablet.webp';
+import p2_img9_desktop from './project2/images/output/9_desktop.webp';
+const p2_img9 = createResponsiveImage(
+  p2_img9_mobile,
+  p2_img9_tablet,
+  p2_img9_desktop,
+);
+
+import p2_img10_mobile from './project2/images/output/10_mobile.webp';
+import p2_img10_tablet from './project2/images/output/10_tablet.webp';
+import p2_img10_desktop from './project2/images/output/10_desktop.webp';
+const p2_img10 = createResponsiveImage(
+  p2_img10_mobile,
+  p2_img10_tablet,
+  p2_img10_desktop,
+);
+
+import p2_img11_mobile from './project2/images/output/11_mobile.webp';
+import p2_img11_tablet from './project2/images/output/11_tablet.webp';
+import p2_img11_desktop from './project2/images/output/11_desktop.webp';
+const p2_img11 = createResponsiveImage(
+  p2_img11_mobile,
+  p2_img11_tablet,
+  p2_img11_desktop,
+);
+
+import p2_imgMain_mobile from './project2/images/output/main_mobile.webp';
+import p2_imgMain_tablet from './project2/images/output/main_tablet.webp';
+import p2_imgMain_desktop from './project2/images/output/main_desktop.webp';
+const p2_imgMain = createResponsiveImage(
+  p2_imgMain_mobile,
+  p2_imgMain_tablet,
+  p2_imgMain_desktop,
+);
+
+// Plans
+import p2_plan1_mobile from './project2/plans/output/1_mobile.webp';
+import p2_plan1_tablet from './project2/plans/output/1_tablet.webp';
+import p2_plan1_desktop from './project2/plans/output/1_desktop.webp';
+const p2_plan1 = createResponsiveImage(
+  p2_plan1_mobile,
+  p2_plan1_tablet,
+  p2_plan1_desktop,
+);
+
+// ========== PROJECT 3 ==========
+// Images
+import p3_img1_mobile from './project3/images/output/1_mobile.webp';
+import p3_img1_tablet from './project3/images/output/1_tablet.webp';
+import p3_img1_desktop from './project3/images/output/1_desktop.webp';
+const p3_img1 = createResponsiveImage(
+  p3_img1_mobile,
+  p3_img1_tablet,
+  p3_img1_desktop,
+);
+
+import p3_img2_mobile from './project3/images/output/2_mobile.webp';
+import p3_img2_tablet from './project3/images/output/2_tablet.webp';
+import p3_img2_desktop from './project3/images/output/2_desktop.webp';
+const p3_img2 = createResponsiveImage(
+  p3_img2_mobile,
+  p3_img2_tablet,
+  p3_img2_desktop,
+);
+
+import p3_img3_mobile from './project3/images/output/3_mobile.webp';
+import p3_img3_tablet from './project3/images/output/3_tablet.webp';
+import p3_img3_desktop from './project3/images/output/3_desktop.webp';
+const p3_img3 = createResponsiveImage(
+  p3_img3_mobile,
+  p3_img3_tablet,
+  p3_img3_desktop,
+);
+
+import p3_img4_mobile from './project3/images/output/4_mobile.webp';
+import p3_img4_tablet from './project3/images/output/4_tablet.webp';
+import p3_img4_desktop from './project3/images/output/4_desktop.webp';
+const p3_img4 = createResponsiveImage(
+  p3_img4_mobile,
+  p3_img4_tablet,
+  p3_img4_desktop,
+);
+
+import p3_img5_mobile from './project3/images/output/5_mobile.webp';
+import p3_img5_tablet from './project3/images/output/5_tablet.webp';
+import p3_img5_desktop from './project3/images/output/5_desktop.webp';
+const p3_img5 = createResponsiveImage(
+  p3_img5_mobile,
+  p3_img5_tablet,
+  p3_img5_desktop,
+);
+
+import p3_img6_mobile from './project3/images/output/6_mobile.webp';
+import p3_img6_tablet from './project3/images/output/6_tablet.webp';
+import p3_img6_desktop from './project3/images/output/6_desktop.webp';
+const p3_img6 = createResponsiveImage(
+  p3_img6_mobile,
+  p3_img6_tablet,
+  p3_img6_desktop,
+);
+
+import p3_img7_mobile from './project3/images/output/7_mobile.webp';
+import p3_img7_tablet from './project3/images/output/7_tablet.webp';
+import p3_img7_desktop from './project3/images/output/7_desktop.webp';
+const p3_img7 = createResponsiveImage(
+  p3_img7_mobile,
+  p3_img7_tablet,
+  p3_img7_desktop,
+);
+
+import p3_img8_mobile from './project3/images/output/8_mobile.webp';
+import p3_img8_tablet from './project3/images/output/8_tablet.webp';
+import p3_img8_desktop from './project3/images/output/8_desktop.webp';
+const p3_img8 = createResponsiveImage(
+  p3_img8_mobile,
+  p3_img8_tablet,
+  p3_img8_desktop,
+);
+
+import p3_img9_mobile from './project3/images/output/9_mobile.webp';
+import p3_img9_tablet from './project3/images/output/9_tablet.webp';
+import p3_img9_desktop from './project3/images/output/9_desktop.webp';
+const p3_img9 = createResponsiveImage(
+  p3_img9_mobile,
+  p3_img9_tablet,
+  p3_img9_desktop,
+);
+
+import p3_imgMain_mobile from './project3/images/output/main_mobile.webp';
+import p3_imgMain_tablet from './project3/images/output/main_tablet.webp';
+import p3_imgMain_desktop from './project3/images/output/main_desktop.webp';
+const p3_imgMain = createResponsiveImage(
+  p3_imgMain_mobile,
+  p3_imgMain_tablet,
+  p3_imgMain_desktop,
+);
+
+// Plans
+import p3_plan1_mobile from './project3/plans/output/1_mobile.webp';
+import p3_plan1_tablet from './project3/plans/output/1_tablet.webp';
+import p3_plan1_desktop from './project3/plans/output/1_desktop.webp';
+const p3_plan1 = createResponsiveImage(
+  p3_plan1_mobile,
+  p3_plan1_tablet,
+  p3_plan1_desktop,
+);
+
+import p3_plan2_mobile from './project3/plans/output/2_mobile.webp';
+import p3_plan2_tablet from './project3/plans/output/2_tablet.webp';
+import p3_plan2_desktop from './project3/plans/output/2_desktop.webp';
+const p3_plan2 = createResponsiveImage(
+  p3_plan2_mobile,
+  p3_plan2_tablet,
+  p3_plan2_desktop,
+);
+
+// ========== PROJECT 4 ==========
+// Images
+import p4_img1_mobile from './project4/images/output/1_mobile.webp';
+import p4_img1_tablet from './project4/images/output/1_tablet.webp';
+import p4_img1_desktop from './project4/images/output/1_desktop.webp';
+const p4_img1 = createResponsiveImage(
+  p4_img1_mobile,
+  p4_img1_tablet,
+  p4_img1_desktop,
+);
+
+import p4_img2_mobile from './project4/images/output/2_mobile.webp';
+import p4_img2_tablet from './project4/images/output/2_tablet.webp';
+import p4_img2_desktop from './project4/images/output/2_desktop.webp';
+const p4_img2 = createResponsiveImage(
+  p4_img2_mobile,
+  p4_img2_tablet,
+  p4_img2_desktop,
+);
+
+import p4_img3_mobile from './project4/images/output/3_mobile.webp';
+import p4_img3_tablet from './project4/images/output/3_tablet.webp';
+import p4_img3_desktop from './project4/images/output/3_desktop.webp';
+const p4_img3 = createResponsiveImage(
+  p4_img3_mobile,
+  p4_img3_tablet,
+  p4_img3_desktop,
+);
+
+import p4_img4_mobile from './project4/images/output/4_mobile.webp';
+import p4_img4_tablet from './project4/images/output/4_tablet.webp';
+import p4_img4_desktop from './project4/images/output/4_desktop.webp';
+const p4_img4 = createResponsiveImage(
+  p4_img4_mobile,
+  p4_img4_tablet,
+  p4_img4_desktop,
+);
+
+import p4_img5_mobile from './project4/images/output/5_mobile.webp';
+import p4_img5_tablet from './project4/images/output/5_tablet.webp';
+import p4_img5_desktop from './project4/images/output/5_desktop.webp';
+const p4_img5 = createResponsiveImage(
+  p4_img5_mobile,
+  p4_img5_tablet,
+  p4_img5_desktop,
+);
+
+import p4_img6_mobile from './project4/images/output/6_mobile.webp';
+import p4_img6_tablet from './project4/images/output/6_tablet.webp';
+import p4_img6_desktop from './project4/images/output/6_desktop.webp';
+const p4_img6 = createResponsiveImage(
+  p4_img6_mobile,
+  p4_img6_tablet,
+  p4_img6_desktop,
+);
+
+import p4_img7_mobile from './project4/images/output/7_mobile.webp';
+import p4_img7_tablet from './project4/images/output/7_tablet.webp';
+import p4_img7_desktop from './project4/images/output/7_desktop.webp';
+const p4_img7 = createResponsiveImage(
+  p4_img7_mobile,
+  p4_img7_tablet,
+  p4_img7_desktop,
+);
+
+import p4_img8_mobile from './project4/images/output/8_mobile.webp';
+import p4_img8_tablet from './project4/images/output/8_tablet.webp';
+import p4_img8_desktop from './project4/images/output/8_desktop.webp';
+const p4_img8 = createResponsiveImage(
+  p4_img8_mobile,
+  p4_img8_tablet,
+  p4_img8_desktop,
+);
+
+import p4_imgMain_mobile from './project4/images/output/main_mobile.webp';
+import p4_imgMain_tablet from './project4/images/output/main_tablet.webp';
+import p4_imgMain_desktop from './project4/images/output/main_desktop.webp';
+const p4_imgMain = createResponsiveImage(
+  p4_imgMain_mobile,
+  p4_imgMain_tablet,
+  p4_imgMain_desktop,
+);
+
+// Plans (רק 2.jpg יש לו output, 1.pdf אין)
+import p4_plan2_mobile from './project4/plans/output/2_mobile.webp';
+import p4_plan2_tablet from './project4/plans/output/2_tablet.webp';
+import p4_plan2_desktop from './project4/plans/output/2_desktop.webp';
+const p4_plan1 = createResponsiveImage(
+  p4_plan2_mobile,
+  p4_plan2_tablet,
+  p4_plan2_desktop,
+);
+
+// ========== PROJECT 5 ==========
+// Images
+import p5_img1_mobile from './project5/images/output/1_mobile.webp';
+import p5_img1_tablet from './project5/images/output/1_tablet.webp';
+import p5_img1_desktop from './project5/images/output/1_desktop.webp';
+const p5_img1 = createResponsiveImage(
+  p5_img1_mobile,
+  p5_img1_tablet,
+  p5_img1_desktop,
+);
+
+import p5_img2_mobile from './project5/images/output/2_mobile.webp';
+import p5_img2_tablet from './project5/images/output/2_tablet.webp';
+import p5_img2_desktop from './project5/images/output/2_desktop.webp';
+const p5_img2 = createResponsiveImage(
+  p5_img2_mobile,
+  p5_img2_tablet,
+  p5_img2_desktop,
+);
+
+import p5_img3_mobile from './project5/images/output/3_mobile.webp';
+import p5_img3_tablet from './project5/images/output/3_tablet.webp';
+import p5_img3_desktop from './project5/images/output/3_desktop.webp';
+const p5_img3 = createResponsiveImage(
+  p5_img3_mobile,
+  p5_img3_tablet,
+  p5_img3_desktop,
+);
+
+import p5_img4_mobile from './project5/images/output/4_mobile.webp';
+import p5_img4_tablet from './project5/images/output/4_tablet.webp';
+import p5_img4_desktop from './project5/images/output/4_desktop.webp';
+const p5_img4 = createResponsiveImage(
+  p5_img4_mobile,
+  p5_img4_tablet,
+  p5_img4_desktop,
+);
+
+import p5_imgMain_mobile from './project5/images/output/main_mobile.webp';
+import p5_imgMain_tablet from './project5/images/output/main_tablet.webp';
+import p5_imgMain_desktop from './project5/images/output/main_desktop.webp';
+const p5_imgMain = createResponsiveImage(
+  p5_imgMain_mobile,
+  p5_imgMain_tablet,
+  p5_imgMain_desktop,
+);
+
+// ========== PROJECT 6 ==========
+// Images
+import p6_img1_mobile from './project6/images/output/1_mobile.webp';
+import p6_img1_tablet from './project6/images/output/1_tablet.webp';
+import p6_img1_desktop from './project6/images/output/1_desktop.webp';
+const p6_img1 = createResponsiveImage(
+  p6_img1_mobile,
+  p6_img1_tablet,
+  p6_img1_desktop,
+);
+
+import p6_img2_mobile from './project6/images/output/2_mobile.webp';
+import p6_img2_tablet from './project6/images/output/2_tablet.webp';
+import p6_img2_desktop from './project6/images/output/2_desktop.webp';
+const p6_img2 = createResponsiveImage(
+  p6_img2_mobile,
+  p6_img2_tablet,
+  p6_img2_desktop,
+);
+
+import p6_img3_mobile from './project6/images/output/3_mobile.webp';
+import p6_img3_tablet from './project6/images/output/3_tablet.webp';
+import p6_img3_desktop from './project6/images/output/3_desktop.webp';
+const p6_img3 = createResponsiveImage(
+  p6_img3_mobile,
+  p6_img3_tablet,
+  p6_img3_desktop,
+);
+
+import p6_imgMain_mobile from './project6/images/output/main_mobile.webp';
+import p6_imgMain_tablet from './project6/images/output/main_tablet.webp';
+import p6_imgMain_desktop from './project6/images/output/main_desktop.webp';
+const p6_imgMain = createResponsiveImage(
+  p6_imgMain_mobile,
+  p6_imgMain_tablet,
+  p6_imgMain_desktop,
+);
+
+// ========== INTERFACE & EXPORTS ==========
 export interface IProject {
   _id: string;
   title: string;
   categories: CategoryUrlCode[];
   description: string;
-  mainImage: string;
-  images: string[];
-  plans?: string[];
+  mainImage: string | ResponsiveImage;
+  images: (string | ResponsiveImage)[];
+  plans?: (string | ResponsiveImage)[];
   videos?: string[];
   location: string;
   client: string;

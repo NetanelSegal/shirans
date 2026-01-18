@@ -1,10 +1,11 @@
 import { ImgHTMLAttributes } from 'react';
-import Image from '../Image/Image';
+import Image, { ResponsiveImage } from '../Image/Image';
 
-interface IImageScaleHoverProps extends ImgHTMLAttributes<HTMLImageElement> {
+interface IImageScaleHoverProps
+  extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   containerOnClick?: () => void;
   containerClassName?: string;
-  src: string;
+  src: string | ResponsiveImage;
 }
 
 export default function ImageScaleHover({

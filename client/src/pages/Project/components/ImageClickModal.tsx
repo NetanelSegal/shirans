@@ -1,7 +1,8 @@
 import Image from '@/components/ui/Image';
+import type { ResponsiveImage } from '@/components/ui/Image';
 
 interface IImageClickModalProps {
-  img: string;
+  img: string | ResponsiveImage;
   onClick?: () => void;
   imageClassname?: string;
 }
@@ -11,11 +12,13 @@ export default function ImageClickModal({
   onClick = () => {},
   imageClassname = '',
 }: IImageClickModalProps) {
+  const altText = typeof img === 'string' ? img : img.desktop;
+  
   return (
     <Image
       onClick={onClick}
       src={img}
-      alt={`${img}`}
+      alt={altText}
       className={`${imageClassname}`}
     />
   );
