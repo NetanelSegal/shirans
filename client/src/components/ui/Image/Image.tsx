@@ -20,22 +20,22 @@ export default function Image({ src, ...rest }: ImageProps) {
   };
 
   // אם src הוא אובייקט responsive
-  if (typeof src === 'object' && 'mobile' in src) {
+  if (typeof src === 'object') {
     const responsiveSrc = src as ResponsiveImage;
     const fallbackSrc = responsiveSrc.fallback || responsiveSrc.desktop;
 
     return (
       <picture>
-        <source
+        {responsiveSrc.mobile && <source
           media='(max-width: 480px)'
           srcSet={responsiveSrc.mobile}
           type='image/webp'
-        />
-        <source
+        />}
+        {responsiveSrc.tablet && <source
           media='(max-width: 800px)'
           srcSet={responsiveSrc.tablet}
           type='image/webp'
-        />
+        />}
         <source srcSet={responsiveSrc.desktop} type='image/webp' />
         <img
           style={{
@@ -54,22 +54,4 @@ export default function Image({ src, ...rest }: ImageProps) {
       </picture>
     );
   }
-
-  // אם src הוא string רגיל (תאימות לאחור)
-  return (
-    <img
-      style={{
-        opacity: isLoading ? 0 : 1,
-        transition: 'opacity 0.3s ease-in-out',
-      }}
-      loading='lazy'
-      src={src as string}
-      alt={rest.alt || ''}
-      {...rest}
-      onError={(e: SyntheticEvent<HTMLImageElement, Event>) => {
-        (e.target as HTMLImageElement).src = image404src;
-      }}
-      onLoad={handleLoad}
-    />
-  );
 }
