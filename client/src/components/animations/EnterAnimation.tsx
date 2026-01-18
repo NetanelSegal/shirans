@@ -50,6 +50,7 @@ export default function EnterAnimation({
     <motion.div
       variants={animationVariants}
       initial='initial'
+      style={{ width: '100%' }}
       {...(dontAnimateWhileInView
         ? { animate: runAnimation ? 'animate' : 'initial' }
         : { whileInView: 'animate', viewport: { once } })}

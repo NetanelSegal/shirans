@@ -1,5 +1,6 @@
 import video from '@/assets/hero-vid.mov';
 import { useState } from 'react';
+import EnterAnimation from '@/components/animations/EnterAnimation';
 
 export default function HeroSection() {
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -23,9 +24,11 @@ export default function HeroSection() {
           />
         )}
       </div>
-      <h1 className='px-page-all absolute inset-0 m-auto size-fit text-center text-5xl font-bold text-white drop-shadow-[0_0_5px_rgba(0,0,0,0.3)] md:text-6xl xl:text-7xl'>
-        שירן גלעד אדריכלות ועיצוב
-      </h1>
+      <EnterAnimation delay={0.5} duration={1.2} translateY={false}>
+        <h1 className='px-page-all absolute inset-0 m-auto size-fit text-center text-5xl font-bold text-white drop-shadow-[0_0_5px_rgba(0,0,0,0.3)] md:text-6xl xl:text-7xl'>
+          שירן גלעד אדריכלות ועיצוב
+        </h1>
+      </EnterAnimation>
     </section>
   );
 }

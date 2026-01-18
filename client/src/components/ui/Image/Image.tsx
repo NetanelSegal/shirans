@@ -2,8 +2,8 @@ import image404src from '@/assets/Image_404.svg';
 import { ImgHTMLAttributes, SyntheticEvent, useState } from 'react';
 
 export interface ResponsiveImage {
-  mobile: string;
-  tablet: string;
+  mobile?: string;
+  tablet?: string;
   desktop: string;
   fallback?: string;
 }
@@ -54,4 +54,22 @@ export default function Image({ src, ...rest }: ImageProps) {
       </picture>
     );
   }
+
+  // אם src הוא string רגיל (תאימות לאחור)
+  return (
+    <img
+      style={{
+        opacity: isLoading ? 0 : 1,
+        transition: 'opacity 0.3s ease-in-out',
+      }}
+      loading='lazy'
+      src={src as string}
+      alt={rest.alt || ''}
+      {...rest}
+      onError={(e: SyntheticEvent<HTMLImageElement, Event>) => {
+        (e.target as HTMLImageElement).src = image404src;
+      }}
+      onLoad={handleLoad}
+    />
+  );
 }
