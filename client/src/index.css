@@ -6,6 +6,15 @@
   font-family: 'Assistant', sans-serif;
 }
 
+/* Fix blurry images when scaled/transformed */
+img {
+  image-rendering: auto; /* Smooth rendering for photos */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0); /* Force GPU acceleration */
+  -webkit-transform: translateZ(0);
+}
+
 button {
   @apply rounded-xl bg-slate-500 px-6 py-2 text-lg font-semibold text-white transition-all duration-150 ease-in-out;
 
