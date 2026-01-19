@@ -19,7 +19,6 @@ export default function Image({ src, ...rest }: ImageProps) {
     setIsLoading(false);
   };
 
-  // אם src הוא אובייקט responsive
   if (typeof src === 'object') {
     const responsiveSrc = src as ResponsiveImage;
     const fallbackSrc = responsiveSrc.fallback || responsiveSrc.desktop;
@@ -55,7 +54,6 @@ export default function Image({ src, ...rest }: ImageProps) {
     );
   }
 
-  // אם src הוא string רגיל (תאימות לאחור)
   return (
     <img
       style={{
