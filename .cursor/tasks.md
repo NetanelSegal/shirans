@@ -30,29 +30,6 @@ Tasks that have been received and broken down into subtasks, awaiting approval b
 
 ### Tasks
 
-### Task 1: Replace Testimonials with New Content
-- **Category**: Tasks
-- **Priority**: Medium
-- **Status**: In Progress
-- **Assigned**: Auto
-- **Created**: 2025-01-27
-- **Branch**: `feature/replace-testimonials`
-- **Description**: Replace the existing 2 testimonials with 6 new testimonials provided by the user
-
-**Subtasks:**
-1. [ ] Parse and structure the 6 new testimonials from the provided Hebrew text
-   - Extract family names: משפחת קליין, משפחת חרבי, משפחת בקר, משפחת שמעון, משפחת אביטל, משפחת ניסים
-   - Extract testimonial messages for each family
-   - Ensure proper formatting and line breaks are preserved
-2. [ ] Update the testimonials array in `client/src/pages/Home/components/Testimonials.tsx`
-   - Replace the existing 2 testimonials with the 6 new ones
-   - Maintain the same data structure: `{ name: string, message: string }`
-3. [ ] Verify the carousel animation still works correctly with 6 items
-   - Test that the infinite scroll animation functions properly
-   - Ensure all testimonials are visible and readable
-   - Check responsive behavior on different screen sizes
-
----
 
 ### Task 2: Fix Project Image Modal - Add Zoom and Gesture Navigation
 - **Category**: Tasks
