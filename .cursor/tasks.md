@@ -26,6 +26,8 @@ Tasks that have been received and broken down into subtasks, awaiting approval b
 
 ---
 
+---
+
 ## Active Tasks
 
 ### Tasks
@@ -41,27 +43,27 @@ Tasks that have been received and broken down into subtasks, awaiting approval b
 - **Clarification**: Desktop needs arrow buttons (overlay, not taking space). Mobile can have buttons but should be overlaid above the picture, half-transparent, not taking space.
 
 **Subtasks:**
-1. [ ] Research and select an appropriate image zoom/pan library
+1. [x] Research and select an appropriate image zoom/pan library
    - Evaluate libraries like `react-zoom-pan-pinch`, `react-image-gallery`, or similar
    - Choose one that supports: pinch zoom (mobile), mouse wheel zoom (desktop), pan/drag, and swipe gestures
    - Install the selected library
-2. [ ] Redesign arrow buttons as overlay elements (not taking space)
+2. [x] Redesign arrow buttons as overlay elements (not taking space)
    - **Desktop**: Keep left/right arrow buttons but position them as overlays (absolute positioning) on the sides of the image, not taking up layout space
    - **Mobile**: Position arrow buttons as overlays above the image, make them half-transparent
    - Ensure buttons don't interfere with image display area
    - Keep keyboard navigation (arrow keys) functionality
    - Update button styling for better visibility and hover states
-3. [ ] Implement zoom functionality in the modal
+3. [x] Implement zoom functionality in the modal
    - Add pinch-to-zoom support for mobile/trackpad
    - Add mouse wheel zoom for desktop
    - Ensure zoom works smoothly and doesn't break the layout
    - Add zoom controls or visual feedback if needed
-4. [ ] Implement swipe/gesture navigation
+4. [x] Implement swipe/gesture navigation
    - Add left swipe to go to next image
    - Add right swipe to go to previous image
    - Ensure swipe works on both mobile and desktop (touch and mouse drag)
    - Prevent swipe conflicts with zoom/pan gestures
-5. [ ] Update modal layout and styling
+5. [x] Update modal layout and styling
    - Ensure the image has maximum available space (buttons are overlays, not in layout)
    - Adjust container width and positioning for better image display
    - Position arrow buttons as overlays (absolute/fixed positioning)

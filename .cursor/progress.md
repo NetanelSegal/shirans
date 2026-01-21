@@ -9,10 +9,10 @@ This file tracks the current work status and progress updates.
 ### Currently Working On
 - **Task 2**: Fix Project Image Modal - Add Zoom and Gesture Navigation
   - Branch: `feature/fix-image-modal`
-  - Status: Ready to start
+  - Status: **In Progress** - Researching and selecting zoom/pan library
 
 ### Current Branch
-- `main` (Task 1 completed and merged)
+- `feature/fix-image-modal` (working on Task 2)
 
 ---
 
@@ -24,7 +24,7 @@ This file tracks the current work status and progress updates.
 - [x] **Task 1: Replace Testimonials with New Content** (Completed and merged to main)
 
 ### In Progress
-- [ ] Task 2: Fix Project Image Modal - Add Zoom and Gesture Navigation (Ready to start)
+- [x] **Task 2: Fix Project Image Modal - Add Zoom and Gesture Navigation** (Started - researching library)
 
 ---
 
