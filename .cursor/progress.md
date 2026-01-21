@@ -9,10 +9,10 @@ This file tracks the current work status and progress updates.
 ### Currently Working On
 - **Task 1**: Replace Testimonials with New Content
   - Branch: `feature/replace-testimonials`
-  - Status: Starting work
+  - Status: **Awaiting Review** (pushed to GitHub)
 - **Task 2**: Fix Project Image Modal - Add Zoom and Gesture Navigation
   - Branch: `feature/fix-image-modal`
-  - Status: Will start after Task 1
+  - Status: Pending (will start after Task 1 review)
 
 ### Current Branch
 - `feature/replace-testimonials` (working on Task 1)
