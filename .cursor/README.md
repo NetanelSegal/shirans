@@ -24,9 +24,12 @@ This directory contains guidelines, best practices, and task management for the 
 4. **Wait**: Wait for approval before proceeding
 5. **Execute**: Once approved, move subtasks to "Active Tasks" and begin work
 6. **Update Progress**: Update `progress.md` with current work status
-7. **Submit for Review**: When task is complete, commit and push to feature branch (do NOT merge to main)
+7. **Submit for Review**: When task is complete:
+   - **Check for errors**: Always verify no linting errors, build errors, or TypeScript errors
+   - **Test**: Ensure code compiles and runs without errors
+   - **Commit and push**: `git add .`, `git commit`, `git push` to feature branch (do NOT merge to main)
 8. **Wait for Review**: Wait for review approval via GitHub
-9. **Complete**: Only after review approval, mark task as complete and merge to main
+9. **Complete**: Only after review approval, mark task as complete (user handles merge to main)
 
 ### Clarification Requirements:
 - **If anything is unclear, ask at least 3 clarifying questions**
@@ -75,14 +78,15 @@ This directory contains guidelines, best practices, and task management for the 
 2. **Approval Given** → Move to "Active Tasks" in `tasks.md`, create feature branch, update `progress.md`
 3. **Work In Progress** → Update `progress.md` with current status and what you're working on
 4. **Subtask Complete** → Make Git commit, update `progress.md`
-5. **Task Complete** → `git add .`, `git commit`, `git push` to feature branch
+5. **Task Complete** → Check for errors (linting, build, TypeScript) → `git add .`, `git commit`, `git push` to feature branch
 6. **Await Review** → Wait for review approval via GitHub
 7. **Review Approved** → User will merge branch to main, then move to "Completed Tasks" in `tasks.md`, update `progress.md`
 
 ### Important: Review Process
 - **You do NOT decide when a task is complete** - tasks require review before completion
 - **You NEVER merge to main** - only push to feature branch, user handles merges
-- When you finish a task: `git add .`, `git commit`, `git push` to the feature branch
+- **Always check for errors before pushing**: Verify no linting errors, build errors, or TypeScript errors
+- When you finish a task: Check for errors → `git add .`, `git commit`, `git push` to the feature branch
 - Review happens via GitHub - wait for approval
 - Only mark tasks as "Completed" after review approval and user confirms merge
 
