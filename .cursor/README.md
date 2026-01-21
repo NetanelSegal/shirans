@@ -63,8 +63,8 @@ This directory contains guidelines, best practices, and task management for the 
 ### Branch Management
 - Keep feature branches focused on a single task
 - When task is complete: commit and push to feature branch, then wait for review
-- After review approval via GitHub: merge branch to main
-- Delete feature branch after successful merge
+- **Never merge to main** - user handles all merges after review
+- User will delete feature branch after successful merge
 
 ---
 
@@ -75,15 +75,16 @@ This directory contains guidelines, best practices, and task management for the 
 2. **Approval Given** → Move to "Active Tasks" in `tasks.md`, create feature branch, update `progress.md`
 3. **Work In Progress** → Update `progress.md` with current status and what you're working on
 4. **Subtask Complete** → Make Git commit, update `progress.md`
-5. **Task Complete** → `git add .`, `git commit`, `git push` to feature branch (DO NOT merge to main)
+5. **Task Complete** → `git add .`, `git commit`, `git push` to feature branch
 6. **Await Review** → Wait for review approval via GitHub
-7. **Review Approved** → Merge branch to main, move to "Completed Tasks" in `tasks.md`, update `progress.md`
+7. **Review Approved** → User will merge branch to main, then move to "Completed Tasks" in `tasks.md`, update `progress.md`
 
 ### Important: Review Process
 - **You do NOT decide when a task is complete** - tasks require review before completion
+- **You NEVER merge to main** - only push to feature branch, user handles merges
 - When you finish a task: `git add .`, `git commit`, `git push` to the feature branch
-- Review happens via GitHub - wait for approval before merging to main
-- Only mark tasks as "Completed" after review approval
+- Review happens via GitHub - wait for approval
+- Only mark tasks as "Completed" after review approval and user confirms merge
 
 ### File Responsibilities
 - **`tasks.md`**: Contains all tasks (Pending Approval, Active, Completed) and subtasks
