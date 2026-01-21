@@ -30,7 +30,6 @@ Tasks that have been received and broken down into subtasks, awaiting approval b
 
 ### Tasks
 
-
 ### Task 2: Fix Project Image Modal - Add Zoom and Gesture Navigation
 - **Category**: Tasks
 - **Priority**: High
@@ -94,8 +93,22 @@ Tasks that have been received and broken down into subtasks, awaiting approval b
 ## Completed Tasks
 
 ### Tasks
-<!-- Completed task items will be moved here -->
-- [ ] _None completed yet_
+
+### Task 1: Replace Testimonials with New Content ✅
+- **Category**: Tasks
+- **Priority**: Medium
+- **Status**: Completed
+- **Assigned**: Auto
+- **Created**: 2025-01-27
+- **Completed**: 2025-01-27
+- **Branch**: `feature/replace-testimonials` (merged to main)
+- **Description**: Replaced the existing 2 testimonials with 6 new testimonials provided by the user
+- **What was done**:
+  - Parsed and structured 6 new testimonials from Hebrew text
+  - Updated testimonials array in `Testimonials.tsx`
+  - Fixed missing image reference (removed p2_img13)
+  - Added smooth hover pause/resume functionality to carousel
+  - All changes tested and verified (no errors)
 
 ### Technologies
 <!-- Completed technology tasks will be moved here -->
