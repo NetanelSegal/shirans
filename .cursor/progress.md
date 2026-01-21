@@ -7,10 +7,15 @@ This file tracks the current work status and progress updates.
 **Last Updated**: 2025-01-27
 
 ### Currently Working On
-- [ ] _No active work at the moment_
+- **Task 1**: Replace Testimonials with New Content
+  - Branch: `feature/replace-testimonials`
+  - Status: **Awaiting Review** (pushed to GitHub)
+- **Task 2**: Fix Project Image Modal - Add Zoom and Gesture Navigation
+  - Branch: `feature/fix-image-modal`
+  - Status: Pending (will start after Task 1 review)
 
 ### Current Branch
-- `main` (or specify feature branch name when working)
+- `feature/replace-testimonials` (working on Task 1)
 
 ---
 
@@ -21,11 +26,8 @@ This file tracks the current work status and progress updates.
 - [x] Task management system reorganization
 
 ### In Progress
-- [ ] Awaiting approval for Task 1 and Task 2
-
-### Pending
-- [ ] Task 1: Replace Testimonials with New Content (Pending Approval)
-- [ ] Task 2: Fix Project Image Modal - Add Zoom and Gesture Navigation (Pending Approval)
+- [x] Task 1: Replace Testimonials with New Content (Approved, starting work)
+- [x] Task 2: Fix Project Image Modal - Add Zoom and Gesture Navigation (Approved, will start after Task 1)
 
 ---
 

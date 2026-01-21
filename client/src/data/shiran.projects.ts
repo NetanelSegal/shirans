@@ -125,9 +125,6 @@ const p2_img11 = createResponsiveImage(p2_img11_desktop);
 import p2_img12_desktop from './project2/images/12_desktop.webp';
 const p2_img12 = createResponsiveImage(p2_img12_desktop);
 
-import p2_img13_desktop from './project2/images/13_desktop.webp';
-const p2_img13 = createResponsiveImage(p2_img13_desktop);
-
 import p2_img14_desktop from './project2/images/14_desktop.webp';
 const p2_img14 = createResponsiveImage(p2_img14_desktop);
 
@@ -548,7 +545,6 @@ export const projects: IProject[] = [
       p2_img10,
       p2_img11,
       p2_img12,
-      p2_img13,
       p2_img14,
       p2_img15,
       p2_img16,
