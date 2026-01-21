@@ -10,7 +10,7 @@ This file tracks the current work status and progress updates.
 - [ ] _No active work at the moment_
 
 ### Current Branch
-- `feature/fix-image-modal` (Task 2 completed, awaiting review)
+- `main` (Task 2 completed, awaiting review on GitHub)
 
 ---
 
