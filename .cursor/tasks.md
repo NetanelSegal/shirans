@@ -31,10 +31,6 @@ Tasks that have been received and broken down into subtasks, awaiting approval b
 ## Active Tasks
 
 ### Tasks
-
-## Active Tasks
-
-### Tasks
 <!-- Add task items here -->
 - [ ] _No tasks yet_
 
@@ -71,6 +67,26 @@ Tasks that have been received and broken down into subtasks, awaiting approval b
   - Fixed missing image reference (removed p2_img13)
   - Added smooth hover pause/resume functionality to carousel
   - All changes tested and verified (no errors)
+
+### Task 2: Fix Project Image Modal - Add Zoom and Gesture Navigation ✅
+- **Category**: Tasks
+- **Priority**: High
+- **Status**: Completed
+- **Assigned**: Auto
+- **Created**: 2025-01-27
+- **Completed**: 2025-01-27
+- **Branch**: `feature/fix-image-modal` (pushed to GitHub for review)
+- **Description**: Improved the project image modal to support zoom functionality and gesture-based navigation, with overlay arrow buttons that don't take up space
+- **What was done**:
+  - Installed and integrated `react-zoom-pan-pinch` library
+  - Implemented pinch-to-zoom (mobile) and mouse wheel zoom (desktop)
+  - Added swipe gesture navigation (left/right) for mobile and desktop
+  - Redesigned arrow buttons as overlay elements (absolute positioning, not taking space)
+  - Fixed RTL button directions for Hebrew interface
+  - Added automatic zoom reset when changing images
+  - Ensured buttons work even when zoomed in (high z-index, pointer-events)
+  - Adjusted container size to match image size for proper backdrop click behavior
+  - All functionality tested and verified
 
 ### Technologies
 <!-- Completed technology tasks will be moved here -->
