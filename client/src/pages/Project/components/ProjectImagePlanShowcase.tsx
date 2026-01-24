@@ -124,10 +124,10 @@ export default function ProjectImagePlanShowcase({
 
   const handleSwipeStart = (e: React.TouchEvent | React.MouseEvent) => {
     if (isZoomed) return; // Don't handle swipe if zoomed
-    
+
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    
+
     swipeStartRef.current = {
       x: clientX,
       y: clientY,
