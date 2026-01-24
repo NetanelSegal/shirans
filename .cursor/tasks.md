@@ -167,3 +167,22 @@ When adding new tasks, use this format:
 - **Created**: YYYY-MM-DD
 - **Completed**: YYYY-MM-DD (if applicable)
 ```
+
+### Completed Task Template
+
+When moving a task to "Completed Tasks", use a **brief summary** format:
+
+```markdown
+### [Task Title] ✅
+- **Category**: Tasks | Technologies | Tips | Best Practices
+- **Priority**: High | Medium | Low
+- **Status**: Completed
+- **Assigned**: Auto
+- **Created**: YYYY-MM-DD
+- **Completed**: YYYY-MM-DD
+- **Branch**: `feature/task-name` (merged/pushed to GitHub)
+- **Description**: Brief description of what was accomplished
+- **What was done**: 
+  - High-level summary of key changes (2-4 bullet points)
+  - Do NOT include all subtasks or detailed breakdown
+```

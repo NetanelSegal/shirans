@@ -83,6 +83,11 @@ This directory contains guidelines, best practices, and task management for the 
 5. **Task Complete** → Check for errors (linting, build, TypeScript) → `git add .`, `git commit`, `git push` to feature branch
 6. **Await Review** → Wait for review approval via GitHub
 7. **Review Approved** → User will merge branch to main, then move to "Completed Tasks" in `tasks.md`, update `progress.md`
+8. **Documentation**: When moving task to "Completed Tasks", keep only a **brief summary** - do NOT copy all subtasks and detailed breakdown. Include only:
+   - What was accomplished (high-level)
+   - Key changes made
+   - Branch name
+   - Completion date
 
 ### Important: Review Process
 - **You do NOT decide when a task is complete** - tasks require review before completion
@@ -130,6 +135,7 @@ This directory contains guidelines, best practices, and task management for the 
 - **Critical**: **Each task/feature MUST have its own separate feature branch** - never work on multiple tasks in the same branch
 - **Critical**: **Always check for Single Source of Truth** - never duplicate constants or configuration values
 - **Important**: Large tasks must be broken down into smaller pieces before execution
+- **Important**: When documenting completed tasks, keep only a **brief summary** - do NOT include all subtasks and detailed breakdown
 - Approval is required before starting work on any task
 - Tasks assigned to Auto (AI agent) should be executable independently
 - Each task should include sufficient context for completion
