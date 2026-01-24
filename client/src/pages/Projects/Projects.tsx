@@ -1,8 +1,16 @@
 import { IProject, projects as projectsData } from '@/data/shiran.projects';
 import Project from './components/Project';
 import EnterAnimation from '@/components/animations/EnterAnimation';
+import { usePageMetadata } from '@/hooks/usePageMetadata';
 
 export default function Projects() {
+  usePageMetadata({
+    title: 'פרויקטים - שירן גלעד אדריכלות ועיצוב פנים',
+    description: 'גלריית פרויקטים מרשימה של בתים פרטיים, דירות יוקרהנטהאוזים. כל פרויקט מתוכנן בקפידה בהתאמה אישית ללקוח.',
+    ogImage: projectsData.length > 0 && typeof projectsData[0].mainImage === 'object' 
+      ? projectsData[0].mainImage.desktop 
+      : '/assets/shiranImage-28AXxNS6.jpeg',
+  });
   return (
     <>
       <div className='py-10 text-center'>

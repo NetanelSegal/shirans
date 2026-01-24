@@ -1,6 +1,7 @@
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import SectionContent from './components/SectionContent';
 import { content } from '@/data/process-info';
+import { usePageMetadata } from '@/hooks/usePageMetadata';
 
 const svgs = [
   <svg overflow='visible' viewBox='0 0 1920 914.65'>
@@ -814,7 +815,11 @@ const svgs = [
 ];
 
 export default function Process() {
-  // TODO: design process page
+  usePageMetadata({
+    title: 'התהליך - שירן גלעד אדריכלות ועיצוב פנים',
+    description: 'גלו את התהליך המקצועי של תכנון ועיצוב הבית החלומות שלכם. מפגישה ראשונית ועד מסירת המפתח - כל השלבים בפירוט.',
+    ogImage: '/assets/shiranImage-28AXxNS6.jpeg',
+  });
 
   return (
     <>

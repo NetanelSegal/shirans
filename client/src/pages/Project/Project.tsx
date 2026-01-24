@@ -7,6 +7,8 @@ import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
 import { useProjects } from '@/contexts/ProjectsContext';
 import { Fragment } from 'react/jsx-runtime';
 import EnterAnimation from '@/components/animations/EnterAnimation';
+import { usePageMetadata } from '@/hooks/usePageMetadata';
+import type { ResponsiveImage } from '@/components/ui/Image';
 
 export default function Project() {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +17,21 @@ export default function Project() {
   const project = projects.find((p) => p._id === id);
 
   if (!project) return <Navigate to='/projects' />;
+
+  // Get image URL for metadata
+  const getImageUrl = (img: string | ResponsiveImage): string => {
+    if (typeof img === 'string') {
+      return img.startsWith('http') ? img : `/assets/${img}`;
+    }
+    return img.desktop.startsWith('http') ? img.desktop : `/assets/${img.desktop}`;
+  };
+
+  usePageMetadata({
+    title: `${project.title} - שירן גלעד אדריכלות ועיצוב פנים`,
+    description: project.description.split('\n')[0].substring(0, 160) + '...',
+    ogImage: getImageUrl(project.mainImage),
+    ogUrl: `/projects/${project._id}`,
+  });
 
   return (
     <>

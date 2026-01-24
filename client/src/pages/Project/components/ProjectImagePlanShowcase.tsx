@@ -30,7 +30,7 @@ export default function ProjectImagePlanShowcase({
   containerClassname = '',
   imageClassname = '',
 }: IProjectImagePlanShowcaseProps) {
-  const { count, reset, setCount, decrement, increment } = useCounter({
+  const { count, reset, setCount } = useCounter({
     initialValue: -1,
     max: arr.length - 1,
     min: 0,
@@ -42,6 +42,35 @@ export default function ProjectImagePlanShowcase({
   const swipeStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
   const swipeThreshold = 50; // Minimum distance for swipe
   const swipeTimeThreshold = 300; // Maximum time for swipe (ms)
+
+  // Wrapper functions with loop functionality
+  const increment = () => {
+    setCount((prev) => {
+      if (prev < 0) {
+        // Modal is closed, shouldn't happen but handle it
+        return prev;
+      }
+      if (prev >= arr.length - 1) {
+        // Loop to first image
+        return 0;
+      }
+      return prev + 1;
+    });
+  };
+
+  const decrement = () => {
+    setCount((prev) => {
+      if (prev < 0) {
+        // Modal is closed, shouldn't happen but handle it
+        return prev;
+      }
+      if (prev <= 0) {
+        // Loop to last image
+        return arr.length - 1;
+      }
+      return prev - 1;
+    });
+  };
 
   const handleKeyPress = (e: KeyboardEvent) => {
     switch (e.key) {
@@ -118,11 +147,11 @@ export default function ProjectImagePlanShowcase({
     // Check if it's a horizontal swipe (not vertical)
     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold && deltaTime < swipeTimeThreshold) {
       if (deltaX > 0) {
-        // Swipe right -> previous image
-        decrement();
-      } else {
-        // Swipe left -> next image
+        // Swipe right -> next image (natural direction)
         increment();
+      } else {
+        // Swipe left -> previous image (natural direction)
+        decrement();
       }
     }
 
