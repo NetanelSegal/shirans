@@ -22,7 +22,63 @@ Best practices to implement and follow.
 
 Tasks that have been received and broken down into subtasks, awaiting approval before execution.
 
-<!-- No tasks pending approval -->
+### Task 3: Fix Project Image Modal Bugs
+- **Category**: Tasks
+- **Priority**: High
+- **Status**: Pending Approval
+- **Assigned**: Auto
+- **Created**: 2025-01-27
+- **Description**: Fix two bugs in the project image modal:
+  1. Add infinite loop functionality (when reaching last image, go to first, and vice versa)
+  2. Fix swipe direction - currently swipe right goes to previous and swipe left goes to next (not natural). Need to reverse: swipe right = next image, swipe left = previous image
+- **Notes**: 
+  - Arrow buttons work perfectly and should NOT be changed (consider RTL layout)
+  - Only fix the swipe gesture direction
+  - Implement loop by modifying useCounter logic or wrapping logic in ProjectImagePlanShowcase
+- **Subtasks**:
+  1. Modify increment/decrement logic to loop (when at max, go to min; when at min, go to max)
+  2. Reverse swipe direction logic in handleSwipeEnd (swap increment/decrement calls)
+  3. Test loop functionality with arrows and keyboard
+  4. Test swipe direction on mobile and desktop
+
+### Task 4: Fix Testimonials Mobile Touch Events
+- **Category**: Tasks
+- **Priority**: Medium
+- **Status**: Pending Approval
+- **Assigned**: Auto
+- **Created**: 2025-01-27
+- **Description**: Fix testimonials carousel on mobile - currently pauses on touch but doesn't resume when touch ends
+- **Notes**: 
+  - Desktop hover pause/resume works perfectly
+  - Mobile needs touch start (pause) and touch end (resume) handlers
+- **Subtasks**:
+  1. Add onTouchStart handler to pause animation (similar to handleMouseEnter)
+  2. Add onTouchEnd handler to resume animation (similar to handleMouseLeave)
+  3. Test on mobile devices to ensure smooth pause/resume behavior
+
+### Task 5: Add Professional Metadata and Favicon
+- **Category**: Tasks
+- **Priority**: Medium
+- **Status**: Pending Approval
+- **Assigned**: Auto
+- **Created**: 2025-01-27
+- **Description**: Add professional metadata (title, description, OG images) for all pages and verify/update favicon
+- **Notes**: 
+  - Use existing images if possible, vary images per page if specific images available
+  - Check if favicon file exists and update if needed
+  - Pages to update: Home, Process, Projects, Project (dynamic), Contact, 404
+- **Subtasks**:
+  1. Check existing favicon (found: `shiran_logo_icon.svg` in public) - verify it's properly linked
+  2. Create/update metadata component or hook for dynamic page metadata
+  3. Add metadata for Home page (use hero/main image)
+  4. Add metadata for Process page (use process section image if available)
+  5. Add metadata for Projects page (use projects showcase image)
+  6. Add metadata for Project pages (use project mainImage dynamically)
+  7. Add metadata for Contact page
+  8. Add metadata for 404 page
+  9. Verify all OG tags (og:title, og:description, og:image, og:url)
+  10. Add Twitter card metadata
+  11. Test metadata with social media preview tools
 
 ---
 
