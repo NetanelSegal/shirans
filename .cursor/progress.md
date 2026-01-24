@@ -10,7 +10,7 @@ This file tracks the current work status and progress updates.
 - [ ] _No active work at the moment_
 
 ### Current Branch
-- `main` (Task 2 completed, awaiting review on GitHub)
+- `feature/fix-image-modal-bugs` (Tasks 3-5 completed, pushed to GitHub for review)
 
 ---
 
@@ -42,6 +42,27 @@ This file tracks the current work status and progress updates.
   - Fixed RTL button directions
   - Added automatic zoom reset on image change
   - Pushed to GitHub for review
+- **Task 3 Completed**: 
+  - Added infinite loop functionality (last image -> first, first -> last)
+  - Fixed swipe direction (swipe right = next, swipe left = previous)
+  - Updated useCounter type to support functional updates
+  - All changes tested and verified (build passes)
+- **Task 4 Completed**: 
+  - Added onTouchStart handler to pause testimonials animation
+  - Added onTouchEnd handler to resume testimonials animation
+  - All changes tested and verified (build passes)
+- **Task 5 Completed**: 
+  - Fixed favicon path in index.html
+  - Migrated from custom usePageMetadata hook to react-helmet-async
+  - Added HelmetProvider to App.tsx
+  - Added metadata for all pages (Home, Process, Projects, Project, NotFound) using Helmet components
+  - Fixed Single Source of Truth - moved BASE_URL to constants/urls.ts
+  - Added OG tags and Twitter card metadata
+  - All changes tested and verified (build passes)
+- **Refactoring Completed**:
+  - Migrated to react-helmet-async for metadata management
+  - Fixed Single Source of Truth for BASE_URL (moved to constants/urls.ts)
+  - Updated workflow guidelines with SSOT and branch separation rules
 
 ---
 

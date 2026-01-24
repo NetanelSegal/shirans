@@ -109,6 +109,26 @@ export default function Testimonials() {
     }
   };
 
+  // Touch handlers for mobile (same logic as mouse handlers)
+  const handleTouchStart = () => {
+    if (animationRef.current) {
+      animationRef.current.stop();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (totalOriginalContentWidth > 0) {
+      const currentX = x.get();
+      animationRef.current = animate(x, 0, {
+        duration: 20,
+        repeat: Infinity,
+        ease: 'linear',
+        repeatType: 'loop',
+        from: currentX,
+      });
+    }
+  };
+
   if (totalOriginalContentWidth === 0) {
     return (
       <div className='relative mt-20 flex' ref={ref}>
@@ -125,6 +145,8 @@ export default function Testimonials() {
       style={{ x, width: 'fit-content' }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
       className='relative mt-20 flex'
     >
       {duplicatedTestimonials.map((testimonial, i) => (

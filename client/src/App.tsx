@@ -2,20 +2,24 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy } from 'react';
 import ScreenProvider from './contexts/ScreenProvider';
 import { ProjectsProvider } from './contexts/ProjectsContext';
+import { HelmetProvider } from 'react-helmet-async';
 
 const Layout = lazy(() => import('./components/Layout'));
 const Home = lazy(() => import('./pages/Home'));
 const Process = lazy(() => import('./pages/Process'));
 const Projects = lazy(() => import('./pages/Projects'));
 const Project = lazy(() => import('./pages/Project'));
+const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 
 function App() {
   return (
-    <ProjectsProvider>
-      <ScreenProvider>
-        <AppRoutes />
-      </ScreenProvider>
-    </ProjectsProvider>
+    <HelmetProvider>
+      <ProjectsProvider>
+        <ScreenProvider>
+          <AppRoutes />
+        </ScreenProvider>
+      </ProjectsProvider>
+    </HelmetProvider>
   );
 }
 
@@ -48,7 +52,7 @@ export const appRoutes = [
   {
     path: '*',
     title: '404',
-    element: <div>404</div>,
+    element: <NotFound />,
     notNavigateable: true,
   },
 ];

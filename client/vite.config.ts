@@ -10,4 +10,8 @@ export default defineConfig({
     },
   },
   assetsInclude: ['**/*.MOV', '**/*.mov'],
+  server: {
+    port: 5174,
+    host: true,
+  },
 });

@@ -22,7 +22,7 @@ This directory contains guidelines, best practices, and task management for the 
 2. **Break Down**: If the task is large (cannot be described in two sentences), break it into smaller, manageable subtasks
 3. **Document**: Add the original task and its breakdown to "Pending Approval" section in `tasks.md`
 4. **Wait**: Wait for approval before proceeding
-5. **Execute**: Once approved, move subtasks to "Active Tasks" and begin work
+5. **Execute**: Once approved, move subtasks to "Active Tasks", **create a separate feature branch for EACH task/feature**, and begin work
 6. **Update Progress**: Update `progress.md` with current work status
 7. **Submit for Review**: When task is complete:
    - **Check for errors**: Always verify no linting errors, build errors, or TypeScript errors
@@ -48,7 +48,8 @@ This directory contains guidelines, best practices, and task management for the 
 ## Git Workflow
 
 ### Feature Branch Strategy
-- **Create a feature branch for each task** (e.g., `feature/replace-testimonials`, `feature/fix-image-modal`)
+- **CRITICAL: Create a separate feature branch for EACH task/feature** (e.g., `feature/replace-testimonials`, `feature/fix-image-modal`)
+- **NEVER work on multiple tasks in the same branch** - each task/feature must have its own dedicated branch
 - Work on the task in its dedicated branch
 - Make **small, logical commits** as work progresses (at meaningful checkpoints, not necessarily every subtask)
 - This allows:
@@ -56,6 +57,7 @@ This directory contains guidelines, best practices, and task management for the 
   - Testing different approaches without affecting main branch
   - Easy rollback if issues arise (`git reset --hard <commit-hash>` or `git revert`)
   - Clean history with descriptive commit messages
+  - Independent review and merge of each feature
 
 ### Commit Guidelines
 - Commit messages should be clear and descriptive
@@ -75,12 +77,17 @@ This directory contains guidelines, best practices, and task management for the 
 
 ### Task Lifecycle
 1. **Task Received** → Add to `tasks.md` under "Pending Approval" with breakdown
-2. **Approval Given** → Move to "Active Tasks" in `tasks.md`, create feature branch, update `progress.md`
+2. **Approval Given** → Move to "Active Tasks" in `tasks.md`, **create a separate feature branch for THIS task only**, update `progress.md`
 3. **Work In Progress** → Update `progress.md` with current status and what you're working on
 4. **Subtask Complete** → Make Git commit, update `progress.md`
 5. **Task Complete** → Check for errors (linting, build, TypeScript) → `git add .`, `git commit`, `git push` to feature branch
 6. **Await Review** → Wait for review approval via GitHub
 7. **Review Approved** → User will merge branch to main, then move to "Completed Tasks" in `tasks.md`, update `progress.md`
+8. **Documentation**: When moving task to "Completed Tasks", keep only a **brief summary** - do NOT copy all subtasks and detailed breakdown. Include only:
+   - What was accomplished (high-level)
+   - Key changes made
+   - Branch name
+   - Completion date
 
 ### Important: Review Process
 - **You do NOT decide when a task is complete** - tasks require review before completion
@@ -106,10 +113,29 @@ This directory contains guidelines, best practices, and task management for the 
 
 ---
 
+## Code Quality Guidelines
+
+### Single Source of Truth (SSOT)
+- **ALWAYS check for existing constants/config files before creating new ones**
+- **NEVER duplicate constants, URLs, or configuration values across multiple files**
+- If a value is used in multiple places, it MUST be defined in a single location (e.g., `constants/urls.js`)
+- Before adding a constant, check if it already exists in:
+  - `constants/` directory
+  - Configuration files
+  - Environment variables
+- Examples of values that should be SSOT:
+  - Base URLs, API endpoints
+  - Configuration values
+  - Magic numbers/strings used in multiple places
+  - Default values
+
 ## Notes
 
 - **Critical**: If anything is unclear, ask at least **3 clarifying questions** before proceeding
+- **Critical**: **Each task/feature MUST have its own separate feature branch** - never work on multiple tasks in the same branch
+- **Critical**: **Always check for Single Source of Truth** - never duplicate constants or configuration values
 - **Important**: Large tasks must be broken down into smaller pieces before execution
+- **Important**: When documenting completed tasks, keep only a **brief summary** - do NOT include all subtasks and detailed breakdown
 - Approval is required before starting work on any task
 - Tasks assigned to Auto (AI agent) should be executable independently
 - Each task should include sufficient context for completion

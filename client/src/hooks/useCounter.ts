@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 interface IUseCounterReturn {
   count: number;
   increment: () => void;
   decrement: () => void;
   reset: () => void;
-  setCount: (value: number) => void;
+  setCount: Dispatch<SetStateAction<number>>;
 }
 
 interface IUseCounterProps {

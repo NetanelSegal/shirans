@@ -1,6 +1,8 @@
 const MAIN_URL = "https://shiran-s-server.onrender.com"
 // http://localhost:3001
 
+export const BASE_URL = "https://shiran-gilad.com"
+
 export const urls = {
     projects: MAIN_URL + "/projects",
     favProjects: MAIN_URL + "/projects/favourites",
