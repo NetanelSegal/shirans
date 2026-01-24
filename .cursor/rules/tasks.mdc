@@ -1,31 +1,6 @@
-# Tasks
-
-This file contains all tasks organized by category: tasks, technologies, tips, and best practices.
-
-## Task Categories
-
-### 🎯 Tasks
-Active development tasks and features to implement.
-
-### 🔧 Technologies
-Technology adoption, setup, and integration tasks.
-
-### 💡 Tips
-Helpful tips and optimizations to apply.
-
-### 📚 Best Practices
-Best practices to implement and follow.
-
 ---
-
-## Pending Approval
-
-Tasks that have been received and broken down into subtasks, awaiting approval before execution.
-
-<!-- No tasks pending approval -->
-
+alwaysApply: true
 ---
-
 ---
 
 ## Active Tasks
