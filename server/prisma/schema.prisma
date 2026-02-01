@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Enums
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum CategoryUrlCode {
+  privateHouses
+  apartments
+  publicSpaces
+}
+
+enum ProjectImageType {
+  MAIN
+  IMAGE
+  PLAN
+  VIDEO
+}
+
+// Models
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@map("users")
+}
+
+model Category {
+  id        String         @id @default(cuid())
+  title     String
+  urlCode   CategoryUrlCode @unique
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  projects  Project[]
+
+  @@index([urlCode])
+  @@map("categories")
+}
+
+model Project {
+  id               String         @id @default(cuid())
+  title            String
+  description      String         @db.Text
+  location         String
+  client           String
+  isCompleted      Boolean        @default(false)
+  constructionArea Int
+  favourite        Boolean        @default(false)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  categories       Category[]
+  images           ProjectImage[]
+
+  @@map("projects")
+}
+
+model ProjectImage {
+  id        String          @id @default(cuid())
+  url       String
+  type      ProjectImageType
+  order     Int             @default(0)
+  projectId String
+  project   Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime        @default(now())
+
+  @@index([projectId])
+  @@map("project_images")
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  name        String
+  message     String   @db.Text
+  isPublished Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+model ContactSubmission {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phoneNumber String
+  message     String?  @db.Text
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@map("contact_submissions")
+}

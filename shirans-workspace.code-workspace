@@ -1,11 +1,8 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "../Work/Shiran's-website"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": ".",
+    },
+  ],
+  "settings": {},
 }
