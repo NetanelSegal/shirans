@@ -1,0 +1,47 @@
+
+# Logs
+*/*/logs
+*/*.log
+*/npm-debug.log*
+*/yarn-debug.log*
+*/yarn-error.log*
+*/lerna-debug.log*
+*/.pnpm-debug.log*
+
+# Dependency directories
+node_modules/
+*/node_modules/
+*/jspm_packages/
+
+# Snowpack dependency directory (https://snowpack.dev/)
+*/web_modules/
+
+# TypeScript cache
+*/*.tsbuildinfo
+
+# Optional npm cache directory
+*/.npm
+
+# Optional eslint cache
+*/.eslintcache
+
+# Optional stylelint cache
+*/.stylelintcache
+
+# dotenv environment variable files
+*/.env
+*/.env.development.local
+*/.env.test.local
+*/.env.production.local
+*/.env.local
+
+*/dist
+dist/
+not_optimized_images
+.cursorignore
+.cursorrules
+.cursor/*
+CURSOR.mdc
+
+# Root level
+package-lock.json
