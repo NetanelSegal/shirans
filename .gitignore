@@ -9,6 +9,7 @@
 */.pnpm-debug.log*
 
 # Dependency directories
+node_modules/
 */node_modules/
 */jspm_packages/
 
@@ -35,7 +36,12 @@
 */.env.local
 
 */dist
+dist/
 not_optimized_images
 .cursorignore
 .cursorrules
 .cursor/*
+CURSOR.mdc
+
+# Root level
+package-lock.json
