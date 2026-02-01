@@ -36,3 +36,6 @@
 
 */dist
 not_optimized_images
+.cursorignore
+.cursorrules
+.cursor/*
