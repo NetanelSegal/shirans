@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon --exec tsx src/index.ts",
     "build": "tsc",
-    "prebuild": "npm run build --workspace=shared",
+    "prebuild": "npm run build -w @shirans/shared",
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
