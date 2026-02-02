@@ -5,6 +5,7 @@ import { HttpError } from '../middleware/errorHandler';
 import { prisma } from '../config/database';
 import type { ProjectFilters } from '../repositories/project.repository';
 import type { CategoryUrlCode } from '../../prisma/generated/prisma/enums';
+import { Prisma } from '../../prisma/generated/prisma/client';
 
 // Mock dependencies
 vi.mock('../repositories/project.repository');
@@ -134,6 +135,211 @@ describe('projectService', () => {
       await expect(projectService.getFavouriteProjects()).rejects.toThrow(
         HttpError
       );
+    });
+  });
+
+  describe('createProject', () => {
+    it('should create project and return transformed result', async () => {
+      const mockCreatedProject = {
+        id: '1',
+        title: 'New Project',
+        description: 'New Description',
+        location: 'New Location',
+        client: 'New Client',
+        isCompleted: false,
+        constructionArea: 100,
+        favourite: false,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
+        categories: [
+          {
+            id: 'cat1',
+            title: 'Category 1',
+            urlCode: 'privateHouses' as CategoryUrlCode,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+        images: [],
+      };
+
+      vi.mocked(projectRepository.create).mockResolvedValue(
+        mockCreatedProject as never
+      );
+
+      const createData = {
+        title: 'New Project',
+        description: 'New Description',
+        location: 'New Location',
+        client: 'New Client',
+        isCompleted: false,
+        constructionArea: 100,
+        favourite: false,
+        categoryIds: ['cat1'],
+        images: [],
+      };
+
+      const result = await projectService.createProject(createData);
+
+      expect(result).toMatchObject({
+        _id: '1',
+        title: 'New Project',
+      });
+      expect(projectRepository.create).toHaveBeenCalled();
+    });
+
+    it('should create project with images', async () => {
+      const mockCreatedProject = {
+        id: '1',
+        title: 'New Project',
+        description: 'New Description',
+        location: 'New Location',
+        client: 'New Client',
+        isCompleted: false,
+        constructionArea: 100,
+        favourite: false,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
+        categories: [],
+        images: [
+          {
+            id: 'img1',
+            url: 'https://example.com/image.jpg',
+            type: 'IMAGE',
+            order: 0,
+            projectId: '1',
+            createdAt: new Date(),
+          },
+        ],
+      };
+
+      vi.mocked(projectRepository.create).mockResolvedValue(
+        mockCreatedProject as never
+      );
+
+      const createData = {
+        title: 'New Project',
+        description: 'New Description',
+        location: 'New Location',
+        client: 'New Client',
+        isCompleted: false,
+        constructionArea: 100,
+        favourite: false,
+        categoryIds: ['cat1'],
+        images: [
+          {
+            url: 'https://example.com/image.jpg',
+            type: 'IMAGE',
+            order: 0,
+          },
+        ],
+      };
+
+      await projectService.createProject(createData);
+
+      expect(projectRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          images: {
+            create: [
+              {
+                url: 'https://example.com/image.jpg',
+                type: 'IMAGE',
+                order: 0,
+              },
+            ],
+          },
+        })
+      );
+    });
+
+    it('should throw HttpError 409 on duplicate title', async () => {
+      const prismaError = {
+        code: 'P2002',
+      } as Prisma.PrismaClientKnownRequestError;
+
+      vi.mocked(projectRepository.create).mockRejectedValue(prismaError);
+
+      await expect(
+        projectService.createProject({
+          title: 'Duplicate Title',
+          description: 'Description',
+          location: 'Location',
+          client: 'Client',
+          isCompleted: false,
+          constructionArea: 100,
+          favourite: false,
+          categoryIds: ['clx789xyz123abc456'],
+          images: [],
+        })
+      ).rejects.toThrow(HttpError);
+      await expect(
+        projectService.createProject({
+          title: 'Duplicate Title',
+          description: 'Description',
+          location: 'Location',
+          client: 'Client',
+          isCompleted: false,
+          constructionArea: 100,
+          favourite: false,
+          categoryIds: ['clx789xyz123abc456'],
+          images: [],
+        })
+      ).rejects.toThrow('already exists');
+    });
+
+    it('should throw HttpError 404 when category not found', async () => {
+      const prismaError = {
+        code: 'P2025',
+      } as Prisma.PrismaClientKnownRequestError;
+
+      vi.mocked(projectRepository.create).mockRejectedValue(prismaError);
+
+      await expect(
+        projectService.createProject({
+          title: 'New Project',
+          description: 'Description',
+          location: 'Location',
+          client: 'Client',
+          isCompleted: false,
+          constructionArea: 100,
+          favourite: false,
+          categoryIds: ['clx999invalid999999'],
+          images: [],
+        })
+      ).rejects.toThrow(HttpError);
+      await expect(
+        projectService.createProject({
+          title: 'New Project',
+          description: 'Description',
+          location: 'Location',
+          client: 'Client',
+          isCompleted: false,
+          constructionArea: 100,
+          favourite: false,
+          categoryIds: ['clx999invalid999999'],
+          images: [],
+        })
+      ).rejects.toThrow('categories not found');
+    });
+
+    it('should throw HttpError on repository error', async () => {
+      vi.mocked(projectRepository.create).mockRejectedValue(
+        new Error('Database error')
+      );
+
+      await expect(
+        projectService.createProject({
+          title: 'New Project',
+          description: 'Description',
+          location: 'Location',
+          client: 'Client',
+          isCompleted: false,
+          constructionArea: 100,
+          favourite: false,
+          categoryIds: ['cat1'],
+          images: [],
+        })
+      ).rejects.toThrow(HttpError);
     });
   });
 

@@ -8,6 +8,7 @@ vi.mock('../../src/repositories/project.repository', () => ({
   projectRepository: {
     findAll: vi.fn(),
     findById: vi.fn(),
+    create: vi.fn(),
     update: vi.fn(),
   },
 }));
@@ -55,6 +56,127 @@ describe('Project Routes Integration Tests', () => {
     vi.clearAllMocks();
   });
 
+  describe('POST /api/projects', () => {
+    it('should return 201 with created project', async () => {
+      const mockCreatedProject = {
+        id: 'clx123abc456def789',
+        title: 'New Project',
+        description: 'New Description',
+        location: 'New Location',
+        client: 'New Client',
+        isCompleted: false,
+        constructionArea: 100,
+        favourite: false,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-01'),
+        categories: [],
+        images: [],
+      };
+
+      vi.mocked(projectRepository.create).mockResolvedValue(
+        mockCreatedProject as never
+      );
+
+      const response = await request(app)
+        .post('/api/projects')
+        .send({
+          title: 'New Project',
+          description: 'New Description',
+          location: 'New Location',
+          client: 'New Client',
+          constructionArea: 100,
+          categoryIds: ['clx789xyz123abc456'],
+          images: [],
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body).toHaveProperty('_id', 'clx123abc456def789');
+      expect(response.body).toHaveProperty('title', 'New Project');
+    });
+
+    it('should return 400 when required fields are missing', async () => {
+      const response = await request(app)
+        .post('/api/projects')
+        .send({
+          title: 'Incomplete Project',
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('error');
+      expect(response.body.message).toMatch(/required|expected/);
+    });
+
+    it('should return 400 when categoryIds is empty', async () => {
+      const response = await request(app)
+        .post('/api/projects')
+        .send({
+          title: 'New Project',
+          description: 'Description',
+          location: 'Location',
+          client: 'Client',
+          constructionArea: 100,
+          categoryIds: [],
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toMatch(/category|array/);
+    });
+
+    it('should return 400 when constructionArea is not positive', async () => {
+      const response = await request(app)
+        .post('/api/projects')
+        .send({
+          title: 'New Project',
+          description: 'Description',
+          location: 'Location',
+          client: 'Client',
+          constructionArea: -10,
+          categoryIds: ['clx789xyz123abc456'],
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toMatch(/positive|greater/);
+    });
+
+    it('should return 400 when title is too long', async () => {
+      const response = await request(app)
+        .post('/api/projects')
+        .send({
+          title: 'A'.repeat(501),
+          description: 'Description',
+          location: 'Location',
+          client: 'Client',
+          constructionArea: 100,
+          categoryIds: ['clx789xyz123abc456'],
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toMatch(/500|less/);
+    });
+
+    it('should validate image URLs', async () => {
+      const response = await request(app)
+        .post('/api/projects')
+        .send({
+          title: 'New Project',
+          description: 'Description',
+          location: 'Location',
+          client: 'Client',
+          constructionArea: 100,
+          categoryIds: ['clx789xyz123abc456'],
+          images: [
+            {
+              url: 'not-a-valid-url',
+              type: 'IMAGE',
+            },
+          ],
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toMatch(/URL|url/);
+    });
+  });
+
   describe('GET /api/projects', () => {
     it('should return 200 with projects array', async () => {
       const mockProjects = [
@@ -89,10 +211,10 @@ describe('Project Routes Integration Tests', () => {
     it('should filter by category query parameter', async () => {
       vi.mocked(projectRepository.findAll).mockResolvedValue([]);
 
-      await request(app).get('/api/projects?category=cat1');
+      await request(app).get('/api/projects?category=clx789xyz123abc456');
 
       expect(projectRepository.findAll).toHaveBeenCalledWith({
-        category: 'cat1',
+        category: 'clx789xyz123abc456',
       });
     });
 
@@ -134,7 +256,7 @@ describe('Project Routes Integration Tests', () => {
   describe('GET /api/projects/single', () => {
     it('should return 200 with project when id is provided', async () => {
       const mockProject = {
-        id: '1',
+        id: 'clx123abc456def789',
         title: 'Test Project',
         description: 'Test Description',
         location: 'Test Location',
@@ -152,10 +274,12 @@ describe('Project Routes Integration Tests', () => {
         mockProject as never
       );
 
-      const response = await request(app).get('/api/projects/single?id=1');
+      const response = await request(app).get(
+        '/api/projects/single?id=clx123abc456def789'
+      );
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('_id', '1');
+      expect(response.body).toHaveProperty('_id', 'clx123abc456def789');
       expect(response.body).toHaveProperty('title', 'Test Project');
     });
 
@@ -164,13 +288,15 @@ describe('Project Routes Integration Tests', () => {
 
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('error');
-      expect(response.body.message).toContain('Project ID is required');
+      expect(response.body.message).toMatch(/id|CUID/);
     });
 
     it('should return 404 when project not found', async () => {
       vi.mocked(projectRepository.findById).mockResolvedValue(null);
 
-      const response = await request(app).get('/api/projects/single?id=999');
+      const response = await request(app).get(
+        '/api/projects/single?id=clx999invalid999999'
+      );
 
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('error');
@@ -181,7 +307,7 @@ describe('Project Routes Integration Tests', () => {
   describe('PUT /api/projects', () => {
     it('should return 200 with updated project', async () => {
       const mockUpdatedProject = {
-        id: '1',
+        id: 'clx123abc456def789',
         title: 'Updated Title',
         description: 'Updated Description',
         location: 'Test Location',
@@ -202,13 +328,13 @@ describe('Project Routes Integration Tests', () => {
       const response = await request(app)
         .put('/api/projects')
         .send({
-          id: '1',
+          id: 'clx123abc456def789',
           title: 'Updated Title',
           description: 'Updated Description',
         });
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('_id', '1');
+      expect(response.body).toHaveProperty('_id', 'clx123abc456def789');
       expect(response.body).toHaveProperty('title', 'Updated Title');
     });
 
@@ -220,26 +346,26 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('Project ID is required');
+      expect(response.body.message).toMatch(/id|CUID/);
     });
 
     it('should return 400 when categoryIds is not an array', async () => {
       const response = await request(app)
         .put('/api/projects')
         .send({
-          id: '1',
+          id: 'clx123abc456def789',
           categoryIds: 'not-an-array',
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('categoryIds must be an array');
+      expect(response.body.message).toMatch(/categoryIds|array/);
     });
   });
 
   describe('POST /api/projects/uploadImgs', () => {
     it('should return 200 with updated project', async () => {
       const mockProject = {
-        id: '1',
+        id: 'clx123abc456def789',
         title: 'Test Project',
         description: 'Test Description',
         location: 'Test Location',
@@ -264,7 +390,7 @@ describe('Project Routes Integration Tests', () => {
       const response = await request(app)
         .post('/api/projects/uploadImgs')
         .send({
-          id: '1',
+          id: 'clx123abc456def789',
           images: [
             {
               url: 'https://example.com/image.jpg',
@@ -274,7 +400,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('_id', '1');
+      expect(response.body).toHaveProperty('_id', 'clx123abc456def789');
     });
 
     it('should return 400 when id is missing', async () => {
@@ -285,25 +411,25 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('Project ID is required');
+      expect(response.body.message).toMatch(/id|CUID/);
     });
 
     it('should return 400 when images is missing', async () => {
       const response = await request(app)
         .post('/api/projects/uploadImgs')
         .send({
-          id: '1',
+          id: 'clx123abc456def789',
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('Images array is required');
+      expect(response.body.message).toMatch(/images|array/);
     });
 
     it('should return 400 when image type is invalid', async () => {
       const response = await request(app)
         .post('/api/projects/uploadImgs')
         .send({
-          id: '1',
+          id: 'clx123abc456def789',
           images: [
             {
               url: 'https://example.com/image.jpg',
@@ -353,7 +479,7 @@ describe('Project Routes Integration Tests', () => {
       const response = await request(app)
         .delete('/api/projects/deleteMainImage')
         .send({
-          id: '1',
+          id: 'clx123abc456def789',
         });
 
       expect(response.status).toBe(200);
@@ -366,14 +492,14 @@ describe('Project Routes Integration Tests', () => {
         .send({});
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('Project ID is required');
+      expect(response.body.message).toMatch(/id|CUID/);
     });
   });
 
   describe('DELETE /api/projects/deleteImages', () => {
     it('should return 200 when images are deleted', async () => {
       const mockProject = {
-        id: '1',
+        id: 'clx123abc456def789',
         title: 'Test Project',
         description: 'Test Description',
         location: 'Test Location',
@@ -386,19 +512,19 @@ describe('Project Routes Integration Tests', () => {
         categories: [],
         images: [
           {
-            id: 'img1',
+            id: 'clximg123456789abc',
             url: 'https://example.com/img1.jpg',
             type: 'IMAGE',
             order: 0,
-            projectId: '1',
+            projectId: 'clx123abc456def789',
             createdAt: new Date(),
           },
           {
-            id: 'img2',
+            id: 'clximg987654321def',
             url: 'https://example.com/img2.jpg',
             type: 'IMAGE',
             order: 1,
-            projectId: '1',
+            projectId: 'clx123abc456def789',
             createdAt: new Date(),
           },
         ],
@@ -414,8 +540,8 @@ describe('Project Routes Integration Tests', () => {
       const response = await request(app)
         .delete('/api/projects/deleteImages')
         .send({
-          id: '1',
-          imageIds: ['img1', 'img2'],
+          id: 'clx123abc456def789',
+          imageIds: ['clximg123456789abc', 'clximg987654321def'],
         });
 
       expect(response.status).toBe(200);
@@ -426,34 +552,34 @@ describe('Project Routes Integration Tests', () => {
       const response = await request(app)
         .delete('/api/projects/deleteImages')
         .send({
-          imageIds: ['img1'],
+          imageIds: ['clximg123456789abc'],
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('Project ID is required');
+      expect(response.body.message).toMatch(/id|CUID/);
     });
 
     it('should return 400 when imageIds is missing', async () => {
       const response = await request(app)
         .delete('/api/projects/deleteImages')
         .send({
-          id: '1',
+          id: 'clx123abc456def789',
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('imageIds array is required');
+      expect(response.body.message).toMatch(/imageIds|array/);
     });
 
     it('should return 400 when imageIds contains invalid values', async () => {
       const response = await request(app)
         .delete('/api/projects/deleteImages')
         .send({
-          id: '1',
-          imageIds: ['img1', ''],
+          id: 'clx123abc456def789',
+          imageIds: ['clximg123456789abc', ''],
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('non-empty strings');
+      expect(response.body.message).toMatch(/CUID|valid/);
     });
   });
 });
