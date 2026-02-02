@@ -12,22 +12,8 @@ export interface UserResponse {
   updatedAt: Date;
 }
 
-/**
- * Register input data
- */
-export interface RegisterInput {
-  email: string;
-  password: string;
-  name: string;
-}
-
-/**
- * Login input data
- */
-export interface LoginInput {
-  email: string;
-  password: string;
-}
+// Re-export types from validators as single source of truth
+export type { RegisterInput, LoginInput } from '../validators/auth.validators';
 
 /**
  * Auth response (user + token)

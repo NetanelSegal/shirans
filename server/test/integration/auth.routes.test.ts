@@ -94,7 +94,7 @@ describe('Auth Routes Integration Tests', () => {
         .post('/api/auth/register')
         .send({
           email: 'test@example.com',
-          password: 'password123',
+          password: 'Password123!',
           name: 'Test User',
         });
 
@@ -117,7 +117,7 @@ describe('Auth Routes Integration Tests', () => {
         .post('/api/auth/register')
         .send({
           email: 'existing@example.com',
-          password: 'password123',
+          password: 'Password123!',
           name: 'Test User',
         });
 
@@ -131,7 +131,7 @@ describe('Auth Routes Integration Tests', () => {
         .post('/api/auth/register')
         .send({
           email: 'invalid-email',
-          password: '123', // Too short
+          password: '123', // Too short and missing complexity requirements
           name: 'A', // Too short
         });
 
@@ -172,7 +172,7 @@ describe('Auth Routes Integration Tests', () => {
         .post('/api/auth/login')
         .send({
           email: 'test@example.com',
-          password: 'password123',
+          password: 'Password123!',
         });
 
       expect(response.status).toBe(200);
@@ -205,7 +205,7 @@ describe('Auth Routes Integration Tests', () => {
         .post('/api/auth/login')
         .send({
           email: 'invalid-email',
-          password: '123', // Too short
+          password: '123', // Too short and missing complexity requirements
         });
 
       expect(response.status).toBe(400);

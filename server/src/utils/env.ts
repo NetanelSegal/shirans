@@ -17,6 +17,18 @@ function getEnvVar(name: string, defaultValue?: string): string {
   if (value === undefined) {
     throw new Error(`Missing required environment variable: ${name}`);
   }
+  
+  // Validate JWT_SECRET length (skip in test environment)
+  if (
+    name === 'JWT_SECRET' &&
+    process.env.NODE_ENV !== 'test' &&
+    value.length < 32
+  ) {
+    throw new Error(
+      'JWT_SECRET must be at least 32 characters long for security'
+    );
+  }
+  
   return value;
 }
 
