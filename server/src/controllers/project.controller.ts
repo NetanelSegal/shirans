@@ -1,12 +1,30 @@
 import { Request, Response } from 'express';
 import { projectService } from '../services/project.service';
-import type {
-  UpdateProjectInput,
-  ImageInput,
-  ProjectQueryParams,
-} from '../types/project.types';
-import { HttpError } from '../middleware/errorHandler';
 import type { ProjectFilters } from '../repositories/project.repository';
+import {
+  createProjectSchema,
+  updateProjectSchema,
+  projectQuerySchema,
+  singleProjectQuerySchema,
+  uploadImagesSchema,
+  deleteMainImageSchema,
+  deleteImagesSchema,
+} from '../validators/project.validators';
+import { validateRequest } from '../utils/validation';
+
+/**
+ * Create a new project
+ * POST /api/projects
+ * Body: CreateProjectInput
+ */
+export async function createProject(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const validatedData = validateRequest(createProjectSchema, req.body);
+  const project = await projectService.createProject(validatedData);
+  return res.status(201).json(project);
+}
 
 /**
  * Get all projects with optional filters
@@ -16,7 +34,7 @@ export async function getAllProjects(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const query = req.query as ProjectQueryParams;
+  const query = validateRequest(projectQuerySchema, req.query);
   const filters: ProjectFilters = {};
 
   // Parse query parameters
@@ -54,12 +72,7 @@ export async function getProjectById(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const { id } = req.query;
-
-  if (!id || typeof id !== 'string') {
-    throw new HttpError(400, 'Project ID is required as query parameter');
-  }
-
+  const { id } = validateRequest(singleProjectQuerySchema, req.query);
   const project = await projectService.getProjectById(id);
   return res.status(200).json(project);
 }
@@ -67,34 +80,14 @@ export async function getProjectById(
 /**
  * Update an existing project
  * PUT /api/projects
- * Body: { id: string, ...updateData }
+ * Body: UpdateProjectInput (includes id)
  */
 export async function updateProject(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const body = req.body as UpdateProjectInput & { id?: string };
-
-  if (!body.id || typeof body.id !== 'string') {
-    throw new HttpError(400, 'Project ID is required in request body');
-  }
-
-  const { id, ...updateData } = body;
-
-  // Validate categoryIds if provided
-  if (updateData.categoryIds !== undefined) {
-    if (!Array.isArray(updateData.categoryIds)) {
-      throw new HttpError(400, 'categoryIds must be an array');
-    }
-    if (
-      !updateData.categoryIds.every(
-        (catId) => typeof catId === 'string' && catId.length > 0
-      )
-    ) {
-      throw new HttpError(400, 'All categoryIds must be non-empty strings');
-    }
-  }
-
+  const validatedData = validateRequest(updateProjectSchema, req.body);
+  const { id, ...updateData } = validatedData;
   const updatedProject = await projectService.updateProject(id, updateData);
   return res.status(200).json(updatedProject);
 }
@@ -102,69 +95,16 @@ export async function updateProject(
 /**
  * Upload images to a project
  * POST /api/projects/uploadImgs
- * Body: { id: string, images: ImageInput[] }
+ * Body: UploadImagesInput
  */
 export async function uploadProjectImages(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const body = req.body as { id?: string; images?: unknown };
-
-  if (!body.id || typeof body.id !== 'string') {
-    throw new HttpError(400, 'Project ID is required in request body');
-  }
-
-  if (!body.images || !Array.isArray(body.images)) {
-    throw new HttpError(400, 'Images array is required in request body');
-  }
-
-  // Validate image inputs
-  const images: ImageInput[] = [];
-  for (const img of body.images) {
-    if (
-      typeof img !== 'object' ||
-      img === null ||
-      !('url' in img) ||
-      !('type' in img)
-    ) {
-      throw new HttpError(
-        400,
-        'Each image must have url and type properties'
-      );
-    }
-
-    const url = img.url;
-    const type = img.type;
-    const order = 'order' in img ? img.order : undefined;
-
-    if (typeof url !== 'string' || url.length === 0) {
-      throw new HttpError(400, 'Image URL must be a non-empty string');
-    }
-
-    if (
-      typeof type !== 'string' ||
-      !['MAIN', 'IMAGE', 'PLAN', 'VIDEO'].includes(type)
-    ) {
-      throw new HttpError(
-        400,
-        'Image type must be one of: MAIN, IMAGE, PLAN, VIDEO'
-      );
-    }
-
-    if (order !== undefined && (typeof order !== 'number' || order < 0)) {
-      throw new HttpError(400, 'Image order must be a non-negative number');
-    }
-
-    images.push({
-      url,
-      type: type as ImageInput['type'],
-      order,
-    });
-  }
-
+  const validatedData = validateRequest(uploadImagesSchema, req.body);
   const updatedProject = await projectService.uploadProjectImages(
-    body.id,
-    images
+    validatedData.id,
+    validatedData.images
   );
   return res.status(200).json(updatedProject);
 }
@@ -172,50 +112,27 @@ export async function uploadProjectImages(
 /**
  * Delete the main image from a project
  * DELETE /api/projects/deleteMainImage
- * Body: { id: string }
+ * Body: DeleteMainImageInput
  */
 export async function deleteMainImage(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const body = req.body as { id?: string };
-
-  if (!body.id || typeof body.id !== 'string') {
-    throw new HttpError(400, 'Project ID is required in request body');
-  }
-
-  await projectService.deleteMainImage(body.id);
+  const { id } = validateRequest(deleteMainImageSchema, req.body);
+  await projectService.deleteMainImage(id);
   return res.status(200).json({ message: 'Main image deleted successfully' });
 }
 
 /**
  * Delete specific images from a project
  * DELETE /api/projects/deleteImages
- * Body: { id: string, imageIds: string[] }
+ * Body: DeleteImagesInput
  */
 export async function deleteProjectImages(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const body = req.body as { id?: string; imageIds?: unknown };
-
-  if (!body.id || typeof body.id !== 'string') {
-    throw new HttpError(400, 'Project ID is required in request body');
-  }
-
-  if (!body.imageIds || !Array.isArray(body.imageIds)) {
-    throw new HttpError(400, 'imageIds array is required in request body');
-  }
-
-  // Validate image IDs
-  const imageIds: string[] = [];
-  for (const imgId of body.imageIds) {
-    if (typeof imgId !== 'string' || imgId.length === 0) {
-      throw new HttpError(400, 'All imageIds must be non-empty strings');
-    }
-    imageIds.push(imgId);
-  }
-
-  await projectService.deleteProjectImages(body.id, imageIds);
+  const { id, imageIds } = validateRequest(deleteImagesSchema, req.body);
+  await projectService.deleteProjectImages(id, imageIds);
   return res.status(200).json({ message: 'Images deleted successfully' });
 }

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  createProject,
   getAllProjects,
   getFavouriteProjects,
   getProjectById,
@@ -10,6 +11,9 @@ import {
 } from '../controllers/project.controller';
 
 const router = Router();
+
+// POST /api/projects - Create a new project
+router.post('/', createProject);
 
 // GET /api/projects - Get all projects with optional filters
 router.get('/', getAllProjects);

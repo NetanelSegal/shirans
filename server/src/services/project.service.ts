@@ -9,6 +9,7 @@ import {
 import { HttpError } from '../middleware/errorHandler';
 import { prisma } from '../config/database';
 import { Prisma } from '../../prisma/generated/prisma/client';
+import { ProjectImageType } from '../../prisma/generated/prisma/enums';
 import logger from '../middleware/logger';
 
 /**
@@ -42,6 +43,63 @@ export const projectService = {
     } catch (error) {
       logger.error('Error fetching favourite projects', { error });
       throw new HttpError(500, 'Failed to fetch favourite projects');
+    }
+  },
+
+  /**
+   * Create a new project
+   * @param data - Project creation data
+   * @returns Created project in frontend format
+   */
+  async createProject(data: {
+    title: string;
+    description: string;
+    location: string;
+    client: string;
+    isCompleted: boolean;
+    constructionArea: number;
+    favourite: boolean;
+    categoryIds: string[];
+    images: Array<{ url: string; type: string; order?: number }>;
+  }): Promise<ProjectResponse> {
+    try {
+      // Build Prisma create input
+      const createData: Prisma.ProjectCreateInput = {
+        title: data.title,
+        description: data.description,
+        location: data.location,
+        client: data.client,
+        isCompleted: data.isCompleted,
+        constructionArea: data.constructionArea,
+        favourite: data.favourite,
+        categories: {
+          connect: data.categoryIds.map((categoryId) => ({ id: categoryId })),
+        },
+        images: {
+          create: data.images.map((img) => ({
+            url: img.url,
+            type: img.type as ProjectImageType,
+            order: img.order ?? 0,
+          })),
+        },
+      };
+
+      const createdProject = await projectRepository.create(createData);
+      return transformProjectToResponse(createdProject);
+    } catch (error) {
+      if (error && typeof error === 'object' && 'code' in error) {
+        const prismaError = error as { code: string };
+        if (prismaError.code === 'P2002') {
+          // Unique constraint violation
+          throw new HttpError(409, 'A project with this title already exists');
+        }
+        if (prismaError.code === 'P2025') {
+          // Related record not found (category)
+          throw new HttpError(404, 'One or more categories not found');
+        }
+      }
+      logger.error('Error creating project', { error, data });
+      throw new HttpError(500, 'Failed to create project');
     }
   },
 
