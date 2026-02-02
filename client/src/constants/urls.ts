@@ -26,8 +26,19 @@ export const urls = {
     auth: {
         register: `${MAIN_URL}/api/auth/register`,
         login: `${MAIN_URL}/api/auth/login`,
+        refresh: `${MAIN_URL}/api/auth/refresh`,
         me: `${MAIN_URL}/api/auth/me`,
         logout: `${MAIN_URL}/api/auth/logout`,
+    },
+    
+    // Contact endpoints
+    contact: {
+        submit: `${MAIN_URL}/api/contact`,
+    },
+    
+    // Categories endpoints
+    categories: {
+        getAll: `${MAIN_URL}/api/categories`,
     },
     
     // Health endpoint

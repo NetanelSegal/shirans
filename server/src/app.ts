@@ -8,6 +8,8 @@ import { errorHandler } from './middleware/errorHandler';
 import healthRoutes from './routes/health.routes';
 import projectRoutes from './routes/project.routes';
 import authRoutes from './routes/auth.routes';
+import categoryRoutes from './routes/category.routes';
+import contactRoutes from './routes/contact.routes';
 
 function createApp(): Express {
   const app = express();
@@ -29,6 +31,8 @@ function createApp(): Express {
   app.use('/api', healthRoutes);
   app.use('/api/auth', authRoutes);
   app.use('/api/projects', projectRoutes);
+  app.use('/api/categories', categoryRoutes);
+  app.use('/api/contact', contactRoutes);
 
   // Error handling middleware (must be last)
   app.use(errorHandler);
