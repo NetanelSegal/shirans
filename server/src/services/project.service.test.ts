@@ -623,6 +623,56 @@ describe('projectService', () => {
     });
   });
 
+  describe('deleteProject', () => {
+    it('should delete project successfully', async () => {
+      const mockProject = {
+        id: '1',
+        title: 'Test Project',
+        description: 'Test Description',
+        location: 'Test Location',
+        client: 'Test Client',
+        isCompleted: true,
+        constructionArea: 100,
+        favourite: false,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-02'),
+        categories: [],
+        images: [],
+      };
+
+      vi.mocked(projectRepository.delete).mockResolvedValue(
+        mockProject as never
+      );
+
+      await projectService.deleteProject('1');
+
+      expect(projectRepository.delete).toHaveBeenCalledWith('1');
+    });
+
+    it('should throw HttpError 404 when project not found', async () => {
+      const prismaError = {
+        code: 'P2025',
+      };
+
+      vi.mocked(projectRepository.delete).mockRejectedValue(prismaError);
+
+      await expect(projectService.deleteProject('999')).rejects.toThrow(
+        HttpError
+      );
+      await expect(projectService.deleteProject('999')).rejects.toThrow(
+        'not found'
+      );
+    });
+
+    it('should throw HttpError on repository error', async () => {
+      vi.mocked(projectRepository.delete).mockRejectedValue(
+        new Error('Database error')
+      );
+
+      await expect(projectService.deleteProject('1')).rejects.toThrow(HttpError);
+    });
+  });
+
   describe('deleteProjectImages', () => {
     it('should delete specified images', async () => {
       const mockProject = {

@@ -7,6 +7,7 @@ import {
   projectQuerySchema,
   singleProjectQuerySchema,
   uploadImagesSchema,
+  deleteProjectSchema,
   deleteMainImageSchema,
   deleteImagesSchema,
 } from '../validators/project.validators';
@@ -107,6 +108,20 @@ export async function uploadProjectImages(
     validatedData.images
   );
   return res.status(200).json(updatedProject);
+}
+
+/**
+ * Delete a project
+ * DELETE /api/projects
+ * Body: DeleteProjectInput
+ */
+export async function deleteProject(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const { id } = validateRequest(deleteProjectSchema, req.body);
+  await projectService.deleteProject(id);
+  return res.status(200).json({ message: 'Project deleted successfully' });
 }
 
 /**

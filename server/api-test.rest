@@ -14,7 +14,7 @@
 ###
 ### Example: If a project response shows "_id": "clx123abc456def789", use that
 @projectId = your-project-id-here
-@categoryId = your-category-id-here
+@categoryId = cml45zx5i00002wuc1k1hciui
 @imageId = your-image-id-here
 
 ###############################################
@@ -210,6 +210,25 @@ Content-Type: application/json
   "title": "New Title Only",
   "favourite": false
 }
+
+###
+
+###############################################
+### DELETE - Delete Project
+###############################################
+DELETE {{apiUrl}}/projects
+Content-Type: application/json
+
+{
+  "id": "{{projectId}}"
+}
+
+### Expected Response:
+### {
+###   "message": "Project deleted successfully"
+### }
+###
+### Note: This will cascade delete all associated images
 
 ###
 

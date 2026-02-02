@@ -10,6 +10,7 @@ vi.mock('../../src/repositories/project.repository', () => ({
     findById: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
+    delete: vi.fn(),
   },
 }));
 vi.mock('../../src/config/database', () => ({
@@ -440,6 +441,65 @@ describe('Project Routes Integration Tests', () => {
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('Image type must be one of');
+    });
+  });
+
+  describe('DELETE /api/projects', () => {
+    it('should return 200 when project is deleted', async () => {
+      const mockProject = {
+        id: 'clx123abc456def789',
+        title: 'Test Project',
+        description: 'Test Description',
+        location: 'Test Location',
+        client: 'Test Client',
+        isCompleted: true,
+        constructionArea: 100,
+        favourite: false,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-02'),
+        categories: [],
+        images: [],
+      };
+
+      vi.mocked(projectRepository.delete).mockResolvedValue(
+        mockProject as never
+      );
+
+      const response = await request(app)
+        .delete('/api/projects')
+        .send({
+          id: 'clx123abc456def789',
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toContain('deleted successfully');
+    });
+
+    it('should return 400 when id is missing', async () => {
+      const response = await request(app)
+        .delete('/api/projects')
+        .send({});
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toMatch(/id|CUID/);
+    });
+
+    it('should return 404 when project not found', async () => {
+      const prismaError = {
+        code: 'P2025',
+      };
+
+      vi.mocked(projectRepository.delete).mockRejectedValue(prismaError);
+
+      const response = await request(app)
+        .delete('/api/projects')
+        .send({
+          id: 'clx999invalid999999',
+        });
+
+      expect(response.status).toBe(404);
+      expect(response.body.message).toContain('not found');
     });
   });
 

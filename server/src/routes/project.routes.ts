@@ -6,6 +6,7 @@ import {
   getProjectById,
   updateProject,
   uploadProjectImages,
+  deleteProject,
   deleteMainImage,
   deleteProjectImages,
 } from '../controllers/project.controller';
@@ -26,6 +27,9 @@ router.get('/single', getProjectById);
 
 // PUT /api/projects - Update project (body contains id)
 router.put('/', updateProject);
+
+// DELETE /api/projects - Delete a project (body contains id)
+router.delete('/', deleteProject);
 
 // POST /api/projects/uploadImgs - Upload images to project
 router.post('/uploadImgs', uploadProjectImages);

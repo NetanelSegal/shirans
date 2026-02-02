@@ -73,6 +73,13 @@ export const deleteMainImageSchema = z.object({
 });
 
 /**
+ * Zod schema for deleting a project
+ */
+export const deleteProjectSchema = z.object({
+  id: z.string().cuid('Project ID must be a valid CUID'),
+});
+
+/**
  * Zod schema for deleting project images
  */
 export const deleteImagesSchema = z.object({
@@ -86,5 +93,6 @@ export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
 export type ProjectQueryInput = z.infer<typeof projectQuerySchema>;
 export type SingleProjectQueryInput = z.infer<typeof singleProjectQuerySchema>;
 export type UploadImagesInput = z.infer<typeof uploadImagesSchema>;
+export type DeleteProjectInput = z.infer<typeof deleteProjectSchema>;
 export type DeleteMainImageInput = z.infer<typeof deleteMainImageSchema>;
 export type DeleteImagesInput = z.infer<typeof deleteImagesSchema>;

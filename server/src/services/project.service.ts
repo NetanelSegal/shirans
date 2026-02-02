@@ -260,6 +260,27 @@ export const projectService = {
   },
 
   /**
+   * Delete a project
+   * @param id - Project ID
+   * @throws HttpError 404 if project not found
+   */
+  async deleteProject(id: string): Promise<void> {
+    try {
+      await projectRepository.delete(id);
+    } catch (error) {
+      if (error && typeof error === 'object' && 'code' in error) {
+        const prismaError = error as { code: string };
+        if (prismaError.code === 'P2025') {
+          // Record not found
+          throw new HttpError(404, `Project with id ${id} not found`);
+        }
+      }
+      logger.error('Error deleting project', { error, id });
+      throw new HttpError(500, 'Failed to delete project');
+    }
+  },
+
+  /**
    * Delete specific images from a project
    * @param id - Project ID
    * @param imageIds - Array of image IDs to delete
