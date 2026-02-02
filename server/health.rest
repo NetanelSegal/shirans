@@ -1,0 +1,19 @@
+### Health Check API Endpoint
+### Base URL - Update this to match your server URL
+@baseUrl = http://localhost:3000
+@apiUrl = {{baseUrl}}/api
+
+###############################################
+### GET - Health Check
+### Returns server status and timestamp
+###############################################
+GET {{apiUrl}}/health
+Content-Type: application/json
+
+### Expected Response:
+### {
+###   "status": "ok",
+###   "timestamp": "2025-02-02T10:00:00.000Z"
+### }
+
+###
