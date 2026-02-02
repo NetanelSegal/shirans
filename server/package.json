@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --exec tsx src/index.ts",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "prebuild": "npm run build -w @shirans/shared",
     "start": "node dist/src/index.js",
     "prisma:generate": "prisma generate",
@@ -55,6 +55,7 @@
     "playwright": "^1.58.1",
     "prisma": "^7.3.0",
     "supertest": "^7.2.2",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.54.0",
