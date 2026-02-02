@@ -8,6 +8,8 @@ interface EnvConfig {
   NODE_ENV: 'development' | 'production' | 'test';
   DATABASE_URL: string;
   CORS_ORIGIN: string;
+  JWT_SECRET: string;
+  JWT_EXPIRES_IN: string;
 }
 
 function getEnvVar(name: string, defaultValue?: string): string {
@@ -43,4 +45,6 @@ export const env: EnvConfig = {
   NODE_ENV: getEnvNodeEnv(),
   DATABASE_URL: getEnvVar('DATABASE_URL'),
   CORS_ORIGIN: getEnvVar('CORS_ORIGIN', 'http://localhost:5174'),
+  JWT_SECRET: getEnvVar('JWT_SECRET'),
+  JWT_EXPIRES_IN: getEnvVar('JWT_EXPIRES_IN', '7d'),
 };
