@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm run build -w @shirans/shared",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@shirans/shared": "1.0.0",
     "@emailjs/browser": "^4.4.1",
     "axios": "^1.13.4",
     "caniuse-lite": "^1.0.30001766",

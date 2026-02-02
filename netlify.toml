@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build:client-for-deploy"
+  publish = "client/dist"
+  base = "."
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--scope=shirans --scope=@shirans/shared"

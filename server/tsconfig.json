@@ -18,7 +18,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@shirans/shared": ["../shared/dist"]
     }
   },
   "include": ["src/**/*", "prisma/generated/**/*"],
