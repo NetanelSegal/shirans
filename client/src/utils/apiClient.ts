@@ -1,12 +1,12 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
-import { MAIN_URL } from '../constants/urls';
+import { BACKEND_URL } from '../constants/urls';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { getAccessToken, removeAccessToken } from './tokenStorage';
 import { transformError } from './errorHandler';
 import { refreshAccessToken } from '../services/tokenRefresh.service';
 
 const apiClient = axios.create({
-  baseURL: MAIN_URL,
+  baseURL: BACKEND_URL,
   timeout: 10000,
   withCredentials: true, // For httpOnly cookies (refresh tokens)
 });
@@ -24,11 +24,16 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
     const appError = transformError(error);
 
     // Handle 401 - Try to refresh token
-    if (appError.statusCode === HTTP_STATUS.UNAUTHORIZED && !originalRequest._retry) {
+    if (
+      appError.statusCode === HTTP_STATUS.UNAUTHORIZED &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       try {
@@ -51,7 +56,7 @@ apiClient.interceptors.response.use(
     }
 
     return Promise.reject(appError);
-  }
+  },
 );
 
 export default apiClient;

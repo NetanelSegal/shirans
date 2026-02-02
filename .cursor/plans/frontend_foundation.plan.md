@@ -55,21 +55,26 @@ Set up the foundational infrastructure for frontend API integration, including c
 ## Files to Create
 
 ### Constants
+
 - `client/src/constants/httpStatus.ts` - Import HTTP_STATUS from shared
 - `client/src/constants/errorMessages.ts` - Hebrew error messages using ERROR_KEYS
 
 ### Types
+
 - `client/src/types/error.types.ts` - Import and extend error types
 
 ### Utilities
+
 - `client/src/utils/tokenStorage.ts` - Token storage functions
 - `client/src/utils/apiClient.ts` - Axios instance with interceptors
 - `client/src/utils/errorHandler.ts` - Error handling utilities
 
 ### Hooks
+
 - `client/src/hooks/useErrorHandler.ts` - Error handling hook
 
 ### Components
+
 - `client/src/components/ErrorDisplay/ErrorDisplay.tsx` - Error display component
 - `client/src/components/ErrorBoundary/ErrorBoundary.tsx` - Error boundary component
 
@@ -221,12 +226,12 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const appError = transformError(error);
-    
+
     // Handle 401 - Token refresh will be added in auth context
     if (appError.statusCode === HTTP_STATUS.UNAUTHORIZED) {
       // Token refresh logic will be added later
     }
-    
+
     return Promise.reject(appError);
   }
 );
@@ -239,6 +244,7 @@ apiClient.interceptors.response.use(
 See `FRONTEND_ERROR_HANDLING_STRATEGY.md` for complete implementation.
 
 Key functions:
+
 - `isAxiosError()` - Check if error is Axios error
 - `isNetworkError()` - Check if network error
 - `extractApiErrorMessage()` - Extract message from API response
@@ -257,10 +263,13 @@ import { transformError, logError } from '../utils/errorHandler';
 import { AppError } from '../types/error.types';
 
 export function useErrorHandler() {
-  const handleError = useCallback((error: unknown, context?: string): AppError => {
-    logError(error, context);
-    return transformError(error);
-  }, []);
+  const handleError = useCallback(
+    (error: unknown, context?: string): AppError => {
+      logError(error, context);
+      return transformError(error);
+    },
+    []
+  );
 
   return { handleError };
 }
