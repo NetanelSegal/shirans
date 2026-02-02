@@ -1,4 +1,4 @@
-export const BACKEND_URL = 'https://shiran-s-server.onrender.com';
+export const BACKEND_URL = 'https://shirans.onrender.com';
 // http://localhost:3000
 
 export const BASE_URL = 'https://shiran-gilad.com';
