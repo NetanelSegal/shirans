@@ -20,7 +20,7 @@
 ### Auth Variables
 ### These will be set after login/register
 ### Copy the accessToken from the response and paste it here
-@accessToken = your-access-token-here
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWw0eXN0NWswMDAwbmN1Y2RmZ2lkcjRmIiwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzAwMjQzNTQsImV4cCI6MTc3MDYyOTE1NH0.McaRvl9of9jkhJGYFwD_CygAxEO9v0__oVSfMPKNEBI
 
 ###############################################
 ### GET - Get All Projects (No Filters)
@@ -242,6 +242,8 @@ Content-Type: application/json
 ###############################################
 POST {{apiUrl}}/projects/uploadImgs
 Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
 
 {
   "id": "{{projectId}}",

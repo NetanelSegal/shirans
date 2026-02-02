@@ -21,7 +21,7 @@ router.post('/login', authLimiter, login);
 router.post('/refresh', authLimiter, refresh);
 
 // GET /api/auth/me - Get current user (protected)
-router.get('/me', authenticate, getCurrentUser);
+router.get('/me', authLimiter, authenticate, getCurrentUser);
 
 // POST /api/auth/logout - Logout user (server-side token invalidation)
 router.post('/logout', authLimiter, logout);
