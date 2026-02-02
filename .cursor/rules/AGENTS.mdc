@@ -1,0 +1,98 @@
+---
+alwaysApply: true
+---
+## Git Workflow
+
+### Feature Branch Strategy
+- **CRITICAL: Create a separate feature branch for EACH task/feature** (e.g., `feature/replace-testimonials`, `feature/fix-image-modal`)
+- **NEVER work on multiple tasks in the same branch** - each task/feature must have its own dedicated branch
+- Work on the task in its dedicated branch
+- Make **small, logical commits** as work progresses (at meaningful checkpoints, not necessarily every subtask)
+- This allows:
+  - Easy navigation between tasks (`git checkout <branch-name>`)
+  - Testing different approaches without affecting main branch
+  - Easy rollback if issues arise (`git reset --hard <commit-hash>` or `git revert`)
+  - Clean history with descriptive commit messages
+  - Independent review and merge of each feature
+
+### Commit Guidelines
+- Commit messages should be clear and descriptive
+- Commit when a logical unit of work is complete
+- Use conventional commit format when possible: `feat:`, `fix:`, `refactor:`, etc.
+- Each commit should represent a working state (code compiles, no obvious errors)
+
+### Branch Management
+- Keep feature branches focused on a single task
+- When task is complete: commit and push to feature branch, then wait for review
+- **Never merge to main** - user handles all merges after review
+- User will delete feature branch after successful merge
+
+---
+
+## Task Management Flow
+
+### Task Lifecycle
+1. **Task Received** → Add to `tasks.md` under "Pending Approval" with breakdown
+2. **Approval Given** → Move to "Active Tasks" in `tasks.md`, **create a separate feature branch for THIS task only**, update `progress.md`
+3. **Work In Progress** → Update `progress.md` with current status and what you're working on
+4. **Subtask Complete** → Make Git commit, update `progress.md`
+5. **Task Complete** → Check for errors (linting, build, TypeScript) → `git add .`, `git commit`, `git push` to feature branch
+6. **Await Review** → Wait for review approval via GitHub
+7. **Review Approved** → User will merge branch to main, then move to "Completed Tasks" in `tasks.md`, update `progress.md`
+8. **Documentation**: When moving task to "Completed Tasks", keep only a **brief summary** - do NOT copy all subtasks and detailed breakdown. Include only:
+   - What was accomplished (high-level)
+   - Key changes made
+   - Branch name
+   - Completion date
+
+### Important: Review Process
+- **You do NOT decide when a task is complete** - tasks require review before completion
+- **You NEVER merge to main** - only push to feature branch, user handles merges
+- **Always check for errors before pushing**: Verify no linting errors, build errors, or TypeScript errors
+- When you finish a task: Check for errors → `git add .`, `git commit`, `git push` to the feature branch
+- Review happens via GitHub - wait for approval
+- Only mark tasks as "Completed" after review approval and user confirms merge
+
+### File Responsibilities
+- **`tasks.md`**: Contains all tasks (Pending Approval, Active, Completed) and subtasks
+- **`progress.md`**: Contains current work status, what's being worked on right now, and progress log
+- **`README.md`** (this file): Contains the process, workflow, and Git guidelines
+
+---
+
+## Task Categories
+
+- **Tasks**: Active development tasks and features
+- **Technologies**: Technology adoption and setup
+- **Tips**: Helpful tips and optimizations
+- **Best Practices**: Best practices to implement
+
+---
+
+## Code Quality Guidelines
+
+### Single Source of Truth (SSOT)
+- **ALWAYS check for existing constants/config files before creating new ones**
+- **NEVER duplicate constants, URLs, or configuration values across multiple files**
+- If a value is used in multiple places, it MUST be defined in a single location (e.g., `constants/urls.js`)
+- Before adding a constant, check if it already exists in:
+  - `constants/` directory
+  - Configuration files
+  - Environment variables
+- Examples of values that should be SSOT:
+  - Base URLs, API endpoints
+  - Configuration values
+  - Magic numbers/strings used in multiple places
+  - Default values
+
+## Notes
+
+- **Critical**: If anything is unclear, ask at least **3 clarifying questions** before proceeding
+- **Critical**: **Each task/feature MUST have its own separate feature branch** - never work on multiple tasks in the same branch
+- **Critical**: **Always check for Single Source of Truth** - never duplicate constants or configuration values
+- **Important**: Large tasks must be broken down into smaller pieces before execution
+- **Important**: When documenting completed tasks, keep only a **brief summary** - do NOT include all subtasks and detailed breakdown
+- Approval is required before starting work on any task
+- Tasks assigned to Auto (AI agent) should be executable independently
+- Each task should include sufficient context for completion
+- Progress should be updated regularly in `progress.md`
