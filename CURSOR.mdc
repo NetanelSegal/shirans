@@ -1,0 +1,347 @@
+---
+alwaysApply: true
+---
+
+# Shirans Project - AI Development Rules
+
+## Project Context
+
+This is a React + TypeScript portfolio website for an architecture/interior design professional (Shiran Gilad).
+
+- **Tech Stack:** React 18, TypeScript, Vite, Tailwind CSS, React Router
+- **Language:** Hebrew (RTL support required)
+- **Key Features:** Project galleries, testimonials, contact forms, image modals
+- **Deployment:** Static site (Vite build)
+
+## Code Style & Conventions
+
+### TypeScript
+
+- Use strict TypeScript (`strict: true` in tsconfig)
+- Prefer `interface` over `type` for object shapes
+- Use explicit return types for functions (especially public APIs)
+- Avoid `any` - use `unknown` when type is truly unknown
+- Use utility types (`Pick`, `Omit`, `Partial`) when appropriate
+- Export types/interfaces alongside components
+
+### React Components
+
+- Use functional components with hooks
+- Default exports for components: `export default function ComponentName()`
+- Named exports for utilities/hooks: `export function useHookName()`
+- Component files: PascalCase (e.g., `ProjectImageModal.tsx`)
+- Hook files: `use` prefix (e.g., `useCarousel.tsx`)
+- Utility files: kebab-case or camelCase (e.g., `formatDate.ts`, `icons.utils.ts`)
+
+### File Organization
+
+- One component per file (except related sub-components)
+- Co-locate related files: `ComponentName/ComponentName.tsx` + `index.tsx`
+- Hooks in `hooks/` directory or component-specific `hooks/` subdirectory
+- Constants in `constants/` directory (SSOT pattern - see below)
+- Types/interfaces in component file or `types/` directory
+
+### Naming Conventions
+
+- Components: PascalCase (`ProjectCard`, `ImageModal`)
+- Hooks: camelCase with `use` prefix (`useCarousel`, `useEmailSend`)
+- Utilities: camelCase (`formatDate`, `validateEmail`)
+- Constants: UPPER_SNAKE_CASE (`BASE_URL`, `MAIN_URL`)
+- Files: Match export name (component file = component name)
+
+## Single Source of Truth (SSOT)
+
+**CRITICAL:** Always check for existing constants/config before creating new ones.
+
+### Before Adding a Constant:
+
+1. Check `constants/` directory
+2. Check component-specific constants
+3. Check environment variables
+4. Check configuration files
+
+### If Value Exists:
+
+- Import and reuse existing constant
+- NEVER duplicate values across files
+- If constant needs to be shared, move to `constants/` directory
+
+### Examples of SSOT Values:
+
+- URLs, API endpoints → `constants/urls.ts`
+- Configuration values → Config files or constants
+- Magic numbers/strings → Named constants
+- Default values → Constants or default parameters
+
+## Git Workflow
+
+### Branch Strategy
+
+- **CRITICAL:** One feature branch per task/feature
+- Branch naming: `feature/task-name` (e.g., `feature/replace-testimonials`)
+- NEVER work on multiple tasks in the same branch
+- Keep branches focused on single task
+
+### Commit Guidelines
+
+- Use conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `style:`, `test:`, `chore:`
+- Commit when logical unit of work is complete
+- Each commit should represent working state (compiles, no errors)
+- Write clear, descriptive commit messages
+
+### Workflow
+
+1. Create feature branch for task
+2. Make small, logical commits as work progresses
+3. Before pushing: Check for linting/build/TypeScript errors
+4. Push to feature branch (NEVER merge to main)
+5. Wait for review approval
+6. User handles merge after approval
+
+## React Best Practices
+
+### Performance (Critical Priority)
+
+- **Eliminate Waterfalls:** Use `Promise.all()` for independent async operations
+- **Bundle Size:** Avoid barrel imports, use direct imports from source files
+- **Code Splitting:** Use `lazy()` for route components (already implemented ✅)
+- **Re-renders:** Use `memo()`, `useMemo()`, `useCallback()` appropriately
+- **State Management:** Use functional `setState` updates to avoid stale closures
+
+### Component Patterns
+
+- Extract expensive computations to memoized components
+- Use Suspense boundaries for async data loading
+- Defer state reads to usage point (don't subscribe if only used in callbacks)
+- Use transitions (`startTransition`) for non-urgent updates
+
+### Data Fetching
+
+- Use SWR or similar for automatic request deduplication
+- Cache API responses appropriately
+- Handle loading and error states
+
+## Accessibility (A11y)
+
+### RTL Support
+
+- All content is Hebrew (RTL)
+- Ensure proper `dir="rtl"` attributes where needed
+- Test navigation and layout in RTL mode
+
+### Keyboard Navigation
+
+- All interactive elements must be keyboard accessible
+- Use semantic HTML (`<button>`, `<nav>`, etc.)
+- Implement proper focus management in modals
+
+### Screen Readers
+
+- Use descriptive `alt` text for images
+- Provide ARIA labels for icon-only buttons
+- Ensure form labels are properly associated
+
+### Visual Accessibility
+
+- Maintain sufficient color contrast
+- Don't rely solely on color to convey information
+- Provide text alternatives for visual content
+
+## Error Handling
+
+### API Errors
+
+- Always handle API errors gracefully
+- Show user-friendly error messages
+- Log errors for debugging (but don't expose internals to users)
+
+### Component Errors
+
+- Use Error Boundaries for component-level error handling
+- Provide fallback UI for error states
+- Handle loading states appropriately
+
+### Form Validation
+
+- Validate on submit and on blur
+- Show clear, actionable error messages
+- Use HTML5 validation attributes where possible
+
+## Testing Strategy
+
+### Tech Stack Definition (SSOT)
+
+- **Frontend (React + Vite)**:
+  - **Runner/Assertions**: `vitest`
+  - **DOM testing**: `@testing-library/react`
+  - **User interactions**: `@testing-library/user-event`
+  - **DOM matchers**: `@testing-library/jest-dom` (via Vitest setup file)
+  - **Network mocking (preferred)**: `msw` (Mock Service Worker)
+  - **Coverage**: `@vitest/coverage-v8`
+- **Backend (Node + Express)**:
+  - **Runner/Assertions**: `vitest`
+  - **HTTP integration testing**: `supertest`
+  - **Mock outgoing HTTP (when needed)**: `msw` in Node mode (`msw/node`) or adapter-level `vi.mock` (see Mocking Policy)
+
+### File Placement & Naming
+
+- **Naming**:
+  - Use **one convention** across the repo: `*.test.ts` / `*.test.tsx` (preferred).
+  - For integration tests, use a scope suffix when helpful: `*.int.test.ts`.
+- **Frontend tests (this repo lives under `client/`)**:
+  - **Co-locate** tests next to the unit under test:
+    - `client/src/components/Button/Button.tsx`
+    - `client/src/components/Button/Button.test.tsx`
+  - Shared test utilities belong in `client/src/test/` (e.g., `renderWithProviders.tsx`, `msw/handlers.ts`, `setup.ts`).
+  - Global test setup (e.g. RTL + jest-dom + MSW lifecycle) lives in `client/src/test/setup.ts` and is referenced from `client/vite.config.ts`.
+- **Backend tests (if/when a `server/` workspace exists)**:
+  - **Unit tests**: co-locate with services/modules under `server/src/**`.
+  - **Integration tests (Express app + routes/controllers)**: `server/test/integration/**` (not co-located) to keep scopes unmistakable.
+
+### Client-Side Rules (React Testing Library)
+
+- **Accessibility-first queries are mandatory (“Query by Role”)**:
+  - Prefer `getByRole` / `findByRole` with `name` for user-facing controls.
+  - Next best: `getByLabelText`, `getByPlaceholderText`, `getByText`, `getByAltText`.
+  - `getByTestId` is **last resort** only (e.g., purely decorative elements with no semantic role).
+- **Forbid implementation-detail testing**:
+  - Do **not** test internal state, hook calls, component instance methods, CSS class names, DOM structure depth, or exact markup that users can’t perceive.
+  - Test **behavior and user-visible outcomes**: text, roles, accessible names, focus, navigation, enabled/disabled state, and error messages.
+- **Interaction testing**:
+  - Use `userEvent` (not `fireEvent`) for user flows.
+  - Prefer `screen.*` queries in tests.
+
+### Server-Side Rules (Node/Express)
+
+- **Unit tests (services/modules)**:
+  - Target pure logic and service-layer behavior with minimal I/O.
+  - Prefer dependency injection and testing boundaries (e.g., pass repositories/clients in) rather than mocking deep internals.
+- **Integration tests (API endpoints)**:
+  - Use `supertest` against the real Express app instance (routes + middleware) to validate:
+    - status codes
+    - auth/authorization behavior (when applicable)
+    - response shape/contracts (don’t snapshot entire bodies unless stable)
+    - validation errors and edge cases
+  - Keep controllers/routes integration tests separate from unit tests to avoid conflating scopes.
+  - Avoid mocking Express `req`/`res` in integration tests; only do that in narrow unit tests when unavoidable.
+
+### Mocking Policy (MSW vs `vi.mock`)
+
+- **Use MSW when the unit under test crosses an HTTP boundary**:
+  - Frontend component/hook tests that call `fetch`/`axios` should mock the network with **MSW**, not by mocking `fetch`/`axios` directly.
+  - For backend code that calls external HTTP APIs, prefer **MSW Node** (or mock the HTTP client adapter) so tests remain close to real request/response behavior.
+- **Use `vi.mock` for module boundaries and non-HTTP dependencies**:
+  - Examples: analytics, feature flags, UUID/time, local storage wrappers, environment config, heavy libraries, or internal adapters.
+  - Prefer mocking the **smallest stable boundary** (an adapter module), not leaf dependencies across many files.
+- **Consistency rules**:
+  - No mixed mocking strategies within the same test suite unless there is a clear boundary reason.
+  - Always reset/restore between tests via shared setup (e.g., `vi.restoreAllMocks()`), and avoid “leaky” global state.
+
+## Code Quality Checks
+
+### Before Committing
+
+1. Run `npm run lint` - fix all ESLint errors
+2. Run `npm run build` - ensure build succeeds
+3. Check TypeScript compilation - no type errors
+4. Test manually in browser (especially RTL layout)
+
+### ESLint Rules
+
+- Follow React Hooks rules
+- Use TypeScript strict mode
+- No unused variables/imports
+- Consistent code style (Prettier handles formatting)
+
+## Project-Specific Patterns
+
+### Image Handling
+
+- Use responsive images with `ResponsiveImage` component
+- Optimize images before adding to project
+- Use WebP format for better compression
+- Provide fallback images
+
+### Routing
+
+- Use React Router for navigation
+- Lazy load route components (already implemented ✅)
+- Handle 404 errors with NotFound component
+
+### State Management
+
+- Use Context API for global state (`ProjectsContext`, `ScreenProvider`)
+- Use local state for component-specific state
+- Avoid prop drilling - use Context when needed
+
+### API Integration
+
+- All API endpoints defined in `constants/urls.ts`
+- Use axios for HTTP requests
+- Handle authentication if needed
+- Implement proper error handling
+
+## Documentation
+
+### Component Documentation
+
+- Add JSDoc comments for complex components
+- Document prop interfaces
+- Explain non-obvious logic
+
+### Code Comments
+
+- Comment "why", not "what"
+- Use comments for complex business logic
+- Keep comments up-to-date with code changes
+
+## Performance Targets
+
+### Bundle Size
+
+- Keep initial bundle under 200KB (gzipped)
+- Use code splitting for large features
+- Lazy load heavy components (modals, editors)
+
+### Load Times
+
+- First Contentful Paint: < 1.5s
+- Time to Interactive: < 3.5s
+- Largest Contentful Paint: < 2.5s
+
+### Runtime Performance
+
+- Maintain 60fps animations
+- Use `requestAnimationFrame` for animations
+- Debounce/throttle scroll/resize handlers
+
+## Security
+
+### API Keys
+
+- Never commit API keys or secrets
+- Use environment variables for sensitive data
+- Validate and sanitize user inputs
+
+### XSS Prevention
+
+- Use React's built-in XSS protection
+- Sanitize any user-generated content
+- Be cautious with `dangerouslySetInnerHTML`
+
+## Questions & Clarifications
+
+**CRITICAL:** If anything is unclear, ask at least 3 clarifying questions before proceeding:
+
+1. What is the expected behavior?
+2. Are there any edge cases to consider?
+3. What is the user experience goal?
+
+---
+
+## References
+
+- React Best Practices: `.cursor/rules/react-best-practices.mdc`
+- Git Workflow: `.cursor/rules/AGENTS.mdc`
+- Task Management: `.cursor/rules/tasks.mdc`
+- Progress Tracking: `.cursor/rules/progress.mdc`
