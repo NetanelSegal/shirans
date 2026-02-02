@@ -5,17 +5,14 @@ test.describe('Projects Page', () => {
     await page.goto('/projects');
     await page.waitForLoadState('networkidle');
     
-    // Wait for projects to load (adjust selector based on your implementation)
-    // const projectsContainer = page.locator('[data-testid="projects-list"], .projects-grid, main').first();
-    // await expect(projectsContainer).toBeVisible();
+    // Check that projects page heading is visible
+    const heading = page.locator('h1:has-text("פרוייקטים")');
+    await expect(heading).toBeVisible({ timeout: 10000 });
     
-    // Check if at least one project card/item is visible
-    // const projectCard = page.locator('[data-testid="project-card"], .project-card').first();
-    // await expect(projectCard).toBeVisible({ timeout: 10000 });
-    
-    // Placeholder test - update based on your actual projects UI
-    const pageContent = page.locator('main, [role="main"]').first();
-    await expect(pageContent).toBeVisible();
+    // Check that at least one project link exists (projects are rendered as links)
+    // Projects are rendered with Link components to /projects/{id}
+    const projectLinks = page.locator('a[href^="/projects/"]');
+    await expect(projectLinks.first()).toBeVisible({ timeout: 10000 });
   });
 
   test('should filter projects by category', async ({ page }) => {

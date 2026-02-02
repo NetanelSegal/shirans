@@ -30,9 +30,11 @@ test.describe('Projects Page', () => {
     
     await page.waitForLoadState('networkidle');
     
-    // Check that projects page content is visible
-    // Adjust selector based on your actual implementation
-    const pageContent = page.locator('main, [role="main"]').first();
-    await expect(pageContent).toBeVisible();
+    // Check that projects page heading is visible
+    const heading = page.locator('h1:has-text("פרוייקטים")');
+    await expect(heading).toBeVisible({ timeout: 10000 });
+    
+    // Check that page title is set correctly
+    await expect(page).toHaveTitle(/פרויקטים/);
   });
 });
