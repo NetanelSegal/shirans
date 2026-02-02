@@ -7,6 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': '/src',
+      '@shirans/shared': '../shared/src',
     },
   },
   assetsInclude: ['**/*.MOV', '**/*.mov'],
