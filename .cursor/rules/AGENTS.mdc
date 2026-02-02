@@ -85,6 +85,79 @@ alwaysApply: true
   - Magic numbers/strings used in multiple places
   - Default values
 
+## Testing Guidelines
+
+### Test Types
+- **Unit Tests**: Test individual functions/components in isolation (server: `server/test/`, client: component tests)
+- **Integration Tests**: Test API routes and service layer interactions (server: `server/test/integration/`)
+- **E2E Tests**: Test full user flows from browser perspective (root: `e2e/`)
+
+### E2E Testing with Playwright
+
+#### Setup
+- E2E tests are located in the `e2e/` directory at the root level
+- Playwright configuration: `playwright.config.ts`
+- Tests use TypeScript and follow Playwright best practices
+
+#### Running E2E Tests
+```bash
+# Run all E2E tests (starts dev servers automatically)
+npm run test:e2e
+
+# Run with UI mode (interactive)
+npm run test:e2e:ui
+
+# Run in headed mode (see browser)
+npm run test:e2e:headed
+
+# Debug mode (step through tests)
+npm run test:e2e:debug
+
+# View test report
+npm run test:e2e:report
+```
+
+#### E2E Test Guidelines
+- **Test user flows, not implementation details**: Focus on what users see and do
+- **Use data-testid attributes**: Prefer `data-testid` over CSS classes for selectors (more stable)
+- **Wait for network idle**: Use `page.waitForLoadState('networkidle')` after navigation
+- **Test across browsers**: Playwright runs tests on Chromium, Firefox, and WebKit by default
+- **Mobile testing**: Include mobile viewport tests for responsive features
+- **Isolation**: Each test should be independent and not rely on other tests
+- **Clean up**: Use `test.beforeEach` and `test.afterEach` for setup/teardown
+- **Avoid flakiness**: Use proper waits (`waitFor`, `waitForLoadState`) instead of fixed `sleep()` calls
+- **Test critical paths**: Focus on authentication, core user flows, and critical features
+
+#### E2E Test Structure
+```
+e2e/
+├── example.spec.ts      # Example/homepage tests
+├── auth.spec.ts         # Authentication flow tests
+├── projects.spec.ts     # Projects page tests
+└── [feature].spec.ts    # Other feature-specific tests
+```
+
+#### Writing E2E Tests
+```typescript
+import { test, expect } from '@playwright/test';
+
+test.describe('Feature Name', () => {
+  test('should do something', async ({ page }) => {
+    await page.goto('/path');
+    await page.waitForLoadState('networkidle');
+    
+    // Use data-testid when possible
+    const element = page.locator('[data-testid="my-element"]');
+    await expect(element).toBeVisible();
+  });
+});
+```
+
+#### CI/CD Integration
+- E2E tests run automatically in CI environments
+- Use `PLAYWRIGHT_BASE_URL` environment variable to override base URL
+- Set `CI=true` for CI-specific configurations (retries, workers)
+
 ## Notes
 
 - **Critical**: If anything is unclear, ask at least **3 clarifying questions** before proceeding
@@ -92,6 +165,7 @@ alwaysApply: true
 - **Critical**: **Always check for Single Source of Truth** - never duplicate constants or configuration values
 - **Important**: Large tasks must be broken down into smaller pieces before execution
 - **Important**: When documenting completed tasks, keep only a **brief summary** - do NOT include all subtasks and detailed breakdown
+- **Important**: Write E2E tests for new features that involve user interactions
 - Approval is required before starting work on any task
 - Tasks assigned to Auto (AI agent) should be executable independently
 - Each task should include sufficient context for completion
