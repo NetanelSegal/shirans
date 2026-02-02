@@ -135,6 +135,53 @@ Content-Type: application/json
 ###
 
 ###############################################
+### POST - Create New Project
+###############################################
+POST {{apiUrl}}/projects
+Content-Type: application/json
+
+{
+  "title": "New Project Title",
+  "description": "Project description here",
+  "location": "Project Location",
+  "client": "Client Name",
+  "constructionArea": 150,
+  "isCompleted": false,
+  "favourite": false,
+  "categoryIds": ["{{categoryId}}"],
+  "images": [
+    {
+      "url": "https://example.com/main.jpg",
+      "type": "MAIN",
+      "order": 0
+    },
+    {
+      "url": "https://example.com/image1.jpg",
+      "type": "IMAGE",
+      "order": 1
+    }
+  ]
+}
+
+###
+
+# Create project without images
+POST {{apiUrl}}/projects
+Content-Type: application/json
+
+{
+  "title": "New Project Without Images",
+  "description": "Project description",
+  "location": "Location",
+  "client": "Client",
+  "constructionArea": 100,
+  "categoryIds": ["{{categoryId}}"],
+  "images": []
+}
+
+###
+
+###############################################
 ### PUT - Update Project
 ###############################################
 PUT {{apiUrl}}/projects
