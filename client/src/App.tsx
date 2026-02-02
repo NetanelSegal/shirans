@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy } from 'react';
 import ScreenProvider from './contexts/ScreenProvider';
 import { ProjectsProvider } from './contexts/ProjectsContext';
+import { AuthProvider } from './contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
 
 const Layout = lazy(() => import('./components/Layout'));
@@ -10,15 +11,19 @@ const Process = lazy(() => import('./pages/Process'));
 const Projects = lazy(() => import('./pages/Projects'));
 const Project = lazy(() => import('./pages/Project'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
+const Login = lazy(() => import('./pages/Auth/Login'));
+const Register = lazy(() => import('./pages/Auth/Register'));
 
 function App() {
   return (
     <HelmetProvider>
-      <ProjectsProvider>
-        <ScreenProvider>
-          <AppRoutes />
-        </ScreenProvider>
-      </ProjectsProvider>
+      <AuthProvider>
+        <ProjectsProvider>
+          <ScreenProvider>
+            <AppRoutes />
+          </ScreenProvider>
+        </ProjectsProvider>
+      </AuthProvider>
     </HelmetProvider>
   );
 }
@@ -65,6 +70,14 @@ const router = createBrowserRouter([
       path: route.path,
       element: route.element,
     })),
+  },
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/register',
+    element: <Register />,
   },
 ]);
 
