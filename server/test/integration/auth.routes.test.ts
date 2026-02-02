@@ -23,6 +23,16 @@ vi.mock('../../src/services/auth.service', () => ({
   },
 }));
 
+vi.mock('../../src/repositories/project.repository', () => ({
+  projectRepository: {
+    findAll: vi.fn(),
+    findById: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+  },
+}));
+
 vi.mock('../../src/middleware/logger', () => ({
   default: {
     info: vi.fn(),
@@ -98,11 +108,10 @@ describe('Auth Routes Integration Tests', () => {
     });
 
     it('should return 409 when email already exists', async () => {
-      vi.mocked(authService.register).mockRejectedValue({
-        statusCode: 409,
-        message: 'Email already registered',
-        name: 'HttpError',
-      });
+      const { HttpError } = await import('../../src/middleware/errorHandler');
+      vi.mocked(authService.register).mockRejectedValue(
+        new HttpError(409, 'Email already registered')
+      );
 
       const response = await request(app)
         .post('/api/auth/register')
@@ -174,11 +183,10 @@ describe('Auth Routes Integration Tests', () => {
     });
 
     it('should return 401 with invalid credentials', async () => {
-      vi.mocked(authService.login).mockRejectedValue({
-        statusCode: 401,
-        message: 'Invalid email or password',
-        name: 'HttpError',
-      });
+      const { HttpError } = await import('../../src/middleware/errorHandler');
+      vi.mocked(authService.login).mockRejectedValue(
+        new HttpError(401, 'Invalid email or password')
+      );
 
       const response = await request(app)
         .post('/api/auth/login')

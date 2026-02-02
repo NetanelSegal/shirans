@@ -23,14 +23,11 @@ export const registerSchema = z.object({
  * Zod schema for user login
  */
 export const loginSchema = z.object({
-  email: z
-    .string()
-    .email('Invalid email format')
-    .min(1, 'Email is required'),
+  email: z.email('Invalid email format').min(1, 'Email is required'),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters')
-    .min(1, 'Password is required'),
+    .min(1, 'Password is required')
+    .min(8, 'Password must be at least 8 characters'),
 });
 
 // Type exports for use in controllers

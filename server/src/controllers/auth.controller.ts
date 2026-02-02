@@ -35,16 +35,14 @@ export async function login(
  * Get current authenticated user
  * GET /api/auth/me
  * Requires: Authentication (Bearer token)
+ * Note: req.user is guaranteed to exist due to authenticate middleware
  */
 export async function getCurrentUser(
   req: Request,
   res: Response
 ): Promise<Response> {
-  if (!req.user) {
-    return res.status(401).json({ error: 'Unauthorized', message: 'Authentication required' });
-  }
-
-  const user = await authService.getCurrentUser(req.user.userId);
+  // req.user is guaranteed to exist because authenticate middleware runs before this
+  const user = await authService.getCurrentUser(req.user!.userId);
   return res.status(200).json({ user });
 }
 

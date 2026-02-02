@@ -23,6 +23,16 @@ vi.mock('../middleware/logger', () => ({
     error: vi.fn(),
   },
 }));
+vi.mock('../utils/env', () => ({
+  env: {
+    PORT: 3000,
+    NODE_ENV: 'test' as const,
+    DATABASE_URL: 'postgresql://test:test@localhost:5432/test',
+    CORS_ORIGIN: 'http://localhost:5174',
+    JWT_SECRET: 'test-jwt-secret-key-for-testing-purposes-only',
+    JWT_EXPIRES_IN: '7d',
+  },
+}));
 
 describe('projectService', () => {
   beforeEach(() => {
