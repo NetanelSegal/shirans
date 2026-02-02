@@ -90,9 +90,7 @@ export const projectRepository = {
    * @param data - Project data including category relations
    * @returns Created project with relations
    */
-  async create(
-    data: Prisma.ProjectCreateInput,
-  ): Promise<ProjectWithRelations> {
+  async create(data: Prisma.ProjectCreateInput): Promise<ProjectWithRelations> {
     return await prisma.project.create({
       data,
       include: {
@@ -114,7 +112,7 @@ export const projectRepository = {
    */
   async update(
     id: string,
-    data: Prisma.ProjectUpdateInput,
+    data: Prisma.ProjectUpdateInput
   ): Promise<ProjectWithRelations> {
     return await prisma.project.update({
       where: { id },

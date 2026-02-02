@@ -39,9 +39,6 @@ node_modules/
 dist/
 not_optimized_images
 .cursorignore
-.cursorrules
-.cursor/*
-CURSOR.mdc
 
 # Root level
 package-lock.json
