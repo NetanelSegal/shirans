@@ -38,6 +38,8 @@ vi.mock('../../src/utils/env', () => ({
     NODE_ENV: 'test' as const,
     DATABASE_URL: 'postgresql://test:test@localhost:5432/test',
     CORS_ORIGIN: 'http://localhost:5174',
+    JWT_SECRET: 'test-jwt-secret-key-for-testing-purposes-only',
+    JWT_EXPIRES_IN: '7d',
   },
 }));
 vi.mock('../../src/config/cors', () => ({
@@ -47,6 +49,46 @@ vi.mock('../../src/config/cors', () => ({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   },
+}));
+
+// Mock auth middleware to bypass authentication for tests (unless Authorization header is present)
+vi.mock('../../src/middleware/auth.middleware', () => ({
+  authenticate: vi.fn((req: any, _res: any, next: any) => {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      // Mock admin token
+      if (token === 'admin-token') {
+        req.user = {
+          userId: 'admin123',
+          email: 'admin@example.com',
+          role: 'ADMIN',
+        };
+      } else if (token === 'user-token') {
+        req.user = {
+          userId: 'user123',
+          email: 'user@example.com',
+          role: 'USER',
+        };
+      }
+    }
+    next();
+  }),
+}));
+
+vi.mock('../../src/middleware/authorize.middleware', () => ({
+  requireAdmin: vi.fn((req: any, _res: any, next: any) => {
+    if (!req.user || req.user.role !== 'ADMIN') {
+      return next({ statusCode: 403, message: 'Admin access required', name: 'HttpError' });
+    }
+    next();
+  }),
+  requireAuth: vi.fn((req: any, _res: any, next: any) => {
+    if (!req.user) {
+      return next({ statusCode: 401, message: 'Authentication required', name: 'HttpError' });
+    }
+    next();
+  }),
 }));
 
 // Import app after all mocks (app.ts exports the app instance, not a function)
@@ -80,6 +122,7 @@ describe('Project Routes Integration Tests', () => {
 
       const response = await request(app)
         .post('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           title: 'New Project',
           description: 'New Description',
@@ -98,6 +141,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when required fields are missing', async () => {
       const response = await request(app)
         .post('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           title: 'Incomplete Project',
         });
@@ -110,6 +154,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when categoryIds is empty', async () => {
       const response = await request(app)
         .post('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           title: 'New Project',
           description: 'Description',
@@ -126,6 +171,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when constructionArea is not positive', async () => {
       const response = await request(app)
         .post('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           title: 'New Project',
           description: 'Description',
@@ -142,6 +188,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when title is too long', async () => {
       const response = await request(app)
         .post('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           title: 'A'.repeat(501),
           description: 'Description',
@@ -158,6 +205,7 @@ describe('Project Routes Integration Tests', () => {
     it('should validate image URLs', async () => {
       const response = await request(app)
         .post('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           title: 'New Project',
           description: 'Description',
@@ -328,6 +376,7 @@ describe('Project Routes Integration Tests', () => {
 
       const response = await request(app)
         .put('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           id: 'clx123abc456def789',
           title: 'Updated Title',
@@ -342,6 +391,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when id is missing', async () => {
       const response = await request(app)
         .put('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           title: 'Updated Title',
         });
@@ -353,6 +403,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when categoryIds is not an array', async () => {
       const response = await request(app)
         .put('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           id: 'clx123abc456def789',
           categoryIds: 'not-an-array',
@@ -390,6 +441,7 @@ describe('Project Routes Integration Tests', () => {
 
       const response = await request(app)
         .post('/api/projects/uploadImgs')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           id: 'clx123abc456def789',
           images: [
@@ -407,6 +459,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when id is missing', async () => {
       const response = await request(app)
         .post('/api/projects/uploadImgs')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           images: [],
         });
@@ -418,6 +471,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when images is missing', async () => {
       const response = await request(app)
         .post('/api/projects/uploadImgs')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           id: 'clx123abc456def789',
         });
@@ -429,6 +483,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when image type is invalid', async () => {
       const response = await request(app)
         .post('/api/projects/uploadImgs')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           id: 'clx123abc456def789',
           images: [
@@ -467,6 +522,7 @@ describe('Project Routes Integration Tests', () => {
 
       const response = await request(app)
         .delete('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           id: 'clx123abc456def789',
         });
@@ -479,6 +535,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when id is missing', async () => {
       const response = await request(app)
         .delete('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({});
 
       expect(response.status).toBe(400);
@@ -494,6 +551,7 @@ describe('Project Routes Integration Tests', () => {
 
       const response = await request(app)
         .delete('/api/projects')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           id: 'clx999invalid999999',
         });
@@ -538,6 +596,7 @@ describe('Project Routes Integration Tests', () => {
 
       const response = await request(app)
         .delete('/api/projects/deleteMainImage')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           id: 'clx123abc456def789',
         });
@@ -549,6 +608,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when id is missing', async () => {
       const response = await request(app)
         .delete('/api/projects/deleteMainImage')
+        .set('Authorization', 'Bearer admin-token')
         .send({});
 
       expect(response.status).toBe(400);
@@ -599,6 +659,7 @@ describe('Project Routes Integration Tests', () => {
 
       const response = await request(app)
         .delete('/api/projects/deleteImages')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           id: 'clx123abc456def789',
           imageIds: ['clximg123456789abc', 'clximg987654321def'],
@@ -611,6 +672,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when id is missing', async () => {
       const response = await request(app)
         .delete('/api/projects/deleteImages')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           imageIds: ['clximg123456789abc'],
         });
@@ -622,6 +684,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when imageIds is missing', async () => {
       const response = await request(app)
         .delete('/api/projects/deleteImages')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           id: 'clx123abc456def789',
         });
@@ -633,6 +696,7 @@ describe('Project Routes Integration Tests', () => {
     it('should return 400 when imageIds contains invalid values', async () => {
       const response = await request(app)
         .delete('/api/projects/deleteImages')
+        .set('Authorization', 'Bearer admin-token')
         .send({
           id: 'clx123abc456def789',
           imageIds: ['clximg123456789abc', ''],

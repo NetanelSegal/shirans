@@ -6,12 +6,14 @@ alwaysApply: true
 
 ## Project Context
 
-This is a React + TypeScript portfolio website for an architecture/interior design professional (Shiran Gilad).
+This is a full-stack portfolio website for an architecture/interior design professional (Shiran Gilad).
 
-- **Tech Stack:** React 18, TypeScript, Vite, Tailwind CSS, React Router
+- **Architecture:** Monorepo with separate client and server workspaces
+- **Frontend:** React 18, TypeScript, Vite, Tailwind CSS, React Router
+- **Backend:** Node.js, Express, TypeScript, Prisma ORM (PostgreSQL)
 - **Language:** Hebrew (RTL support required)
-- **Key Features:** Project galleries, testimonials, contact forms, image modals
-- **Deployment:** Static site (Vite build)
+- **Key Features:** Project galleries, testimonials, contact forms, image modals, authentication system
+- **Testing:** Vitest (unit/integration), Playwright (E2E)
 
 ## Code Style & Conventions
 
@@ -149,7 +151,28 @@ This is a React + TypeScript portfolio website for an architecture/interior desi
 
 ## Error Handling
 
-### API Errors
+**CRITICAL:** Follow the error management guidelines defined in `.cursor/rules/error-management.mdc`
+
+### Backend Error Management
+
+- **Never use magic numbers** - Always use `HTTP_STATUS` constants from `server/src/constants/httpStatus.ts`
+- **Centralize error messages** - All error messages must come from `ERROR_MESSAGES` in `server/src/constants/errorMessages.ts`
+- **Handle database errors** - Map Prisma errors (P2002, P2025, etc.) to appropriate HTTP errors
+- **Use HttpError class** - All errors should use `HttpError` with constants, not raw status codes or hardcoded messages
+
+**Example:**
+```typescript
+import { HTTP_STATUS } from '../constants/httpStatus';
+import { ERROR_MESSAGES } from '../constants/errorMessages';
+import { HttpError } from '../middleware/errorHandler';
+
+throw new HttpError(
+  HTTP_STATUS.NOT_FOUND,
+  ERROR_MESSAGES.NOT_FOUND.USER_NOT_FOUND
+);
+```
+
+### API Errors (Frontend)
 
 - Always handle API errors gracefully
 - Show user-friendly error messages
@@ -194,9 +217,10 @@ This is a React + TypeScript portfolio website for an architecture/interior desi
     - `client/src/components/Button/Button.test.tsx`
   - Shared test utilities belong in `client/src/test/` (e.g., `renderWithProviders.tsx`, `msw/handlers.ts`, `setup.ts`).
   - Global test setup (e.g. RTL + jest-dom + MSW lifecycle) lives in `client/src/test/setup.ts` and is referenced from `client/vite.config.ts`.
-- **Backend tests (if/when a `server/` workspace exists)**:
-  - **Unit tests**: co-locate with services/modules under `server/src/**`.
+- **Backend tests (`server/` workspace)**:
+  - **Unit tests**: co-locate with services/modules under `server/src/**` (e.g., `server/src/services/auth.service.test.ts`).
   - **Integration tests (Express app + routes/controllers)**: `server/test/integration/**` (not co-located) to keep scopes unmistakable.
+  - **E2E tests**: `e2e/` directory at root level using Playwright
 
 ### Client-Side Rules (React Testing Library)
 
@@ -241,10 +265,11 @@ This is a React + TypeScript portfolio website for an architecture/interior desi
 
 ### Before Committing
 
-1. Run `npm run lint` - fix all ESLint errors
-2. Run `npm run build` - ensure build succeeds
-3. Check TypeScript compilation - no type errors
-4. Test manually in browser (especially RTL layout)
+1. Run `npm run lint` - fix all ESLint errors (runs for both client and server)
+2. Run `npm run build` - ensure build succeeds (both workspaces)
+3. Run `npm run type-check` - check TypeScript types (server)
+4. Run `npm run test:run --workspace=server` - ensure all tests pass
+5. Test manually in browser (especially RTL layout)
 
 ### ESLint Rules
 
@@ -276,10 +301,12 @@ This is a React + TypeScript portfolio website for an architecture/interior desi
 
 ### API Integration
 
-- All API endpoints defined in `constants/urls.ts`
+- All API endpoints defined in `client/src/constants/urls.ts` (SSOT)
 - Use axios for HTTP requests
-- Handle authentication if needed
-- Implement proper error handling
+- Handle authentication - JWT tokens stored in httpOnly cookies
+- Implement proper error handling using error management constants
+- Backend API: Express routes in `server/src/routes/`
+- Authentication: JWT-based with refresh tokens
 
 ## Documentation
 
@@ -342,6 +369,7 @@ This is a React + TypeScript portfolio website for an architecture/interior desi
 ## References
 
 - React Best Practices: `.cursor/rules/react-best-practices.mdc`
+- Error Management: `.cursor/rules/error-management.mdc` ⭐ **IMPORTANT**
 - Git Workflow: `.cursor/rules/AGENTS.mdc`
 - Task Management: `.cursor/rules/tasks.mdc`
 - Progress Tracking: `.cursor/rules/progress.mdc`

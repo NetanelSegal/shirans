@@ -38,6 +38,11 @@ Required environment variables:
 - `NODE_ENV` - Environment (development/production/test)
 - `DATABASE_URL` - PostgreSQL connection string
 - `CORS_ORIGIN` - Frontend origin (default: http://localhost:5174)
+- `JWT_SECRET` - Secret key for signing JWT tokens (min 32 characters in production)
+- `JWT_EXPIRES_IN` - Token expiration time (default: 7d)
+- `BCRYPT_SALT_ROUNDS` - Password hashing salt rounds (default: 12)
+
+See `.env.example` for detailed descriptions of each variable.
 
 ### 3. Database Setup
 
@@ -51,7 +56,27 @@ Run migrations (when models are added):
 npm run prisma:migrate
 ```
 
-### 4. Start Development Server
+### 4. Create Admin User
+
+Before starting the server, create your first admin user:
+
+```bash
+npm run tsx scripts/create-admin-user.ts <email> <password> <name>
+```
+
+Example:
+```bash
+npm run tsx scripts/create-admin-user.ts admin@example.com "SecurePassword123!" "Admin User"
+```
+
+**Note:** The password must meet the following requirements:
+- At least 8 characters
+- Contains uppercase letter
+- Contains lowercase letter
+- Contains number
+- Contains special character
+
+### 5. Start Development Server
 
 ```bash
 npm run dev

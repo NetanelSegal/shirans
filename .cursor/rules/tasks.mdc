@@ -6,8 +6,14 @@ alwaysApply: true
 ## Active Tasks
 
 ### Tasks
-<!-- Add task items here -->
-- [ ] _No tasks yet_
+- [ ] **Authentication and Authorization System**
+  - **Category**: Tasks
+  - **Priority**: High
+  - **Status**: In Progress
+  - **Assigned**: Auto
+  - **Created**: 2025-02-02
+  - **Branch**: `feature/authentication-and-authorization`
+  - **Description**: Implement complete authentication and authorization system with JWT tokens, user registration, login, and role-based access control. Protect admin routes so only ADMIN users can access them.
 
 ### Technologies
 <!-- Add technology tasks here -->

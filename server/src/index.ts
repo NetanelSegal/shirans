@@ -3,10 +3,14 @@ import app from './app';
 import { env } from './utils/env';
 import { prisma } from './config/database';
 import logger from './middleware/logger';
+import { startTokenCleanupJob } from './jobs/tokenCleanup';
 
 // Validate environment variables on startup
 // This will throw if required variables are missing
 logger.info('Environment variables validated');
+
+// Start token cleanup job (runs daily)
+startTokenCleanupJob();
 
 // Start server
 const server: Server = app.listen(env.PORT, () => {

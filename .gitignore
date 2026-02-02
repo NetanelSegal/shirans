@@ -42,3 +42,8 @@ not_optimized_images
 
 # Root level
 package-lock.json
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
