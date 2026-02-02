@@ -5,6 +5,7 @@ import { corsOptions } from './config/cors';
 import { requestLogger } from './middleware/logger';
 import { errorHandler } from './middleware/errorHandler';
 import healthRoutes from './routes/health.routes';
+import projectRoutes from './routes/project.routes';
 
 function createApp(): Express {
   const app = express();
@@ -21,6 +22,7 @@ function createApp(): Express {
 
   // API routes
   app.use('/api', healthRoutes);
+  app.use('/api/projects', projectRoutes);
 
   // Error handling middleware (must be last)
   app.use(errorHandler);
