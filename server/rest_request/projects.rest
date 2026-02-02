@@ -1,0 +1,590 @@
+### Projects API Endpoints
+### Base URL - Update this to match your server URL
+@baseUrl = http://localhost:3000
+@apiUrl = {{baseUrl}}/api
+
+### Variables
+### IMPORTANT: Replace these with actual IDs from your database!
+### 
+### To get IDs:
+### 1. First, run: GET {{apiUrl}}/projects (see below)
+### 2. Look at the response - each project has an "id" field
+### 3. For category IDs, check your database or create categories first
+### 4. For image IDs, check a project's images array
+###
+### Example: If a project response shows "id": "clx123abc456def789", use that
+@projectId = your-project-id-here
+@categoryId = cml45zx5i00002wuc1k1hciui
+@imageId = your-image-id-here
+
+### Auth Variables (for protected endpoints)
+### IMPORTANT: Admin routes require ADMIN role token, regular USER tokens will get 403 Forbidden
+### Copy the accessToken from login/register response and paste it here
+@adminToken = your-admin-access-token-here
+@userToken = your-user-access-token-here
+@accessToken = {{adminToken}}
+
+###############################################
+### PUBLIC ROUTES (No Authentication Required)
+###############################################
+### These routes are accessible without authentication
+### Anyone can view projects, favourites, and single project details
+
+###############################################
+### GET - Get All Projects (No Filters)
+### 
+### Returns: Array of all projects in database
+### If empty: [] (means no projects exist yet)
+### 
+### Use this first to see what data you have!
+### PUBLIC ROUTE - No authentication required
+###############################################
+GET {{apiUrl}}/projects
+Content-Type: application/json
+
+### Expected Response Format:
+### [
+###   {
+###     "id": "clx123abc456def789",
+###     "title": "Project Title",
+###     "description": "Project description...",
+###     "location": "Location",
+###     "client": "Client Name",
+###     "isCompleted": true,
+###     "constructionArea": 100,
+###     "favourite": false,
+###     "categories": [...],
+###     "images": [...],
+###     "createdAt": "2024-01-01T00:00:00.000Z",
+###     "updatedAt": "2024-01-02T00:00:00.000Z"
+###   }
+### ]
+
+###
+
+###############################################
+### GET - Get All Projects with Filters
+### 
+### NOTE: Filters work independently - you can combine them
+### Empty result [] means no projects match the filter criteria
+###############################################
+
+### Filter by Category ID
+### IMPORTANT: Use the category's ID (not urlCode like "privateHouses")
+### To find category IDs, check your database or the categories table
+GET {{apiUrl}}/projects?category={{categoryId}}
+Content-Type: application/json
+
+### Example with actual category ID:
+### GET {{apiUrl}}/projects?category=clx789xyz123abc456
+### 
+### Response: Array of projects in that category
+### Empty [] if no projects match
+
+###
+
+### Filter by Favourite Status
+### Returns: Only projects where favourite=true
+GET {{apiUrl}}/projects?favourite=true
+Content-Type: application/json
+
+### Response: Array of favourite projects
+### Empty [] if no favourite projects exist
+
+###
+
+### Filter by Non-Favourite Projects
+GET {{apiUrl}}/projects?favourite=false
+Content-Type: application/json
+
+###
+
+### Filter by Completion Status
+### Returns: Only completed projects (isCompleted=true)
+GET {{apiUrl}}/projects?isCompleted=true
+Content-Type: application/json
+
+### Response: Array of completed projects
+### Empty [] if no completed projects exist
+
+###
+
+### Filter by Incomplete Projects
+GET {{apiUrl}}/projects?isCompleted=false
+Content-Type: application/json
+
+###
+
+### Multiple Filters Combined
+### Returns: Projects matching ALL specified filters
+### Example: Get incomplete favourite projects in a specific category
+GET {{apiUrl}}/projects?category={{categoryId}}&favourite=true&isCompleted=false
+Content-Type: application/json
+
+### Example with actual values:
+### GET {{apiUrl}}/projects?category=clx789xyz&favourite=true&isCompleted=false
+### 
+### Response: Array of projects matching ALL criteria
+### Empty [] if no projects match all filters
+
+###
+
+###############################################
+### GET - Get Favourite Projects
+###############################################
+GET {{apiUrl}}/projects/favourites
+Content-Type: application/json
+
+###
+
+###############################################
+### GET - Get Single Project by ID
+###############################################
+GET {{apiUrl}}/projects/single?id={{projectId}}
+Content-Type: application/json
+
+###
+
+###############################################
+### ADMIN ROUTES (Require ADMIN Role)
+###############################################
+### These routes require authentication AND ADMIN role
+### Regular USER tokens will receive 403 Forbidden
+
+###############################################
+### POST - Create New Project
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
+###############################################
+POST {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "title": "New Project Title",
+  "description": "Project description here",
+  "location": "Project Location",
+  "client": "Client Name",
+  "constructionArea": 150,
+  "isCompleted": false,
+  "favourite": false,
+  "categoryIds": ["{{categoryId}}"],
+  "images": [
+    {
+      "url": "https://example.com/main.jpg",
+      "type": "MAIN",
+      "order": 0
+    },
+    {
+      "url": "https://example.com/image1.jpg",
+      "type": "IMAGE",
+      "order": 1
+    }
+  ]
+}
+
+###
+
+# Create project without images
+POST {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "title": "New Project Without Images",
+  "description": "Project description",
+  "location": "Location",
+  "client": "Client",
+  "constructionArea": 100,
+  "categoryIds": ["{{categoryId}}"],
+  "images": []
+}
+
+###
+
+###############################################
+### PUT - Update Project
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
+###############################################
+PUT {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "id": "{{projectId}}",
+  "title": "Updated Project Title",
+  "description": "Updated project description",
+  "location": "Updated Location",
+  "client": "Updated Client Name",
+  "isCompleted": true,
+  "constructionArea": 150,
+  "favourite": true,
+  "categoryIds": ["category-id-1", "category-id-2"]
+}
+
+###
+
+# Update only specific fields
+PUT {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "id": "{{projectId}}",
+  "title": "New Title Only",
+  "favourite": false
+}
+
+###
+
+###############################################
+### DELETE - Delete Project
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
+###############################################
+DELETE {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "id": "{{projectId}}"
+}
+
+### Expected Response:
+### {
+###   "message": "Project deleted successfully"
+### }
+###
+### Note: This will cascade delete all associated images
+
+###
+
+###############################################
+### POST - Upload Project Images
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
+###############################################
+POST {{apiUrl}}/projects/uploadImgs
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "id": "{{projectId}}",
+  "images": [
+    {
+      "url": "https://example.com/image1.jpg",
+      "type": "IMAGE",
+      "order": 0
+    },
+    {
+      "url": "https://example.com/image2.jpg",
+      "type": "IMAGE",
+      "order": 1
+    },
+    {
+      "url": "https://example.com/main.jpg",
+      "type": "MAIN",
+      "order": 0
+    },
+    {
+      "url": "https://example.com/plan1.jpg",
+      "type": "PLAN",
+      "order": 0
+    },
+    {
+      "url": "https://example.com/video1.mp4",
+      "type": "VIDEO",
+      "order": 0
+    }
+  ]
+}
+
+###
+
+# Upload single image
+POST {{apiUrl}}/projects/uploadImgs
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "id": "{{projectId}}",
+  "images": [
+    {
+      "url": "https://example.com/new-image.jpg",
+      "type": "IMAGE"
+    }
+  ]
+}
+
+###
+
+###############################################
+### DELETE - Delete Main Image
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
+###############################################
+DELETE {{apiUrl}}/projects/deleteMainImage
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "id": "{{projectId}}"
+}
+
+###
+
+###############################################
+### DELETE - Delete Project Images
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
+###############################################
+DELETE {{apiUrl}}/projects/deleteImages
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "id": "{{projectId}}",
+  "imageIds": ["{{imageId}}", "another-image-id"]
+}
+
+###
+
+# Delete single image
+DELETE {{apiUrl}}/projects/deleteImages
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "id": "{{projectId}}",
+  "imageIds": ["{{imageId}}"]
+}
+
+###
+
+###############################################
+### Example Error Cases - Projects
+###############################################
+
+### Public Route Errors
+
+# Missing project ID
+GET {{apiUrl}}/projects/single
+Content-Type: application/json
+
+###
+
+# Invalid project ID
+GET {{apiUrl}}/projects/single?id=invalid-id
+Content-Type: application/json
+
+###
+
+### Admin Route Authorization Errors
+
+# Create project without authentication (401 Unauthorized)
+# Expected: 401 Unauthorized - Missing or invalid authorization header
+POST {{apiUrl}}/projects
+Content-Type: application/json
+
+{
+  "title": "New Project",
+  "description": "Description",
+  "location": "Location",
+  "client": "Client",
+  "constructionArea": 100,
+  "categoryIds": ["{{categoryId}}"],
+  "images": []
+}
+
+###
+
+# Create project with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
+# Use a regular USER token (not ADMIN token)
+POST {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "title": "New Project",
+  "description": "Description",
+  "location": "Location",
+  "client": "Client",
+  "constructionArea": 100,
+  "categoryIds": ["{{categoryId}}"],
+  "images": []
+}
+
+###
+
+# Update project with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
+PUT {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "id": "{{projectId}}",
+  "title": "Updated Title"
+}
+
+###
+
+# Delete project with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
+DELETE {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "id": "{{projectId}}"
+}
+
+###
+
+# Upload images with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
+POST {{apiUrl}}/projects/uploadImgs
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "id": "{{projectId}}",
+  "images": [
+    {
+      "url": "https://example.com/image.jpg",
+      "type": "IMAGE"
+    }
+  ]
+}
+
+###
+
+# Delete images with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
+DELETE {{apiUrl}}/projects/deleteImages
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "id": "{{projectId}}",
+  "imageIds": ["{{imageId}}"]
+}
+
+###
+
+# Delete main image with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
+DELETE {{apiUrl}}/projects/deleteMainImage
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "id": "{{projectId}}"
+}
+
+###
+
+### Admin Route Validation Errors (with valid admin token)
+
+# Update without ID (400 Bad Request)
+PUT {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "title": "Missing ID"
+}
+
+###
+
+# Upload images without ID (400 Bad Request)
+POST {{apiUrl}}/projects/uploadImgs
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "images": [
+    {
+      "url": "https://example.com/image.jpg",
+      "type": "IMAGE"
+    }
+  ]
+}
+
+###
+
+# Invalid image type (400 Bad Request)
+POST {{apiUrl}}/projects/uploadImgs
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "id": "{{projectId}}",
+  "images": [
+    {
+      "url": "https://example.com/image.jpg",
+      "type": "INVALID_TYPE"
+    }
+  ]
+}
+
+###
+
+# Delete images without ID (400 Bad Request)
+DELETE {{apiUrl}}/projects/deleteImages
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "imageIds": ["{{imageId}}"]
+}
+
+###
+
+# Invalid categoryIds format (400 Bad Request)
+PUT {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "id": "{{projectId}}",
+  "categoryIds": "not-an-array"
+}
+
+###
+
+# Create project with duplicate title (409 Conflict)
+POST {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "title": "Existing Project Title",
+  "description": "Description",
+  "location": "Location",
+  "client": "Client",
+  "constructionArea": 100,
+  "categoryIds": ["{{categoryId}}"],
+  "images": []
+}
+
+###
+
+# Create project with invalid category ID (404 Not Found)
+POST {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "title": "New Project",
+  "description": "Description",
+  "location": "Location",
+  "client": "Client",
+  "constructionArea": 100,
+  "categoryIds": ["invalid-category-id"],
+  "images": []
+}
+
+###
