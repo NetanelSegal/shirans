@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "npm run build --workspace=shared",
+    "prebuild": "npm run build -w @shirans/shared",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
