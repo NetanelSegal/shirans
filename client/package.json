@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@shirans/shared": "workspace:^1.0.0",
     "@emailjs/browser": "^4.4.1",
