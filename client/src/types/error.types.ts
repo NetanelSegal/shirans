@@ -1,5 +1,4 @@
 import { ApiErrorResponse } from '@shirans/shared';
-import { HTTP_STATUS } from '../constants/httpStatus';
 
 /**
  * Frontend Error Object

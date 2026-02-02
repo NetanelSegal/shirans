@@ -136,7 +136,8 @@ export function handleError(error: unknown): ErrorHandlerResult {
     statusCode: appError.statusCode,
     shouldRetry: appError.isNetworkError || appError.statusCode >= 500,
     shouldLogout:
-      appError.isAuthError && appError.statusCode === HTTP_STATUS.UNAUTHORIZED,
+      !!appError.isAuthError &&
+      appError.statusCode === HTTP_STATUS.UNAUTHORIZED,
   };
 }
 
