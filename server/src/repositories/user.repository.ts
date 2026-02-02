@@ -1,6 +1,6 @@
 import { prisma } from '../config/database';
-import type { Prisma } from '../../prisma/generated/prisma/client';
-import { UserRole } from '../../prisma/generated/prisma/enums';
+import type { Prisma } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 
 /**
  * User with all fields

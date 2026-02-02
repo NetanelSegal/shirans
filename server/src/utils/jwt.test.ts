@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { TokenPayload } from '../types/auth.types';
-import { UserRole } from '../../prisma/generated/prisma/enums';
+import { UserRole } from '@prisma/client';
 
 // Mock jsonwebtoken with error classes - hoisted to top
 const { mockJwt, JsonWebTokenError, TokenExpiredError } = vi.hoisted(() => {
@@ -68,11 +68,9 @@ describe('jwt utilities', () => {
       const result = signToken(mockPayload);
 
       expect(result).toBe(mockToken);
-      expect(jwt.sign).toHaveBeenCalledWith(
-        mockPayload,
-        env.JWT_SECRET,
-        { expiresIn: env.JWT_EXPIRES_IN }
-      );
+      expect(jwt.sign).toHaveBeenCalledWith(mockPayload, env.JWT_SECRET, {
+        expiresIn: env.JWT_EXPIRES_IN,
+      });
     });
 
     it('should include all payload fields in token', () => {
@@ -112,7 +110,9 @@ describe('jwt utilities', () => {
         throw error;
       });
 
-      expect(() => verifyToken('invalid.token')).toThrow('Invalid or expired token');
+      expect(() => verifyToken('invalid.token')).toThrow(
+        'Invalid or expired token'
+      );
     });
 
     it('should throw generic error for TokenExpiredError (security: prevent info disclosure)', () => {
@@ -121,7 +121,9 @@ describe('jwt utilities', () => {
         throw error;
       });
 
-      expect(() => verifyToken('expired.token')).toThrow('Invalid or expired token');
+      expect(() => verifyToken('expired.token')).toThrow(
+        'Invalid or expired token'
+      );
     });
 
     it('should throw generic error for other verification failures', () => {
@@ -129,7 +131,9 @@ describe('jwt utilities', () => {
         throw new Error('Unexpected error');
       });
 
-      expect(() => verifyToken('bad.token')).toThrow('Invalid or expired token');
+      expect(() => verifyToken('bad.token')).toThrow(
+        'Invalid or expired token'
+      );
     });
   });
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Request, Response, NextFunction } from 'express';
 import { requireAdmin, requireAuth } from './authorize.middleware';
-import { UserRole } from '../../prisma/generated/prisma/enums';
+import { UserRole } from '@prisma/client';
 
 describe('authorize middleware', () => {
   let mockRequest: Partial<Request>;

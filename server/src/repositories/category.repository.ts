@@ -1,5 +1,5 @@
 import { prisma } from '../config/database';
-import { CategoryUrlCode } from '../../prisma/generated/prisma/enums';
+import { CategoryUrlCode } from '@prisma/client';
 import type { CategoryResponse } from '../types/category.types';
 
 /**
@@ -33,7 +33,9 @@ export const categoryRepository = {
    * @param urlCode - Category URL code
    * @returns Category or null if not found
    */
-  async findByUrlCode(urlCode: CategoryUrlCode): Promise<CategoryResponse | null> {
+  async findByUrlCode(
+    urlCode: CategoryUrlCode
+  ): Promise<CategoryResponse | null> {
     return await prisma.category.findUnique({
       where: { urlCode },
     });
@@ -44,7 +46,10 @@ export const categoryRepository = {
    * @param data - Category data including title and urlCode
    * @returns Created category
    */
-  async create(data: { title: string; urlCode: CategoryUrlCode }): Promise<CategoryResponse> {
+  async create(data: {
+    title: string;
+    urlCode: CategoryUrlCode;
+  }): Promise<CategoryResponse> {
     return await prisma.category.create({
       data: {
         title: data.title,

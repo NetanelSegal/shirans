@@ -2,7 +2,6 @@
   "name": "shirans-server",
   "version": "1.0.0",
   "description": "Backend server for Shirans portfolio website",
-  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --exec tsx src/index.ts",

@@ -5,7 +5,7 @@ import { authService } from '../services/auth.service';
 import { HttpError } from './errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { ERROR_MESSAGES } from '../constants/errorMessages';
-import { UserRole } from '../../prisma/generated/prisma/enums';
+import { UserRole } from '@prisma/client';
 
 // Mock auth service
 vi.mock('../services/auth.service', () => ({
@@ -75,29 +75,29 @@ describe('authenticate middleware', () => {
     expect(mockNext).toHaveBeenCalledWith();
   });
 
-    it('should handle Bearer token case-insensitively', () => {
-      const mockPayload = {
-        userId: 'user123',
-        email: 'test@example.com',
-        role: UserRole.USER,
-      };
+  it('should handle Bearer token case-insensitively', () => {
+    const mockPayload = {
+      userId: 'user123',
+      email: 'test@example.com',
+      role: UserRole.USER,
+    };
 
-      mockRequest.headers = {
-        authorization: 'bearer valid-token', // Lowercase "bearer"
-      };
+    mockRequest.headers = {
+      authorization: 'bearer valid-token', // Lowercase "bearer"
+    };
 
-      vi.mocked(authService.verifyToken).mockReturnValue(mockPayload);
+    vi.mocked(authService.verifyToken).mockReturnValue(mockPayload);
 
-      authenticate(mockRequest as Request, mockResponse as Response, mockNext);
+    authenticate(mockRequest as Request, mockResponse as Response, mockNext);
 
-      expect(authService.verifyToken).toHaveBeenCalledWith('valid-token');
-      expect(mockRequest.user).toEqual({
-        userId: 'user123',
-        email: 'test@example.com',
-        role: UserRole.USER,
-      });
-      expect(mockNext).toHaveBeenCalledWith();
+    expect(authService.verifyToken).toHaveBeenCalledWith('valid-token');
+    expect(mockRequest.user).toEqual({
+      userId: 'user123',
+      email: 'test@example.com',
+      role: UserRole.USER,
     });
+    expect(mockNext).toHaveBeenCalledWith();
+  });
 
   it('should return 401 when authorization header is missing', () => {
     mockRequest.headers = {};

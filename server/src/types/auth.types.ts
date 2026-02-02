@@ -1,4 +1,4 @@
-import type { UserRole } from '../../prisma/generated/prisma/client';
+import type { UserRole } from '@prisma/client';
 
 /**
  * JWT Token payload structure

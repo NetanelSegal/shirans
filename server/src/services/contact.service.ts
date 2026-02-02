@@ -3,7 +3,7 @@ import type { ContactRequest, ContactResponse } from '../types/contact.types';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { ERROR_MESSAGES } from '../constants/errorMessages';
-import { Prisma } from '../../prisma/generated/prisma/client';
+import { Prisma } from '@prisma/client';
 import logger from '../middleware/logger';
 
 /**
@@ -33,7 +33,9 @@ export const contactService = {
    * @param filters - Optional filters for isRead status
    * @returns Array of contact submissions
    */
-  async getSubmissions(filters?: { isRead?: boolean }): Promise<ContactResponse[]> {
+  async getSubmissions(filters?: {
+    isRead?: boolean;
+  }): Promise<ContactResponse[]> {
     try {
       return await contactRepository.findAll(filters);
     } catch (error) {
@@ -80,7 +82,10 @@ export const contactService = {
    * @returns Updated contact submission
    * @throws HttpError 404 if not found
    */
-  async updateReadStatus(id: string, isRead: boolean): Promise<ContactResponse> {
+  async updateReadStatus(
+    id: string,
+    isRead: boolean
+  ): Promise<ContactResponse> {
     try {
       await this.getSubmissionById(id); // Throws if not found
       return await contactRepository.updateReadStatus(id, isRead);
@@ -96,7 +101,10 @@ export const contactService = {
           );
         }
       }
-      logger.error('Error updating contact submission read status', { error, id });
+      logger.error('Error updating contact submission read status', {
+        error,
+        id,
+      });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
         'Failed to update contact submission'

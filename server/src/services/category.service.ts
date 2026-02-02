@@ -1,9 +1,12 @@
 import { categoryRepository } from '../repositories/category.repository';
-import type { CategoryRequest, CategoryResponse } from '../types/category.types';
+import type {
+  CategoryRequest,
+  CategoryResponse,
+} from '../types/category.types';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { ERROR_MESSAGES } from '../constants/errorMessages';
-import { Prisma } from '../../prisma/generated/prisma/client';
+import { Prisma } from '@prisma/client';
 import logger from '../middleware/logger';
 
 /**

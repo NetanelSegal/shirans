@@ -1,4 +1,4 @@
-import { CategoryUrlCode } from '../../prisma/generated/prisma/enums';
+import { CategoryUrlCode } from '@prisma/client';
 
 export interface CategoryRequest {
   title: string;

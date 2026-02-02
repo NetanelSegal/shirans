@@ -4,8 +4,8 @@ import { REFRESH_TOKEN_BYTE_LENGTH } from '../constants/auth.constants';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { ERROR_MESSAGES } from '../constants/errorMessages';
-import { Prisma } from '../../prisma/generated/prisma/client';
-import type { UserRole } from '../../prisma/generated/prisma/client';
+import { Prisma } from '@prisma/client';
+import type { UserRole } from '@prisma/client';
 
 /**
  * RefreshToken with all fields
@@ -49,7 +49,9 @@ export const refreshTokenRepository = {
   async create(userId: string, expiresAt: Date): Promise<RefreshToken> {
     try {
       // Generate a secure random token
-      const token = crypto.randomBytes(REFRESH_TOKEN_BYTE_LENGTH).toString('hex');
+      const token = crypto
+        .randomBytes(REFRESH_TOKEN_BYTE_LENGTH)
+        .toString('hex');
 
       return await prisma.refreshToken.create({
         data: {

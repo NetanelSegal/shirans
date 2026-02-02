@@ -1,5 +1,5 @@
 import { prisma } from '../config/database';
-import type { Prisma } from '../../prisma/generated/prisma/client';
+import type { Prisma } from '@prisma/client';
 
 /**
  * Filter options for finding projects

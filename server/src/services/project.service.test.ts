@@ -4,8 +4,8 @@ import { projectRepository } from '../repositories/project.repository';
 import { HttpError } from '../middleware/errorHandler';
 import { prisma } from '../config/database';
 import type { ProjectFilters } from '../repositories/project.repository';
-import type { CategoryUrlCode } from '../../prisma/generated/prisma/enums';
-import { Prisma } from '../../prisma/generated/prisma/client';
+import type { CategoryUrlCode } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 // Mock dependencies
 vi.mock('../repositories/project.repository');
@@ -518,7 +518,9 @@ describe('projectService', () => {
           ],
         } as never);
 
-      (prisma.projectImage.createMany as ReturnType<typeof vi.fn>).mockResolvedValue({
+      (
+        prisma.projectImage.createMany as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         count: 1,
       });
 
@@ -585,9 +587,9 @@ describe('projectService', () => {
       vi.mocked(projectRepository.findById).mockResolvedValue(
         mockProject as never
       );
-      (prisma.projectImage.delete as ReturnType<typeof vi.fn>).mockResolvedValue(
-        mockProject.images[0]
-      );
+      (
+        prisma.projectImage.delete as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(mockProject.images[0]);
 
       await projectService.deleteMainImage('1');
 
@@ -679,7 +681,9 @@ describe('projectService', () => {
         new Error('Database error')
       );
 
-      await expect(projectService.deleteProject('1')).rejects.toThrow(HttpError);
+      await expect(projectService.deleteProject('1')).rejects.toThrow(
+        HttpError
+      );
     });
   });
 
@@ -720,7 +724,9 @@ describe('projectService', () => {
       vi.mocked(projectRepository.findById).mockResolvedValue(
         mockProject as never
       );
-      (prisma.projectImage.deleteMany as ReturnType<typeof vi.fn>).mockResolvedValue({
+      (
+        prisma.projectImage.deleteMany as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
         count: 2,
       });
 

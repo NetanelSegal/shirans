@@ -13,8 +13,8 @@ import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { ERROR_MESSAGES } from '../constants/errorMessages';
 import { prisma } from '../config/database';
-import { Prisma } from '../../prisma/generated/prisma/client';
-import { ProjectImageType } from '../../prisma/generated/prisma/enums';
+import { Prisma } from '@prisma/client';
+import { ProjectImageType } from '@prisma/client';
 import logger from '../middleware/logger';
 
 /**

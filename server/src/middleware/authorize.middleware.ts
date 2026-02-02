@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { HttpError } from './errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { ERROR_MESSAGES } from '../constants/errorMessages';
-import { UserRole } from '../../prisma/generated/prisma/enums';
+import { UserRole } from '@prisma/client';
 
 /**
  * Require admin role middleware

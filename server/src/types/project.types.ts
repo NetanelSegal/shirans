@@ -1,5 +1,5 @@
-import type { Prisma } from '../../prisma/generated/prisma/client';
-import type { CategoryUrlCode } from '../../prisma/generated/prisma/enums';
+import type { Prisma } from '@prisma/client';
+import type { CategoryUrlCode } from '@prisma/client';
 
 /**
  * ResponsiveImage interface matching frontend format
