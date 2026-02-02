@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
+import { env } from './env';
 
-const SALT_ROUNDS = 12;
+const SALT_ROUNDS = env.BCRYPT_SALT_ROUNDS;
 
 /**
  * Hash a password using bcrypt

@@ -1,4 +1,9 @@
+import { env } from '@/utils/env';
 import rateLimit from 'express-rate-limit';
+import {
+  RATE_LIMIT_WINDOW_MS,
+  RATE_LIMIT_MAX_REQUESTS,
+} from '../constants/auth.constants';
 
 /**
  * Rate limiter for authentication endpoints
@@ -6,10 +11,10 @@ import rateLimit from 'express-rate-limit';
  * Prevents brute-force attacks on login/registration
  */
 export const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 requests per window
+  windowMs: RATE_LIMIT_WINDOW_MS,
+  max: RATE_LIMIT_MAX_REQUESTS,
   message: 'Too many authentication attempts, please try again later',
   standardHeaders: true, // Return rate limit info in `RateLimit-*` headers
   legacyHeaders: false, // Disable `X-RateLimit-*` headers
-  skip: process.env.NODE_ENV === 'test', // Skip in test environment only
+  skip: () => env.NODE_ENV === 'test', // Skip in test environment only
 });

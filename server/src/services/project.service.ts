@@ -1,4 +1,7 @@
-import { projectRepository, type ProjectFilters } from '../repositories/project.repository';
+import {
+  projectRepository,
+  type ProjectFilters,
+} from '../repositories/project.repository';
 import {
   type ProjectResponse,
   type UpdateProjectInput,
@@ -7,6 +10,8 @@ import {
   transformProjectsToResponse,
 } from '../types/project.types';
 import { HttpError } from '../middleware/errorHandler';
+import { HTTP_STATUS } from '../constants/httpStatus';
+import { ERROR_MESSAGES } from '../constants/errorMessages';
 import { prisma } from '../config/database';
 import { Prisma } from '../../prisma/generated/prisma/client';
 import { ProjectImageType } from '../../prisma/generated/prisma/enums';
@@ -28,7 +33,10 @@ export const projectService = {
       return transformProjectsToResponse(projects);
     } catch (error) {
       logger.error('Error fetching all projects', { error, filters });
-      throw new HttpError(500, 'Failed to fetch projects');
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.SERVER.FETCH_PROJECTS_FAILED
+      );
     }
   },
 
@@ -42,7 +50,10 @@ export const projectService = {
       return transformProjectsToResponse(projects);
     } catch (error) {
       logger.error('Error fetching favourite projects', { error });
-      throw new HttpError(500, 'Failed to fetch favourite projects');
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.SERVER.FETCH_FAVOURITE_PROJECTS_FAILED
+      );
     }
   },
 
@@ -91,15 +102,24 @@ export const projectService = {
         const prismaError = error as { code: string };
         if (prismaError.code === 'P2002') {
           // Unique constraint violation
-          throw new HttpError(409, 'A project with this title already exists');
+          throw new HttpError(
+            HTTP_STATUS.CONFLICT,
+            ERROR_MESSAGES.CONFLICT.PROJECT_TITLE_EXISTS
+          );
         }
         if (prismaError.code === 'P2025') {
           // Related record not found (category)
-          throw new HttpError(404, 'One or more categories not found');
+          throw new HttpError(
+            HTTP_STATUS.NOT_FOUND,
+            ERROR_MESSAGES.NOT_FOUND.CATEGORY_NOT_FOUND
+          );
         }
       }
       logger.error('Error creating project', { error, data });
-      throw new HttpError(500, 'Failed to create project');
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.SERVER.CREATE_PROJECT_FAILED
+      );
     }
   },
 
@@ -113,7 +133,10 @@ export const projectService = {
     try {
       const project = await projectRepository.findById(id);
       if (!project) {
-        throw new HttpError(404, `Project with id ${id} not found`);
+        throw new HttpError(
+          HTTP_STATUS.NOT_FOUND,
+          ERROR_MESSAGES.NOT_FOUND.PROJECT_NOT_FOUND(id)
+        );
       }
       return transformProjectToResponse(project);
     } catch (error) {
@@ -121,7 +144,10 @@ export const projectService = {
         throw error;
       }
       logger.error('Error fetching project by ID', { error, id });
-      throw new HttpError(500, 'Failed to fetch project');
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.SERVER.FETCH_PROJECT_FAILED
+      );
     }
   },
 
@@ -175,11 +201,17 @@ export const projectService = {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
           // Record not found
-          throw new HttpError(404, `Project with id ${id} not found`);
+          throw new HttpError(
+            HTTP_STATUS.NOT_FOUND,
+            ERROR_MESSAGES.NOT_FOUND.PROJECT_NOT_FOUND(id)
+          );
         }
       }
       logger.error('Error updating project', { error, id, data });
-      throw new HttpError(500, 'Failed to update project');
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.SERVER.UPDATE_PROJECT_FAILED
+      );
     }
   },
 
@@ -198,7 +230,10 @@ export const projectService = {
       // Verify project exists
       const project = await projectRepository.findById(id);
       if (!project) {
-        throw new HttpError(404, `Project with id ${id} not found`);
+        throw new HttpError(
+          HTTP_STATUS.NOT_FOUND,
+          ERROR_MESSAGES.NOT_FOUND.PROJECT_NOT_FOUND(id)
+        );
       }
 
       // Create image records
@@ -214,7 +249,10 @@ export const projectService = {
       // Fetch updated project
       const updatedProject = await projectRepository.findById(id);
       if (!updatedProject) {
-        throw new HttpError(404, `Project with id ${id} not found`);
+        throw new HttpError(
+          HTTP_STATUS.NOT_FOUND,
+          ERROR_MESSAGES.NOT_FOUND.PROJECT_NOT_FOUND(id)
+        );
       }
 
       return transformProjectToResponse(updatedProject);
@@ -223,7 +261,10 @@ export const projectService = {
         throw error;
       }
       logger.error('Error uploading project images', { error, id, images });
-      throw new HttpError(500, 'Failed to upload project images');
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.SERVER.UPLOAD_IMAGES_FAILED
+      );
     }
   },
 
@@ -237,13 +278,19 @@ export const projectService = {
       // Verify project exists
       const project = await projectRepository.findById(id);
       if (!project) {
-        throw new HttpError(404, `Project with id ${id} not found`);
+        throw new HttpError(
+          HTTP_STATUS.NOT_FOUND,
+          ERROR_MESSAGES.NOT_FOUND.PROJECT_NOT_FOUND(id)
+        );
       }
 
       // Find main image
       const mainImage = project.images.find((img) => img.type === 'MAIN');
       if (!mainImage) {
-        throw new HttpError(404, `Main image not found for project ${id}`);
+        throw new HttpError(
+          HTTP_STATUS.NOT_FOUND,
+          ERROR_MESSAGES.NOT_FOUND.MAIN_IMAGE_NOT_FOUND(id)
+        );
       }
 
       // Delete main image
@@ -255,7 +302,10 @@ export const projectService = {
         throw error;
       }
       logger.error('Error deleting main image', { error, id });
-      throw new HttpError(500, 'Failed to delete main image');
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.SERVER.DELETE_MAIN_IMAGE_FAILED
+      );
     }
   },
 
@@ -272,11 +322,17 @@ export const projectService = {
         const prismaError = error as { code: string };
         if (prismaError.code === 'P2025') {
           // Record not found
-          throw new HttpError(404, `Project with id ${id} not found`);
+          throw new HttpError(
+            HTTP_STATUS.NOT_FOUND,
+            ERROR_MESSAGES.NOT_FOUND.PROJECT_NOT_FOUND(id)
+          );
         }
       }
       logger.error('Error deleting project', { error, id });
-      throw new HttpError(500, 'Failed to delete project');
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.SERVER.DELETE_PROJECT_FAILED
+      );
     }
   },
 
@@ -291,16 +347,21 @@ export const projectService = {
       // Verify project exists
       const project = await projectRepository.findById(id);
       if (!project) {
-        throw new HttpError(404, `Project with id ${id} not found`);
+        throw new HttpError(
+          HTTP_STATUS.NOT_FOUND,
+          ERROR_MESSAGES.NOT_FOUND.PROJECT_NOT_FOUND(id)
+        );
       }
 
       // Verify all images belong to this project
       const projectImageIds = project.images.map((img) => img.id);
-      const invalidIds = imageIds.filter((imgId) => !projectImageIds.includes(imgId));
+      const invalidIds = imageIds.filter(
+        (imgId) => !projectImageIds.includes(imgId)
+      );
       if (invalidIds.length > 0) {
         throw new HttpError(
-          400,
-          `Images with ids ${invalidIds.join(', ')} do not belong to project ${id}`
+          HTTP_STATUS.BAD_REQUEST,
+          ERROR_MESSAGES.VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT(invalidIds, id)
         );
       }
 
@@ -318,7 +379,10 @@ export const projectService = {
         throw error;
       }
       logger.error('Error deleting project images', { error, id, imageIds });
-      throw new HttpError(500, 'Failed to delete project images');
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.SERVER.DELETE_PROJECT_IMAGES_FAILED
+      );
     }
   },
 };

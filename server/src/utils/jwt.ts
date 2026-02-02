@@ -1,15 +1,12 @@
 import jwt from 'jsonwebtoken';
 import { env } from './env';
-import type { UserRole } from '../../prisma/generated/prisma/client';
+import type { TokenPayload } from '../types/auth.types';
 
-export interface TokenPayload {
-  userId: string;
-  email: string;
-  role: UserRole;
-}
+// Re-export TokenPayload for convenience
+export type { TokenPayload } from '../types/auth.types';
 
 /**
- * Sign a JWT token with user information
+ * Sign a JWT access token with user information
  * @param payload - User information to include in token
  * @returns Signed JWT token
  */
@@ -30,13 +27,8 @@ export function verifyToken(token: string): TokenPayload {
     const decoded = jwt.verify(token, env.JWT_SECRET) as TokenPayload;
     return decoded;
   } catch (error) {
-    if (error instanceof jwt.JsonWebTokenError) {
-      throw new Error('Invalid token');
-    }
-    if (error instanceof jwt.TokenExpiredError) {
-      throw new Error('Token expired');
-    }
-    throw new Error('Token verification failed');
+    // Generic error message to prevent information disclosure
+    throw new Error('Invalid or expired token');
   }
 }
 

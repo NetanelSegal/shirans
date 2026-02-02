@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpError } from './errorHandler';
+import { HTTP_STATUS } from '../constants/httpStatus';
+import { ERROR_MESSAGES } from '../constants/errorMessages';
 import { UserRole } from '../../prisma/generated/prisma/enums';
 
 /**
@@ -13,12 +15,22 @@ export function requireAdmin(
   next: NextFunction
 ): void {
   if (!req.user) {
-    next(new HttpError(401, 'Authentication required'));
+    next(
+      new HttpError(
+        HTTP_STATUS.UNAUTHORIZED,
+        ERROR_MESSAGES.AUTH.AUTHENTICATION_REQUIRED
+      )
+    );
     return;
   }
 
   if (req.user.role !== UserRole.ADMIN) {
-    next(new HttpError(403, 'Admin access required'));
+    next(
+      new HttpError(
+        HTTP_STATUS.FORBIDDEN,
+        ERROR_MESSAGES.AUTH.ADMIN_ACCESS_REQUIRED
+      )
+    );
     return;
   }
 
@@ -36,7 +48,12 @@ export function requireAuth(
   next: NextFunction
 ): void {
   if (!req.user) {
-    next(new HttpError(401, 'Authentication required'));
+    next(
+      new HttpError(
+        HTTP_STATUS.UNAUTHORIZED,
+        ERROR_MESSAGES.AUTH.AUTHENTICATION_REQUIRED
+      )
+    );
     return;
   }
 

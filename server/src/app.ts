@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import 'express-async-errors';
 import { corsOptions } from './config/cors';
 import { requestLogger } from './middleware/logger';
@@ -16,6 +17,9 @@ function createApp(): Express {
 
   // Request logging middleware
   app.use(requestLogger);
+
+  // Cookie parsing middleware
+  app.use(cookieParser());
 
   // Body parsing middleware
   app.use(express.json());

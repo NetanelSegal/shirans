@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { authService } from '../services/auth.service';
 import { HttpError } from './errorHandler';
+import { HTTP_STATUS } from '../constants/httpStatus';
+import { ERROR_MESSAGES } from '../constants/errorMessages';
 
 /**
  * Authentication middleware
@@ -15,11 +17,15 @@ export function authenticate(
   try {
     // Extract token from Authorization header
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new HttpError(401, 'Missing or invalid authorization header');
+    if (!authHeader || !/^Bearer\s+/i.test(authHeader)) {
+      throw new HttpError(
+        HTTP_STATUS.UNAUTHORIZED,
+        ERROR_MESSAGES.AUTH.TOKEN_REQUIRED
+      );
     }
 
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    // Extract token using regex to handle multiple spaces robustly
+    const token = authHeader.replace(/^Bearer\s+/i, '');
 
     // Verify token
     const payload = authService.verifyToken(token);
@@ -36,7 +42,12 @@ export function authenticate(
     if (error instanceof HttpError) {
       next(error);
     } else {
-      next(new HttpError(401, 'Invalid or expired token'));
+      next(
+        new HttpError(
+          HTTP_STATUS.UNAUTHORIZED,
+          ERROR_MESSAGES.AUTH.TOKEN_INVALID
+        )
+      );
     }
   }
 }

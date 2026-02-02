@@ -18,6 +18,8 @@ vi.mock('../../src/services/auth.service', () => ({
   authService: {
     register: vi.fn(),
     login: vi.fn(),
+    refreshAccessToken: vi.fn(),
+    logout: vi.fn(),
     verifyToken: vi.fn(),
     getCurrentUser: vi.fn(),
   },
@@ -52,6 +54,11 @@ vi.mock('../../src/utils/env', () => ({
     CORS_ORIGIN: 'http://localhost:5174',
     JWT_SECRET: 'test-jwt-secret-key-for-testing-purposes-only',
     JWT_EXPIRES_IN: '7d',
+    JWT_REFRESH_EXPIRES_IN: '7d',
+    BCRYPT_SALT_ROUNDS: 12,
+    COOKIE_SECURE: 'false',
+    COOKIE_SAME_SITE: 'strict',
+    COOKIE_DOMAIN: '',
   },
 }));
 
@@ -83,11 +90,13 @@ describe('Auth Routes Integration Tests', () => {
         updatedAt: new Date(),
       };
 
-      const mockToken = 'mock-jwt-token';
+      const mockAccessToken = 'mock-access-token';
+      const mockRefreshToken = 'mock-refresh-token';
 
       vi.mocked(authService.register).mockResolvedValue({
         user: mockUser,
-        token: mockToken,
+        accessToken: mockAccessToken,
+        refreshToken: mockRefreshToken,
       });
 
       const response = await request(app)
@@ -100,7 +109,10 @@ describe('Auth Routes Integration Tests', () => {
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('user');
-      expect(response.body).toHaveProperty('token', mockToken);
+      expect(response.body).toHaveProperty('accessToken', mockAccessToken);
+      expect(response.body).not.toHaveProperty('refreshToken'); // Should be in cookie, not JSON
+      expect(response.headers['set-cookie']).toBeDefined(); // Should set cookie
+      expect(response.headers['set-cookie']?.[0]).toContain('refreshToken=');
       expect(response.body.user).toHaveProperty('email', 'test@example.com');
       expect(response.body.user).toHaveProperty('name', 'Test User');
       expect(response.body.user).toHaveProperty('role', UserRole.USER);
@@ -109,8 +121,13 @@ describe('Auth Routes Integration Tests', () => {
 
     it('should return 409 when email already exists', async () => {
       const { HttpError } = await import('../../src/middleware/errorHandler');
+      const { HTTP_STATUS } = await import('../../src/constants/httpStatus');
+      const { ERROR_MESSAGES } = await import('../../src/constants/errorMessages');
       vi.mocked(authService.register).mockRejectedValue(
-        new HttpError(409, 'Email already registered')
+        new HttpError(
+          HTTP_STATUS.CONFLICT,
+          ERROR_MESSAGES.CONFLICT.EMAIL_ALREADY_EXISTS
+        )
       );
 
       const response = await request(app)
@@ -161,11 +178,13 @@ describe('Auth Routes Integration Tests', () => {
         updatedAt: new Date(),
       };
 
-      const mockToken = 'mock-jwt-token';
+      const mockAccessToken = 'mock-access-token';
+      const mockRefreshToken = 'mock-refresh-token';
 
       vi.mocked(authService.login).mockResolvedValue({
         user: mockUser,
-        token: mockToken,
+        accessToken: mockAccessToken,
+        refreshToken: mockRefreshToken,
       });
 
       const response = await request(app)
@@ -177,15 +196,23 @@ describe('Auth Routes Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('user');
-      expect(response.body).toHaveProperty('token', mockToken);
+      expect(response.body).toHaveProperty('accessToken', mockAccessToken);
+      expect(response.body).not.toHaveProperty('refreshToken'); // Should be in cookie, not JSON
+      expect(response.headers['set-cookie']).toBeDefined(); // Should set cookie
+      expect(response.headers['set-cookie']?.[0]).toContain('refreshToken=');
       expect(response.body.user).toHaveProperty('email', 'test@example.com');
       expect(response.body.user).not.toHaveProperty('password');
     });
 
     it('should return 401 with invalid credentials', async () => {
       const { HttpError } = await import('../../src/middleware/errorHandler');
+      const { HTTP_STATUS } = await import('../../src/constants/httpStatus');
+      const { ERROR_MESSAGES } = await import('../../src/constants/errorMessages');
       vi.mocked(authService.login).mockRejectedValue(
-        new HttpError(401, 'Invalid email or password')
+        new HttpError(
+          HTTP_STATUS.UNAUTHORIZED,
+          ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS
+        )
       );
 
       const response = await request(app)
@@ -263,7 +290,7 @@ describe('Auth Routes Integration Tests', () => {
 
     it('should return 401 with expired token', async () => {
       vi.mocked(authService.verifyToken).mockImplementation(() => {
-        throw new Error('Token expired');
+        throw new Error('Invalid or expired token');
       });
 
       const response = await request(app)
@@ -275,8 +302,76 @@ describe('Auth Routes Integration Tests', () => {
     });
   });
 
+  describe('POST /api/auth/refresh', () => {
+    it('should refresh access token successfully', async () => {
+      const mockAccessToken = 'new-access-token';
+      const mockRefreshToken = 'new-refresh-token';
+
+      vi.mocked(authService.refreshAccessToken).mockResolvedValue({
+        accessToken: mockAccessToken,
+        refreshToken: mockRefreshToken,
+      });
+
+      const response = await request(app)
+        .post('/api/auth/refresh')
+        .set('Cookie', 'refreshToken=old-refresh-token');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('accessToken', mockAccessToken);
+      expect(response.body).not.toHaveProperty('refreshToken'); // Should be in cookie, not JSON
+      expect(response.headers['set-cookie']).toBeDefined(); // Should set new cookie
+      expect(response.headers['set-cookie']?.[0]).toContain('refreshToken=');
+    });
+
+    it('should return 401 when refresh token is missing', async () => {
+      const response = await request(app).post('/api/auth/refresh');
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty('error');
+    });
+
+    it('should return 401 when refresh token is invalid', async () => {
+      const { HttpError } = await import('../../src/middleware/errorHandler');
+      const { HTTP_STATUS } = await import('../../src/constants/httpStatus');
+      const { ERROR_MESSAGES } = await import('../../src/constants/errorMessages');
+      vi.mocked(authService.refreshAccessToken).mockRejectedValue(
+        new HttpError(
+          HTTP_STATUS.UNAUTHORIZED,
+          ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID
+        )
+      );
+
+      const response = await request(app)
+        .post('/api/auth/refresh')
+        .set('Cookie', 'refreshToken=invalid-token');
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty('error');
+    });
+  });
+
   describe('POST /api/auth/logout', () => {
-    it('should return success message', async () => {
+    it('should logout successfully with refresh token cookie', async () => {
+      vi.mocked(authService.logout).mockResolvedValue(undefined);
+
+      const response = await request(app)
+        .post('/api/auth/logout')
+        .set('Cookie', 'refreshToken=valid-refresh-token');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toContain('Logged out');
+      // Cookie should be cleared
+      const cookies = response.headers['set-cookie'];
+      expect(cookies).toBeDefined();
+      // Check if cookie is cleared (expires in the past or maxAge=0)
+      const clearCookie = cookies?.find((cookie: string) =>
+        cookie.includes('refreshToken=')
+      );
+      expect(clearCookie).toBeDefined();
+    });
+
+    it('should logout successfully even without refresh token cookie', async () => {
       const response = await request(app).post('/api/auth/logout');
 
       expect(response.status).toBe(200);

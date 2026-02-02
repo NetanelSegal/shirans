@@ -3,6 +3,7 @@ import {
   register,
   login,
   getCurrentUser,
+  refresh,
   logout,
 } from '../controllers/auth.controller';
 import { authenticate } from '../middleware/auth.middleware';
@@ -16,10 +17,13 @@ router.post('/register', authLimiter, register);
 // POST /api/auth/login - Login user (public)
 router.post('/login', authLimiter, login);
 
+// POST /api/auth/refresh - Refresh access token (public)
+router.post('/refresh', authLimiter, refresh);
+
 // GET /api/auth/me - Get current user (protected)
 router.get('/me', authenticate, getCurrentUser);
 
-// POST /api/auth/logout - Logout user (client-side token removal)
-router.post('/logout', logout);
+// POST /api/auth/logout - Logout user (server-side token invalidation)
+router.post('/logout', authLimiter, logout);
 
 export default router;
