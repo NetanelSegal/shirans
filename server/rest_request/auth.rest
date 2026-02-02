@@ -1,0 +1,260 @@
+### Authentication API Endpoints
+### Base URL - Update this to match your server URL
+@baseUrl = http://localhost:3000
+@apiUrl = {{baseUrl}}/api
+
+### Auth Variables
+### Copy the accessToken from login/register response and paste it here
+### Note: GET /auth/me works with both ADMIN and USER tokens
+@adminToken = your-admin-access-token-here
+@userToken = your-user-access-token-here
+@accessToken = {{userToken}}
+
+###############################################
+### POST - Register New User
+### Creates a new user account
+### Returns: user object, accessToken, and sets refreshToken in httpOnly cookie
+###############################################
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "SecurePassword123!",
+  "name": "Test User"
+}
+
+### Expected Response:
+### {
+###   "user": {
+###     "id": "user-id",
+###     "email": "user@example.com",
+###     "name": "Test User",
+###     "role": "USER",
+###     "createdAt": "2025-02-02T...",
+###     "updatedAt": "2025-02-02T..."
+###   },
+###   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+### }
+### 
+### Note: refreshToken is set in httpOnly cookie automatically
+### Password Requirements:
+### - At least 8 characters
+### - Contains uppercase letter
+### - Contains lowercase letter
+### - Contains number
+### - Contains special character
+
+###
+
+###############################################
+### POST - Login User
+### Authenticates user and returns tokens
+### Returns: user object, accessToken, and sets refreshToken in httpOnly cookie
+###############################################
+POST {{apiUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "SecurePassword123!"
+}
+
+### Expected Response:
+### {
+###   "user": {
+###     "id": "user-id",
+###     "email": "user@example.com",
+###     "name": "Test User",
+###     "role": "USER",
+###     ...
+###   },
+###   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+### }
+### 
+### Note: refreshToken is set in httpOnly cookie automatically
+### Copy the accessToken and update @accessToken variable above
+
+###
+
+###############################################
+### POST - Refresh Access Token
+### Refreshes the access token using refresh token from cookie
+### Returns: new accessToken and sets new refreshToken in httpOnly cookie
+###############################################
+POST {{apiUrl}}/auth/refresh
+Content-Type: application/json
+
+### Expected Response:
+### {
+###   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+### }
+### 
+### Note: Requires refreshToken cookie (set automatically on login/register)
+### Updates both accessToken and refreshToken
+
+###
+
+###############################################
+### GET - Get Current User
+### Returns the authenticated user's information
+### Requires: Bearer token in Authorization header
+### Works with both ADMIN and USER tokens
+###############################################
+GET {{apiUrl}}/auth/me
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### Expected Response:
+### {
+###   "user": {
+###     "id": "user-id",
+###     "email": "user@example.com",
+###     "name": "Test User",
+###     "role": "USER" or "ADMIN",
+###     "createdAt": "2025-02-02T...",
+###     "updatedAt": "2025-02-02T..."
+###   }
+### }
+### 
+### Note: This endpoint requires authentication but NOT admin role
+### Both ADMIN and USER tokens work - returns the authenticated user's info
+### Copy accessToken from login/register response and set @accessToken variable
+
+###
+
+# Get current user with admin token (works - returns admin user info)
+GET {{apiUrl}}/auth/me
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+###
+
+# Get current user with regular user token (works - returns user info)
+GET {{apiUrl}}/auth/me
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+###
+
+###############################################
+### POST - Logout User
+### Logs out user by invalidating refresh token server-side
+### Returns: success message and clears refreshToken cookie
+###############################################
+POST {{apiUrl}}/auth/logout
+Content-Type: application/json
+
+### Expected Response:
+### {
+###   "message": "Logged out successfully"
+### }
+### 
+### Note: Requires refreshToken cookie (set automatically on login/register)
+### Clears refreshToken cookie and invalidates token server-side
+
+###
+
+###############################################
+### Example Error Cases - Authentication
+###############################################
+
+### Register with existing email (409 Conflict)
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "existing@example.com",
+  "password": "SecurePassword123!",
+  "name": "Test User"
+}
+
+###
+
+### Register with invalid password (400 Bad Request)
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "weak",
+  "name": "Test User"
+}
+
+###
+
+### Register with invalid email format (400 Bad Request)
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "invalid-email",
+  "password": "SecurePassword123!",
+  "name": "Test User"
+}
+
+###
+
+### Register with missing fields (400 Bad Request)
+POST {{apiUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com"
+}
+
+###
+
+### Login with invalid credentials (401 Unauthorized)
+POST {{apiUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "WrongPassword123!"
+}
+
+###
+
+### Login with missing fields (400 Bad Request)
+POST {{apiUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com"
+}
+
+###
+
+### Get current user without token (401 Unauthorized)
+GET {{apiUrl}}/auth/me
+Content-Type: application/json
+
+###
+
+### Get current user with invalid token (401 Unauthorized)
+GET {{apiUrl}}/auth/me
+Content-Type: application/json
+Authorization: Bearer invalid-token-here
+
+###
+
+### Get current user with expired token (401 Unauthorized)
+GET {{apiUrl}}/auth/me
+Content-Type: application/json
+Authorization: Bearer expired-token-here
+
+###
+
+### Refresh token without cookie (401 Unauthorized)
+POST {{apiUrl}}/auth/refresh
+Content-Type: application/json
+
+###
+
+### Refresh token with invalid cookie (401 Unauthorized)
+POST {{apiUrl}}/auth/refresh
+Content-Type: application/json
+Cookie: refreshToken=invalid-token
+
+###

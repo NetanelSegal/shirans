@@ -1,4 +1,4 @@
-### Project API Endpoints
+### Projects API Endpoints
 ### Base URL - Update this to match your server URL
 @baseUrl = http://localhost:3000
 @apiUrl = {{baseUrl}}/api
@@ -8,14 +8,27 @@
 ### 
 ### To get IDs:
 ### 1. First, run: GET {{apiUrl}}/projects (see below)
-### 2. Look at the response - each project has an "_id" field
+### 2. Look at the response - each project has an "id" field
 ### 3. For category IDs, check your database or create categories first
 ### 4. For image IDs, check a project's images array
 ###
-### Example: If a project response shows "_id": "clx123abc456def789", use that
+### Example: If a project response shows "id": "clx123abc456def789", use that
 @projectId = your-project-id-here
 @categoryId = cml45zx5i00002wuc1k1hciui
 @imageId = your-image-id-here
+
+### Auth Variables (for protected endpoints)
+### IMPORTANT: Admin routes require ADMIN role token, regular USER tokens will get 403 Forbidden
+### Copy the accessToken from login/register response and paste it here
+@adminToken = your-admin-access-token-here
+@userToken = your-user-access-token-here
+@accessToken = {{adminToken}}
+
+###############################################
+### PUBLIC ROUTES (No Authentication Required)
+###############################################
+### These routes are accessible without authentication
+### Anyone can view projects, favourites, and single project details
 
 ###############################################
 ### GET - Get All Projects (No Filters)
@@ -24,6 +37,7 @@
 ### If empty: [] (means no projects exist yet)
 ### 
 ### Use this first to see what data you have!
+### PUBLIC ROUTE - No authentication required
 ###############################################
 GET {{apiUrl}}/projects
 Content-Type: application/json
@@ -31,21 +45,18 @@ Content-Type: application/json
 ### Expected Response Format:
 ### [
 ###   {
-###     "_id": "clx123abc456def789",
+###     "id": "clx123abc456def789",
 ###     "title": "Project Title",
-###     "categories": ["privateHouses"],
 ###     "description": "Project description...",
-###     "mainImage": "https://example.com/main.jpg",
-###     "images": ["https://example.com/img1.jpg"],
-###     "plans": ["https://example.com/plan1.jpg"],
-###     "videos": ["https://example.com/video1.mp4"],
 ###     "location": "Location",
 ###     "client": "Client Name",
 ###     "isCompleted": true,
 ###     "constructionArea": 100,
 ###     "favourite": false,
-###     "createdAt": { "$date": "2024-01-01T00:00:00.000Z" },
-###     "updatedAt": { "$date": "2024-01-02T00:00:00.000Z" }
+###     "categories": [...],
+###     "images": [...],
+###     "createdAt": "2024-01-01T00:00:00.000Z",
+###     "updatedAt": "2024-01-02T00:00:00.000Z"
 ###   }
 ### ]
 
@@ -135,10 +146,19 @@ Content-Type: application/json
 ###
 
 ###############################################
+### ADMIN ROUTES (Require ADMIN Role)
+###############################################
+### These routes require authentication AND ADMIN role
+### Regular USER tokens will receive 403 Forbidden
+
+###############################################
 ### POST - Create New Project
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
 ###############################################
 POST {{apiUrl}}/projects
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "title": "New Project Title",
@@ -168,6 +188,7 @@ Content-Type: application/json
 # Create project without images
 POST {{apiUrl}}/projects
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "title": "New Project Without Images",
@@ -183,9 +204,12 @@ Content-Type: application/json
 
 ###############################################
 ### PUT - Update Project
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
 ###############################################
 PUT {{apiUrl}}/projects
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "id": "{{projectId}}",
@@ -204,6 +228,7 @@ Content-Type: application/json
 # Update only specific fields
 PUT {{apiUrl}}/projects
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "id": "{{projectId}}",
@@ -215,9 +240,12 @@ Content-Type: application/json
 
 ###############################################
 ### DELETE - Delete Project
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
 ###############################################
 DELETE {{apiUrl}}/projects
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "id": "{{projectId}}"
@@ -234,9 +262,12 @@ Content-Type: application/json
 
 ###############################################
 ### POST - Upload Project Images
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
 ###############################################
 POST {{apiUrl}}/projects/uploadImgs
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "id": "{{projectId}}",
@@ -274,6 +305,7 @@ Content-Type: application/json
 # Upload single image
 POST {{apiUrl}}/projects/uploadImgs
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "id": "{{projectId}}",
@@ -289,9 +321,12 @@ Content-Type: application/json
 
 ###############################################
 ### DELETE - Delete Main Image
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
 ###############################################
 DELETE {{apiUrl}}/projects/deleteMainImage
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "id": "{{projectId}}"
@@ -301,9 +336,12 @@ Content-Type: application/json
 
 ###############################################
 ### DELETE - Delete Project Images
+### Requires: Admin authentication (Bearer token with ADMIN role)
+### Regular users will get 403 Forbidden
 ###############################################
 DELETE {{apiUrl}}/projects/deleteImages
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "id": "{{projectId}}",
@@ -315,6 +353,7 @@ Content-Type: application/json
 # Delete single image
 DELETE {{apiUrl}}/projects/deleteImages
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "id": "{{projectId}}",
@@ -324,16 +363,10 @@ Content-Type: application/json
 ###
 
 ###############################################
-### Health Check (for reference)
+### Example Error Cases - Projects
 ###############################################
-GET {{apiUrl}}/health
-Content-Type: application/json
 
-###
-
-###############################################
-### Example Error Cases
-###############################################
+### Public Route Errors
 
 # Missing project ID
 GET {{apiUrl}}/projects/single
@@ -347,9 +380,118 @@ Content-Type: application/json
 
 ###
 
-# Update without ID
+### Admin Route Authorization Errors
+
+# Create project without authentication (401 Unauthorized)
+# Expected: 401 Unauthorized - Missing or invalid authorization header
+POST {{apiUrl}}/projects
+Content-Type: application/json
+
+{
+  "title": "New Project",
+  "description": "Description",
+  "location": "Location",
+  "client": "Client",
+  "constructionArea": 100,
+  "categoryIds": ["{{categoryId}}"],
+  "images": []
+}
+
+###
+
+# Create project with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
+# Use a regular USER token (not ADMIN token)
+POST {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "title": "New Project",
+  "description": "Description",
+  "location": "Location",
+  "client": "Client",
+  "constructionArea": 100,
+  "categoryIds": ["{{categoryId}}"],
+  "images": []
+}
+
+###
+
+# Update project with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
 PUT {{apiUrl}}/projects
 Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "id": "{{projectId}}",
+  "title": "Updated Title"
+}
+
+###
+
+# Delete project with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
+DELETE {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "id": "{{projectId}}"
+}
+
+###
+
+# Upload images with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
+POST {{apiUrl}}/projects/uploadImgs
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "id": "{{projectId}}",
+  "images": [
+    {
+      "url": "https://example.com/image.jpg",
+      "type": "IMAGE"
+    }
+  ]
+}
+
+###
+
+# Delete images with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
+DELETE {{apiUrl}}/projects/deleteImages
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "id": "{{projectId}}",
+  "imageIds": ["{{imageId}}"]
+}
+
+###
+
+# Delete main image with non-admin token (403 Forbidden)
+# Expected: 403 Forbidden - Admin access required
+DELETE {{apiUrl}}/projects/deleteMainImage
+Content-Type: application/json
+Authorization: Bearer {{userToken}}
+
+{
+  "id": "{{projectId}}"
+}
+
+###
+
+### Admin Route Validation Errors (with valid admin token)
+
+# Update without ID (400 Bad Request)
+PUT {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "title": "Missing ID"
@@ -357,9 +499,10 @@ Content-Type: application/json
 
 ###
 
-# Upload images without ID
+# Upload images without ID (400 Bad Request)
 POST {{apiUrl}}/projects/uploadImgs
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "images": [
@@ -372,9 +515,10 @@ Content-Type: application/json
 
 ###
 
-# Invalid image type
+# Invalid image type (400 Bad Request)
 POST {{apiUrl}}/projects/uploadImgs
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "id": "{{projectId}}",
@@ -388,9 +532,10 @@ Content-Type: application/json
 
 ###
 
-# Delete images without ID
+# Delete images without ID (400 Bad Request)
 DELETE {{apiUrl}}/projects/deleteImages
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "imageIds": ["{{imageId}}"]
@@ -398,13 +543,48 @@ Content-Type: application/json
 
 ###
 
-# Invalid categoryIds format
+# Invalid categoryIds format (400 Bad Request)
 PUT {{apiUrl}}/projects
 Content-Type: application/json
+Authorization: Bearer {{adminToken}}
 
 {
   "id": "{{projectId}}",
   "categoryIds": "not-an-array"
+}
+
+###
+
+# Create project with duplicate title (409 Conflict)
+POST {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "title": "Existing Project Title",
+  "description": "Description",
+  "location": "Location",
+  "client": "Client",
+  "constructionArea": 100,
+  "categoryIds": ["{{categoryId}}"],
+  "images": []
+}
+
+###
+
+# Create project with invalid category ID (404 Not Found)
+POST {{apiUrl}}/projects
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "title": "New Project",
+  "description": "Description",
+  "location": "Location",
+  "client": "Client",
+  "constructionArea": 100,
+  "categoryIds": ["invalid-category-id"],
+  "images": []
 }
 
 ###
