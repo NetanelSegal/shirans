@@ -19,7 +19,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@shirans/shared": ["../shared/src"]
+      "@shirans/shared": ["../shared/dist"]
     }
   },
   "include": ["src/**/*", "prisma/generated/**/*"],

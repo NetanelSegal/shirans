@@ -146,7 +146,7 @@ export const projectService = {
       logger.error('Error fetching project by ID', { error, id });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        ERROR_MESSAGES.SERVER.FETCH_PROJECT_FAILED
+        ERROR_MESSAGES.SERVER.FETCH_PROJECTS_FAILED
       );
     }
   },

@@ -6,8 +6,13 @@ import { CategoryUrlCode } from '../../prisma/generated/prisma/enums';
  */
 export const createCategorySchema = z.object({
   title: z.string().min(2, 'Title must be at least 2 characters').max(100, 'Title must be less than 100 characters'),
-  urlCode: z.nativeEnum(CategoryUrlCode, {
-    errorMap: () => ({ message: 'Invalid category URL code' }),
+  urlCode: z.nativeEnum(CategoryUrlCode).superRefine((val, ctx) => {
+    if (!Object.values(CategoryUrlCode).includes(val)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Invalid category URL code",
+      });
+    }
   }),
 });
 

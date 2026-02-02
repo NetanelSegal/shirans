@@ -3,7 +3,6 @@ import type { ContactRequest, ContactResponse } from '../types/contact.types';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { ERROR_MESSAGES } from '../constants/errorMessages';
-import { ERROR_KEYS } from '@shirans/shared';
 import { Prisma } from '../../prisma/generated/prisma/client';
 import logger from '../middleware/logger';
 
