@@ -173,6 +173,7 @@ test.describe('Feature Name', () => {
 ## Notes
 
 - **Critical**: If anything is unclear, ask at least **3 clarifying questions** before proceeding
+- **Critical**: **ALWAYS check for current implementation of stuff before adding new code or features**
 - **Critical**: **Each task/feature MUST have its own separate feature branch** - never work on multiple tasks in the same branch
 - **Critical**: **Always check for Single Source of Truth** - never duplicate constants or configuration values
 - **Important**: Large tasks must be broken down into smaller pieces before execution
