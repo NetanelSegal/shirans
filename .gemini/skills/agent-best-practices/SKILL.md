@@ -60,6 +60,7 @@ This document outlines the best practices for the AI agent, covering Git workflo
 - **You do NOT decide when a task is complete** - tasks require review before completion
 - **You NEVER merge to main** - only push to feature branch, user handles merges
 - **Always check for errors before pushing**: Verify no linting errors, build errors, or TypeScript errors
+- **Before every push**: Run linting, ensure the app compiles, and builds successfully.
 - When you finish a task: Check for errors → `git add .`, `git commit`, `git push` to the feature branch
 - Review happens via GitHub - wait for approval
 - Only mark tasks as "Completed" after review approval and user confirms merge
