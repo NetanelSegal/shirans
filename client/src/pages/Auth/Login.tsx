@@ -1,5 +1,5 @@
 import { useState, FormEvent, ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../../hooks/useAuth';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
@@ -14,9 +14,13 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState({ email: false, password: false });
 
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const { handleError } = useErrorHandler();
   const navigate = useNavigate();
+
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleInputFocus = (e: ChangeEvent<HTMLInputElement>) => {
     setIsFocused((prev) => ({ ...prev, [e.target.name]: true }));
@@ -50,7 +54,7 @@ export default function Login() {
         <link rel="canonical" href={`${BASE_URL}/login`} />
       </Helmet>
 
-      <div className="min-h-screen flex items-center justify-center px-page-all py-section-all" dir="rtl">
+      <div className="flex items-center justify-center py-section-all" dir="rtl">
         <div className="w-full max-w-md">
           <h1 className="heading mb-6 text-center">התחברות</h1>
           
@@ -113,9 +117,9 @@ export default function Login() {
             </button>
 
             <div className="text-center">
-              <a href="/register" className="text-primary underline">
+              <Link to="/register" className="text-primary underline">
                 אין לך חשבון? הירשם כאן
-              </a>
+              </Link>
             </div>
           </form>
         </div>
