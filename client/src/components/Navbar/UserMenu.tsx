@@ -23,7 +23,7 @@ export default function UserMenu() {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickToClose);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [userMenuRef]);
 
