@@ -4,6 +4,8 @@ import ScreenProvider from './contexts/ScreenProvider';
 import { ProjectsProvider } from './contexts/ProjectsContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
+import { useAuth } from './hooks/useAuth';
+import Loader from './components/Loader/Loader';
 
 const Layout = lazy(() => import('./components/Layout'));
 const Home = lazy(() => import('./pages/Home'));
@@ -60,6 +62,18 @@ export const appRoutes = [
     element: <NotFound />,
     notNavigateable: true,
   },
+  {
+    path: 'login',
+    title: 'התחברות',
+    element: <Login />,
+    notNavigateable: true,
+  },
+  {
+    path: 'register',
+    title: 'הרשמה',
+    element: <Register />,
+    notNavigateable: true,
+  },
 ];
 
 const router = createBrowserRouter([
@@ -71,17 +85,19 @@ const router = createBrowserRouter([
       element: route.element,
     })),
   },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/register',
-    element: <Register />,
-  },
 ]);
 
 const AppRoutes = () => {
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center" dir="rtl">
+        <Loader />
+      </div>
+    );
+  }
+
   return <RouterProvider router={router} />;
 };
 
