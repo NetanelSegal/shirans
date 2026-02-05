@@ -1,0 +1,315 @@
+---
+name: error-management-best-practices
+description: A set of guidelines for error management in the Shirans project, covering HTTP status codes, error messages, and database error handling.
+license: MIT
+metadata:
+  author: Shiran
+  version: "1.0.0"
+---
+
+# Error Management Guidelines
+
+**Version 1.0.0**
+February 2025
+
+> **Note:** This document defines the error management standards for the Shirans project. All new code must follow these guidelines.
+
+---
+
+## Overview
+
+We use a simplified error management system that centralizes HTTP status codes and error messages. This ensures consistency, maintainability, and eliminates magic numbers throughout the codebase.
+
+---
+
+## Core Principles
+
+1. **Never use magic numbers** - Always use `HTTP_STATUS` constants instead of raw status codes
+2. **Centralize error messages** - All error messages must come from `ERROR_MESSAGES` constants
+3. **Handle database errors** - Map Prisma/database errors to appropriate HTTP errors
+4. **Keep it simple** - Use `HttpError` class directly, no complex error hierarchies
+
+---
+
+## HTTP Status Constants
+
+**File:** `server/src/constants/httpStatus.ts`
+
+Always use HTTP status constants instead of magic numbers:
+
+```typescript
+import { HTTP_STATUS } from '../constants/httpStatus';
+
+// ❌ BAD - Magic number
+throw new HttpError(401, 'Unauthorized');
+
+// ✅ GOOD - Use constant
+throw new HttpError(HTTP_STATUS.UNAUTHORIZED, 'Unauthorized');
+```
+
+**Available Constants:**
+- `HTTP_STATUS.BAD_REQUEST` (400)
+- `HTTP_STATUS.UNAUTHORIZED` (401)
+- `HTTP_STATUS.FORBIDDEN` (403)
+- `HTTP_STATUS.NOT_FOUND` (404)
+- `HTTP_STATUS.CONFLICT` (409)
+- `HTTP_STATUS.INTERNAL_SERVER_ERROR` (500)
+
+---
+
+## Error Messages Constants
+
+**File:** `server/src/constants/errorMessages.ts`
+
+All error messages must be centralized in the `ERROR_MESSAGES` object:
+
+```typescript
+import { ERROR_MESSAGES } from '../constants/errorMessages';
+
+// ❌ BAD - Hardcoded message
+throw new HttpError(HTTP_STATUS.NOT_FOUND, 'User not found');
+
+// ✅ GOOD - Use constant
+throw new HttpError(
+  HTTP_STATUS.NOT_FOUND,
+  ERROR_MESSAGES.NOT_FOUND.USER_NOT_FOUND
+);
+```
+
+**Message Categories:**
+- `ERROR_MESSAGES.AUTH` - Authentication/authorization errors
+- `ERROR_MESSAGES.VALIDATION` - Input validation errors
+- `ERROR_MESSAGES.NOT_FOUND` - Resource not found errors
+- `ERROR_MESSAGES.CONFLICT` - Conflict errors (duplicates, etc.)
+- `ERROR_MESSAGES.SERVER` - Server/internal errors
+
+**Dynamic Messages:**
+Some messages accept parameters for dynamic content:
+
+```typescript
+// Function-based messages for dynamic content
+ERROR_MESSAGES.NOT_FOUND.PROJECT_NOT_FOUND(id)
+ERROR_MESSAGES.NOT_FOUND.MAIN_IMAGE_NOT_FOUND(id)
+ERROR_MESSAGES.VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT(imageIds, projectId)
+```
+
+---
+
+## Adding New Error Messages
+
+When adding new error messages:
+
+1. **Add to appropriate category** in `server/src/constants/errorMessages.ts`
+2. **Use descriptive names** - e.g., `USER_NOT_FOUND`, not `NOT_FOUND`
+3. **Keep messages user-friendly** - Avoid technical jargon
+4. **Use functions for dynamic content** - If message needs parameters
+
+**Example:**
+```typescript
+// In errorMessages.ts
+export const ERROR_MESSAGES = {
+  NOT_FOUND: {
+    // ... existing messages
+    NEW_RESOURCE_NOT_FOUND: (id: string) => `New resource with id ${id} not found`,
+  },
+} as const;
+```
+
+---
+
+## Database Error Handling
+
+**Always handle database errors** and map them to appropriate HTTP errors:
+
+### Prisma Error Codes
+
+Common Prisma error codes and their HTTP mappings:
+
+- **P2002** (Unique constraint violation) → `HTTP_STATUS.CONFLICT`
+- **P2025** (Record not found) → `HTTP_STATUS.NOT_FOUND`
+- **P2003** (Foreign key constraint violation) → `HTTP_STATUS.NOT_FOUND` or `HTTP_STATUS.BAD_REQUEST`
+
+**Example:**
+```typescript
+import { Prisma } from '@prisma/client';
+import { HTTP_STATUS } from '../constants/httpStatus';
+import { ERROR_MESSAGES } from '../constants/errorMessages';
+
+try {
+  await prisma.user.create({ data });
+} catch (error) {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === 'P2002') {
+      throw new HttpError(
+        HTTP_STATUS.CONFLICT,
+        ERROR_MESSAGES.CONFLICT.EMAIL_ALREADY_EXISTS
+      );
+    }
+    if (error.code === 'P2025') {
+      throw new HttpError(
+        HTTP_STATUS.NOT_FOUND,
+        ERROR_MESSAGES.NOT_FOUND.USER_NOT_FOUND
+      );
+    }
+  }
+  // Generic database error
+  throw new HttpError(
+    HTTP_STATUS.INTERNAL_SERVER_ERROR,
+    ERROR_MESSAGES.SERVER.OPERATION_FAILED
+  );
+}
+```
+
+### Repository Pattern
+
+Repositories should throw `HttpError` instead of generic `Error`:
+
+```typescript
+// ❌ BAD - Generic Error
+throw new Error('Token not found');
+
+// ✅ GOOD - HttpError with constants
+throw new HttpError(
+  HTTP_STATUS.NOT_FOUND,
+  ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID
+);
+```
+
+---
+
+## Error Handling in Services
+
+Services should:
+1. **Catch and re-throw HttpError** - Don't swallow errors
+2. **Map generic errors to HttpError** - Wrap unexpected errors
+3. **Use appropriate error messages** - From `ERROR_MESSAGES`
+
+**Example:**
+```typescript
+async someOperation() {
+  try {
+    // ... operation logic
+  } catch (error) {
+    // Re-throw HttpError as-is
+    if (error instanceof HttpError) {
+      throw error;
+    }
+    // Map unexpected errors
+    logger.error('Operation failed', { error });
+    throw new HttpError(
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      ERROR_MESSAGES.SERVER.OPERATION_FAILED
+    );
+  }
+}
+```
+
+---
+
+## Error Handling in Middleware
+
+Middleware should use constants for consistency:
+
+```typescript
+import { HTTP_STATUS } from '../constants/httpStatus';
+import { ERROR_MESSAGES } from '../constants/errorMessages';
+
+export function authenticate(req: Request, res: Response, next: NextFunction) {
+  if (!req.headers.authorization) {
+    throw new HttpError(
+      HTTP_STATUS.UNAUTHORIZED,
+      ERROR_MESSAGES.AUTH.TOKEN_REQUIRED
+    );
+  }
+  // ...
+}
+```
+
+---
+
+## Testing
+
+When writing tests, use constants for consistency:
+
+```typescript
+import { HttpError } from '../middleware/errorHandler';
+import { HTTP_STATUS } from '../constants/httpStatus';
+import { ERROR_MESSAGES } from '../constants/errorMessages';
+
+// In tests
+vi.mocked(service.method).mockRejectedValue(
+  new HttpError(
+    HTTP_STATUS.NOT_FOUND,
+    ERROR_MESSAGES.NOT_FOUND.USER_NOT_FOUND
+  )
+);
+```
+
+---
+
+## Checklist for New Code
+
+When adding new error handling:
+
+- [ ] Use `HTTP_STATUS` constants instead of magic numbers
+- [ ] Use `ERROR_MESSAGES` constants instead of hardcoded strings
+- [ ] Handle database errors (Prisma error codes)
+- [ ] Add new error messages to `ERROR_MESSAGES` if needed
+- [ ] Update tests to use constants
+- [ ] Ensure error messages are user-friendly
+
+---
+
+## File Locations
+
+- **HTTP Status Constants:** `server/src/constants/httpStatus.ts`
+- **Error Messages:** `server/src/constants/errorMessages.ts`
+- **HttpError Class:** `server/src/middleware/errorHandler.ts`
+
+---
+
+## Examples
+
+### Complete Example: Service Method
+
+```typescript
+import { HttpError } from '../middleware/errorHandler';
+import { HTTP_STATUS } from '../constants/httpStatus';
+import { ERROR_MESSAGES } from '../constants/errorMessages';
+import { Prisma } from '@prisma/client';
+
+async createResource(data: CreateInput) {
+  try {
+    const resource = await repository.create(data);
+    return resource;
+  } catch (error) {
+    // Handle Prisma errors
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        throw new HttpError(
+          HTTP_STATUS.CONFLICT,
+          ERROR_MESSAGES.CONFLICT.RESOURCE_EXISTS
+        );
+      }
+    }
+    // Re-throw HttpError
+    if (error instanceof HttpError) {
+      throw error;
+    }
+    // Generic error
+    logger.error('Failed to create resource', { error });
+    throw new HttpError(
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      ERROR_MESSAGES.SERVER.CREATE_RESOURCE_FAILED
+    );
+  }
+}
+```
+
+---
+
+## References
+
+- HTTP Status Constants: `server/src/constants/httpStatus.ts`
+- Error Messages: `server/src/constants/errorMessages.ts`
+- Error Handler: `server/src/middleware/errorHandler.ts`
