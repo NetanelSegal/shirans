@@ -7,7 +7,6 @@ import { z } from 'zod';
 export const registerSchema = z.object({
   email: z
     .string()
-    .email('Invalid email format')
     .min(1, 'Email is required')
     .max(255, 'Email must be less than 255 characters')
     .transform((val) => DOMPurify.sanitize(val.trim())),
@@ -20,7 +19,7 @@ export const registerSchema = z.object({
     .regex(/[0-9]/, 'Password must contain at least one number')
     .regex(
       /[^A-Za-z0-9]/,
-      'Password must contain at least one special character'
+      'Password must contain at least one special character',
     ),
   name: z
     .string()
@@ -34,7 +33,6 @@ export const registerSchema = z.object({
  */
 export const loginSchema = z.object({
   email: z
-    .string()
     .email('Invalid email format')
     .min(1, 'Email is required')
     .transform((val) => DOMPurify.sanitize(val.trim())),
@@ -43,7 +41,6 @@ export const loginSchema = z.object({
     .min(1, 'Password is required')
     .min(8, 'Password must be at least 8 characters'),
 });
-
 
 // Type exports for use in controllers
 export type RegisterInput = z.infer<typeof registerSchema>;

@@ -57,4 +57,5 @@ export const ERROR_KEYS = {
   },
 } as const;
 
-export type ErrorKey = typeof ERROR_KEYS[keyof typeof ERROR_KEYS][keyof typeof ERROR_KEYS[keyof typeof ERROR_KEYS]];
+export type ErrorKey =
+  (typeof ERROR_KEYS)[keyof typeof ERROR_KEYS][keyof (typeof ERROR_KEYS)[keyof typeof ERROR_KEYS]];

@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { JWT_SECRET_MIN_LENGTH } from '@shirans/shared';
+import { JWT_SECRET_MIN_LENGTH } from '../constants/auth.constants';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -31,7 +31,7 @@ function getEnvVar(name: string, defaultValue?: string): string {
     value.length < JWT_SECRET_MIN_LENGTH
   ) {
     throw new Error(
-      `JWT_SECRET must be at least ${JWT_SECRET_MIN_LENGTH} characters long for security`
+      `JWT_SECRET must be at least ${JWT_SECRET_MIN_LENGTH} characters long for security`,
     );
   }
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { REFRESH_TOKEN_MAX_LENGTH } from '@shirans/shared';
+import { REFRESH_TOKEN_MAX_LENGTH } from '../constants/auth.constants';
 
 /**
  * Zod schema for refresh token request (deprecated - now read from cookie)

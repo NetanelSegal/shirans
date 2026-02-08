@@ -1,5 +1,5 @@
 {
-  "name": "shirans-server",
+  "name": "server",
   "version": "1.0.0",
   "description": "Backend server for Shirans portfolio website",
   "main": "dist/index.js",

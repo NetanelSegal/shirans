@@ -1,11 +1,11 @@
 {
-  "name": "shirans",
+  "name": "client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "npm run build -w @shirans/shared",
+    "prebuild": "npm run build -w shared",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
