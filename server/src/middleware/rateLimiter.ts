@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 import {
   RATE_LIMIT_WINDOW_MS,
   RATE_LIMIT_MAX_REQUESTS,
-} from '../constants/auth.constants';
+} from '@shirans/shared';
 
 /**
  * Rate limiter for authentication endpoints

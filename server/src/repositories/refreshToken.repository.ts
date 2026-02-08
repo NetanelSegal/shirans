@@ -1,6 +1,6 @@
 import { prisma } from '../config/database';
 import crypto from 'crypto';
-import { REFRESH_TOKEN_BYTE_LENGTH } from '../constants/auth.constants';
+import { REFRESH_TOKEN_BYTE_LENGTH } from '@shirans/shared';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { ERROR_MESSAGES } from '../constants/errorMessages';

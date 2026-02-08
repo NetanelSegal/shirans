@@ -4,7 +4,7 @@ import {
   createCategorySchema,
   updateCategorySchema,
   categoryIdSchema,
-} from '../validators/category.validators';
+} from '@shirans/shared';
 import { validateRequest } from '../utils/validation';
 
 /**

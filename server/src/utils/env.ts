@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { JWT_SECRET_MIN_LENGTH } from '../constants/auth.constants';
+import { JWT_SECRET_MIN_LENGTH } from '@shirans/shared';
 
 // Load environment variables from .env file
 dotenv.config();

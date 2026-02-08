@@ -34,7 +34,6 @@ export default function UserMenu() {
         className='flex items-center gap-2 rounded-xl bg-secondary p-2 text-black hover:bg-secondary/80 transition-all duration-200'
       >
         <i className="fa-solid fa-user"></i>
-        <i className={`fa-solid fa-chevron-down text-sm transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`}></i>
       </button>
 
       {showUserMenu && (

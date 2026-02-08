@@ -1,18 +1,26 @@
-import { useState, FormEvent, ChangeEvent } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema, LoginInput } from '@shirans/shared';
 import { useAuth } from '../../hooks/useAuth';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { ErrorDisplay } from '../../components/ErrorDisplay';
 import { AppError } from '../../types/error.types';
 import { BASE_URL } from '../../constants/urls';
+import { Input } from '../../components/ui/Input';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState<AppError | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFocused, setIsFocused] = useState({ email: false, password: false });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+  });
 
   const { login, isAuthenticated } = useAuth();
   const { handleError } = useErrorHandler();
@@ -22,21 +30,12 @@ export default function Login() {
     return <Navigate to="/" replace />;
   }
 
-  const handleInputFocus = (e: ChangeEvent<HTMLInputElement>) => {
-    setIsFocused((prev) => ({ ...prev, [e.target.name]: true }));
-  };
-
-  const handleInputBlur = (e: ChangeEvent<HTMLInputElement>) => {
-    setIsFocused((prev) => ({ ...prev, [e.target.name]: false }));
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginInput) => {
     setError(null);
     setIsLoading(true);
 
     try {
-      await login(email, password);
+      await login(data.email, data.password);
       navigate('/');
     } catch (err) {
       const appError = handleError(err, 'Login');
@@ -57,54 +56,25 @@ export default function Login() {
       <div className="flex items-center justify-center py-section-all" dir="rtl">
         <div className="w-full max-w-md">
           <h1 className="heading mb-6 text-center">התחברות</h1>
-          
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="relative">
-              <label
-                htmlFor="email"
-                className={`absolute right-2 top-2 rounded-md bg-secondary px-2 font-bold shadow-md transition-all duration-150 ease-in-out ${
-                  isFocused.email || email !== '' ? '-translate-y-3/4' : ''
-                }`}
-              >
-                כתובת אימייל
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                className="w-full rounded-xl p-2"
-                required
-                autoComplete="email"
-              />
-            </div>
 
-            <div className="relative">
-              <label
-                htmlFor="password"
-                className={`absolute right-2 top-2 rounded-md bg-secondary px-2 font-bold shadow-md transition-all duration-150 ease-in-out ${
-                  isFocused.password || password !== '' ? '-translate-y-3/4' : ''
-                }`}
-              >
-                סיסמה
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                className="w-full rounded-xl p-2"
-                required
-                autoComplete="current-password"
-                minLength={8}
-              />
-            </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <Input
+              borderColor="border-gray-300"
+              label="כתובת אימייל"
+              type="email"
+              {...register('email')}
+              error={errors.email}
+              autoComplete="email"
+            />
+
+            <Input
+              borderColor="border-gray-300"
+              label="סיסמה"
+              type="password"
+              {...register('password')}
+              error={errors.password}
+              autoComplete="current-password"
+            />
 
             {error && <ErrorDisplay error={error} />}
 
