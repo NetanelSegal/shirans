@@ -8,8 +8,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      '@shirans/shared': path.resolve(__dirname, '../shared/src'),
+      '@shirans/shared': path.resolve(__dirname, '../shared/src/index.ts'),
     },
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.scss', '.md'],
   },
   assetsInclude: ['**/*.MOV', '**/*.mov'],
   server: {

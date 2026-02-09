@@ -37,6 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAuth = async (): Promise<void> => {
     const token = getAccessToken();
+
     if (!token) {
       setIsLoading(false);
       return;
@@ -44,6 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     try {
       const response = await apiClient.get(urls.auth.me);
+
       setUser(response.data);
     } catch {
       removeAccessToken();

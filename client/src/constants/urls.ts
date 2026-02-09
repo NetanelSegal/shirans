@@ -1,4 +1,4 @@
-export const BACKEND_URL = 'https://shirans.onrender.com';
+export const BACKEND_URL = import.meta.env.VITE_API_URL;
 // http://localhost:3000
 
 export const BASE_URL = 'https://shiran-gilad.com';

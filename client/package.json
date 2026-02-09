@@ -1,26 +1,29 @@
 {
-  "name": "shirans",
+  "name": "client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "npm run build -w @shirans/shared",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@shirans/shared": "1.0.0",
     "@emailjs/browser": "^4.4.1",
+    "@hookform/resolvers": "^5.2.2",
     "axios": "^1.13.4",
     "caniuse-lite": "^1.0.30001766",
+    "classnames": "^2.5.1",
     "motion": "^12.29.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
+    "react-hook-form": "^7.71.1",
     "react-router-dom": "^6.27.0",
-    "react-zoom-pan-pinch": "^3.7.0"
+    "react-zoom-pan-pinch": "^3.7.0",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

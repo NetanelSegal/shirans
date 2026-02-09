@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { projectService } from '../services/project.service';
 import type { ProjectFilters } from '../repositories/project.repository';
 import {
@@ -10,7 +10,7 @@ import {
   deleteProjectSchema,
   deleteMainImageSchema,
   deleteImagesSchema,
-} from '../validators/project.validators';
+} from '@shirans/shared';
 import { validateRequest } from '../utils/validation';
 
 /**

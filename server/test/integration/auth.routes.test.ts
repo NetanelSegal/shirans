@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi, beforeAll } from 'vitest';
 import request from 'supertest';
 import { userRepository } from '../../src/repositories/user.repository';
 import { authService } from '../../src/services/auth.service';
-import { UserRole } from '../../prisma/generated/prisma/enums';
+import { UserRole } from '@prisma/client';
 
 // Mock the repository and service BEFORE importing app
 vi.mock('../../src/repositories/user.repository', () => ({

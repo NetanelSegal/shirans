@@ -1,5 +1,3 @@
-import { Testimonial } from '@prisma/client';
-
 export interface TestimonialRequest {
   name: string;
   message: string;

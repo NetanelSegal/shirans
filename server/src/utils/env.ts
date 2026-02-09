@@ -31,7 +31,7 @@ function getEnvVar(name: string, defaultValue?: string): string {
     value.length < JWT_SECRET_MIN_LENGTH
   ) {
     throw new Error(
-      `JWT_SECRET must be at least ${JWT_SECRET_MIN_LENGTH} characters long for security`
+      `JWT_SECRET must be at least ${JWT_SECRET_MIN_LENGTH} characters long for security`,
     );
   }
 

@@ -22,7 +22,7 @@ export const createContactSchema = z.object({
  * Zod schema for contact ID parameter
  */
 export const contactIdSchema = z.object({
-  id: z.cuid('Contact ID must be a valid CUID'),
+  id: z.string().cuid('Contact ID must be a valid CUID'),
 });
 
 /**
@@ -31,3 +31,8 @@ export const contactIdSchema = z.object({
 export const updateReadStatusSchema = z.object({
   isRead: z.boolean(),
 });
+
+// Type exports
+export type CreateContactInput = z.infer<typeof createContactSchema>;
+export type ContactIdInput = z.infer<typeof contactIdSchema>;
+export type UpdateReadStatusInput = z.infer<typeof updateReadStatusSchema>;

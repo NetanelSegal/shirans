@@ -4,7 +4,8 @@ import ScreenProvider from './contexts/ScreenProvider';
 import { ProjectsProvider } from './contexts/ProjectsContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
-import ProtectedRoute from './components/Auth/ProtectedRoute'; // Import ProtectedRoute
+import { useAuth } from './hooks/useAuth';
+import { ProtectedRoute } from './components/Auth/ProtectedRoute'; // Import ProtectedRoute
 import Loader from './components/Loader/Loader'; // Import Loader for Suspense fallback
 
 const Layout = lazy(() => import('./components/Layout'));
@@ -63,6 +64,18 @@ export const appRoutes = [
     element: <NotFound />,
     notNavigateable: true,
   },
+  {
+    path: 'login',
+    title: 'התחברות',
+    element: <Login />,
+    notNavigateable: true,
+  },
+  {
+    path: 'register',
+    title: 'הרשמה',
+    element: <Register />,
+    notNavigateable: true,
+  },
 ];
 
 const router = createBrowserRouter([
@@ -73,14 +86,6 @@ const router = createBrowserRouter([
       path: route.path,
       element: route.element,
     })),
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/register',
-    element: <Register />,
   },
   { // Admin routes
     path: '/admin',
@@ -115,6 +120,16 @@ const router = createBrowserRouter([
 ]);
 
 const AppRoutes = () => {
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center" dir="rtl">
+        <Loader />
+      </div>
+    );
+  }
+
   return <RouterProvider router={router} />;
 };
 

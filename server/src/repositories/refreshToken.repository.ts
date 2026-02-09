@@ -67,21 +67,21 @@ export const refreshTokenRepository = {
           // Unique constraint violation (shouldn't happen with random tokens, but handle it)
           throw new HttpError(
             HTTP_STATUS.CONFLICT,
-            'Token already exists - please try again'
+            'Token already exists - please try again',
           );
         }
         if (error.code === 'P2003') {
           // Foreign key constraint violation (user doesn't exist)
           throw new HttpError(
             HTTP_STATUS.NOT_FOUND,
-            ERROR_MESSAGES.NOT_FOUND.USER_NOT_FOUND
+            ERROR_MESSAGES.NOT_FOUND.USER_NOT_FOUND,
           );
         }
       }
       // Generic database error
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to create refresh token'
+        'Failed to create refresh token',
       );
     }
   },
@@ -128,14 +128,14 @@ export const refreshTokenRepository = {
           // Record not found
           throw new HttpError(
             HTTP_STATUS.NOT_FOUND,
-            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID
+            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID,
           );
         }
       }
       // Generic database error
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to revoke refresh token'
+        'Failed to revoke refresh token',
       );
     }
   },
@@ -217,7 +217,7 @@ export const refreshTokenRepository = {
         if (!refreshToken) {
           throw new HttpError(
             HTTP_STATUS.UNAUTHORIZED,
-            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID
+            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID,
           );
         }
 
@@ -225,7 +225,7 @@ export const refreshTokenRepository = {
         if (refreshToken.revokedAt) {
           throw new HttpError(
             HTTP_STATUS.UNAUTHORIZED,
-            ERROR_MESSAGES.AUTH.TOKEN_REUSE_DETECTED
+            ERROR_MESSAGES.AUTH.TOKEN_REUSE_DETECTED,
           );
         }
 
@@ -233,7 +233,7 @@ export const refreshTokenRepository = {
         if (refreshToken.expiresAt < now) {
           throw new HttpError(
             HTTP_STATUS.UNAUTHORIZED,
-            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID
+            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID,
           );
         }
 
@@ -257,14 +257,14 @@ export const refreshTokenRepository = {
         if (error.code === 'P2025') {
           throw new HttpError(
             HTTP_STATUS.UNAUTHORIZED,
-            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID
+            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID,
           );
         }
       }
       // Generic database error
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to process refresh token'
+        'Failed to process refresh token',
       );
     }
   },
