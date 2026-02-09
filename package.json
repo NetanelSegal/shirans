@@ -16,7 +16,7 @@
     "dev:server": "npm run dev -w server",
     "build:client": "npm run build -w client",
     "build:server": "npm run build -w server",
-    "build:client-for-deploy": "npm run build -w client",
+    "build:client-for-deploy": "npm run build -w shared && npm run build -w client",
     "lint": "npm run lint --workspaces",
     "lint:client": "npm run lint -w client",
     "lint:server": "npm run lint -w server",
