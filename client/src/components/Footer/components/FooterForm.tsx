@@ -1,8 +1,10 @@
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { footerFormSchema, FooterFormInput } from '@shirans/shared';
 import useEmailSend from '../hooks/useEmailSend';
 import { Input } from '../../ui/Input';
+import Button from '../../ui/Button';
 
 export default function FooterForm() {
   const {
@@ -55,16 +57,9 @@ export default function FooterForm() {
           error={errors.context}
           rows={5}
         />
-        <button
-          className={`bg-secondary text-black ${error && 'bg-red-500'} ${success && 'bg-green-500'
-            }`}
-          type="submit"
-        >
-          {!loading && !error && !success && 'שלח'}
-          {loading && 'שולח מייל'}
-          {success && 'ההודעה נשלחה בהצלחה'}
-          {error}
-        </button>
+        <Button variant={error ? 'danger' : success ? 'success' : 'secondary'} type='submit'>
+          {loading ? 'שולח מייל' : success ? 'ההודעה נשלחה בהצלחה' : error ? error : 'שלח'}
+        </Button>
       </div>
     </form>
   );

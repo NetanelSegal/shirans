@@ -16,7 +16,7 @@ const Project = lazy(() => import('./pages/Project'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 const Login = lazy(() => import('./pages/Auth/Login'));
 const Register = lazy(() => import('./pages/Auth/Register'));
-const Dashboard = lazy(() => import('./pages/Admin/Dashboard')); // Import Dashboard
+const Dashboard = lazy(() => import('./pages/Admin/Dashboard'));
 
 function App() {
   return (
