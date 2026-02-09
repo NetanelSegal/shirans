@@ -14,6 +14,8 @@ export default function useEmailSend(): IReturnUseEmailSend {
   const [success, setSuccess] = useState<boolean>(false);
 
   const sendEmail = async (data: any) => {
+    setLoading(true);
+    setError('');
     try {
       const res = await emailjs.send(
         'service_qowi0kn',
@@ -21,7 +23,6 @@ export default function useEmailSend(): IReturnUseEmailSend {
         data,
       );
       setSuccess(true);
-      setError('');
       return res;
     } catch (error) {
       console.error(error);

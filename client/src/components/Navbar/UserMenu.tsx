@@ -7,7 +7,6 @@ export default function UserMenu() {
   const userMenuRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, user, logout, isLoading } = useAuth();
 
-  console.log(user);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
