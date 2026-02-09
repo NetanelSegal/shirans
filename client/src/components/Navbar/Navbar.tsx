@@ -4,13 +4,14 @@ import srcShiranLogo from '../../assets/shiran_logo.svg';
 import { useScreenContext } from '../../contexts/ScreenProvider';
 import { useEffect, useRef, useState } from 'react';
 import UserMenu from './UserMenu';
+import Button from '../ui/Button';
 
 export default function Navbar() {
   const { isSmallScreen } = useScreenContext();
   const location = useLocation();
   const [toggle, setToggle] = useState(false);
 
-  const navRef = useRef<HTMLDivElement>(null); // Changed to HTMLDivElement
+  const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -46,7 +47,7 @@ export default function Navbar() {
       <Link to={'/'}>
         <img className='h-10' src={srcShiranLogo} alt='shiran logo icon' />
       </Link>
-      <div ref={navRef} className="flex items-center gap-5"> {/* Container for mobile toggle and UserMenu */}
+      <div ref={navRef} className="flex items-center md:gap-5 gap-2"> {/* Container for mobile toggle and UserMenu */}
         {isSmallScreen && (
           <button
             className='bg-none p-0'
@@ -56,11 +57,10 @@ export default function Navbar() {
           </button>
         )}
         <ul
-          className={`flex items-center gap-5 ${
-            isSmallScreen
-              ? `fixed left-0 right-0 top-14 -z-20 ${!toggle && '-translate-y-[150%]'} flex-col bg-white p-5 text-primary transition-all duration-300 ease-in-out`
-              : 'text-white'
-          }`}
+          className={`flex items-center gap-5 ${isSmallScreen
+            ? `fixed left-0 right-0 top-14 -z-20 ${!toggle && '-translate-y-[150%]'} flex-col bg-white p-5 text-primary transition-all duration-300 ease-in-out`
+            : 'text-white'
+            }`}
         >
           {appRoutes.map(
             ({ title, path, notNavigateable }) =>
@@ -75,9 +75,7 @@ export default function Navbar() {
                     }
                   >
                     {path === 'contact' ? (
-                      <button className='rounded-xl bg-secondary px-4 py-2 text-black hover:bg-secondary/80 transition-all duration-200'>
-                        {title}
-                      </button>
+                      <Button>{title}</Button>
                     ) : (
                       title
                     )}
@@ -85,15 +83,8 @@ export default function Navbar() {
                 </li>
               ),
           )}
-          {isSmallScreen && (
-            <li>
-              <UserMenu />
-            </li>
-          )}
         </ul>
-        {!isSmallScreen && (
-          <UserMenu />
-        )}
+        <UserMenu />
       </div>
     </nav>
   );

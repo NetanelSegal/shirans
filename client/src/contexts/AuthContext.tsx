@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const response = await apiClient.get(urls.auth.me);
 
-      setUser(response.data);
+      setUser(response.data.user);
     } catch {
       removeAccessToken();
       setUser(null);

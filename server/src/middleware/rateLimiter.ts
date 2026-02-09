@@ -1,8 +1,8 @@
 import {
   RATE_LIMIT_MAX_REQUESTS,
   RATE_LIMIT_WINDOW_MS,
-} from '@/constants/auth.constants';
-import { env } from '@/utils/env';
+} from '../constants/auth.constants';
+import { env } from '../utils/env';
 import rateLimit from 'express-rate-limit';
 
 /**

@@ -5,7 +5,8 @@ import { ProjectsProvider } from './contexts/ProjectsContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { useAuth } from './hooks/useAuth';
-import Loader from './components/Loader/Loader';
+import { ProtectedRoute } from './components/Auth/ProtectedRoute'; // Import ProtectedRoute
+import Loader from './components/Loader/Loader'; // Import Loader for Suspense fallback
 
 const Layout = lazy(() => import('./components/Layout'));
 const Home = lazy(() => import('./pages/Home'));
@@ -15,6 +16,7 @@ const Project = lazy(() => import('./pages/Project'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 const Login = lazy(() => import('./pages/Auth/Login'));
 const Register = lazy(() => import('./pages/Auth/Register'));
+const Dashboard = lazy(() => import('./pages/Admin/Dashboard'));
 
 function App() {
   return (
@@ -85,6 +87,36 @@ const router = createBrowserRouter([
       element: route.element,
     })),
   },
+  { // Admin routes
+    path: '/admin',
+    element: (
+      <ProtectedRoute requireAdmin={true}>
+        <Dashboard />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: '',
+        element: <div>Dashboard Overview Placeholder</div>
+      },
+      {
+        path: 'projects',
+        element: <div>Projects Management Placeholder</div>
+      },
+      {
+        path: 'categories',
+        element: <div>Categories Management Placeholder</div>
+      },
+      {
+        path: 'testimonials',
+        element: <div>Testimonials Management Placeholder</div>
+      },
+      {
+        path: 'contacts',
+        element: <div>Contact Submissions Placeholder</div>
+      }
+    ]
+  }
 ]);
 
 const AppRoutes = () => {
