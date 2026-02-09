@@ -4,7 +4,7 @@ import {
   createContactSchema,
   contactIdSchema,
   updateReadStatusSchema,
-} from '../validators/contact.validators';
+} from '@shirans/shared';
 import { validateRequest } from '../utils/validation';
 
 /**

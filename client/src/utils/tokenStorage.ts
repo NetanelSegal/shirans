@@ -18,6 +18,8 @@ export function setAccessToken(token: string): void {
 
 export function removeAccessToken(): void {
   try {
+    console.log('removeAccessToken called');
+
     localStorage.removeItem(ACCESS_TOKEN_KEY);
   } catch {
     // Ignore errors

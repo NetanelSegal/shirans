@@ -3,7 +3,7 @@ import { authService } from '../services/auth.service';
 import {
   registerSchema,
   loginSchema,
-} from '../validators/auth.validators';
+} from '@shirans/shared';
 import { validateRequest } from '../utils/validation';
 import {
   setRefreshTokenCookie,

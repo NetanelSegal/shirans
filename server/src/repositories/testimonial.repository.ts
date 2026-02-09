@@ -1,5 +1,8 @@
-import { prisma } from '../config/prisma.config';
-import { TestimonialRequest, TestimonialFilters } from '../types/testimonial.types';
+import { prisma } from '../config/database';
+import {
+  TestimonialRequest,
+  TestimonialFilters,
+} from '../types/testimonial.types';
 
 export const testimonialRepository = {
   async create(data: TestimonialRequest) {
@@ -8,11 +11,11 @@ export const testimonialRepository = {
 
   async findAll(filters?: TestimonialFilters) {
     return prisma.testimonial.findMany({
-      where: filters?.isPublished !== undefined ? { isPublished: filters.isPublished } : {},
-      orderBy: [
-        { order: 'asc' },
-        { createdAt: 'desc' },
-      ],
+      where:
+        filters?.isPublished !== undefined
+          ? { isPublished: filters.isPublished }
+          : {},
+      orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
     });
   },
 

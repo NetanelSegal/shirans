@@ -4,7 +4,7 @@ import { z } from 'zod';
  * Zod schema for project image input
  */
 export const imageInputSchema = z.object({
-  url: z.string().url('Image URL must be a valid URL').min(1, 'Image URL is required'),
+  url: z.url('Image URL must be a valid URL').min(1, 'Image URL is required'),
   type: z.enum(['MAIN', 'IMAGE', 'PLAN', 'VIDEO'], {
     message: 'Image type must be one of: MAIN, IMAGE, PLAN, VIDEO',
   }),
@@ -15,14 +15,28 @@ export const imageInputSchema = z.object({
  * Zod schema for creating a project
  */
 export const createProjectSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(500, 'Title must be less than 500 characters'),
+  title: z
+    .string()
+    .min(1, 'Title is required')
+    .max(500, 'Title must be less than 500 characters'),
   description: z.string().min(1, 'Description is required'),
-  location: z.string().min(1, 'Location is required').max(200, 'Location must be less than 200 characters'),
-  client: z.string().min(1, 'Client is required').max(200, 'Client must be less than 200 characters'),
+  location: z
+    .string()
+    .min(1, 'Location is required')
+    .max(200, 'Location must be less than 200 characters'),
+  client: z
+    .string()
+    .min(1, 'Client is required')
+    .max(200, 'Client must be less than 200 characters'),
   isCompleted: z.boolean().optional().default(false),
-  constructionArea: z.number().int().positive('Construction area must be a positive number'),
+  constructionArea: z
+    .number()
+    .int()
+    .positive('Construction area must be a positive number'),
   favourite: z.boolean().optional().default(false),
-  categoryIds: z.array(z.string().cuid('Category ID must be a valid CUID')).min(1, 'At least one category is required'),
+  categoryIds: z
+    .array(z.string().cuid('Category ID must be a valid CUID'))
+    .min(1, 'At least one category is required'),
   images: z.array(imageInputSchema).optional().default([]),
 });
 
@@ -84,7 +98,9 @@ export const deleteProjectSchema = z.object({
  */
 export const deleteImagesSchema = z.object({
   id: z.string().cuid('Project ID must be a valid CUID'),
-  imageIds: z.array(z.string().cuid('Image ID must be a valid CUID')).min(1, 'At least one image ID is required'),
+  imageIds: z
+    .array(z.string().cuid('Image ID must be a valid CUID'))
+    .min(1, 'At least one image ID is required'),
 });
 
 // Type exports for use in controllers

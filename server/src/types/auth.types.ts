@@ -22,11 +22,8 @@ export interface UserResponse {
 }
 
 // Re-export types from validators as single source of truth
-export type {
-  RegisterInput,
-  LoginInput,
-  RefreshTokenInput,
-} from '../validators/auth.validators';
+export type { RegisterInput, LoginInput } from '@shirans/shared';
+export type { RefreshTokenInput } from '../validators/auth.validators';
 
 /**
  * Auth response (user + access token + refresh token)

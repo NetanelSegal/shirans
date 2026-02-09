@@ -12,7 +12,7 @@ import {
  * Check if error is an Axios error
  */
 export function isAxiosError(
-  error: unknown
+  error: unknown,
 ): error is AxiosError<ApiErrorResponse> {
   return (
     typeof error === 'object' &&
@@ -36,7 +36,7 @@ export function isNetworkError(error: unknown): boolean {
  * Extract error message from API error response
  */
 export function extractApiErrorMessage(
-  error: AxiosError<ApiErrorResponse>
+  error: AxiosError<ApiErrorResponse>,
 ): string {
   // Try to get message from API response
   if (error.response?.data?.message) {
@@ -112,7 +112,8 @@ export function transformError(error: unknown): AppError {
   if (error instanceof Error) {
     return {
       statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-      message: error.message || ERROR_MESSAGES[ERROR_KEYS.NETWORK.UNKNOWN_ERROR],
+      message:
+        error.message || ERROR_MESSAGES[ERROR_KEYS.NETWORK.UNKNOWN_ERROR],
       originalError: error,
     };
   }
