@@ -57,5 +57,20 @@ export const ERROR_KEYS = {
   },
 } as const;
 
-export type ErrorKey =
-  (typeof ERROR_KEYS)[keyof typeof ERROR_KEYS][keyof (typeof ERROR_KEYS)[keyof typeof ERROR_KEYS]];
+// A helper to extract all string values from the nested object
+export type DeepValue<T> = T extends object
+  ? { [K in keyof T]: DeepValue<T[K]> }[keyof T]
+  : T;
+
+export type ErrorKey = DeepValue<typeof ERROR_KEYS>;
+
+// הגדרת המבנה של המפה
+export type ErrorMap = Partial<Record<ErrorKey, string>>;
+
+/**
+ * פונקציה גנרית לשליפת הודעה
+ */
+export function formatErrorMessage(map: ErrorMap, key: ErrorKey): string {
+  const entry = map[key];
+  return entry || `Unknown Error (${key})`;
+}

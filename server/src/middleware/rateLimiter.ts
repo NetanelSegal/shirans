@@ -1,9 +1,9 @@
+import {
+  RATE_LIMIT_MAX_REQUESTS,
+  RATE_LIMIT_WINDOW_MS,
+} from '@/constants/auth.constants';
 import { env } from '@/utils/env';
 import rateLimit from 'express-rate-limit';
-import {
-  RATE_LIMIT_WINDOW_MS,
-  RATE_LIMIT_MAX_REQUESTS,
-} from '@shirans/shared';
 
 /**
  * Rate limiter for authentication endpoints

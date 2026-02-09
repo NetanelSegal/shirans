@@ -93,8 +93,4 @@ function buildErrorMessages(
   return result;
 }
 
-/**
- * Backward compatible nested structure
- * @deprecated Use getErrorMessage with ERROR_KEYS instead
- */
 export const ERROR_MESSAGES = buildErrorMessages(ERROR_KEYS, errorMessagesMap);

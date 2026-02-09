@@ -2,7 +2,6 @@ export * from './constants/httpStatus';
 export * from './errors/errorKeys';
 export * from './types/error.types';
 export * from './schemas/project.schema';
-export * from '../../server/src/constants/auth.constants';
 export * from './schemas/auth.schema';
 export * from './schemas/category.schema';
 export * from './schemas/contact.schema';
