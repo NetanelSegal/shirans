@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import logger from './logger';
 import { env } from '../utils/env';
+import { ServerErrorMessage } from '@/constants/errorMessages';
+import { HTTP_STATUS, HttpStatus } from '@shirans/shared';
 
 interface ErrorResponse {
   error: string;
@@ -12,7 +14,7 @@ export function errorHandler(
   err: Error,
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): void {
   // Log the error
   logger.error('Error occurred', {
@@ -24,7 +26,7 @@ export function errorHandler(
   });
 
   // Determine status code
-  let statusCode = 500;
+  let statusCode: HttpStatus = HTTP_STATUS.INTERNAL_SERVER_ERROR;
   if (err instanceof HttpError) {
     statusCode = err.statusCode;
   }
@@ -45,9 +47,9 @@ export function errorHandler(
 
 // Custom HTTP Error class
 export class HttpError extends Error {
-  statusCode: number;
+  statusCode: HttpStatus;
 
-  constructor(statusCode: number, message: string) {
+  constructor(statusCode: HttpStatus, message: ServerErrorMessage) {
     super(message);
     this.statusCode = statusCode;
     this.name = 'HttpError';

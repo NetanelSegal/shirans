@@ -2,7 +2,7 @@ import { contactRepository } from '../repositories/contact.repository';
 import type { ContactRequest, ContactResponse } from '../types/contact.types';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
-import { ERROR_MESSAGES } from '../constants/errorMessages';
+import { getServerErrorMessage } from '../constants/errorMessages';
 import { Prisma } from '@prisma/client';
 import logger from '../middleware/logger';
 
@@ -23,7 +23,7 @@ export const contactService = {
       logger.error('Error submitting contact form', { error });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        ERROR_MESSAGES.SERVER.SUBMIT_CONTACT_FAILED
+        getServerErrorMessage('SERVER.CONTACT.SUBMIT_FAILED'),
       );
     }
   },
@@ -42,7 +42,7 @@ export const contactService = {
       logger.error('Error fetching contact submissions', { error });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to fetch contact submissions'
+        getServerErrorMessage('SERVER.CONTACT.FETCH_SUBMISSIONS_FAILED'),
       );
     }
   },
@@ -59,7 +59,7 @@ export const contactService = {
       if (!submission) {
         throw new HttpError(
           HTTP_STATUS.NOT_FOUND,
-          ERROR_MESSAGES.NOT_FOUND.RESOURCE_NOT_FOUND
+          getServerErrorMessage('NOT_FOUND.RESOURCE_NOT_FOUND'),
         );
       }
       return submission;
@@ -70,7 +70,7 @@ export const contactService = {
       logger.error('Error fetching contact submission by ID', { error, id });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to fetch contact submission'
+        getServerErrorMessage('SERVER.CONTACT.FETCH_SUBMISSION_BY_ID_FAILED'),
       );
     }
   },
@@ -84,7 +84,7 @@ export const contactService = {
    */
   async updateReadStatus(
     id: string,
-    isRead: boolean
+    isRead: boolean,
   ): Promise<ContactResponse> {
     try {
       await this.getSubmissionById(id); // Throws if not found
@@ -97,7 +97,7 @@ export const contactService = {
         if (error.code === 'P2025') {
           throw new HttpError(
             HTTP_STATUS.NOT_FOUND,
-            ERROR_MESSAGES.NOT_FOUND.RESOURCE_NOT_FOUND
+            getServerErrorMessage('NOT_FOUND.RESOURCE_NOT_FOUND'),
           );
         }
       }
@@ -107,7 +107,7 @@ export const contactService = {
       });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to update contact submission'
+        getServerErrorMessage('SERVER.CONTACT.UPDATE_SUBMISSION_FAILED'),
       );
     }
   },
@@ -129,14 +129,14 @@ export const contactService = {
         if (error.code === 'P2025') {
           throw new HttpError(
             HTTP_STATUS.NOT_FOUND,
-            ERROR_MESSAGES.NOT_FOUND.RESOURCE_NOT_FOUND
+            getServerErrorMessage('NOT_FOUND.RESOURCE_NOT_FOUND'),
           );
         }
       }
       logger.error('Error deleting contact submission', { error, id });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to delete contact submission'
+        getServerErrorMessage('SERVER.CONTACT.DELETE_SUBMISSION_FAILED'),
       );
     }
   },
