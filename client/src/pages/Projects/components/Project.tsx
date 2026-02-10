@@ -18,7 +18,7 @@ const Project = ({ project, i }: IProjectProps) => {
       <div className='lg:w-2/3'>
         <EnterAnimation delay={i * 0.1} translateY={false}>
           <Link
-            to={`/projects/${project._id}`}
+            to={`/projects/${project.id}`}
             state={{ project, other: 'other' }}
           >
             <ImageScaleHover
@@ -56,7 +56,7 @@ const Project = ({ project, i }: IProjectProps) => {
                 </Fragment>
               ))}
             <Link
-              to={`/projects/${project._id}`}
+              to={`/projects/${project.id}`}
               className='font-semibold underline'
             >
               עוד על הפרויקט

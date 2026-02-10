@@ -8,11 +8,11 @@
 ### 
 ### To get IDs:
 ### 1. First, run: GET {{apiUrl}}/projects (see below)
-### 2. Look at the response - each project has an "_id" field
+### 2. Look at the response - each project has an "id" field
 ### 3. For category IDs, check your database or create categories first
 ### 4. For image IDs, check a project's images array
 ###
-### Example: If a project response shows "_id": "clx123abc456def789", use that
+### Example: If a project response shows "id": "clx123abc456def789", use that
 @projectId = your-project-id-here
 @categoryId = cml45zx5i00002wuc1k1hciui
 @imageId = your-image-id-here
@@ -40,7 +40,7 @@ Content-Type: application/json
 ### Expected Response Format:
 ### [
 ###   {
-###     "_id": "clx123abc456def789",
+###     "id": "clx123abc456def789",
 ###     "title": "Project Title",
 ###     "categories": ["privateHouses"],
 ###     "description": "Project description...",
@@ -53,8 +53,8 @@ Content-Type: application/json
 ###     "isCompleted": true,
 ###     "constructionArea": 100,
 ###     "favourite": false,
-###     "createdAt": { "$date": "2024-01-01T00:00:00.000Z" },
-###     "updatedAt": { "$date": "2024-01-02T00:00:00.000Z" }
+###     "createdAt": "2024-01-01T00:00:00.000Z",
+###     "updatedAt": "2024-01-02T00:00:00.000Z"
 ###   }
 ### ]
 

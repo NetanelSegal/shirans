@@ -13,14 +13,14 @@ export default function FavoriteProjects() {
         פרוייקטים נבחרים
       </h2>
       <DataCarousel
-        keyProperty='_id'
+        keyProperty='id'
         dataArray={data}
         containerClassname='max-w-[900px] mx-auto'
-        singleItem={({ mainImage, _id }, index) => (
+        singleItem={({ mainImage, id }, index) => (
           <div className='relative mb-2 aspect-video size-full overflow-hidden rounded-xl'>
-            <Link to={`/projects/${_id}`} state={{ project: data[index] }}>
+            <Link to={`/projects/${id}`} state={{ project: data[index] }}>
               <Image
-                key={_id}
+                key={id}
                 draggable='false'
                 className='size-full object-cover object-center transition-all duration-300 ease-in-out hover:scale-105'
                 src={mainImage}

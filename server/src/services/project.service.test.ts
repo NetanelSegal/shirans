@@ -91,7 +91,7 @@ describe('projectService', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject({
-        _id: '1',
+        id: '1',
         title: 'Test Project',
         categories: ['privateHouses'],
         mainImage: 'https://example.com/main.jpg',
@@ -192,7 +192,7 @@ describe('projectService', () => {
       const result = await projectService.createProject(createData);
 
       expect(result).toMatchObject({
-        _id: '1',
+        id: '1',
         title: 'New Project',
       });
       expect(projectRepository.create).toHaveBeenCalled();
@@ -377,7 +377,7 @@ describe('projectService', () => {
       const result = await projectService.getProjectById('1');
 
       expect(result).toMatchObject({
-        _id: '1',
+        id: '1',
         title: 'Test Project',
       });
       expect(projectRepository.findById).toHaveBeenCalledWith('1');
@@ -437,7 +437,7 @@ describe('projectService', () => {
       const result = await projectService.updateProject('1', updateData);
 
       expect(result).toMatchObject({
-        _id: '1',
+        id: '1',
         title: 'Updated Title',
       });
       expect(projectRepository.update).toHaveBeenCalled();
