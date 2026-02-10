@@ -53,7 +53,7 @@ export const testimonialRepository = {
   },
 
   async delete(id: string) {
-    return prisma.testimonial.delete({ where: { id } });
+    return await prisma.testimonial.delete({ where: { id } });
   },
 
   async updateOrder(id: string, order: number): Promise<TestimonialResponse> {

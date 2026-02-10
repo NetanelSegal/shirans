@@ -28,7 +28,7 @@ describe('cookie utilities', () => {
     vi.mocked(env).COOKIE_SECURE = 'false';
     vi.mocked(env).COOKIE_SAME_SITE = 'strict';
     vi.mocked(env).COOKIE_DOMAIN = '';
-    vi.mocked(env).NODE_ENV = 'test' as any;
+    vi.mocked(env).NODE_ENV = 'test';
 
     mockRequest = {
       cookies: {},
@@ -62,7 +62,7 @@ describe('cookie utilities', () => {
     });
 
     it('should set secure cookie in production', () => {
-      vi.mocked(env).NODE_ENV = 'production' as any;
+      vi.mocked(env).NODE_ENV = 'production';
 
       const token = 'test-refresh-token';
       const maxAge = 7 * 24 * 60 * 60 * 1000;
@@ -147,7 +147,7 @@ describe('cookie utilities', () => {
     });
 
     it('should clear cookie with secure flag in production', () => {
-      vi.mocked(env).NODE_ENV = 'production' as any;
+      vi.mocked(env).NODE_ENV = 'production';
 
       clearRefreshTokenCookie(mockResponse as Response);
 
@@ -193,7 +193,7 @@ describe('cookie utilities', () => {
     });
 
     it('should return null when cookies object is undefined', () => {
-      mockRequest.cookies = undefined as any;
+      mockRequest.cookies = undefined as unknown as Record<string, string>;
 
       const result = getRefreshTokenFromCookie(mockRequest as Request);
 

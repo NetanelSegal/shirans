@@ -3,7 +3,7 @@ import emailjs, { EmailJSResponseStatus } from '@emailjs/browser';
 
 interface IReturnUseEmailSend {
   error: string;
-  sendEmail: (data: any) => Promise<EmailJSResponseStatus | undefined>;
+  sendEmail: (data: Record<string, unknown>) => Promise<EmailJSResponseStatus | undefined>;
   loading: boolean;
   success: boolean;
 }
@@ -13,7 +13,7 @@ export default function useEmailSend(): IReturnUseEmailSend {
   const [loading, setLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
-  const sendEmail = async (data: any) => {
+  const sendEmail = async (data: Record<string, unknown>) => {
     setLoading(true);
     setError('');
     try {

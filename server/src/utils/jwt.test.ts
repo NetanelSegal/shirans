@@ -15,7 +15,7 @@ const { mockJwt, JsonWebTokenError, TokenExpiredError } = vi.hoisted(() => {
     constructor(message: string, expiredAt?: Date) {
       super(message);
       this.name = 'TokenExpiredError';
-      (this as any).expiredAt = expiredAt;
+      (this as unknown as Record<string, unknown>).expiredAt = expiredAt;
     }
   }
 
