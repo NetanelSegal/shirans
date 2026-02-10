@@ -5,6 +5,7 @@ import 'express-async-errors';
 import { corsOptions } from './config/cors';
 import { requestLogger } from './middleware/logger';
 import { errorHandler } from './middleware/errorHandler';
+import { setupSwagger } from './docs/swagger';
 import healthRoutes from './routes/health.routes';
 import projectRoutes from './routes/project.routes';
 import authRoutes from './routes/auth.routes';
@@ -26,6 +27,9 @@ function createApp(): Express {
   // Body parsing middleware
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // Swagger API documentation
+  setupSwagger(app);
 
   // API routes
   app.use('/api', healthRoutes);

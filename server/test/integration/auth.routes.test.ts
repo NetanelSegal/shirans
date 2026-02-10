@@ -73,6 +73,7 @@ vi.mock('../../src/config/cors', () => ({
 
 // Import app after all mocks
 import app from '../../src/app';
+import { UserResponse } from '@shirans/shared';
 
 describe('Auth Routes Integration Tests', () => {
   beforeEach(() => {
@@ -81,13 +82,13 @@ describe('Auth Routes Integration Tests', () => {
 
   describe('POST /api/auth/register', () => {
     it('should register a new user successfully', async () => {
-      const mockUser = {
+      const mockUser: UserResponse = {
         id: 'user123',
         email: 'test@example.com',
         name: 'Test User',
         role: UserRole.USER,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       const mockAccessToken = 'mock-access-token';
@@ -99,13 +100,11 @@ describe('Auth Routes Integration Tests', () => {
         refreshToken: mockRefreshToken,
       });
 
-      const response = await request(app)
-        .post('/api/auth/register')
-        .send({
-          email: 'test@example.com',
-          password: 'Password123!',
-          name: 'Test User',
-        });
+      const response = await request(app).post('/api/auth/register').send({
+        email: 'test@example.com',
+        password: 'Password123!',
+        name: 'Test User',
+      });
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('user');
@@ -122,21 +121,20 @@ describe('Auth Routes Integration Tests', () => {
     it('should return 409 when email already exists', async () => {
       const { HttpError } = await import('../../src/middleware/errorHandler');
       const { HTTP_STATUS } = await import('../../src/constants/httpStatus');
-      const { ERROR_MESSAGES } = await import('../../src/constants/errorMessages');
+      const { getServerErrorMessage } =
+        await import('../../src/constants/errorMessages');
       vi.mocked(authService.register).mockRejectedValue(
         new HttpError(
           HTTP_STATUS.CONFLICT,
-          ERROR_MESSAGES.CONFLICT.EMAIL_ALREADY_EXISTS
-        )
+          getServerErrorMessage('CONFLICT.EMAIL_ALREADY_EXISTS'),
+        ),
       );
 
-      const response = await request(app)
-        .post('/api/auth/register')
-        .send({
-          email: 'existing@example.com',
-          password: 'Password123!',
-          name: 'Test User',
-        });
+      const response = await request(app).post('/api/auth/register').send({
+        email: 'existing@example.com',
+        password: 'Password123!',
+        name: 'Test User',
+      });
 
       expect(response.status).toBe(409);
       expect(response.body).toHaveProperty('error');
@@ -144,24 +142,20 @@ describe('Auth Routes Integration Tests', () => {
     });
 
     it('should return 400 when validation fails', async () => {
-      const response = await request(app)
-        .post('/api/auth/register')
-        .send({
-          email: 'invalid-email',
-          password: '123', // Too short and missing complexity requirements
-          name: 'A', // Too short
-        });
+      const response = await request(app).post('/api/auth/register').send({
+        email: 'invalid-email',
+        password: '123', // Too short and missing complexity requirements
+        name: 'A', // Too short
+      });
 
       expect(response.status).toBe(400);
     });
 
     it('should return 400 when required fields are missing', async () => {
-      const response = await request(app)
-        .post('/api/auth/register')
-        .send({
-          email: 'test@example.com',
-          // Missing password and name
-        });
+      const response = await request(app).post('/api/auth/register').send({
+        email: 'test@example.com',
+        // Missing password and name
+      });
 
       expect(response.status).toBe(400);
     });
@@ -169,13 +163,13 @@ describe('Auth Routes Integration Tests', () => {
 
   describe('POST /api/auth/login', () => {
     it('should login user successfully', async () => {
-      const mockUser = {
+      const mockUser: UserResponse = {
         id: 'user123',
         email: 'test@example.com',
         name: 'Test User',
         role: UserRole.USER,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       const mockAccessToken = 'mock-access-token';
@@ -187,12 +181,10 @@ describe('Auth Routes Integration Tests', () => {
         refreshToken: mockRefreshToken,
       });
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          email: 'test@example.com',
-          password: 'Password123!',
-        });
+      const response = await request(app).post('/api/auth/login').send({
+        email: 'test@example.com',
+        password: 'Password123!',
+      });
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('user');
@@ -207,20 +199,19 @@ describe('Auth Routes Integration Tests', () => {
     it('should return 401 with invalid credentials', async () => {
       const { HttpError } = await import('../../src/middleware/errorHandler');
       const { HTTP_STATUS } = await import('../../src/constants/httpStatus');
-      const { ERROR_MESSAGES } = await import('../../src/constants/errorMessages');
+      const { getServerErrorMessage } =
+        await import('../../src/constants/errorMessages');
       vi.mocked(authService.login).mockRejectedValue(
         new HttpError(
           HTTP_STATUS.UNAUTHORIZED,
-          ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS
-        )
+          getServerErrorMessage('AUTH.INVALID_CREDENTIALS'),
+        ),
       );
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          email: 'test@example.com',
-          password: 'wrongpassword',
-        });
+      const response = await request(app).post('/api/auth/login').send({
+        email: 'test@example.com',
+        password: 'wrongpassword',
+      });
 
       expect(response.status).toBe(401);
       expect(response.body).toHaveProperty('error');
@@ -228,12 +219,10 @@ describe('Auth Routes Integration Tests', () => {
     });
 
     it('should return 400 when validation fails', async () => {
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          email: 'invalid-email',
-          password: '123', // Too short and missing complexity requirements
-        });
+      const response = await request(app).post('/api/auth/login').send({
+        email: 'invalid-email',
+        password: '123', // Too short and missing complexity requirements
+      });
 
       expect(response.status).toBe(400);
     });
@@ -241,13 +230,13 @@ describe('Auth Routes Integration Tests', () => {
 
   describe('GET /api/auth/me', () => {
     it('should return current user with valid token', async () => {
-      const mockUser = {
+      const mockUser: UserResponse = {
         id: 'user123',
         email: 'test@example.com',
         name: 'Test User',
         role: UserRole.USER,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       vi.mocked(authService.verifyToken).mockReturnValue({
@@ -333,12 +322,13 @@ describe('Auth Routes Integration Tests', () => {
     it('should return 401 when refresh token is invalid', async () => {
       const { HttpError } = await import('../../src/middleware/errorHandler');
       const { HTTP_STATUS } = await import('../../src/constants/httpStatus');
-      const { ERROR_MESSAGES } = await import('../../src/constants/errorMessages');
+      const { getServerErrorMessage } =
+        await import('../../src/constants/errorMessages');
       vi.mocked(authService.refreshAccessToken).mockRejectedValue(
         new HttpError(
           HTTP_STATUS.UNAUTHORIZED,
-          ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID
-        )
+          getServerErrorMessage('AUTH.REFRESH_TOKEN_INVALID'),
+        ),
       );
 
       const response = await request(app)
@@ -365,9 +355,7 @@ describe('Auth Routes Integration Tests', () => {
       const cookies = response.headers['set-cookie'];
       expect(cookies).toBeDefined();
       // Check if cookie is cleared (expires in the past or maxAge=0)
-      const clearCookie = cookies?.find((cookie: string) =>
-        cookie.includes('refreshToken=')
-      );
+      const clearCookie = cookies?.includes('refreshToken=');
       expect(clearCookie).toBeDefined();
     });
 
@@ -430,7 +418,8 @@ describe('Auth Routes Integration Tests', () => {
       });
 
       // Mock project repository for successful creation
-      const { projectRepository } = await import('../../src/repositories/project.repository');
+      const { projectRepository } =
+        await import('../../src/repositories/project.repository');
       vi.mocked(projectRepository.create).mockResolvedValue({
         id: 'proj123',
         title: 'Test Project',
