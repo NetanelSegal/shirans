@@ -12,7 +12,7 @@ export const REFRESH_TOKEN_BYTE_LENGTH = 32;
 /**
  * Rate limiting configuration for authentication endpoints
  */
-export const RATE_LIMIT_WINDOW_MS = 3; // 15 minutes
+export const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 export const RATE_LIMIT_MAX_REQUESTS = 5; // 5 requests per window
 
 /**

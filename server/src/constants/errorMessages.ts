@@ -1,4 +1,4 @@
-import { ERROR_KEYS } from '@shirans/shared';
+import { ErrorKey, formatErrorMessage } from '@shirans/shared';
 
 /**
  * Centralized Error Messages
@@ -6,91 +6,64 @@ import { ERROR_KEYS } from '@shirans/shared';
  * Uses shared ERROR_KEYS for consistency
  * Maintains backward compatibility with nested structure
  */
-const errorMessagesMap: Record<
-  string,
-  string | ((...args: unknown[]) => string)
-> = {
-  [ERROR_KEYS.AUTH.INVALID_CREDENTIALS]: 'Invalid email or password',
-  [ERROR_KEYS.AUTH.TOKEN_REQUIRED]: 'Missing or invalid authorization header',
-  [ERROR_KEYS.AUTH.TOKEN_INVALID]: 'Invalid or expired token',
-  [ERROR_KEYS.AUTH.REFRESH_TOKEN_REQUIRED]: 'Refresh token required',
-  [ERROR_KEYS.AUTH.REFRESH_TOKEN_INVALID]: 'Invalid or expired refresh token',
-  [ERROR_KEYS.AUTH.AUTHENTICATION_REQUIRED]: 'Authentication required',
-  [ERROR_KEYS.AUTH.ADMIN_ACCESS_REQUIRED]: 'Admin access required',
-  [ERROR_KEYS.AUTH.TOKEN_REUSE_DETECTED]:
-    'Token already used - security breach detected',
-  [ERROR_KEYS.VALIDATION.INVALID_INPUT]: 'Invalid input data',
-  [ERROR_KEYS.VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT]: (
-    ...args: unknown[]
-  ) => {
-    const [imageIds, projectId] = args;
-    if (Array.isArray(imageIds) && typeof projectId === 'string') {
-      return `Images with ids ${imageIds.join(', ')} do not belong to project ${projectId}`;
-    }
-    return 'Invalid arguments for IMAGES_NOT_BELONG_TO_PROJECT';
-  },
-  [ERROR_KEYS.NOT_FOUND.USER_NOT_FOUND]: 'User not found',
-  [ERROR_KEYS.NOT_FOUND.PROJECT_NOT_FOUND]: (...args: unknown[]) => {
-    const [id] = args;
-    if (typeof id === 'string') {
-      return `Project with id ${id} not found`;
-    }
-    return 'Invalid arguments for PROJECT_NOT_FOUND';
-  },
-  [ERROR_KEYS.NOT_FOUND.CATEGORY_NOT_FOUND]: 'One or more categories not found',
-  [ERROR_KEYS.NOT_FOUND.MAIN_IMAGE_NOT_FOUND]: (...args: unknown[]) => {
-    const [id] = args;
-    if (typeof id === 'string') {
-      return `Main image not found for project ${id}`;
-    }
-    return 'Invalid arguments for MAIN_IMAGE_NOT_FOUND';
-  },
-  [ERROR_KEYS.NOT_FOUND.PAGE_NOT_FOUND]: 'Page not found',
-  [ERROR_KEYS.NOT_FOUND.RESOURCE_NOT_FOUND]: 'Resource not found',
-  [ERROR_KEYS.CONFLICT.EMAIL_ALREADY_EXISTS]: 'Email already registered',
-  [ERROR_KEYS.CONFLICT.PROJECT_TITLE_EXISTS]:
-    'A project with this title already exists',
-  [ERROR_KEYS.SERVER.REGISTRATION_FAILED]: 'Failed to register user',
-  [ERROR_KEYS.SERVER.LOGIN_FAILED]: 'Failed to login',
-  [ERROR_KEYS.SERVER.FETCH_USER_FAILED]: 'Failed to get user',
-  [ERROR_KEYS.SERVER.REFRESH_TOKEN_FAILED]: 'Failed to refresh token',
-  [ERROR_KEYS.SERVER.FETCH_PROJECTS_FAILED]: 'Failed to fetch projects',
-  [ERROR_KEYS.SERVER.FETCH_FAVOURITE_PROJECTS_FAILED]:
+const errorMessagesMap = {
+  'AUTH.INVALID_CREDENTIALS': 'Invalid email or password',
+  'AUTH.TOKEN_REQUIRED': 'Missing or invalid authorization header',
+  'AUTH.TOKEN_INVALID': 'Invalid or expired token',
+  'AUTH.REFRESH_TOKEN_REQUIRED': 'Refresh token required',
+  'AUTH.REFRESH_TOKEN_INVALID': 'Invalid or expired refresh token',
+  'AUTH.AUTHENTICATION_REQUIRED': 'Authentication required',
+  'AUTH.ADMIN_ACCESS_REQUIRED': 'Admin access required',
+  'AUTH.TOKEN_REUSE_DETECTED': 'Token already used - security breach detected',
+  'VALIDATION.INVALID_INPUT': 'Invalid input data',
+  'VALIDATION.REQUIRED_FIELD': 'Required field',
+  'VALIDATION.INVALID_EMAIL': 'Invalid email',
+  'VALIDATION.INVALID_PHONE': 'Invalid phone',
+  'VALIDATION.PASSWORD_TOO_SHORT': 'Password too short',
+  'VALIDATION.PASSWORD_WEAK': 'Password weak',
+  'VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT': `Images do not belong to project`,
+  'NOT_FOUND.USER_NOT_FOUND': 'User not found',
+  'NOT_FOUND.PROJECT_NOT_FOUND': 'Project not found',
+  'NOT_FOUND.CATEGORY_NOT_FOUND': 'One or more categories not found',
+  'NOT_FOUND.MAIN_IMAGE_NOT_FOUND': 'Main image not found for project',
+  'NOT_FOUND.PAGE_NOT_FOUND': 'Page not found',
+  'NOT_FOUND.RESOURCE_NOT_FOUND': 'Resource not found',
+  'NOT_FOUND.TESTIMONIAL_NOT_FOUND': 'Testimonial not found',
+  'CONFLICT.EMAIL_ALREADY_EXISTS': 'Email already registered',
+  'CONFLICT.PROJECT_TITLE_EXISTS': 'A project with this title already exists',
+  'SERVER.PROJECT.FETCHS_FAILED': 'Failed to fetch projects',
+  'SERVER.PROJECT.FETCH_FAVOURITES_FAILED':
     'Failed to fetch favourite projects',
-  [ERROR_KEYS.SERVER.CREATE_PROJECT_FAILED]: 'Failed to create project',
-  [ERROR_KEYS.SERVER.UPDATE_PROJECT_FAILED]: 'Failed to update project',
-  [ERROR_KEYS.SERVER.DELETE_PROJECT_FAILED]: 'Failed to delete project',
-  [ERROR_KEYS.SERVER.SUBMIT_CONTACT_FAILED]: 'Failed to submit contact form',
-  [ERROR_KEYS.SERVER.UPLOAD_IMAGES_FAILED]: 'Failed to upload images',
-  [ERROR_KEYS.SERVER.DELETE_MAIN_IMAGE_FAILED]: 'Failed to delete main image',
-  [ERROR_KEYS.SERVER.DELETE_PROJECT_IMAGES_FAILED]:
-    'Failed to delete project images',
-};
+  'SERVER.PROJECT.FETCH_BY_ID_FAILED': 'Failed to fetch project by id',
+  'SERVER.TESTIMONIAL.FETCHS_FAILED': 'Failed to fetch testimonials',
+  'SERVER.TESTIMONIAL.FETCH_BY_ID_FAILED': 'Failed to fetch testimonial by id',
+  'NETWORK.CONNECTION_ERROR': 'Connection error',
+  'NETWORK.TIMEOUT': 'Timeout',
+  'NETWORK.SERVER_ERROR': 'Server error',
+  'NETWORK.UNKNOWN_ERROR': 'Unknown error',
+  'SERVER.CONTACT.DELETE_SUBMISSION_FAILED':
+    'Failed to delete contact submission',
+  'SERVER.CONTACT.FETCH_SUBMISSIONS_FAILED':
+    'Failed to fetch contact submissions',
+  'SERVER.CONTACT.FETCH_SUBMISSION_BY_ID_FAILED':
+    'Failed to fetch contact submission by id',
+  'SERVER.CONTACT.SUBMIT_FAILED': 'Failed to submit contact',
+  'SERVER.CONTACT.UPDATE_SUBMISSION_FAILED':
+    'Failed to update contact submission',
+  'SERVER.PROJECT.CREATE_FAILED': 'Failed to create project',
+  'SERVER.PROJECT.DELETE_FAILED': 'Failed to delete project',
+  'SERVER.PROJECT.UPDATE_FAILED': 'Failed to update project',
+  'SERVER.TESTIMONIAL.CREATE_FAILED': 'Failed to create testimonial',
+  'SERVER.TESTIMONIAL.DELETE_FAILED': 'Failed to delete testimonial',
+  'SERVER.TESTIMONIAL.UPDATE_FAILED': 'Failed to update testimonial',
+  'SERVER.USER.REGISTRATION_FAILED': 'Failed to register user',
+  'SERVER.USER.LOGIN_FAILED': 'Failed to login user',
+  'SERVER.USER.FETCH_USER_FAILED': 'Failed to fetch user',
+  'SERVER.USER.REFRESH_TOKEN_FAILED': 'Failed to refresh token',
+} as const satisfies Record<ErrorKey, string>;
 
-/**
- * Get error message by ERROR_KEY
- */
-export function getErrorMessage(key: string, ...args: unknown[]): string {
-  const message = errorMessagesMap[key];
-  if (typeof message === 'function') {
-    return message(...args);
-  }
-  return message || 'Unknown error';
+export type ServerErrorMessage = (typeof errorMessagesMap)[ErrorKey];
+
+export function getServerErrorMessage(key: ErrorKey): ServerErrorMessage {
+  return formatErrorMessage(errorMessagesMap, key);
 }
-
-function buildErrorMessages(
-  errorKeys: any,
-  messagesMap: Record<string, any>,
-): any {
-  const result: any = {};
-  for (const key in errorKeys) {
-    if (typeof errorKeys[key] === 'object' && errorKeys[key] !== null) {
-      result[key] = buildErrorMessages(errorKeys[key], messagesMap);
-    } else {
-      result[key] = messagesMap[errorKeys[key]];
-    }
-  }
-  return result;
-}
-
-export const ERROR_MESSAGES = buildErrorMessages(ERROR_KEYS, errorMessagesMap);
