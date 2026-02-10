@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --exec tsx src/index.ts",
     "build": "npm run build:deps && npm run build:compile",
-    "build:deps": "npm run build -w shared && npx prisma generate",
+    "build:deps": "npm run build -w @shirans/shared && npx prisma generate",
     "build:compile": "tsc --project tsconfig.json --rootDir .. && tsc-alias -p tsconfig.json",
     "start": "node dist/server/src/index.js",
     "prisma:generate": "prisma generate",
