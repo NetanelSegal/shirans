@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@shirans/shared": "*",
     "@emailjs/browser": "^4.4.1",
     "@hookform/resolvers": "^5.2.2",
     "axios": "^1.13.4",
