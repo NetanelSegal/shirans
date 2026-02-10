@@ -1,4 +1,6 @@
-export type CategoryUrlCode = 'privateHouses' | 'apartments' | 'publicSpaces';
+import type { CategoryUrlCode } from '@shirans/shared';
+
+export type { CategoryUrlCode } from '@shirans/shared';
 
 export interface ICategory {
   _id: {

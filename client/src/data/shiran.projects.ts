@@ -1,5 +1,4 @@
-import { CategoryUrlCode } from './shiran.categories';
-import type { ResponsiveImage } from '@/components/ui/Image';
+import type { ResponsiveImage, ProjectResponse } from '@shirans/shared';
 
 // Helper function ליצירת responsive image object
 const createResponsiveImage = (
@@ -481,26 +480,8 @@ const p6_imgMain = createResponsiveImage(
   p6_imgMain_desktop,
 );
 
-// ========== INTERFACE & EXPORTS ==========
-export interface IProject {
-  id: string;
-  title: string;
-  categories: CategoryUrlCode[];
-  description: string;
-  mainImage: string | ResponsiveImage;
-  images: (string | ResponsiveImage)[];
-  plans?: (string | ResponsiveImage)[];
-  videos?: string[];
-  location: string;
-  client: string;
-  isCompleted: boolean;
-  constructionArea: number;
-  favourite: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export const projects: IProject[] = [
+// ========== EXPORTS ==========
+export const projects: ProjectResponse[] = [
   {
     id: '1',
     title: 'תכנון ובנייה של בית מגורים לזוג צעיר במושב ילדותם',

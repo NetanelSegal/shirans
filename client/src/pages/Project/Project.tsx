@@ -8,7 +8,7 @@ import { useProjects } from '@/contexts/ProjectsContext';
 import { Fragment } from 'react/jsx-runtime';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import { Helmet } from 'react-helmet-async';
-import type { ResponsiveImage } from '@/components/ui/Image';
+import type { ResponsiveImage } from '@shirans/shared';
 import { BASE_URL } from '@/constants/urls';
 
 export default function Project() {

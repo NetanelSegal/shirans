@@ -4,18 +4,10 @@ import { setAccessToken, getAccessToken, removeAccessToken } from '../utils/toke
 import { urls } from '../constants/urls';
 import { transformError } from '../utils/errorHandler';
 import { refreshAccessToken } from '../services/tokenRefresh.service';
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: 'ADMIN' | 'USER';
-  createdAt: string;
-  updatedAt: string;
-}
+import type { UserResponse } from '@shirans/shared';
 
 interface AuthContextType {
-  user: User | null;
+  user: UserResponse | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
@@ -27,7 +19,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Check if user is authenticated on mount

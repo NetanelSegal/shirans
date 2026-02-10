@@ -32,8 +32,8 @@ function transformUserToResponse(user: {
     email: user.email,
     name: user.name,
     role: user.role as UserResponse['role'],
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
+    createdAt: user.createdAt.toISOString(),
+    updatedAt: user.updatedAt.toISOString(),
   };
 }
 

@@ -1,5 +1,5 @@
 import { contactRepository } from '../repositories/contact.repository';
-import type { ContactRequest, ContactResponse } from '../types/contact.types';
+import type { ContactResponse, CreateContactInput } from '@shirans/shared';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { getServerErrorMessage } from '@/constants/errorMessages';
@@ -16,7 +16,7 @@ export const contactService = {
    * @param data - Contact submission data
    * @returns Created contact submission
    */
-  async submitContact(data: ContactRequest): Promise<ContactResponse> {
+  async submitContact(data: CreateContactInput): Promise<ContactResponse> {
     try {
       return await contactRepository.create(data);
     } catch (error) {

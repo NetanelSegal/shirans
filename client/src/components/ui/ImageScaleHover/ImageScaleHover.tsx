@@ -1,5 +1,6 @@
 import { ImgHTMLAttributes } from 'react';
-import Image, { ResponsiveImage } from '../Image/Image';
+import Image from '../Image/Image';
+import type { ResponsiveImage } from '@shirans/shared';
 
 interface IImageScaleHoverProps
   extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {

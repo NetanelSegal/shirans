@@ -1,9 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
 import DataCarousel from '../DataCarousel';
 import Image from '../ui/Image';
-import { projects, IProject } from '@/data/shiran.projects';
+import { projects } from '@/data/shiran.projects';
+import type { ProjectResponse } from '@shirans/shared';
 
-const data: IProject[] = projects.filter((p) => p.favourite);
+const data: ProjectResponse[] = projects.filter((p) => p.favourite);
 
 export default function FavoriteProjects() {
   const nav = useNavigate();

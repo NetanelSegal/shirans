@@ -3,7 +3,7 @@ import ImageClickModal from './ImageClickModal';
 import useCounter from '@/hooks/useCounter';
 import arrowIconSrc from '@/assets/icons/select-arrow.svg';
 import Image from '@/components/ui/Image';
-import type { ResponsiveImage } from '@/components/ui/Image';
+import type { ResponsiveImage } from '@shirans/shared';
 import Modal from '@/components/ui/Modal';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 

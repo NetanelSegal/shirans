@@ -1,8 +1,9 @@
 import { createContext, useContext, ReactNode } from 'react';
-import { IProject, projects } from '@/data/shiran.projects';
+import { projects } from '@/data/shiran.projects';
+import type { ProjectResponse } from '@shirans/shared';
 
 interface ProjectsContextType {
-  projects: IProject[];
+  projects: ProjectResponse[];
 }
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(

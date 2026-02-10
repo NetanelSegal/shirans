@@ -1,2 +1,2 @@
 export { default } from './Image';
-export type { ResponsiveImage } from './Image';
+export type { ResponsiveImage } from '@shirans/shared';
