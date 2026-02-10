@@ -1,7 +1,7 @@
 import { ZodError } from 'zod';
-import { HttpError } from '../middleware/errorHandler';
+import { CustomZodError, HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
-import { ERROR_MESSAGES } from '../constants/errorMessages';
+import { getServerErrorMessage } from '@/constants/errorMessages';
 
 /**
  * Format Zod validation errors into a user-friendly message
@@ -25,16 +25,13 @@ export function formatZodError(error: ZodError): string {
  */
 export function validateRequest<T>(
   schema: { parse: (data: unknown) => T },
-  data: unknown
+  data: unknown,
 ): T {
   try {
     return schema.parse(data);
   } catch (error) {
     if (error instanceof ZodError) {
-      throw new HttpError(
-        HTTP_STATUS.BAD_REQUEST,
-        formatZodError(error) || ERROR_MESSAGES.VALIDATION.INVALID_INPUT
-      );
+      throw new CustomZodError(formatZodError(error));
     }
     throw error;
   }

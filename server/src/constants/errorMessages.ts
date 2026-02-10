@@ -79,6 +79,8 @@ const errorMessagesMap = {
   'SERVER.TESTIMONIAL.CREATE_FAILED': 'Failed to create testimonial',
   'SERVER.TESTIMONIAL.DELETE_FAILED': 'Failed to delete testimonial',
   'SERVER.TESTIMONIAL.UPDATE_FAILED': 'Failed to update testimonial',
+  'SERVER.TESTIMONIAL.UPDATE_ORDER_FAILED':
+    'Failed to update testimonial order',
 
   'SERVER.USER.REGISTRATION_FAILED': 'Failed to register user',
   'SERVER.USER.LOGIN_FAILED': 'Failed to login user',

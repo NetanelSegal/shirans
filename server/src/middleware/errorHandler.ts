@@ -1,13 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 import logger from './logger';
 import { env } from '../utils/env';
-import { ServerErrorMessage } from '@/constants/errorMessages';
+import {
+  getServerErrorMessage,
+  ServerErrorMessage,
+} from '@/constants/errorMessages';
 import { HTTP_STATUS, HttpStatus } from '@shirans/shared';
 
 interface ErrorResponse {
   error: string;
   message: string;
   stack?: string;
+  validationErrors?: string;
 }
 
 export function errorHandler(
@@ -40,6 +44,9 @@ export function errorHandler(
   // Include stack trace in development
   if (env.NODE_ENV === 'development' && err.stack) {
     errorResponse.stack = err.stack;
+    if (err instanceof CustomZodError) {
+      errorResponse.validationErrors = err.validationErrors;
+    }
   }
 
   res.status(statusCode).json(errorResponse);
@@ -54,5 +61,17 @@ export class HttpError extends Error {
     this.statusCode = statusCode;
     this.name = 'HttpError';
     Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+export class CustomZodError extends HttpError {
+  validationErrors: string;
+
+  constructor(validationErrors: string) {
+    super(
+      HTTP_STATUS.BAD_REQUEST,
+      getServerErrorMessage('VALIDATION.INVALID_INPUT'),
+    );
+    this.validationErrors = validationErrors;
   }
 }

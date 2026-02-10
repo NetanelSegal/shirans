@@ -4,7 +4,7 @@ import { authenticate } from './auth.middleware';
 import { authService } from '../services/auth.service';
 import { HttpError } from './errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
-import { ERROR_MESSAGES } from '../constants/errorMessages';
+import { getServerErrorMessage } from '@/constants/errorMessages';
 import { UserRole } from '@prisma/client';
 
 // Mock auth service
@@ -109,7 +109,7 @@ describe('authenticate middleware', () => {
       expect.objectContaining({
         statusCode: 401,
         message: 'Missing or invalid authorization header',
-      })
+      }),
     );
   });
 
@@ -125,7 +125,7 @@ describe('authenticate middleware', () => {
       expect.objectContaining({
         statusCode: 401,
         message: 'Missing or invalid authorization header',
-      })
+      }),
     );
   });
 
@@ -137,7 +137,7 @@ describe('authenticate middleware', () => {
     vi.mocked(authService.verifyToken).mockImplementation(() => {
       throw new HttpError(
         HTTP_STATUS.UNAUTHORIZED,
-        ERROR_MESSAGES.AUTH.TOKEN_INVALID
+        getServerErrorMessage('AUTH.TOKEN_INVALID'),
       );
     });
 
@@ -148,7 +148,7 @@ describe('authenticate middleware', () => {
       expect.objectContaining({
         statusCode: 401,
         message: 'Invalid or expired token',
-      })
+      }),
     );
   });
 
@@ -168,7 +168,7 @@ describe('authenticate middleware', () => {
       expect.objectContaining({
         statusCode: 401,
         message: 'Invalid or expired token',
-      })
+      }),
     );
   });
 
