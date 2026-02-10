@@ -195,7 +195,7 @@ describe('Swagger Schema Definitions', () => {
     });
 
     it('should define UpdateCategoryRequest with no required fields', () => {
-      const schema = categorySchemas.UpdateCategoryRequest;
+      const schema = categorySchemas.UpdateCategoryRequest as Record<string, unknown>;
       expect(schema.required).toBeUndefined();
     });
   });
@@ -253,7 +253,7 @@ describe('Swagger Schema Definitions', () => {
     });
 
     it('should define UpdateTestimonialRequest with no required fields', () => {
-      const schema = testimonialSchemas.UpdateTestimonialRequest;
+      const schema = testimonialSchemas.UpdateTestimonialRequest as Record<string, unknown>;
       expect(schema.required).toBeUndefined();
     });
 

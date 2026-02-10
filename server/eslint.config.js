@@ -29,6 +29,13 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', '*.js'],
+    files: ['**/*.test.ts', '**/*.spec.ts'],
+    rules: {
+      '@typescript-eslint/unbound-method': 'off',
+      '@typescript-eslint/restrict-template-expressions': 'off',
+    },
+  },
+  {
+    ignores: ['dist/', 'node_modules/', '*.js', 'prisma.config.ts', 'vitest.config.ts', 'test/'],
   }
 );

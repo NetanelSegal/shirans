@@ -26,7 +26,7 @@ export function verifyToken(token: string): TokenPayload {
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET) as TokenPayload;
     return decoded;
-  } catch (error) {
+  } catch {
     // Generic error message to prevent information disclosure
     throw new Error('Invalid or expired token');
   }

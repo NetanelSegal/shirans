@@ -9,11 +9,11 @@ export function startTokenCleanupJob(): void {
   const CLEANUP_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
   // Run cleanup immediately on startup (for expired tokens)
-  runCleanup();
+  void runCleanup();
 
   // Schedule daily cleanup
   setInterval(() => {
-    runCleanup();
+    void runCleanup();
   }, CLEANUP_INTERVAL_MS);
 
   logger.info('Token cleanup job started - running daily');
