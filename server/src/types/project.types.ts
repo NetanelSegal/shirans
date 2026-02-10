@@ -15,7 +15,7 @@ export interface ResponsiveImage {
  * Project response matching frontend IProject interface
  */
 export interface ProjectResponse {
-  _id: string;
+  id: string;
   title: string;
   categories: CategoryUrlCode[];
   description: string;
@@ -28,13 +28,8 @@ export interface ProjectResponse {
   isCompleted: boolean;
   constructionArea: number;
   favourite: boolean;
-  createdAt?: {
-    $date: string;
-  };
-  updatedAt?: {
-    $date: string;
-  };
-  __v?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 /**
@@ -116,7 +111,7 @@ export function transformProjectToResponse(
   );
 
   return {
-    _id: project.id,
+    id: project.id,
     title: project.title,
     categories,
     description: project.description,
@@ -129,12 +124,8 @@ export function transformProjectToResponse(
     isCompleted: project.isCompleted,
     constructionArea: project.constructionArea,
     favourite: project.favourite,
-    createdAt: {
-      $date: project.createdAt.toISOString(),
-    },
-    updatedAt: {
-      $date: project.updatedAt.toISOString(),
-    },
+    createdAt: project.createdAt.toISOString(),
+    updatedAt: project.updatedAt.toISOString(),
   };
 }
 

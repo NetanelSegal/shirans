@@ -483,7 +483,7 @@ const p6_imgMain = createResponsiveImage(
 
 // ========== INTERFACE & EXPORTS ==========
 export interface IProject {
-  _id: string;
+  id: string;
   title: string;
   categories: CategoryUrlCode[];
   description: string;
@@ -496,18 +496,13 @@ export interface IProject {
   isCompleted: boolean;
   constructionArea: number;
   favourite: boolean;
-  createdAt?: {
-    $date: string;
-  };
-  updatedAt?: {
-    $date: string;
-  };
-  __v?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export const projects: IProject[] = [
   {
-    _id: '1',
+    id: '1',
     title: 'תכנון ובנייה של בית מגורים לזוג צעיר במושב ילדותם',
     categories: ['privateHouses'],
     description: `זוג צעיר ומקסים הגיע למשרדי לאחר תהליך כואב ומתסכל עם אדריכלית קודמת, שלא הצליחה לפתור את האתגרים שעמדו בפניהם.
@@ -524,7 +519,7 @@ export const projects: IProject[] = [
     favourite: true,
   },
   {
-    _id: '2',
+    id: '2',
     title: 'משפחה, חיבור ועיצוב שמספר סיפור',
     categories: ['privateHouses'],
     description: `זוג צעיר ומקסים, שכבר זכיתי לתכנן עבורם את ביתם הראשון, פנו אליי שוב עם בקשה ייחודית ומלאת משמעות: לתכנן ולעצב עבורם בית חדש, מחובר לבית של אמא אך עם כניסה נפרדת ועצמאות מלאה.
@@ -572,7 +567,7 @@ export const projects: IProject[] = [
     favourite: true,
   },
   {
-    _id: '3',
+    id: '3',
     title: 'בית של חלומות, בים של חיים - מחכה להתגשם',
     categories: ['privateHouses'],
     description: `זוג מקסים עם ארבעה ילדים פנה אליי ללוות אותם בתכנון בית חלומותיהם בפרדס חנה הכפרית. 
@@ -600,7 +595,7 @@ export const projects: IProject[] = [
     favourite: true,
   },
   {
-    _id: '4',
+    id: '4',
     categories: ['privateHouses'],
     client: 'זוג + 2',
     isCompleted: true,
@@ -630,7 +625,7 @@ export const projects: IProject[] = [
     mainImage: p4_imgMain,
   },
   {
-    _id: '5',
+    id: '5',
     categories: ['privateHouses'],
     client: 'זוג',
     isCompleted: true,
@@ -645,7 +640,7 @@ export const projects: IProject[] = [
     mainImage: p5_imgMain,
   },
   {
-    _id: '6',
+    id: '6',
     categories: ['privateHouses'],
     client: 'דירת שותפים',
     isCompleted: true,

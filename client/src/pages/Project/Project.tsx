@@ -15,7 +15,7 @@ export default function Project() {
   const { id } = useParams<{ id: string }>();
   const { projects } = useProjects();
 
-  const project = projects.find((p) => p._id === id);
+  const project = projects.find((p) => p.id === id);
 
   if (!project) return <Navigate to='/projects' />;
 
@@ -28,7 +28,7 @@ export default function Project() {
   };
 
   const ogImage = getImageUrl(project.mainImage);
-  const ogUrl = `${BASE_URL}/projects/${project._id}`;
+  const ogUrl = `${BASE_URL}/projects/${project.id}`;
   const description = project.description.split('\n')[0].substring(0, 160) + '...';
   const title = `${project.title} - שירן גלעד אדריכלות ועיצוב פנים`;
 

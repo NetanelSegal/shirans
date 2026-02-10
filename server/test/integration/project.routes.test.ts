@@ -134,7 +134,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty('_id', 'clx123abc456def789');
+      expect(response.body).toHaveProperty('id', 'clx123abc456def789');
       expect(response.body).toHaveProperty('title', 'New Project');
     });
 
@@ -253,7 +253,7 @@ describe('Project Routes Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body[0]).toHaveProperty('_id');
+      expect(response.body[0]).toHaveProperty('id');
       expect(response.body[0]).toHaveProperty('title');
     });
 
@@ -328,7 +328,7 @@ describe('Project Routes Integration Tests', () => {
       );
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('_id', 'clx123abc456def789');
+      expect(response.body).toHaveProperty('id', 'clx123abc456def789');
       expect(response.body).toHaveProperty('title', 'Test Project');
     });
 
@@ -384,7 +384,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('_id', 'clx123abc456def789');
+      expect(response.body).toHaveProperty('id', 'clx123abc456def789');
       expect(response.body).toHaveProperty('title', 'Updated Title');
     });
 
@@ -453,7 +453,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('_id', 'clx123abc456def789');
+      expect(response.body).toHaveProperty('id', 'clx123abc456def789');
     });
 
     it('should return 400 when id is missing', async () => {
