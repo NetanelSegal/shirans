@@ -20,12 +20,12 @@ jobs:
 
       # התקנת תלויות בשורש (חשוב עבור Shared packages)
       - name: Install root dependencies
-        run: npm install
+        run: npm ci
 
       # התקנת תלויות בשרת והרצת טסטים
       - name: Install server dependencies
         working-directory: ./server
-        run: npm install
+        run: npm ci
 
       # אם יש לך Prisma, חייבים לייצר את ה-Client לפני הטסטים
       - name: Prisma Generate
@@ -48,11 +48,11 @@ jobs:
           cache: 'npm'
 
       - name: Install root dependencies
-        run: npm install
+        run: npm ci
 
       - name: Install client dependencies
         working-directory: ./client
-        run: npm install
+        run: npm ci
 
       - name: Run Client Tests
         working-directory: ./client
@@ -70,7 +70,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
