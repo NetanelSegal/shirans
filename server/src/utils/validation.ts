@@ -1,7 +1,5 @@
 import { ZodError } from 'zod';
-import { CustomZodError, HttpError } from '../middleware/errorHandler';
-import { HTTP_STATUS } from '../constants/httpStatus';
-import { getServerErrorMessage } from '@/constants/errorMessages';
+import { CustomZodError } from '../middleware/errorHandler';
 
 /**
  * Format Zod validation errors into a user-friendly message
