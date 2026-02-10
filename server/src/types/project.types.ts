@@ -1,36 +1,8 @@
 import type { Prisma } from '@prisma/client';
-import type { CategoryUrlCode } from '@prisma/client';
+import type { CategoryUrlCode, ResponsiveImage, ProjectResponse } from '@shirans/shared';
 
-/**
- * ResponsiveImage interface matching frontend format
- */
-export interface ResponsiveImage {
-  mobile?: string;
-  tablet?: string;
-  desktop: string;
-  fallback?: string;
-}
-
-/**
- * Project response matching frontend IProject interface
- */
-export interface ProjectResponse {
-  id: string;
-  title: string;
-  categories: CategoryUrlCode[];
-  description: string;
-  mainImage: string | ResponsiveImage;
-  images: (string | ResponsiveImage)[];
-  plans?: (string | ResponsiveImage)[];
-  videos?: string[];
-  location: string;
-  client: string;
-  isCompleted: boolean;
-  constructionArea: number;
-  favourite: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-}
+// Re-export shared types for convenience
+export type { ResponsiveImage, ProjectResponse } from '@shirans/shared';
 
 /**
  * Project with relations from Prisma

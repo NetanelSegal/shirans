@@ -1,5 +1,5 @@
 import Image from '@/components/ui/Image';
-import type { ResponsiveImage } from '@/components/ui/Image';
+import type { ResponsiveImage } from '@shirans/shared';
 
 interface IImageClickModalProps {
   img: string | ResponsiveImage;

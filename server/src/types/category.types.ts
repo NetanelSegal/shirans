@@ -1,14 +1,2 @@
-import { CategoryUrlCode } from '@prisma/client';
-
-export interface CategoryRequest {
-  title: string;
-  urlCode: CategoryUrlCode;
-}
-
-export interface CategoryResponse {
-  id: string;
-  title: string;
-  urlCode: CategoryUrlCode;
-  createdAt: Date;
-  updatedAt: Date;
-}
+// Re-export shared types for convenience
+export type { CategoryResponse } from '@shirans/shared';

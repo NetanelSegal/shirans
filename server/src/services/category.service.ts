@@ -1,8 +1,5 @@
 import { categoryRepository } from '../repositories/category.repository';
-import type {
-  CategoryRequest,
-  CategoryResponse,
-} from '../types/category.types';
+import type { CategoryResponse, CreateCategoryInput } from '@shirans/shared';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { getServerErrorMessage } from '@/constants/errorMessages';
@@ -64,7 +61,7 @@ export const categoryService = {
    * @returns Created category
    * @throws HttpError 409 if urlCode already exists
    */
-  async createCategory(data: CategoryRequest): Promise<CategoryResponse> {
+  async createCategory(data: CreateCategoryInput): Promise<CategoryResponse> {
     try {
       // Check if urlCode already exists
       const existing = await categoryRepository.findByUrlCode(data.urlCode);
@@ -106,7 +103,7 @@ export const categoryService = {
    */
   async updateCategory(
     id: string,
-    data: Partial<CategoryRequest>,
+    data: Partial<CreateCategoryInput>,
   ): Promise<CategoryResponse> {
     try {
       // Check if category exists

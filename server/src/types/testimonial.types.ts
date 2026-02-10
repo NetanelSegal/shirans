@@ -1,3 +1,6 @@
+// Re-export shared types for convenience
+export type { TestimonialResponse } from '@shirans/shared';
+
 export interface TestimonialRequest {
   name: string;
   message: string;
@@ -5,18 +8,12 @@ export interface TestimonialRequest {
   order?: number;
 }
 
-export interface TestimonialResponse {
+export interface UpdateTestimonialInput {
   id: string;
-  name: string;
-  message: string;
-  isPublished: boolean;
-  order: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface UpdateTestimonialInput extends Partial<TestimonialRequest> {
-  id: string;
+  name?: string;
+  message?: string;
+  isPublished?: boolean;
+  order?: number;
 }
 
 export interface TestimonialFilters {

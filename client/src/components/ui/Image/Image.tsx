@@ -1,12 +1,8 @@
 import image404src from '@/assets/Image_404.svg';
 import { ImgHTMLAttributes, SyntheticEvent, useState } from 'react';
+import type { ResponsiveImage } from '@shirans/shared';
 
-export interface ResponsiveImage {
-  mobile?: string;
-  tablet?: string;
-  desktop: string;
-  fallback?: string;
-}
+export type { ResponsiveImage } from '@shirans/shared';
 
 interface ImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   src: string | ResponsiveImage;

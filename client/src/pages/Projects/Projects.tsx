@@ -1,4 +1,5 @@
-import { IProject, projects as projectsData } from '@/data/shiran.projects';
+import { projects as projectsData } from '@/data/shiran.projects';
+import type { ProjectResponse } from '@shirans/shared';
 import Project from './components/Project';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import { Helmet } from 'react-helmet-async';
@@ -43,7 +44,7 @@ export default function Projects() {
           חללים יפים ומותאמים בדיוק לצרכים שלכם"
         </p>
       </div>
-      {projectsData.map((e: IProject, i) => (
+      {projectsData.map((e: ProjectResponse, i) => (
         <EnterAnimation key={e.id}>
           <div className={`${i !== 0 ? 'py-5 lg:py-10' : 'py-5 lg:pb-10'}`}>
             <Project project={e} i={i} />

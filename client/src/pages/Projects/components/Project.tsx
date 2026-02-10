@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
-import { IProject } from '@/data/shiran.projects';
+import type { ProjectResponse } from '@shirans/shared';
 import ImageScaleHover from '@/components/ui/ImageScaleHover';
 import { CategoryLabel } from '@/components/CategoryLabel';
 import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
 import { Fragment } from 'react/jsx-runtime';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 interface IProjectProps {
-  project: IProject;
+  project: ProjectResponse;
   i: number;
 }
 

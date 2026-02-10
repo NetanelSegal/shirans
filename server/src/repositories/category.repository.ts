@@ -1,6 +1,22 @@
 import { prisma } from '../config/database';
 import { CategoryUrlCode } from '@prisma/client';
-import type { CategoryResponse } from '../types/category.types';
+import type { CategoryResponse } from '@shirans/shared';
+
+function transformCategory(category: {
+  id: string;
+  title: string;
+  urlCode: CategoryUrlCode;
+  createdAt: Date;
+  updatedAt: Date;
+}): CategoryResponse {
+  return {
+    id: category.id,
+    title: category.title,
+    urlCode: category.urlCode,
+    createdAt: category.createdAt.toISOString(),
+    updatedAt: category.updatedAt.toISOString(),
+  };
+}
 
 /**
  * Category Repository
@@ -12,9 +28,10 @@ export const categoryRepository = {
    * @returns Array of categories ordered by creation date
    */
   async findAll(): Promise<CategoryResponse[]> {
-    return await prisma.category.findMany({
+    const categories = await prisma.category.findMany({
       orderBy: { createdAt: 'asc' },
     });
+    return categories.map(transformCategory);
   },
 
   /**
@@ -23,9 +40,10 @@ export const categoryRepository = {
    * @returns Category or null if not found
    */
   async findById(id: string): Promise<CategoryResponse | null> {
-    return await prisma.category.findUnique({
+    const category = await prisma.category.findUnique({
       where: { id },
     });
+    return category ? transformCategory(category) : null;
   },
 
   /**
@@ -36,9 +54,10 @@ export const categoryRepository = {
   async findByUrlCode(
     urlCode: CategoryUrlCode
   ): Promise<CategoryResponse | null> {
-    return await prisma.category.findUnique({
+    const category = await prisma.category.findUnique({
       where: { urlCode },
     });
+    return category ? transformCategory(category) : null;
   },
 
   /**
@@ -50,12 +69,13 @@ export const categoryRepository = {
     title: string;
     urlCode: CategoryUrlCode;
   }): Promise<CategoryResponse> {
-    return await prisma.category.create({
+    const category = await prisma.category.create({
       data: {
         title: data.title,
         urlCode: data.urlCode,
       },
     });
+    return transformCategory(category);
   },
 
   /**
@@ -68,10 +88,11 @@ export const categoryRepository = {
     id: string,
     data: Partial<{ title: string; urlCode: CategoryUrlCode }>
   ): Promise<CategoryResponse> {
-    return await prisma.category.update({
+    const category = await prisma.category.update({
       where: { id },
       data,
     });
+    return transformCategory(category);
   },
 
   /**

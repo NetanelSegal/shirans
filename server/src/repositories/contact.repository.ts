@@ -1,5 +1,25 @@
 import { prisma } from '../config/database';
-import type { ContactRequest, ContactResponse } from '../types/contact.types';
+import type { ContactResponse, CreateContactInput } from '@shirans/shared';
+
+function transformContact(contact: {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  message: string | null;
+  isRead: boolean;
+  createdAt: Date;
+}): ContactResponse {
+  return {
+    id: contact.id,
+    name: contact.name,
+    email: contact.email,
+    phoneNumber: contact.phoneNumber,
+    message: contact.message,
+    isRead: contact.isRead,
+    createdAt: contact.createdAt.toISOString(),
+  };
+}
 
 /**
  * Contact Repository
@@ -11,8 +31,8 @@ export const contactRepository = {
    * @param data - Contact submission data
    * @returns Created contact submission
    */
-  async create(data: ContactRequest): Promise<ContactResponse> {
-    return await prisma.contactSubmission.create({
+  async create(data: CreateContactInput): Promise<ContactResponse> {
+    const contact = await prisma.contactSubmission.create({
       data: {
         name: data.name,
         email: data.email,
@@ -20,6 +40,7 @@ export const contactRepository = {
         message: data.message || null,
       },
     });
+    return transformContact(contact);
   },
 
   /**
@@ -33,10 +54,11 @@ export const contactRepository = {
       where.isRead = filters.isRead;
     }
 
-    return await prisma.contactSubmission.findMany({
+    const contacts = await prisma.contactSubmission.findMany({
       where,
       orderBy: { createdAt: 'desc' },
     });
+    return contacts.map(transformContact);
   },
 
   /**
@@ -45,9 +67,10 @@ export const contactRepository = {
    * @returns Contact submission or null if not found
    */
   async findById(id: string): Promise<ContactResponse | null> {
-    return await prisma.contactSubmission.findUnique({
+    const contact = await prisma.contactSubmission.findUnique({
       where: { id },
     });
+    return contact ? transformContact(contact) : null;
   },
 
   /**
@@ -57,10 +80,11 @@ export const contactRepository = {
    * @returns Updated contact submission
    */
   async updateReadStatus(id: string, isRead: boolean): Promise<ContactResponse> {
-    return await prisma.contactSubmission.update({
+    const contact = await prisma.contactSubmission.update({
       where: { id },
       data: { isRead },
     });
+    return transformContact(contact);
   },
 
   /**

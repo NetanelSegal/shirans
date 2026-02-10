@@ -1,4 +1,4 @@
-import type { UserRole } from '@prisma/client';
+import type { UserRole, UserResponse } from '@shirans/shared';
 
 /**
  * JWT Token payload structure
@@ -9,21 +9,12 @@ export interface TokenPayload {
   role: UserRole;
 }
 
-/**
- * User response (without password)
- */
-export interface UserResponse {
-  id: string;
-  email: string;
-  name: string;
-  role: UserRole;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 // Re-export types from validators as single source of truth
 export type { RegisterInput, LoginInput } from '@shirans/shared';
 export type { RefreshTokenInput } from '../validators/auth.validators';
+
+// Re-export shared types for convenience
+export type { UserResponse } from '@shirans/shared';
 
 /**
  * Auth response (user + access token + refresh token)
