@@ -1,9 +1,6 @@
 import { Request, Response } from 'express';
 import { authService } from '../services/auth.service';
-import {
-  registerSchema,
-  loginSchema,
-} from '@shirans/shared';
+import { registerSchema, loginSchema } from '@shirans/shared';
 import { validateRequest } from '../utils/validation';
 import {
   setRefreshTokenCookie,
@@ -12,8 +9,8 @@ import {
 } from '../utils/cookies';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
-import { ERROR_MESSAGES } from '../constants/errorMessages';
 import { env } from '../utils/env';
+import { getServerErrorMessage } from '@/constants/errorMessages';
 
 /**
  * Calculate refresh token max age in milliseconds from JWT_REFRESH_EXPIRES_IN
@@ -91,7 +88,7 @@ export async function login(req: Request, res: Response): Promise<Response> {
  */
 export async function getCurrentUser(
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<Response> {
   // req.user is guaranteed to exist because authenticate middleware runs before this
   const user = await authService.getCurrentUser(req.user!.userId);
@@ -109,7 +106,7 @@ export async function refresh(req: Request, res: Response): Promise<Response> {
   if (!refreshToken) {
     throw new HttpError(
       HTTP_STATUS.UNAUTHORIZED,
-      ERROR_MESSAGES.AUTH.REFRESH_TOKEN_REQUIRED
+      getServerErrorMessage('AUTH.REFRESH_TOKEN_REQUIRED'),
     );
   }
 

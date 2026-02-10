@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpError } from './errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
-import { ERROR_MESSAGES } from '../constants/errorMessages';
 import { UserRole } from '@prisma/client';
+import { getServerErrorMessage } from '@/constants/errorMessages';
 
 /**
  * Require admin role middleware
@@ -12,14 +12,14 @@ import { UserRole } from '@prisma/client';
 export function requireAdmin(
   req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
   if (!req.user) {
     next(
       new HttpError(
         HTTP_STATUS.UNAUTHORIZED,
-        ERROR_MESSAGES.AUTH.AUTHENTICATION_REQUIRED
-      )
+        getServerErrorMessage('AUTH.AUTHENTICATION_REQUIRED'),
+      ),
     );
     return;
   }
@@ -28,8 +28,8 @@ export function requireAdmin(
     next(
       new HttpError(
         HTTP_STATUS.FORBIDDEN,
-        ERROR_MESSAGES.AUTH.ADMIN_ACCESS_REQUIRED
-      )
+        getServerErrorMessage('AUTH.ADMIN_ACCESS_REQUIRED'),
+      ),
     );
     return;
   }
@@ -45,14 +45,14 @@ export function requireAdmin(
 export function requireAuth(
   req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
   if (!req.user) {
     next(
       new HttpError(
         HTTP_STATUS.UNAUTHORIZED,
-        ERROR_MESSAGES.AUTH.AUTHENTICATION_REQUIRED
-      )
+        getServerErrorMessage('AUTH.AUTHENTICATION_REQUIRED'),
+      ),
     );
     return;
   }

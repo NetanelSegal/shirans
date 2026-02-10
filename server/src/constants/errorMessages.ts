@@ -31,6 +31,7 @@ const errorMessagesMap = {
   'NOT_FOUND.TESTIMONIAL_NOT_FOUND': 'Testimonial not found',
   'CONFLICT.EMAIL_ALREADY_EXISTS': 'Email already registered',
   'CONFLICT.PROJECT_TITLE_EXISTS': 'A project with this title already exists',
+  'CONFLICT.TOKEN_ALREADY_EXISTS': 'Token already exists - please try again',
   'SERVER.PROJECT.FETCHS_FAILED': 'Failed to fetch projects',
   'SERVER.PROJECT.FETCH_FAVOURITES_FAILED':
     'Failed to fetch favourite projects',
@@ -60,6 +61,9 @@ const errorMessagesMap = {
   'SERVER.USER.LOGIN_FAILED': 'Failed to login user',
   'SERVER.USER.FETCH_USER_FAILED': 'Failed to fetch user',
   'SERVER.USER.REFRESH_TOKEN_FAILED': 'Failed to refresh token',
+  'SERVER.REFRESH_TOKEN.CREATE_FAILED': 'Failed to create refresh token',
+  'SERVER.REFRESH_TOKEN.REVOKE_FAILED': 'Failed to revoke refresh token',
+  'SERVER.REFRESH_TOKEN.PROCESS_FAILED': 'Failed to process refresh token',
 } as const satisfies Record<ErrorKey, string>;
 
 export type ServerErrorMessage = (typeof errorMessagesMap)[ErrorKey];

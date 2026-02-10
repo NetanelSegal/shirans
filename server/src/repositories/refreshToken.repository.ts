@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { REFRESH_TOKEN_BYTE_LENGTH } from '../constants/auth.constants';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
-import { ERROR_MESSAGES } from '../constants/errorMessages';
+import { getServerErrorMessage } from '@/constants/errorMessages';
 import { Prisma } from '@prisma/client';
 import type { UserRole } from '@prisma/client';
 
@@ -67,21 +67,21 @@ export const refreshTokenRepository = {
           // Unique constraint violation (shouldn't happen with random tokens, but handle it)
           throw new HttpError(
             HTTP_STATUS.CONFLICT,
-            'Token already exists - please try again',
+            getServerErrorMessage('CONFLICT.TOKEN_ALREADY_EXISTS'),
           );
         }
         if (error.code === 'P2003') {
           // Foreign key constraint violation (user doesn't exist)
           throw new HttpError(
             HTTP_STATUS.NOT_FOUND,
-            ERROR_MESSAGES.NOT_FOUND.USER_NOT_FOUND,
+            getServerErrorMessage('NOT_FOUND.USER_NOT_FOUND'),
           );
         }
       }
       // Generic database error
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to create refresh token',
+        getServerErrorMessage('SERVER.REFRESH_TOKEN.CREATE_FAILED'),
       );
     }
   },
@@ -128,14 +128,14 @@ export const refreshTokenRepository = {
           // Record not found
           throw new HttpError(
             HTTP_STATUS.NOT_FOUND,
-            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID,
+            getServerErrorMessage('AUTH.REFRESH_TOKEN_INVALID'),
           );
         }
       }
       // Generic database error
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to revoke refresh token',
+        getServerErrorMessage('SERVER.REFRESH_TOKEN.REVOKE_FAILED'),
       );
     }
   },
@@ -217,7 +217,7 @@ export const refreshTokenRepository = {
         if (!refreshToken) {
           throw new HttpError(
             HTTP_STATUS.UNAUTHORIZED,
-            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID,
+            getServerErrorMessage('AUTH.REFRESH_TOKEN_INVALID'),
           );
         }
 
@@ -225,7 +225,7 @@ export const refreshTokenRepository = {
         if (refreshToken.revokedAt) {
           throw new HttpError(
             HTTP_STATUS.UNAUTHORIZED,
-            ERROR_MESSAGES.AUTH.TOKEN_REUSE_DETECTED,
+            getServerErrorMessage('AUTH.TOKEN_REUSE_DETECTED'),
           );
         }
 
@@ -233,7 +233,7 @@ export const refreshTokenRepository = {
         if (refreshToken.expiresAt < now) {
           throw new HttpError(
             HTTP_STATUS.UNAUTHORIZED,
-            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID,
+            getServerErrorMessage('AUTH.REFRESH_TOKEN_INVALID'),
           );
         }
 
@@ -257,14 +257,14 @@ export const refreshTokenRepository = {
         if (error.code === 'P2025') {
           throw new HttpError(
             HTTP_STATUS.UNAUTHORIZED,
-            ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID,
+            getServerErrorMessage('AUTH.REFRESH_TOKEN_INVALID'),
           );
         }
       }
       // Generic database error
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to process refresh token',
+        getServerErrorMessage('SERVER.REFRESH_TOKEN.PROCESS_FAILED'),
       );
     }
   },

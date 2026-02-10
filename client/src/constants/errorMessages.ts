@@ -37,6 +37,7 @@ export const ERROR_MESSAGES = {
 
   'CONFLICT.EMAIL_ALREADY_EXISTS': 'כתובת דואר אלקטרוני כבר קיימת',
   'CONFLICT.PROJECT_TITLE_EXISTS': 'כותרת פרוייקט כבר קיימת',
+  'CONFLICT.TOKEN_ALREADY_EXISTS': 'טוקן כבר קיים - נסה שנית',
 
   'SERVER.USER.LOGIN_FAILED': 'כניסה לא נכשלה',
   'SERVER.USER.FETCH_USER_FAILED': 'קביעת משתמש נכשלה',
@@ -61,6 +62,10 @@ export const ERROR_MESSAGES = {
   'SERVER.TESTIMONIAL.DELETE_FAILED': 'שגיאת שרת',
   'SERVER.TESTIMONIAL.FETCHS_FAILED': 'שגיאת שרת',
   'SERVER.TESTIMONIAL.FETCH_BY_ID_FAILED': 'שגיאת שרת',
+
+  'SERVER.REFRESH_TOKEN.CREATE_FAILED': 'שגיאת שרת',
+  'SERVER.REFRESH_TOKEN.REVOKE_FAILED': 'שגיאת שרת',
+  'SERVER.REFRESH_TOKEN.PROCESS_FAILED': 'שגיאת שרת',
 } as const satisfies Record<ErrorKey, string>;
 
 export type ErrorMessage = (typeof ERROR_MESSAGES)[ErrorKey];

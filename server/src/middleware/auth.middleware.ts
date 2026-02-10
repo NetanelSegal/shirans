@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { authService } from '../services/auth.service';
 import { HttpError } from './errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
-import { ERROR_MESSAGES } from '../constants/errorMessages';
+import { getServerErrorMessage } from '@/constants/errorMessages';
 
 /**
  * Authentication middleware
@@ -12,7 +12,7 @@ import { ERROR_MESSAGES } from '../constants/errorMessages';
 export function authenticate(
   req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
   try {
     // Extract token from Authorization header
@@ -20,7 +20,7 @@ export function authenticate(
     if (!authHeader || !/^Bearer\s+/i.test(authHeader)) {
       throw new HttpError(
         HTTP_STATUS.UNAUTHORIZED,
-        ERROR_MESSAGES.AUTH.TOKEN_REQUIRED
+        getServerErrorMessage('AUTH.TOKEN_REQUIRED'),
       );
     }
 
@@ -45,8 +45,8 @@ export function authenticate(
       next(
         new HttpError(
           HTTP_STATUS.UNAUTHORIZED,
-          ERROR_MESSAGES.AUTH.TOKEN_INVALID
-        )
+          getServerErrorMessage('AUTH.TOKEN_INVALID'),
+        ),
       );
     }
   }
