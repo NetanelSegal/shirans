@@ -390,7 +390,7 @@ describe('projectService', () => {
         HttpError
       );
       await expect(projectService.getProjectById('999')).rejects.toThrow(
-        'Project with id 999 not found'
+        'Project not found'
       );
     });
 

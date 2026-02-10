@@ -40,8 +40,6 @@ dist/
 not_optimized_images
 .cursorignore
 
-# Root level
-package-lock.json
 
 # Playwright
 /test-results/

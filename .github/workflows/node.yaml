@@ -1,0 +1,83 @@
+name: CI Tests
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+
+jobs:
+  server-tests:
+    runs-on: ubuntu-latest
+
+    # Set all the variables that the code requires in EnvConfig
+    env:
+      NODE_ENV: test
+      PORT: 3000
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      CORS_ORIGIN: http://localhost:5174
+      JWT_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      BCRYPT_SALT_ROUNDS: 12
+      COOKIE_SECURE: 'false'
+      COOKIE_SAME_SITE: strict
+      COOKIE_DOMAIN: ''
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: './server/package-lock.json'
+
+      - name: Install dependencies
+        # מתקין גם בשורש וגם בשרת כדי לוודא שכל ה-Shared types זמינים
+        run: |
+          npm ci
+          cd server && npm ci
+
+      - name: Prisma Generate
+        working-directory: ./server
+        run: npx prisma generate
+
+      - name: Run Server Tests
+        working-directory: ./server
+        run: npm test
+
+  # e2e-tests:
+  #   runs-on: ubuntu-latest
+
+  #   env:
+  #     NODE_ENV: test
+  #     PORT: 3000
+  #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  #     JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  #     CORS_ORIGIN: http://localhost:5174
+  #     JWT_EXPIRES_IN: 15m
+  #     JWT_REFRESH_EXPIRES_IN: 7d
+  #     BCRYPT_SALT_ROUNDS: 12
+  #     COOKIE_SECURE: 'false'
+  #     COOKIE_SAME_SITE: strict
+  #     COOKIE_DOMAIN: ''
+
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #         cache: 'npm'
+
+  #     - name: Install dependencies
+  #       run: npm ci
+
+  #     - name: Install Playwright Browsers
+  #       run: npx playwright install --with-deps
+
+  #     - name: Run Playwright tests
+  #       run: npx playwright test

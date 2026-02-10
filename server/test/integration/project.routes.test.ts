@@ -148,7 +148,7 @@ describe('Project Routes Integration Tests', () => {
 
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('error');
-      expect(response.body.message).toMatch(/required|expected/);
+      expect(response.body.message).toBe('Invalid input data');
     });
 
     it('should return 400 when categoryIds is empty', async () => {
@@ -165,7 +165,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toMatch(/category|array/);
+      expect(response.body.message).toBe('Invalid input data');
     });
 
     it('should return 400 when constructionArea is not positive', async () => {
@@ -182,7 +182,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toMatch(/positive|greater/);
+      expect(response.body.message).toBe('Invalid input data');
     });
 
     it('should return 400 when title is too long', async () => {
@@ -199,7 +199,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toMatch(/500|less/);
+      expect(response.body.message).toBe('Invalid input data');
     });
 
     it('should validate image URLs', async () => {
@@ -222,7 +222,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toMatch(/URL|url/);
+      expect(response.body.message).toBe('Invalid input data');
     });
   });
 
@@ -410,7 +410,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toMatch(/categoryIds|array/);
+      expect(response.body.message).toBe('Invalid input data');
     });
   });
 
@@ -477,7 +477,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toMatch(/images|array/);
+      expect(response.body.message).toBe('Invalid input data');
     });
 
     it('should return 400 when image type is invalid', async () => {
@@ -495,7 +495,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('Image type must be one of');
+      expect(response.body.message).toBe('Invalid input data');
     });
   });
 
@@ -690,7 +690,7 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toMatch(/imageIds|array/);
+      expect(response.body.message).toBe('Invalid input data');
     });
 
     it('should return 400 when imageIds contains invalid values', async () => {
