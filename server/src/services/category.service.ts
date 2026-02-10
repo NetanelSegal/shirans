@@ -5,7 +5,7 @@ import type {
 } from '../types/category.types';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
-import { ERROR_MESSAGES } from '../constants/errorMessages';
+import { getServerErrorMessage } from '@/constants/errorMessages';
 import { Prisma } from '@prisma/client';
 import logger from '../middleware/logger';
 
@@ -25,7 +25,7 @@ export const categoryService = {
       logger.error('Error fetching all categories', { error });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to fetch categories'
+        getServerErrorMessage('SERVER.CATEGORY.FETCHS_FAILED'),
       );
     }
   },
@@ -42,7 +42,7 @@ export const categoryService = {
       if (!category) {
         throw new HttpError(
           HTTP_STATUS.NOT_FOUND,
-          ERROR_MESSAGES.NOT_FOUND.CATEGORY_NOT_FOUND
+          getServerErrorMessage('NOT_FOUND.CATEGORY_NOT_FOUND'),
         );
       }
       return category;
@@ -53,7 +53,7 @@ export const categoryService = {
       logger.error('Error fetching category by ID', { error, id });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to fetch category'
+        getServerErrorMessage('SERVER.CATEGORY.FETCH_BY_ID_FAILED'),
       );
     }
   },
@@ -71,7 +71,7 @@ export const categoryService = {
       if (existing) {
         throw new HttpError(
           HTTP_STATUS.CONFLICT,
-          'Category with this urlCode already exists'
+          getServerErrorMessage('CONFLICT.CATEGORY_URL_CODE_EXISTS'),
         );
       }
 
@@ -84,14 +84,14 @@ export const categoryService = {
         if (error.code === 'P2002') {
           throw new HttpError(
             HTTP_STATUS.CONFLICT,
-            'Category with this urlCode already exists'
+            getServerErrorMessage('CONFLICT.CATEGORY_URL_CODE_EXISTS'),
           );
         }
       }
       logger.error('Error creating category', { error });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to create category'
+        getServerErrorMessage('SERVER.CATEGORY.CREATE_FAILED'),
       );
     }
   },
@@ -106,7 +106,7 @@ export const categoryService = {
    */
   async updateCategory(
     id: string,
-    data: Partial<CategoryRequest>
+    data: Partial<CategoryRequest>,
   ): Promise<CategoryResponse> {
     try {
       // Check if category exists
@@ -118,7 +118,7 @@ export const categoryService = {
         if (existing && existing.id !== id) {
           throw new HttpError(
             HTTP_STATUS.CONFLICT,
-            'Category with this urlCode already exists'
+            getServerErrorMessage('CONFLICT.CATEGORY_URL_CODE_EXISTS'),
           );
         }
       }
@@ -132,20 +132,20 @@ export const categoryService = {
         if (error.code === 'P2002') {
           throw new HttpError(
             HTTP_STATUS.CONFLICT,
-            'Category with this urlCode already exists'
+            getServerErrorMessage('CONFLICT.CATEGORY_URL_CODE_EXISTS'),
           );
         }
         if (error.code === 'P2025') {
           throw new HttpError(
             HTTP_STATUS.NOT_FOUND,
-            ERROR_MESSAGES.NOT_FOUND.CATEGORY_NOT_FOUND
+            getServerErrorMessage('NOT_FOUND.CATEGORY_NOT_FOUND'),
           );
         }
       }
       logger.error('Error updating category', { error, id });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to update category'
+        getServerErrorMessage('SERVER.CATEGORY.UPDATE_FAILED'),
       );
     }
   },
@@ -166,7 +166,7 @@ export const categoryService = {
       if (hasProjects) {
         throw new HttpError(
           HTTP_STATUS.CONFLICT,
-          'Cannot delete category with associated projects'
+          getServerErrorMessage('CONFLICT.CATEGORY_HAS_ASSOCIATED_PROJECTS'),
         );
       }
 
@@ -179,14 +179,14 @@ export const categoryService = {
         if (error.code === 'P2025') {
           throw new HttpError(
             HTTP_STATUS.NOT_FOUND,
-            ERROR_MESSAGES.NOT_FOUND.CATEGORY_NOT_FOUND
+            getServerErrorMessage('NOT_FOUND.CATEGORY_NOT_FOUND'),
           );
         }
       }
       logger.error('Error deleting category', { error, id });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        'Failed to delete category'
+        getServerErrorMessage('SERVER.CATEGORY.DELETE_FAILED'),
       );
     }
   },

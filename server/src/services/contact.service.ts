@@ -2,7 +2,7 @@ import { contactRepository } from '../repositories/contact.repository';
 import type { ContactRequest, ContactResponse } from '../types/contact.types';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
-import { getServerErrorMessage } from '../constants/errorMessages';
+import { getServerErrorMessage } from '@/constants/errorMessages';
 import { Prisma } from '@prisma/client';
 import logger from '../middleware/logger';
 

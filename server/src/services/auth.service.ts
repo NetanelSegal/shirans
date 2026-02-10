@@ -4,7 +4,7 @@ import { hashPassword, comparePassword } from '../utils/password';
 import { signToken, verifyToken } from '../utils/jwt';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
-import { ERROR_MESSAGES } from '../constants/errorMessages';
+import { getServerErrorMessage } from '@/constants/errorMessages';
 import type {
   UserResponse,
   RegisterInput,
@@ -55,7 +55,7 @@ export const authService = {
       if (existingUser) {
         throw new HttpError(
           HTTP_STATUS.CONFLICT,
-          ERROR_MESSAGES.CONFLICT.EMAIL_ALREADY_EXISTS
+          getServerErrorMessage('CONFLICT.EMAIL_ALREADY_EXISTS'),
         );
       }
 
@@ -81,7 +81,7 @@ export const authService = {
 
       const refreshTokenRecord = await refreshTokenRepository.create(
         user.id,
-        refreshTokenExpiresAt
+        refreshTokenExpiresAt,
       );
 
       return {
@@ -99,7 +99,7 @@ export const authService = {
       });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        ERROR_MESSAGES.SERVER.REGISTRATION_FAILED
+        getServerErrorMessage('SERVER.USER.REGISTRATION_FAILED'),
       );
     }
   },
@@ -118,19 +118,19 @@ export const authService = {
         // Don't reveal if email exists (security best practice)
         throw new HttpError(
           HTTP_STATUS.UNAUTHORIZED,
-          ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS
+          getServerErrorMessage('AUTH.INVALID_CREDENTIALS'),
         );
       }
 
       // Compare password
       const isPasswordValid = await comparePassword(
         data.password,
-        user.password
+        user.password,
       );
       if (!isPasswordValid) {
         throw new HttpError(
           HTTP_STATUS.UNAUTHORIZED,
-          ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS
+          getServerErrorMessage('AUTH.INVALID_CREDENTIALS'),
         );
       }
 
@@ -146,7 +146,7 @@ export const authService = {
 
       const refreshTokenRecord = await refreshTokenRepository.create(
         user.id,
-        refreshTokenExpiresAt
+        refreshTokenExpiresAt,
       );
 
       return {
@@ -164,7 +164,7 @@ export const authService = {
       });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        ERROR_MESSAGES.SERVER.LOGIN_FAILED
+        getServerErrorMessage('SERVER.USER.LOGIN_FAILED'),
       );
     }
   },
@@ -182,12 +182,12 @@ export const authService = {
       if (error instanceof Error) {
         throw new HttpError(
           HTTP_STATUS.UNAUTHORIZED,
-          ERROR_MESSAGES.AUTH.TOKEN_INVALID
+          getServerErrorMessage('AUTH.TOKEN_INVALID'),
         );
       }
       throw new HttpError(
         HTTP_STATUS.UNAUTHORIZED,
-        ERROR_MESSAGES.AUTH.TOKEN_INVALID
+        getServerErrorMessage('AUTH.TOKEN_INVALID'),
       );
     }
   },
@@ -204,7 +204,7 @@ export const authService = {
       if (!user) {
         throw new HttpError(
           HTTP_STATUS.NOT_FOUND,
-          ERROR_MESSAGES.NOT_FOUND.USER_NOT_FOUND
+          getServerErrorMessage('NOT_FOUND.USER_NOT_FOUND'),
         );
       }
       return transformUserToResponse(user);
@@ -215,7 +215,7 @@ export const authService = {
       logger.error('Error getting current user', { error, userId });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        ERROR_MESSAGES.SERVER.FETCH_USER_FAILED
+        getServerErrorMessage('SERVER.USER.FETCH_USER_FAILED'),
       );
     }
   },
@@ -227,7 +227,7 @@ export const authService = {
    * @throws HttpError 401 if refresh token is invalid or reused
    */
   async refreshAccessToken(
-    refreshTokenString: string
+    refreshTokenString: string,
   ): Promise<RefreshTokenResponse> {
     try {
       // Atomically find and revoke token (prevents race conditions)
@@ -240,7 +240,7 @@ export const authService = {
         // Check if this is a reuse detection (token already revoked)
         if (
           error instanceof HttpError &&
-          error.message === ERROR_MESSAGES.AUTH.TOKEN_REUSE_DETECTED
+          error.message === getServerErrorMessage('AUTH.TOKEN_REUSE_DETECTED')
         ) {
           // Security breach: token was reused - revoke ALL user tokens
           const tempToken =
@@ -251,12 +251,12 @@ export const authService = {
               'Refresh token reuse detected - revoked all user tokens',
               {
                 userId: tempToken.userId,
-              }
+              },
             );
           }
           throw new HttpError(
             HTTP_STATUS.UNAUTHORIZED,
-            ERROR_MESSAGES.AUTH.TOKEN_REUSE_DETECTED
+            getServerErrorMessage('AUTH.TOKEN_REUSE_DETECTED'),
           );
         }
         // Re-throw HttpError as-is (from repository)
@@ -266,7 +266,7 @@ export const authService = {
         // Other errors (shouldn't happen, but handle gracefully)
         throw new HttpError(
           HTTP_STATUS.UNAUTHORIZED,
-          ERROR_MESSAGES.AUTH.REFRESH_TOKEN_INVALID
+          getServerErrorMessage('AUTH.REFRESH_TOKEN_INVALID'),
         );
       }
 
@@ -283,7 +283,7 @@ export const authService = {
       const refreshTokenExpiresAt = this.calculateRefreshTokenExpiry();
       const newRefreshTokenRecord = await refreshTokenRepository.create(
         user.id,
-        refreshTokenExpiresAt
+        refreshTokenExpiresAt,
       );
 
       return {
@@ -299,7 +299,7 @@ export const authService = {
       });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        ERROR_MESSAGES.SERVER.REFRESH_TOKEN_FAILED
+        getServerErrorMessage('SERVER.USER.REFRESH_TOKEN_FAILED'),
       );
     }
   },
@@ -343,7 +343,7 @@ export const authService = {
     if (!match) {
       // Default to 7 days if format is invalid
       logger.warn(
-        `Invalid JWT_REFRESH_EXPIRES_IN format: ${expiresIn}, defaulting to 7d`
+        `Invalid JWT_REFRESH_EXPIRES_IN format: ${expiresIn}, defaulting to 7d`,
       );
       expiresAt.setDate(expiresAt.getDate() + 7);
       return expiresAt;
@@ -367,7 +367,7 @@ export const authService = {
         break;
       default:
         logger.warn(
-          `Unknown time unit in JWT_REFRESH_EXPIRES_IN: ${unit}, defaulting to 7d`
+          `Unknown time unit in JWT_REFRESH_EXPIRES_IN: ${unit}, defaulting to 7d`,
         );
         expiresAt.setDate(expiresAt.getDate() + 7);
     }

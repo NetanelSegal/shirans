@@ -38,6 +38,9 @@ export const ERROR_MESSAGES = {
   'CONFLICT.EMAIL_ALREADY_EXISTS': 'כתובת דואר אלקטרוני כבר קיימת',
   'CONFLICT.PROJECT_TITLE_EXISTS': 'כותרת פרוייקט כבר קיימת',
   'CONFLICT.TOKEN_ALREADY_EXISTS': 'טוקן כבר קיים - נסה שנית',
+  'CONFLICT.CATEGORY_URL_CODE_EXISTS': 'קוד קטגוריה כבר קיים',
+  'CONFLICT.CATEGORY_HAS_ASSOCIATED_PROJECTS':
+    'קטגוריה ישנה עם פרוייקטים מקושרים',
 
   'SERVER.USER.LOGIN_FAILED': 'כניסה לא נכשלה',
   'SERVER.USER.FETCH_USER_FAILED': 'קביעת משתמש נכשלה',
@@ -56,6 +59,15 @@ export const ERROR_MESSAGES = {
   'SERVER.PROJECT.FETCHS_FAILED': 'שגיאת שרת',
   'SERVER.PROJECT.FETCH_FAVOURITES_FAILED': 'שגיאת שרת',
   'SERVER.PROJECT.FETCH_BY_ID_FAILED': 'שגיאת שרת',
+  'SERVER.PROJECT.UPLOAD_IMAGES_FAILED': 'שגיאת שרת',
+  'SERVER.PROJECT.DELETE_PROJECT_IMAGES_FAILED': 'שגיאת שרת',
+  'SERVER.PROJECT.DELETE_MAIN_IMAGE_FAILED': 'שגיאת שרת',
+
+  'SERVER.CATEGORY.CREATE_FAILED': 'שגיאת שרת',
+  'SERVER.CATEGORY.UPDATE_FAILED': 'שגיאת שרת',
+  'SERVER.CATEGORY.DELETE_FAILED': 'שגיאת שרת',
+  'SERVER.CATEGORY.FETCHS_FAILED': 'שגיאת שרת',
+  'SERVER.CATEGORY.FETCH_BY_ID_FAILED': 'שגיאת שרת',
 
   'SERVER.TESTIMONIAL.CREATE_FAILED': 'שגיאת שרת',
   'SERVER.TESTIMONIAL.UPDATE_FAILED': 'שגיאת שרת',
