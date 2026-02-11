@@ -157,14 +157,7 @@ describe('Swagger ↔ Routes Sync Validation', () => {
    * then enforce that it stays documented.
    */
   const KNOWN_UNMOUNTED: Set<string> = new Set([
-    // Testimonial routes exist but are not registered in app.ts yet
-    'GET /api/testimonials',
-    'POST /api/testimonials',
-    'GET /api/testimonials/published',
-    'GET /api/testimonials/{id}',
-    'PUT /api/testimonials/{id}',
-    'DELETE /api/testimonials/{id}',
-    'PATCH /api/testimonials/{id}/order',
+    // All routes are currently mounted
   ]);
 
   it('every Express route should be documented in Swagger', () => {
@@ -220,14 +213,14 @@ describe('Swagger ↔ Routes Sync Validation', () => {
   it('should extract the expected number of Express routes', () => {
     const expressRoutes = getExpressRoutes(app);
 
-    // 1 health + 5 auth + 9 project + 5 category + 5 contact = 25
-    expect(expressRoutes.size).toBe(25);
+    // 1 health + 5 auth + 9 project + 5 category + 5 contact + 7 testimonial = 32
+    expect(expressRoutes.size).toBe(32);
   });
 
   it('should extract the expected number of Swagger routes', () => {
     const swaggerRoutes = getSwaggerRoutes();
 
-    // 25 mounted + 7 testimonial (unmounted) = 32
+    // 32 routes total (all mounted)
     expect(swaggerRoutes.size).toBe(32);
   });
 });
