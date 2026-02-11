@@ -41,6 +41,11 @@ export const urls = {
     getAll: `${BACKEND_URL}/api/categories`,
   },
 
+  // Testimonials endpoints
+  testimonials: {
+    published: `${BACKEND_URL}/api/testimonials/published`,
+  },
+
   // Health endpoint
   health: `${BACKEND_URL}/api/health`,
 

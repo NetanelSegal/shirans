@@ -1,4 +1,4 @@
-import { projects as projectsData } from '@/data/shiran.projects';
+import { useProjects } from '@/contexts/ProjectsContext';
 import type { ProjectResponse } from '@shirans/shared';
 import Project from './components/Project';
 import EnterAnimation from '@/components/animations/EnterAnimation';
@@ -6,12 +6,14 @@ import { Helmet } from 'react-helmet-async';
 import { BASE_URL } from '@/constants/urls';
 
 export default function Projects() {
+  const { projects, isLoading } = useProjects();
+
   // Get first project's main image for OG
   const getFirstProjectImage = (): string => {
-    if (projectsData.length === 0) {
+    if (projects.length === 0) {
       return `${BASE_URL}/assets/shiranImage-28AXxNS6.jpeg`;
     }
-    const mainImage = projectsData[0].mainImage;
+    const mainImage = projects[0].mainImage;
     if (typeof mainImage === 'string') {
       return mainImage.startsWith('http') ? mainImage : `${BASE_URL}/assets/${mainImage}`;
     }
@@ -44,7 +46,7 @@ export default function Projects() {
           חללים יפים ומותאמים בדיוק לצרכים שלכם"
         </p>
       </div>
-      {projectsData.map((e: ProjectResponse, i) => (
+      {isLoading ? null : projects.map((e: ProjectResponse, i) => (
         <EnterAnimation key={e.id}>
           <div className={`${i !== 0 ? 'py-5 lg:py-10' : 'py-5 lg:pb-10'}`}>
             <Project project={e} i={i} />

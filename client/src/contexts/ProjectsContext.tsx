@@ -1,9 +1,11 @@
-import { createContext, useContext, ReactNode } from 'react';
-import { projects } from '@/data/shiran.projects';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { fetchProjects } from '@/services/projects.service';
 import type { ProjectResponse } from '@shirans/shared';
 
 interface ProjectsContextType {
   projects: ProjectResponse[];
+  isLoading: boolean;
+  error: string | null;
 }
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(
@@ -11,8 +13,19 @@ const ProjectsContext = createContext<ProjectsContextType | undefined>(
 );
 
 export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
+  const [projects, setProjects] = useState<ProjectResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchProjects()
+      .then(setProjects)
+      .catch((err) => setError(err.message))
+      .finally(() => setIsLoading(false));
+  }, []);
+
   return (
-    <ProjectsContext.Provider value={{ projects }}>
+    <ProjectsContext.Provider value={{ projects, isLoading, error }}>
       {children}
     </ProjectsContext.Provider>
   );

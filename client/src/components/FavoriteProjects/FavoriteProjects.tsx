@@ -1,13 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
 import DataCarousel from '../DataCarousel';
 import Image from '../ui/Image';
-import { projects } from '@/data/shiran.projects';
+import { useProjects } from '@/contexts/ProjectsContext';
 import type { ProjectResponse } from '@shirans/shared';
-
-const data: ProjectResponse[] = projects.filter((p) => p.favourite);
 
 export default function FavoriteProjects() {
   const nav = useNavigate();
+  const { projects } = useProjects();
+  const data: ProjectResponse[] = projects.filter((p) => p.favourite);
+
+  if (data.length === 0) return null;
+
   return (
     <>
       <h2 className='heading mb-4 text-center font-semibold'>

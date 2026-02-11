@@ -1,42 +1,12 @@
 import { useScreenContext } from '@/contexts/ScreenProvider';
+import { fetchPublishedTestimonials } from '@/services/testimonials.service';
 import { motion, useMotionValue, animate } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
-const testimonials = [
-  {
-    name: 'משפחת קליין',
-    message: `חד משמעית לא ראיתי בעלת מקצוע כזאת!!! התחלנו יחד תהליך של בניית בית פרטי מ0 שירן ליוותה אותנו ויש בה הכל..החל מראש פתוח..זמינות בשעות שלא תאמינו אבל כן היינו מתכתבים גם ב 12 בלילה חרוצה מקצועית יש לה תשובה הפיתרון לכל דבר ..יצירתית ובלי שתשימו לב עושה דברים שהיא לא אמורה לעשות בכלל בקיצור אני אישית ממליץ מאוד וכמובן שכבר העברתי לה כמה פרוייקטים ..כי פשוט מגיע לה
-אם יש שאלות או רוצים לראות. את העבודה שלה תגידו לה שתפנה אותכם אליי`,
-  },
-  {
-    name: 'משפחת חרבי',
-    message: `איזה מזל יש לנו שהגענו אלייך!!!
-כל כך מוכשרת, מסורה, מקצועית!
-יש לך את כל התשובות והידע שצריך לתהליך הזה! ואת היכולת המטורפת להבין טוב טוב את האנשים שעומדים מולך!
-ללמוד אותם, את החלומות שלהם, את הצרכים שלהם.. ולתרגם את זה לתכנון מושלם של בית החלומות!`,
-  },
-  {
-    name: 'משפחת בקר',
-    message: `בנית לנו בית לתפארת. היי לנו המון אילוצים וידעת בחוכמתך ובסינכרון רב לתכנן לנו בית בדיוק כפי שרצינו. הצלחת להתאים הכל למידות ולטעם שלנו. הכל היה אצלך כ״כ מדויק תוך הסתכלות על כל פרט: כל קיר, זווית, דלת, חלון וצבע. הנחת כל בעל מקצוע עם השרטוט המדויק שבנית לו וידעת לפתור לנו כל אילוץ בתכנון חלופי ובמקצועיות רבה. היית העוגן שלי בבית הזה ובזכותך היה לי ראש שקט. ידעת שאת יודעת טוב ממני ונתתי לך להחליט בעבורי את רוב ההחלטות ואכן צדקתי שסמכתי עליך. יש לנו בית שאנחנו לא רוצים לצאת ממנו. אנחנו מאוהבים. בזכותך. תודה רבה אשה מוכשרת שכמותך`,
-  },
-  {
-    name: 'משפחת שמעון',
-    message: `מהרגע הראשון היה ברור שמדובר בעבודה מקצועית ויסודית. התכנון נעשה מתוך הקשבה אמיתית לצרכים שלנו, הבנה עמוקה של המגבלות והאילוצים, וירידה לפרטים הקטנים ביותר. כל החלטה לוותה בהסבר ברור, חשיבה קדימה ופתרונות חכמים שהתאימו גם לתכנון וגם לביצוע בשטח.
-הליווי היה מדויק, אחראי ועם נוכחות מלאה מול כל בעלי המקצוע, מה שנתן לנו שקט נפשי לאורך כל הדרך. הרגשנו שיש מי שמחזיק את הפרויקט, רואה את התמונה הגדולה ולא מפספס אף פרט קטן.
-התוצאה היא בית מתוכנן היטב, נעים ונכון לנו כזה שמרגיש טבעי, מאוזן ובעיקר מחובר לאיך שאנחנו חיים באמת.
-ממליצים מאוד למי שמחפש תכנון איכותי, חשיבה עמוקה וליווי שאפשר לסמוך עליו`,
-  },
-  {
-    name: 'משפחת אביטל',
-    message: `כבר מהפגישה הראשונה הרגשנו שיש על מי לסמוך. התהליך היה נעים, מסודר וברור, עם הרבה הקשבה ויכולת להבין בדיוק מה חשוב לנו גם בדברים שלא תמיד ידענו להגדיר בעצמנו.
-הייתה זמינות, ירידה לפרטים ויכולת לפתור דברים תוך כדי תנועה, בצורה עניינית וחכמה. הכל התחבר בסוף לבית שמרגיש נכון לנו, לא מתאמץ
-שמחים מאוד על הבחירה, וממליצים למי שמחפש ליווי מקצועי עם גישה אנושית וראש שקט לאורך כל הדרך.`,
-  },
-  {
-    name: 'משפחת ניסים',
-    message: `תכננו בית פרטי מאפס, ואחרי שבדקנו ודיברנו עם לא מעט אדריכלים, ושירן הייתה החלטה טובה. התהליך היה ברור ורגוע, עם הקשבה אמיתית לצרכים שלנו וחשיבה נכונה על כל פרט. הרגשנו שיש מי שמוביל את הפרויקט ויודע לקבל החלטות בזמן הנכון. בסוף קיבלנו בית שמתאים לנו באמת ונעים לנו לחיות בו. שמחים מאוד על הבחירה`,
-  },
-];
+interface ITestimonial {
+  name: string;
+  message: string;
+}
 
 export default function Testimonials() {
   const { screenWidth } = useScreenContext();
@@ -44,14 +14,26 @@ export default function Testimonials() {
   const [totalOriginalContentWidth, setTotalOriginalContentWidth] = useState(0);
   const x = useMotionValue(0);
   const animationRef = useRef<ReturnType<typeof animate> | null>(null);
+  const [testimonials, setTestimonials] = useState<ITestimonial[]>([]);
+
+  useEffect(() => {
+    fetchPublishedTestimonials()
+      .then((data) =>
+        setTestimonials(data.map(({ name, message }) => ({ name, message }))),
+      )
+      .catch(() => {
+        // Silently fail - testimonials section just won't show
+      });
+  }, []);
 
   const duplicatedTestimonials = [
     ...testimonials,
     ...testimonials,
-    testimonials[0],
+    ...(testimonials.length > 0 ? [testimonials[0]] : []),
   ];
+
   useEffect(() => {
-    if (ref.current) {
+    if (ref.current && testimonials.length > 0) {
       let calculatedWidth = 0;
       const originalChildren = Array.from(ref.current.children).slice(
         0,
@@ -67,7 +49,7 @@ export default function Testimonials() {
 
       setTotalOriginalContentWidth(calculatedWidth);
     }
-  }, [screenWidth, ref]);
+  }, [screenWidth, ref, testimonials]);
 
   useEffect(() => {
     if (totalOriginalContentWidth > 0) {
@@ -129,6 +111,8 @@ export default function Testimonials() {
     }
   };
 
+  if (testimonials.length === 0) return null;
+
   if (totalOriginalContentWidth === 0) {
     return (
       <div className='relative mt-20 flex' ref={ref}>
@@ -154,11 +138,6 @@ export default function Testimonials() {
       ))}
     </motion.div>
   );
-}
-
-interface ITestimonial {
-  name: string;
-  message: string;
 }
 
 const TestimonialItem = ({ name, message }: ITestimonial) => {
