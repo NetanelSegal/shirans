@@ -62,12 +62,13 @@ const swaggerDocument = {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
-        description: 'JWT access token obtained from /api/auth/login or /api/auth/register',
+        description:
+          'JWT access token obtained from /api/auth/login or /api/auth/register',
       },
     },
   },
 };
 
 export function setupSwagger(app: Express): void {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
