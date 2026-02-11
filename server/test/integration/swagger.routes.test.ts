@@ -56,12 +56,11 @@ describe('Swagger API Docs Integration Tests', () => {
       expect(response.text).toContain('swagger-ui');
     });
 
-    it('should redirect /api-docs to /api-docs/', async () => {
-      const response = await request(app).get('/api-docs');
+    it('should serve swagger UI at root path', async () => {
+      const response = await request(app).get('/');
 
-      // swagger-ui-express redirects /api-docs to /api-docs/
-      expect(response.status).toBe(301);
-      expect(response.headers.location).toBe('/api-docs/');
+      expect(response.status).toBe(200);
+      expect(response.headers['content-type']).toMatch(/text\/html/);
     });
   });
 

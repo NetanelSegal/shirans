@@ -28,15 +28,15 @@ function createApp(): Express {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // Swagger API documentation
-  setupSwagger(app);
-
   // API routes
   app.use('/api', healthRoutes);
   app.use('/api/auth', authRoutes);
   app.use('/api/projects', projectRoutes);
   app.use('/api/categories', categoryRoutes);
   app.use('/api/contact', contactRoutes);
+
+  // Swagger API documentation (after API routes so it doesn't intercept them)
+  setupSwagger(app);
 
   // Error handling middleware (must be last)
   app.use(errorHandler);
