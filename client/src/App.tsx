@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy } from 'react';
 import ScreenProvider from './contexts/ScreenProvider';
 import { ProjectsProvider } from './contexts/ProjectsContext';
+import { CategoriesProvider } from './contexts/CategoriesContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { useAuth } from './hooks/useAuth';
@@ -23,9 +24,11 @@ function App() {
     <HelmetProvider>
       <AuthProvider>
         <ProjectsProvider>
-          <ScreenProvider>
-            <AppRoutes />
-          </ScreenProvider>
+          <CategoriesProvider>
+            <ScreenProvider>
+              <AppRoutes />
+            </ScreenProvider>
+          </CategoriesProvider>
         </ProjectsProvider>
       </AuthProvider>
     </HelmetProvider>

@@ -1,6 +1,14 @@
-import { PrismaClient, CategoryUrlCode, ProjectImageType } from '@prisma/client';
+import dotenv from 'dotenv';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
+import {
+  PrismaClient,
+  CategoryUrlCode,
+  ProjectImageType,
+} from '@prisma/client';
 
-const prisma = new PrismaClient();
+// Load .env from server directory
+dotenv.config();
 
 interface SeedProject {
   title: string;
@@ -21,7 +29,10 @@ interface SeedProject {
 const categoriesData = [
   { title: 'תכנון ועיצוב בתים', urlCode: CategoryUrlCode.privateHouses },
   { title: 'שיפוץ ועיצוב דירות', urlCode: CategoryUrlCode.apartments },
-  { title: 'תכנון ועיצוב חללים מסחריים', urlCode: CategoryUrlCode.publicSpaces },
+  {
+    title: 'תכנון ועיצוב חללים מסחריים',
+    urlCode: CategoryUrlCode.publicSpaces,
+  },
 ] as const;
 
 const projectsData: SeedProject[] = [
@@ -38,14 +49,46 @@ const projectsData: SeedProject[] = [
     favourite: true,
     categoryCode: CategoryUrlCode.privateHouses,
     images: [
-      { url: '/uploads/projects/project1/images/main_desktop.webp', type: ProjectImageType.MAIN, order: 0 },
-      { url: '/uploads/projects/project1/images/1_desktop.webp', type: ProjectImageType.IMAGE, order: 1 },
-      { url: '/uploads/projects/project1/images/2_desktop.webp', type: ProjectImageType.IMAGE, order: 2 },
-      { url: '/uploads/projects/project1/images/3_desktop.webp', type: ProjectImageType.IMAGE, order: 3 },
-      { url: '/uploads/projects/project1/images/4_desktop.webp', type: ProjectImageType.IMAGE, order: 4 },
-      { url: '/uploads/projects/project1/images/5_desktop.webp', type: ProjectImageType.IMAGE, order: 5 },
-      { url: '/uploads/projects/project1/images/6_desktop.webp', type: ProjectImageType.IMAGE, order: 6 },
-      { url: '/uploads/projects/project1/plans/1_desktop.webp', type: ProjectImageType.PLAN, order: 0 },
+      {
+        url: '/uploads/projects/project1/images/main_desktop.webp',
+        type: ProjectImageType.MAIN,
+        order: 0,
+      },
+      {
+        url: '/uploads/projects/project1/images/1_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 1,
+      },
+      {
+        url: '/uploads/projects/project1/images/2_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 2,
+      },
+      {
+        url: '/uploads/projects/project1/images/3_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 3,
+      },
+      {
+        url: '/uploads/projects/project1/images/4_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 4,
+      },
+      {
+        url: '/uploads/projects/project1/images/5_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 5,
+      },
+      {
+        url: '/uploads/projects/project1/images/6_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 6,
+      },
+      {
+        url: '/uploads/projects/project1/plans/1_desktop.webp',
+        type: ProjectImageType.PLAN,
+        order: 0,
+      },
     ],
   },
   {
@@ -61,38 +104,166 @@ const projectsData: SeedProject[] = [
     favourite: true,
     categoryCode: CategoryUrlCode.privateHouses,
     images: [
-      { url: '/uploads/projects/project2/images/main_desktop.webp', type: ProjectImageType.MAIN, order: 0 },
-      { url: '/uploads/projects/project2/images/1_desktop.webp', type: ProjectImageType.IMAGE, order: 1 },
-      { url: '/uploads/projects/project2/images/2_desktop.webp', type: ProjectImageType.IMAGE, order: 2 },
-      { url: '/uploads/projects/project2/images/3_desktop.webp', type: ProjectImageType.IMAGE, order: 3 },
-      { url: '/uploads/projects/project2/images/4_desktop.webp', type: ProjectImageType.IMAGE, order: 4 },
-      { url: '/uploads/projects/project2/images/5_desktop.webp', type: ProjectImageType.IMAGE, order: 5 },
-      { url: '/uploads/projects/project2/images/6_desktop.webp', type: ProjectImageType.IMAGE, order: 6 },
-      { url: '/uploads/projects/project2/images/7_desktop.webp', type: ProjectImageType.IMAGE, order: 7 },
-      { url: '/uploads/projects/project2/images/8_desktop.webp', type: ProjectImageType.IMAGE, order: 8 },
-      { url: '/uploads/projects/project2/images/9_desktop.webp', type: ProjectImageType.IMAGE, order: 9 },
-      { url: '/uploads/projects/project2/images/10_desktop.webp', type: ProjectImageType.IMAGE, order: 10 },
-      { url: '/uploads/projects/project2/images/11_desktop.webp', type: ProjectImageType.IMAGE, order: 11 },
-      { url: '/uploads/projects/project2/images/12_desktop.webp', type: ProjectImageType.IMAGE, order: 12 },
-      { url: '/uploads/projects/project2/images/14_desktop.webp', type: ProjectImageType.IMAGE, order: 13 },
-      { url: '/uploads/projects/project2/images/15_desktop.webp', type: ProjectImageType.IMAGE, order: 14 },
-      { url: '/uploads/projects/project2/images/16_desktop.webp', type: ProjectImageType.IMAGE, order: 15 },
-      { url: '/uploads/projects/project2/images/17_desktop.webp', type: ProjectImageType.IMAGE, order: 16 },
-      { url: '/uploads/projects/project2/images/18_desktop.webp', type: ProjectImageType.IMAGE, order: 17 },
-      { url: '/uploads/projects/project2/images/19_desktop.webp', type: ProjectImageType.IMAGE, order: 18 },
-      { url: '/uploads/projects/project2/images/20_desktop.webp', type: ProjectImageType.IMAGE, order: 19 },
-      { url: '/uploads/projects/project2/images/21_desktop.webp', type: ProjectImageType.IMAGE, order: 20 },
-      { url: '/uploads/projects/project2/images/22_desktop.webp', type: ProjectImageType.IMAGE, order: 21 },
-      { url: '/uploads/projects/project2/images/23_desktop.webp', type: ProjectImageType.IMAGE, order: 22 },
-      { url: '/uploads/projects/project2/images/24_desktop.webp', type: ProjectImageType.IMAGE, order: 23 },
-      { url: '/uploads/projects/project2/images/25_desktop.webp', type: ProjectImageType.IMAGE, order: 24 },
-      { url: '/uploads/projects/project2/images/26_desktop.webp', type: ProjectImageType.IMAGE, order: 25 },
-      { url: '/uploads/projects/project2/images/27_desktop.webp', type: ProjectImageType.IMAGE, order: 26 },
-      { url: '/uploads/projects/project2/images/28_desktop.webp', type: ProjectImageType.IMAGE, order: 27 },
-      { url: '/uploads/projects/project2/images/29_desktop.webp', type: ProjectImageType.IMAGE, order: 28 },
-      { url: '/uploads/projects/project2/images/30_desktop.webp', type: ProjectImageType.IMAGE, order: 29 },
-      { url: '/uploads/projects/project2/images/31_desktop.webp', type: ProjectImageType.IMAGE, order: 30 },
-      { url: '/uploads/projects/project2/plans/1_desktop.webp', type: ProjectImageType.PLAN, order: 0 },
+      {
+        url: '/uploads/projects/project2/images/main_desktop.webp',
+        type: ProjectImageType.MAIN,
+        order: 0,
+      },
+      {
+        url: '/uploads/projects/project2/images/1_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 1,
+      },
+      {
+        url: '/uploads/projects/project2/images/2_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 2,
+      },
+      {
+        url: '/uploads/projects/project2/images/3_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 3,
+      },
+      {
+        url: '/uploads/projects/project2/images/4_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 4,
+      },
+      {
+        url: '/uploads/projects/project2/images/5_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 5,
+      },
+      {
+        url: '/uploads/projects/project2/images/6_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 6,
+      },
+      {
+        url: '/uploads/projects/project2/images/7_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 7,
+      },
+      {
+        url: '/uploads/projects/project2/images/8_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 8,
+      },
+      {
+        url: '/uploads/projects/project2/images/9_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 9,
+      },
+      {
+        url: '/uploads/projects/project2/images/10_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 10,
+      },
+      {
+        url: '/uploads/projects/project2/images/11_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 11,
+      },
+      {
+        url: '/uploads/projects/project2/images/12_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 12,
+      },
+      {
+        url: '/uploads/projects/project2/images/14_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 13,
+      },
+      {
+        url: '/uploads/projects/project2/images/15_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 14,
+      },
+      {
+        url: '/uploads/projects/project2/images/16_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 15,
+      },
+      {
+        url: '/uploads/projects/project2/images/17_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 16,
+      },
+      {
+        url: '/uploads/projects/project2/images/18_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 17,
+      },
+      {
+        url: '/uploads/projects/project2/images/19_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 18,
+      },
+      {
+        url: '/uploads/projects/project2/images/20_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 19,
+      },
+      {
+        url: '/uploads/projects/project2/images/21_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 20,
+      },
+      {
+        url: '/uploads/projects/project2/images/22_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 21,
+      },
+      {
+        url: '/uploads/projects/project2/images/23_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 22,
+      },
+      {
+        url: '/uploads/projects/project2/images/24_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 23,
+      },
+      {
+        url: '/uploads/projects/project2/images/25_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 24,
+      },
+      {
+        url: '/uploads/projects/project2/images/26_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 25,
+      },
+      {
+        url: '/uploads/projects/project2/images/27_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 26,
+      },
+      {
+        url: '/uploads/projects/project2/images/28_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 27,
+      },
+      {
+        url: '/uploads/projects/project2/images/29_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 28,
+      },
+      {
+        url: '/uploads/projects/project2/images/30_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 29,
+      },
+      {
+        url: '/uploads/projects/project2/images/31_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 30,
+      },
+      {
+        url: '/uploads/projects/project2/plans/1_desktop.webp',
+        type: ProjectImageType.PLAN,
+        order: 0,
+      },
     ],
   },
   {
@@ -109,18 +280,66 @@ const projectsData: SeedProject[] = [
     favourite: true,
     categoryCode: CategoryUrlCode.privateHouses,
     images: [
-      { url: '/uploads/projects/project3/images/main_desktop.webp', type: ProjectImageType.MAIN, order: 0 },
-      { url: '/uploads/projects/project3/images/1_desktop.webp', type: ProjectImageType.IMAGE, order: 1 },
-      { url: '/uploads/projects/project3/images/2_desktop.webp', type: ProjectImageType.IMAGE, order: 2 },
-      { url: '/uploads/projects/project3/images/3_desktop.webp', type: ProjectImageType.IMAGE, order: 3 },
-      { url: '/uploads/projects/project3/images/4_desktop.webp', type: ProjectImageType.IMAGE, order: 4 },
-      { url: '/uploads/projects/project3/images/5_desktop.webp', type: ProjectImageType.IMAGE, order: 5 },
-      { url: '/uploads/projects/project3/images/6_desktop.webp', type: ProjectImageType.IMAGE, order: 6 },
-      { url: '/uploads/projects/project3/images/7_desktop.webp', type: ProjectImageType.IMAGE, order: 7 },
-      { url: '/uploads/projects/project3/images/8_desktop.webp', type: ProjectImageType.IMAGE, order: 8 },
-      { url: '/uploads/projects/project3/images/9_desktop.webp', type: ProjectImageType.IMAGE, order: 9 },
-      { url: '/uploads/projects/project3/plans/1_desktop.webp', type: ProjectImageType.PLAN, order: 0 },
-      { url: '/uploads/projects/project3/plans/2_desktop.webp', type: ProjectImageType.PLAN, order: 1 },
+      {
+        url: '/uploads/projects/project3/images/main_desktop.webp',
+        type: ProjectImageType.MAIN,
+        order: 0,
+      },
+      {
+        url: '/uploads/projects/project3/images/1_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 1,
+      },
+      {
+        url: '/uploads/projects/project3/images/2_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 2,
+      },
+      {
+        url: '/uploads/projects/project3/images/3_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 3,
+      },
+      {
+        url: '/uploads/projects/project3/images/4_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 4,
+      },
+      {
+        url: '/uploads/projects/project3/images/5_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 5,
+      },
+      {
+        url: '/uploads/projects/project3/images/6_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 6,
+      },
+      {
+        url: '/uploads/projects/project3/images/7_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 7,
+      },
+      {
+        url: '/uploads/projects/project3/images/8_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 8,
+      },
+      {
+        url: '/uploads/projects/project3/images/9_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 9,
+      },
+      {
+        url: '/uploads/projects/project3/plans/1_desktop.webp',
+        type: ProjectImageType.PLAN,
+        order: 0,
+      },
+      {
+        url: '/uploads/projects/project3/plans/2_desktop.webp',
+        type: ProjectImageType.PLAN,
+        order: 1,
+      },
     ],
   },
   {
@@ -136,18 +355,66 @@ const projectsData: SeedProject[] = [
     favourite: true,
     categoryCode: CategoryUrlCode.privateHouses,
     images: [
-      { url: '/uploads/projects/project4/images/main_desktop.webp', type: ProjectImageType.MAIN, order: 0 },
-      { url: '/uploads/projects/project4/images/1_desktop.webp', type: ProjectImageType.IMAGE, order: 1 },
-      { url: '/uploads/projects/project4/images/2_desktop.webp', type: ProjectImageType.IMAGE, order: 2 },
-      { url: '/uploads/projects/project4/images/3_desktop.webp', type: ProjectImageType.IMAGE, order: 3 },
-      { url: '/uploads/projects/project4/images/4_desktop.webp', type: ProjectImageType.IMAGE, order: 4 },
-      { url: '/uploads/projects/project4/images/5_desktop.webp', type: ProjectImageType.IMAGE, order: 5 },
-      { url: '/uploads/projects/project4/images/6_desktop.webp', type: ProjectImageType.IMAGE, order: 6 },
-      { url: '/uploads/projects/project4/images/7_desktop.webp', type: ProjectImageType.IMAGE, order: 7 },
-      { url: '/uploads/projects/project4/images/8_desktop.webp', type: ProjectImageType.IMAGE, order: 8 },
-      { url: '/uploads/projects/project4/plans/2_desktop.webp', type: ProjectImageType.PLAN, order: 0 },
-      { url: 'https://www.youtube.com/embed/XPgwUDZXKkk', type: ProjectImageType.VIDEO, order: 0 },
-      { url: 'https://www.youtube.com/embed/Kn7jyqiiHck', type: ProjectImageType.VIDEO, order: 1 },
+      {
+        url: '/uploads/projects/project4/images/main_desktop.webp',
+        type: ProjectImageType.MAIN,
+        order: 0,
+      },
+      {
+        url: '/uploads/projects/project4/images/1_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 1,
+      },
+      {
+        url: '/uploads/projects/project4/images/2_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 2,
+      },
+      {
+        url: '/uploads/projects/project4/images/3_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 3,
+      },
+      {
+        url: '/uploads/projects/project4/images/4_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 4,
+      },
+      {
+        url: '/uploads/projects/project4/images/5_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 5,
+      },
+      {
+        url: '/uploads/projects/project4/images/6_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 6,
+      },
+      {
+        url: '/uploads/projects/project4/images/7_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 7,
+      },
+      {
+        url: '/uploads/projects/project4/images/8_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 8,
+      },
+      {
+        url: '/uploads/projects/project4/plans/2_desktop.webp',
+        type: ProjectImageType.PLAN,
+        order: 0,
+      },
+      {
+        url: 'https://www.youtube.com/embed/XPgwUDZXKkk',
+        type: ProjectImageType.VIDEO,
+        order: 0,
+      },
+      {
+        url: 'https://www.youtube.com/embed/Kn7jyqiiHck',
+        type: ProjectImageType.VIDEO,
+        order: 1,
+      },
     ],
   },
   {
@@ -162,11 +429,31 @@ const projectsData: SeedProject[] = [
     favourite: true,
     categoryCode: CategoryUrlCode.privateHouses,
     images: [
-      { url: '/uploads/projects/project5/images/main_desktop.webp', type: ProjectImageType.MAIN, order: 0 },
-      { url: '/uploads/projects/project5/images/1_desktop.webp', type: ProjectImageType.IMAGE, order: 1 },
-      { url: '/uploads/projects/project5/images/2_desktop.webp', type: ProjectImageType.IMAGE, order: 2 },
-      { url: '/uploads/projects/project5/images/3_desktop.webp', type: ProjectImageType.IMAGE, order: 3 },
-      { url: '/uploads/projects/project5/images/4_desktop.webp', type: ProjectImageType.IMAGE, order: 4 },
+      {
+        url: '/uploads/projects/project5/images/main_desktop.webp',
+        type: ProjectImageType.MAIN,
+        order: 0,
+      },
+      {
+        url: '/uploads/projects/project5/images/1_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 1,
+      },
+      {
+        url: '/uploads/projects/project5/images/2_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 2,
+      },
+      {
+        url: '/uploads/projects/project5/images/3_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 3,
+      },
+      {
+        url: '/uploads/projects/project5/images/4_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 4,
+      },
     ],
   },
   {
@@ -179,10 +466,26 @@ const projectsData: SeedProject[] = [
     favourite: true,
     categoryCode: CategoryUrlCode.privateHouses,
     images: [
-      { url: '/uploads/projects/project6/images/main_desktop.webp', type: ProjectImageType.MAIN, order: 0 },
-      { url: '/uploads/projects/project6/images/1_desktop.webp', type: ProjectImageType.IMAGE, order: 1 },
-      { url: '/uploads/projects/project6/images/2_desktop.webp', type: ProjectImageType.IMAGE, order: 2 },
-      { url: '/uploads/projects/project6/images/3_desktop.webp', type: ProjectImageType.IMAGE, order: 3 },
+      {
+        url: '/uploads/projects/project6/images/main_desktop.webp',
+        type: ProjectImageType.MAIN,
+        order: 0,
+      },
+      {
+        url: '/uploads/projects/project6/images/1_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 1,
+      },
+      {
+        url: '/uploads/projects/project6/images/2_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 2,
+      },
+      {
+        url: '/uploads/projects/project6/images/3_desktop.webp',
+        type: ProjectImageType.IMAGE,
+        order: 3,
+      },
     ],
   },
 ];
@@ -235,16 +538,25 @@ const testimonialsData = [
   },
 ];
 
-async function main() {
-  console.log('Seeding database...');
+// Create Prisma client with PrismaPg adapter (required for Prisma 7 without URL in schema)
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
-  // Clear existing data (idempotent)
-  await prisma.projectImage.deleteMany();
-  await prisma.project.deleteMany();
-  await prisma.category.deleteMany();
-  await prisma.testimonial.deleteMany();
+async function main() {
+  console.log('Starting database seed...');
+
+  // Clear existing data in a transaction (safe order - children first)
+  console.log('Clearing old data...');
+  await prisma.$transaction([
+    prisma.projectImage.deleteMany(),
+    prisma.testimonial.deleteMany(),
+    prisma.project.deleteMany(),
+    prisma.category.deleteMany(),
+  ]);
 
   // Seed categories
+  console.log('Seeding categories...');
   const categories = await Promise.all(
     categoriesData.map((cat) =>
       prisma.category.create({
@@ -252,16 +564,14 @@ async function main() {
       }),
     ),
   );
-  console.log(`Seeded ${categories.length} categories`);
 
   const categoryMap = new Map(categories.map((c) => [c.urlCode, c.id]));
 
-  // Seed projects with images
+  // Seed projects
+  console.log('Seeding projects...');
   for (const projectData of projectsData) {
     const categoryId = categoryMap.get(projectData.categoryCode);
-    if (!categoryId) {
-      throw new Error(`Category not found for code: ${projectData.categoryCode}`);
-    }
+    if (!categoryId) continue;
 
     await prisma.project.create({
       data: {
@@ -274,22 +584,17 @@ async function main() {
         favourite: projectData.favourite,
         categories: { connect: [{ id: categoryId }] },
         images: {
-          create: projectData.images.map((img) => ({
-            url: img.url,
-            type: img.type,
-            order: img.order,
-          })),
+          create: projectData.images,
         },
       },
     });
   }
-  console.log(`Seeded ${projectsData.length} projects`);
 
   // Seed testimonials
+  console.log('Seeding testimonials...');
   await prisma.testimonial.createMany({
     data: testimonialsData,
   });
-  console.log(`Seeded ${testimonialsData.length} testimonials`);
 
   console.log('Database seeding complete!');
 }
@@ -301,4 +606,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pool.end();
   });

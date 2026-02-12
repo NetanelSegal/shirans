@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import type { ProjectResponse } from '@shirans/shared';
 import ImageScaleHover from '@/components/ui/ImageScaleHover';
 import { CategoryLabel } from '@/components/CategoryLabel';
-import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
+import { useCategories } from '@/contexts/CategoriesContext';
 import { Fragment } from 'react/jsx-runtime';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 interface IProjectProps {
@@ -11,6 +11,7 @@ interface IProjectProps {
 }
 
 const Project = ({ project, i }: IProjectProps) => {
+  const { categoriesMap } = useCategories();
   return (
     <div
       className={`flex flex-col gap-5 lg:flex-row ${i % 2 === 0 ? '' : 'lg:flex-row-reverse'}`}
@@ -35,7 +36,7 @@ const Project = ({ project, i }: IProjectProps) => {
             {project.categories?.map((catCode) => (
               <CategoryLabel
                 key={catCode}
-                label={categoriesCodeToTitleMap[catCode]}
+                label={categoriesMap[catCode]}
               />
             ))}
           </div>

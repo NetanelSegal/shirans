@@ -1,7 +1,7 @@
 import { CategoryLabel } from '@/components/CategoryLabel';
 import FavoriteProjects from '@/components/FavoriteProjects';
 import ImageScaleHover from '@/components/ui/ImageScaleHover';
-import { categoriesCodeToTitleMap } from '@/data/shiran.categories';
+import { useCategories } from '@/contexts/CategoriesContext';
 import { Navigate, useParams } from 'react-router-dom';
 import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
 import { useProjects } from '@/contexts/ProjectsContext';
@@ -14,6 +14,7 @@ import { BASE_URL } from '@/constants/urls';
 export default function Project() {
   const { id } = useParams<{ id: string }>();
   const { projects } = useProjects();
+  const { categoriesMap } = useCategories();
 
   const project = projects.find((p) => p.id === id);
 
@@ -72,8 +73,8 @@ export default function Project() {
                     <div className='flex gap-2'>
                       {project.categories.map((catCode) => (
                         <CategoryLabel
-                          label={categoriesCodeToTitleMap[catCode]}
-                          key={categoriesCodeToTitleMap[catCode]}
+                          label={categoriesMap[catCode]}
+                          key={categoriesMap[catCode]}
                         />
                       ))}
                     </div>
