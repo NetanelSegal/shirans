@@ -17,7 +17,15 @@
       "Bash(git commit:*)",
       "Bash(npm run test:*)",
       "Bash(npx vitest:*)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm run prisma:generate:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(npx prisma db seed:*)",
+      "Bash(node -e:*)",
+      "Bash(npx prisma db push:*)",
+      "Bash(curl:*)",
+      "Bash(npx tsx:*)"
     ]
   }
 }
