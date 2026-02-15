@@ -1,11 +1,10 @@
 import { prisma } from '../config/database';
-import { CategoryUrlCode } from '@prisma/client';
 import type { CategoryResponse } from '@shirans/shared';
 
 function transformCategory(category: {
   id: string;
   title: string;
-  urlCode: CategoryUrlCode;
+  urlCode: string;
   createdAt: Date;
   updatedAt: Date;
 }): CategoryResponse {
@@ -52,7 +51,7 @@ export const categoryRepository = {
    * @returns Category or null if not found
    */
   async findByUrlCode(
-    urlCode: CategoryUrlCode
+    urlCode: string
   ): Promise<CategoryResponse | null> {
     const category = await prisma.category.findUnique({
       where: { urlCode },
@@ -67,7 +66,7 @@ export const categoryRepository = {
    */
   async create(data: {
     title: string;
-    urlCode: CategoryUrlCode;
+    urlCode: string;
   }): Promise<CategoryResponse> {
     const category = await prisma.category.create({
       data: {
@@ -86,7 +85,7 @@ export const categoryRepository = {
    */
   async update(
     id: string,
-    data: Partial<{ title: string; urlCode: CategoryUrlCode }>
+    data: Partial<{ title: string; urlCode: string }>
   ): Promise<CategoryResponse> {
     const category = await prisma.category.update({
       where: { id },

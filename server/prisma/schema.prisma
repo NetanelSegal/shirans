@@ -15,12 +15,6 @@ enum UserRole {
   USER
 }
 
-enum CategoryUrlCode {
-  privateHouses
-  apartments
-  publicSpaces
-}
-
 enum ProjectImageType {
   MAIN
   IMAGE
@@ -61,7 +55,7 @@ model RefreshToken {
 model Category {
   id        String         @id @default(cuid())
   title     String
-  urlCode   CategoryUrlCode @unique
+  urlCode   String          @unique
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
   projects  Project[]

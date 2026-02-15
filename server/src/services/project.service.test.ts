@@ -4,7 +4,7 @@ import { projectRepository } from '../repositories/project.repository';
 import { HttpError } from '../middleware/errorHandler';
 import { prisma } from '../config/database';
 import type { ProjectFilters } from '../repositories/project.repository';
-import type { CategoryUrlCode } from '@prisma/client';
+import type { CategoryUrlCode } from '@shirans/shared';
 import { Prisma } from '@prisma/client';
 
 // Mock dependencies
