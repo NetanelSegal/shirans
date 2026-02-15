@@ -21,7 +21,8 @@ export const categoriesPaths = {
     post: {
       tags: ['Categories'],
       summary: 'Create a new category',
-      description: 'Creates a new project category. Requires admin authentication.',
+      description:
+        'Creates a new project category. Requires admin authentication.',
       security: [{ bearerAuth: [] }],
       requestBody: {
         required: true,
@@ -111,7 +112,8 @@ export const categoriesPaths = {
     put: {
       tags: ['Categories'],
       summary: 'Update a category',
-      description: 'Updates an existing category. Requires admin authentication.',
+      description:
+        'Updates an existing category. Requires admin authentication.',
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -176,7 +178,8 @@ export const categoriesPaths = {
     delete: {
       tags: ['Categories'],
       summary: 'Delete a category',
-      description: 'Deletes a category by its ID. Requires admin authentication.',
+      description:
+        'Deletes a category by its ID. Requires admin authentication.',
       security: [{ bearerAuth: [] }],
       parameters: [
         {
