@@ -1,5 +1,5 @@
 export type UserRole = 'ADMIN' | 'USER';
-export type CategoryUrlCode = 'privateHouses' | 'apartments' | 'publicSpaces';
+export type CategoryUrlCode = string;
 export type ProjectImageType = 'MAIN' | 'IMAGE' | 'PLAN' | 'VIDEO';
 
 export interface ResponsiveImage {

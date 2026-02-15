@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-const categoryUrlCode = z.enum(['privateHouses', 'apartments', 'publicSpaces']);
-
 /**
  * Zod schema for creating a category
  */
@@ -10,7 +8,11 @@ export const createCategorySchema = z.object({
     .string()
     .min(2, 'Title must be at least 2 characters')
     .max(100, 'Title must be less than 100 characters'),
-  urlCode: categoryUrlCode,
+  urlCode: z
+    .string()
+    .min(2, 'URL code must be at least 2 characters')
+    .max(50, 'URL code must be less than 50 characters')
+    .regex(/^[a-zA-Z][a-zA-Z0-9]*$/, 'URL code must start with a letter and contain only letters and numbers'),
 });
 
 /**
@@ -18,7 +20,12 @@ export const createCategorySchema = z.object({
  */
 export const updateCategorySchema = z.object({
   title: z.string().min(2).max(100).optional(),
-  urlCode: categoryUrlCode.optional(),
+  urlCode: z
+    .string()
+    .min(2)
+    .max(50)
+    .regex(/^[a-zA-Z][a-zA-Z0-9]*$/, 'URL code must start with a letter and contain only letters and numbers')
+    .optional(),
 });
 
 /**

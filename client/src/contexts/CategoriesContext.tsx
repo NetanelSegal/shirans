@@ -1,9 +1,8 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { fetchCategories } from '@/services/categories.service';
-import type { CategoryUrlCode } from '@shirans/shared';
 
 interface CategoriesContextType {
-  categoriesMap: Record<CategoryUrlCode, string>;
+  categoriesMap: Record<string, string>;
   isLoading: boolean;
 }
 
@@ -12,15 +11,13 @@ const CategoriesContext = createContext<CategoriesContextType | undefined>(
 );
 
 export const CategoriesProvider = ({ children }: { children: ReactNode }) => {
-  const [categoriesMap, setCategoriesMap] = useState<Record<CategoryUrlCode, string>>(
-    {} as Record<CategoryUrlCode, string>,
-  );
+  const [categoriesMap, setCategoriesMap] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchCategories()
       .then((data) => {
-        const map = {} as Record<CategoryUrlCode, string>;
+        const map: Record<string, string> = {};
         for (const cat of data) {
           map[cat.urlCode] = cat.title;
         }

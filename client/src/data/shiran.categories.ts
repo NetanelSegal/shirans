@@ -1,13 +1,9 @@
-import type { CategoryUrlCode } from '@shirans/shared';
-
-export type { CategoryUrlCode } from '@shirans/shared';
-
 export interface ICategory {
   _id: {
     $oid: string;
   };
   title: string;
-  urlCode: CategoryUrlCode;
+  urlCode: string;
 }
 export const categories: ICategory[] = [
   {
@@ -34,9 +30,9 @@ export const categories: ICategory[] = [
 ];
 
 export const categoriesCodeToTitleMap = categories.reduce(
-  (acc: Record<CategoryUrlCode, string>, e) => {
+  (acc: Record<string, string>, e) => {
     acc[e.urlCode] = e.title;
     return acc;
   },
-  {} as Record<CategoryUrlCode, string>,
+  {} as Record<string, string>,
 );

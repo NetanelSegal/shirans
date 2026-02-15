@@ -25,7 +25,8 @@ export const commonSchemas = {
   },
   CategoryUrlCode: {
     type: 'string',
-    enum: ['privateHouses', 'apartments', 'publicSpaces'],
+    description: 'URL-safe code for the category (e.g. privateHouses, apartments)',
+    pattern: '^[a-zA-Z][a-zA-Z0-9]*$',
   },
   ResponsiveImage: {
     type: 'object',

@@ -20,10 +20,10 @@ const variantClasses = {
   dark: 'bg-gray-800 text-white',
 }
 
-function Button({ children, variant = 'secondary', className, disabled, type = 'button' }: ButtonProps) {
+function Button({ children, onClick, variant = 'secondary', className, disabled, type = 'button' }: ButtonProps) {
 
   return (
-    <button className={`rounded-xl px-4 py-2 text-black hover:bg-secondary/80 transition-all duration-200 ${variantClasses[variant]} ${className}`} disabled={disabled} type={type}>
+    <button className={`rounded-xl px-4 py-2 text-black hover:bg-secondary/80 transition-all duration-200 ${variantClasses[variant]} ${className}`} disabled={disabled} type={type} onClick={onClick}>
       {children}
     </button>
   )

@@ -3,7 +3,6 @@ import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import {
   PrismaClient,
-  CategoryUrlCode,
   ProjectImageType,
 } from '@prisma/client';
 
@@ -18,7 +17,7 @@ interface SeedProject {
   isCompleted: boolean;
   constructionArea: number;
   favourite: boolean;
-  categoryCode: CategoryUrlCode;
+  categoryCode: string;
   images: Array<{
     url: string;
     type: ProjectImageType;
@@ -27,11 +26,11 @@ interface SeedProject {
 }
 
 const categoriesData = [
-  { title: 'תכנון ועיצוב בתים', urlCode: CategoryUrlCode.privateHouses },
-  { title: 'שיפוץ ועיצוב דירות', urlCode: CategoryUrlCode.apartments },
+  { title: 'תכנון ועיצוב בתים', urlCode: 'privateHouses' },
+  { title: 'שיפוץ ועיצוב דירות', urlCode: 'apartments' },
   {
     title: 'תכנון ועיצוב חללים מסחריים',
-    urlCode: CategoryUrlCode.publicSpaces,
+    urlCode: 'publicSpaces',
   },
 ] as const;
 
@@ -47,7 +46,7 @@ const projectsData: SeedProject[] = [
     isCompleted: true,
     constructionArea: 120,
     favourite: true,
-    categoryCode: CategoryUrlCode.privateHouses,
+    categoryCode: 'privateHouses',
     images: [
       {
         url: '/uploads/projects/project1/images/main_desktop.webp',
@@ -102,7 +101,7 @@ const projectsData: SeedProject[] = [
     isCompleted: true,
     constructionArea: 110,
     favourite: true,
-    categoryCode: CategoryUrlCode.privateHouses,
+    categoryCode: 'privateHouses',
     images: [
       {
         url: '/uploads/projects/project2/images/main_desktop.webp',
@@ -278,7 +277,7 @@ const projectsData: SeedProject[] = [
     isCompleted: false,
     constructionArea: 160,
     favourite: true,
-    categoryCode: CategoryUrlCode.privateHouses,
+    categoryCode: 'privateHouses',
     images: [
       {
         url: '/uploads/projects/project3/images/main_desktop.webp',
@@ -353,7 +352,7 @@ const projectsData: SeedProject[] = [
     isCompleted: true,
     constructionArea: 130,
     favourite: true,
-    categoryCode: CategoryUrlCode.privateHouses,
+    categoryCode: 'privateHouses',
     images: [
       {
         url: '/uploads/projects/project4/images/main_desktop.webp',
@@ -427,7 +426,7 @@ const projectsData: SeedProject[] = [
     isCompleted: true,
     constructionArea: 130,
     favourite: true,
-    categoryCode: CategoryUrlCode.privateHouses,
+    categoryCode: 'privateHouses',
     images: [
       {
         url: '/uploads/projects/project5/images/main_desktop.webp',
@@ -464,7 +463,7 @@ const projectsData: SeedProject[] = [
     isCompleted: true,
     constructionArea: 130,
     favourite: true,
-    categoryCode: CategoryUrlCode.privateHouses,
+    categoryCode: 'privateHouses',
     images: [
       {
         url: '/uploads/projects/project6/images/main_desktop.webp',
