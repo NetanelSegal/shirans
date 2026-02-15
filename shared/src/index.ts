@@ -8,3 +8,4 @@ export * from './schemas/auth.schema';
 export * from './schemas/category.schema';
 export * from './schemas/contact.schema';
 export * from './schemas/footer.schema';
+export * from './schemas/testimonial.schema';
