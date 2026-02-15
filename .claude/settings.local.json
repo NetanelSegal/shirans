@@ -25,7 +25,10 @@
       "Bash(node -e:*)",
       "Bash(npx prisma db push:*)",
       "Bash(curl:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(npx prisma migrate reset:*)",
+      "Bash(npx prisma migrate:*)",
+      "WebFetch(domain:www.prisma.io)"
     ]
   }
 }
