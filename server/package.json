@@ -7,7 +7,7 @@
     "dev": "nodemon --exec tsx src/index.ts",
     "build": "npm run build:deps && npm run build:compile",
     "build:deps": "npm run build -w @shirans/shared && npx prisma generate",
-    "build:compile": "tsc --project tsconfig.json --rootDir .. && tsc-alias -p tsconfig.json",
+    "build:compile": "tsc --project tsconfig.json --rootDir .. && tsc-alias -p tsconfig.json && cp -r public dist/server/public",
     "start": "node dist/server/src/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
@@ -18,7 +18,7 @@
     "test": "vitest",
     "test:run": "vitest run"
   },
-"keywords": [],
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
