@@ -12,7 +12,7 @@ export const ERROR_MESSAGES = {
 
   'AUTH.ADMIN_ACCESS_REQUIRED': 'כניסה נדרשת לאיזור ניהול',
   'AUTH.AUTHENTICATION_REQUIRED': 'כניסה נדרשת',
-  'AUTH.INVALID_CREDENTIALS': 'אימות נדרש',
+  'AUTH.INVALID_CREDENTIALS': 'מייל או סיסמה שגויים',
   'AUTH.REFRESH_TOKEN_INVALID': 'טוקן רענון שגוי',
   'AUTH.REFRESH_TOKEN_REQUIRED': 'טוקן רענון נדרש',
   'AUTH.TOKEN_INVALID': 'טוקן שגוי',
@@ -35,7 +35,7 @@ export const ERROR_MESSAGES = {
   'NOT_FOUND.RESOURCE_NOT_FOUND': 'משאב לא נמצא',
   'NOT_FOUND.TESTIMONIAL_NOT_FOUND': 'צפייה במשוב לא נמצאה',
 
-  'CONFLICT.EMAIL_ALREADY_EXISTS': 'כתובת דואר אלקטרוני כבר קיימת',
+  'CONFLICT.EMAIL_ALREADY_EXISTS': 'חשבון זה כבר קיים במערכת',
   'CONFLICT.PROJECT_TITLE_EXISTS': 'כותרת פרוייקט כבר קיימת',
   'CONFLICT.TOKEN_ALREADY_EXISTS': 'טוקן כבר קיים - נסה שנית',
   'CONFLICT.CATEGORY_URL_CODE_EXISTS': 'קוד קטגוריה כבר קיים',

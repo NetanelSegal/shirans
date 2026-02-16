@@ -35,7 +35,8 @@ export const contactPaths = {
       tags: ['Contact'],
       summary: 'Get all contact submissions',
       description:
-        'Returns all contact form submissions with optional read status filter. Auth middleware is planned but not yet active.',
+        'Returns all contact form submissions with optional read status filter. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
       parameters: [
         {
           name: 'isRead',
@@ -56,6 +57,22 @@ export const contactPaths = {
             },
           },
         },
+        '401': {
+          description: 'Not authenticated',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '403': {
+          description: 'Not authorized (admin only)',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
       },
     },
   },
@@ -64,7 +81,8 @@ export const contactPaths = {
       tags: ['Contact'],
       summary: 'Get a contact submission by ID',
       description:
-        'Returns a single contact submission. Auth middleware is planned but not yet active.',
+        'Returns a single contact submission. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
       parameters: [
         {
           name: 'id',
@@ -83,6 +101,22 @@ export const contactPaths = {
             },
           },
         },
+        '401': {
+          description: 'Not authenticated',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '403': {
+          description: 'Not authorized (admin only)',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
         '404': {
           description: 'Submission not found',
           content: {
@@ -97,7 +131,8 @@ export const contactPaths = {
       tags: ['Contact'],
       summary: 'Delete a contact submission',
       description:
-        'Deletes a contact submission by ID. Auth middleware is planned but not yet active.',
+        'Deletes a contact submission by ID. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
       parameters: [
         {
           name: 'id',
@@ -113,6 +148,22 @@ export const contactPaths = {
           content: {
             'application/json': {
               schema: { $ref: '#/components/schemas/MessageResponse' },
+            },
+          },
+        },
+        '401': {
+          description: 'Not authenticated',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '403': {
+          description: 'Not authorized (admin only)',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
             },
           },
         },
@@ -132,7 +183,8 @@ export const contactPaths = {
       tags: ['Contact'],
       summary: 'Update read status',
       description:
-        'Updates the read status of a contact submission. Auth middleware is planned but not yet active.',
+        'Updates the read status of a contact submission. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
       parameters: [
         {
           name: 'id',
@@ -161,6 +213,22 @@ export const contactPaths = {
         },
         '400': {
           description: 'Validation error',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '401': {
+          description: 'Not authenticated',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '403': {
+          description: 'Not authorized (admin only)',
           content: {
             'application/json': {
               schema: { $ref: '#/components/schemas/ErrorResponse' },

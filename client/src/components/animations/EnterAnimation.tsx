@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion, MotionGlobalConfig } from 'motion/react';
 import { ReactNode } from 'react';
 
 interface CommonProps {
@@ -35,6 +35,10 @@ export default function EnterAnimation({
   runAnimation,
   dontAnimateWhileInView,
 }: IEnterAnimationProps) {
+  if (MotionGlobalConfig.skipAnimations) {
+    return <div style={{ width: '100%' }}>{children}</div>;
+  }
+
   const animationVariants = {
     initial: {
       opacity: opacity ? 0 : undefined,

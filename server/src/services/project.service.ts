@@ -198,9 +198,17 @@ export const projectService = {
       const updatedProject = await projectRepository.update(id, updateData);
       return transformProjectToResponse(updatedProject);
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          // Record not found
+      if (error && typeof error === 'object' && 'code' in error) {
+        const prismaError = error as { code: string; meta?: Record<string, unknown> };
+        if (prismaError.code === 'P2025') {
+          // Differentiate between project not found and category not found
+          const cause = prismaError.meta?.cause;
+          if (typeof cause === 'string' && cause.toLowerCase().includes('category')) {
+            throw new HttpError(
+              HTTP_STATUS.NOT_FOUND,
+              getServerErrorMessage('NOT_FOUND.CATEGORY_NOT_FOUND'),
+            );
+          }
           throw new HttpError(
             HTTP_STATUS.NOT_FOUND,
             getServerErrorMessage('NOT_FOUND.PROJECT_NOT_FOUND'),

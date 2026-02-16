@@ -5,7 +5,7 @@ import {
   createTestimonialSchema,
   testimonialIdSchema,
   testimonialQuerySchema,
-} from '../validators/testimonial.validators';
+} from '@shirans/shared';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import z from 'zod';
 

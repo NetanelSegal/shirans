@@ -2,14 +2,22 @@ import { Request, Response, NextFunction } from 'express';
 import logger from './logger';
 import { env } from '../utils/env';
 import {
+  errorMessagesMap,
   getServerErrorMessage,
   ServerErrorMessage,
 } from '@/constants/errorMessages';
-import { HTTP_STATUS, HttpStatus } from '@shirans/shared';
+import { HTTP_STATUS, HttpStatus, ErrorKey } from '@shirans/shared';
+
+// Reverse lookup: English message → ErrorKey
+const messageToKeyMap = new Map<string, ErrorKey>();
+for (const [key, message] of Object.entries(errorMessagesMap)) {
+  messageToKeyMap.set(message, key as ErrorKey);
+}
 
 interface ErrorResponse {
   error: string;
   message: string;
+  errorKey?: string;
   stack?: string;
   validationErrors?: string;
 }
@@ -36,9 +44,11 @@ export function errorHandler(
   }
 
   // Build error response
+  const errorKey = messageToKeyMap.get(err.message);
   const errorResponse: ErrorResponse = {
     error: err.name || 'Internal Server Error',
     message: err.message || 'An unexpected error occurred',
+    ...(errorKey && { errorKey }),
   };
 
   // Include stack trace in development

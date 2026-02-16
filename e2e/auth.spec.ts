@@ -1,56 +1,50 @@
 import { test, expect } from '@playwright/test';
 
-const API_BASE_URL = process.env.PLAYWRIGHT_BASE_URL?.replace(':5174', ':3000') || 'http://localhost:3000';
-const API_URL = `${API_BASE_URL}/api/auth`;
+const SERVER_URL = process.env.PLAYWRIGHT_SERVER_URL || 'http://localhost:3000';
+const API_URL = `${SERVER_URL}/api/auth`;
+
+const TEST_PASSWORD = 'Password123!';
+const TEST_NAME = 'Test User';
+
+/** Generate a unique email for each test to avoid parallel conflicts */
+function uniqueEmail(prefix: string): string {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}@example.com`;
+}
+
+/** Register a user and return the accessToken */
+async function registerUser(request: { post: Function }, email: string) {
+  const response = await request.post(`${API_URL}/register`, {
+    data: { email, password: TEST_PASSWORD, name: TEST_NAME },
+  });
+  return response;
+}
 
 test.describe('Authentication Flow', () => {
-  // Test user credentials
-  const testUser = {
-    email: `test-${Date.now()}@example.com`,
-    password: 'Password123!',
-    name: 'Test User',
-  };
-
   test.describe('POST /api/auth/register', () => {
     test('should register a new user successfully', async ({ request }) => {
-      const response = await request.post(`${API_URL}/register`, {
-        data: {
-          email: testUser.email,
-          password: testUser.password,
-          name: testUser.name,
-        },
-      });
+      const email = uniqueEmail('reg-success');
+      const response = await registerUser(request, email);
 
       expect(response.status()).toBe(201);
       const body = await response.json();
       expect(body).toHaveProperty('user');
-      expect(body).toHaveProperty('token');
-      expect(body.user).toHaveProperty('email', testUser.email);
-      expect(body.user).toHaveProperty('name', testUser.name);
+      expect(body).toHaveProperty('accessToken');
+      expect(body.user).toHaveProperty('email', email);
+      expect(body.user).toHaveProperty('name', TEST_NAME);
       expect(body.user).toHaveProperty('role');
       expect(body.user).not.toHaveProperty('password');
-      expect(typeof body.token).toBe('string');
-      expect(body.token.length).toBeGreaterThan(0);
+      expect(typeof body.accessToken).toBe('string');
+      expect(body.accessToken.length).toBeGreaterThan(0);
     });
 
     test('should return 409 when email already exists', async ({ request }) => {
+      const email = uniqueEmail('reg-dup');
+
       // First registration
-      await request.post(`${API_URL}/register`, {
-        data: {
-          email: testUser.email,
-          password: testUser.password,
-          name: testUser.name,
-        },
-      });
+      await registerUser(request, email);
 
       // Try to register again with same email
-      const response = await request.post(`${API_URL}/register`, {
-        data: {
-          email: testUser.email,
-          password: testUser.password,
-          name: testUser.name,
-        },
-      });
+      const response = await registerUser(request, email);
 
       expect(response.status()).toBe(409);
       const body = await response.json();
@@ -61,9 +55,9 @@ test.describe('Authentication Flow', () => {
     test('should return 400 when validation fails - invalid email', async ({ request }) => {
       const response = await request.post(`${API_URL}/register`, {
         data: {
-          email: 'invalid-email',
-          password: testUser.password,
-          name: testUser.name,
+          email: `invalid-email-${Date.now()}`,
+          password: TEST_PASSWORD,
+          name: TEST_NAME,
         },
       });
 
@@ -75,9 +69,9 @@ test.describe('Authentication Flow', () => {
     test('should return 400 when validation fails - password too short', async ({ request }) => {
       const response = await request.post(`${API_URL}/register`, {
         data: {
-          email: `test-${Date.now()}@example.com`,
+          email: uniqueEmail('reg-short-pw'),
           password: '123',
-          name: testUser.name,
+          name: TEST_NAME,
         },
       });
 
@@ -89,9 +83,9 @@ test.describe('Authentication Flow', () => {
     test('should return 400 when validation fails - password missing complexity', async ({ request }) => {
       const response = await request.post(`${API_URL}/register`, {
         data: {
-          email: `test-${Date.now()}@example.com`,
+          email: uniqueEmail('reg-weak-pw'),
           password: 'password123', // Missing uppercase and special character
-          name: testUser.name,
+          name: TEST_NAME,
         },
       });
 
@@ -103,7 +97,7 @@ test.describe('Authentication Flow', () => {
     test('should return 400 when required fields are missing', async ({ request }) => {
       const response = await request.post(`${API_URL}/register`, {
         data: {
-          email: testUser.email,
+          email: uniqueEmail('reg-missing'),
           // Missing password and name
         },
       });
@@ -116,50 +110,34 @@ test.describe('Authentication Flow', () => {
 
   test.describe('POST /api/auth/login', () => {
     test('should login user successfully', async ({ request }) => {
+      const email = uniqueEmail('login-success');
+
       // First register a user
-      const registerResponse = await request.post(`${API_URL}/register`, {
-        data: {
-          email: testUser.email,
-          password: testUser.password,
-          name: testUser.name,
-        },
-      });
+      const registerResponse = await registerUser(request, email);
       expect(registerResponse.status()).toBe(201);
 
       // Then login
       const loginResponse = await request.post(`${API_URL}/login`, {
-        data: {
-          email: testUser.email,
-          password: testUser.password,
-        },
+        data: { email, password: TEST_PASSWORD },
       });
 
       expect(loginResponse.status()).toBe(200);
       const body = await loginResponse.json();
       expect(body).toHaveProperty('user');
-      expect(body).toHaveProperty('token');
-      expect(body.user).toHaveProperty('email', testUser.email);
+      expect(body).toHaveProperty('accessToken');
+      expect(body.user).toHaveProperty('email', email);
       expect(body.user).not.toHaveProperty('password');
-      expect(typeof body.token).toBe('string');
-      expect(body.token.length).toBeGreaterThan(0);
+      expect(typeof body.accessToken).toBe('string');
+      expect(body.accessToken.length).toBeGreaterThan(0);
     });
 
     test('should return 401 with invalid credentials', async ({ request }) => {
-      // First register a user
-      await request.post(`${API_URL}/register`, {
-        data: {
-          email: testUser.email,
-          password: testUser.password,
-          name: testUser.name,
-        },
-      });
+      const email = uniqueEmail('login-wrong-pw');
+      await registerUser(request, email);
 
       // Try to login with wrong password
       const response = await request.post(`${API_URL}/login`, {
-        data: {
-          email: testUser.email,
-          password: 'WrongPassword123!',
-        },
+        data: { email, password: 'WrongPassword123!' },
       });
 
       expect(response.status()).toBe(401);
@@ -172,7 +150,7 @@ test.describe('Authentication Flow', () => {
       const response = await request.post(`${API_URL}/login`, {
         data: {
           email: 'nonexistent@example.com',
-          password: testUser.password,
+          password: TEST_PASSWORD,
         },
       });
 
@@ -198,28 +176,23 @@ test.describe('Authentication Flow', () => {
 
   test.describe('GET /api/auth/me', () => {
     test('should return current user with valid token', async ({ request }) => {
+      const email = uniqueEmail('me-valid');
+
       // Register and get token
-      const registerResponse = await request.post(`${API_URL}/register`, {
-        data: {
-          email: testUser.email,
-          password: testUser.password,
-          name: testUser.name,
-        },
-      });
-      const { token } = await registerResponse.json();
+      const registerResponse = await registerUser(request, email);
+      expect(registerResponse.status()).toBe(201);
+      const { accessToken } = await registerResponse.json();
 
       // Get current user
       const meResponse = await request.get(`${API_URL}/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       expect(meResponse.status()).toBe(200);
       const body = await meResponse.json();
       expect(body).toHaveProperty('user');
-      expect(body.user).toHaveProperty('email', testUser.email);
-      expect(body.user).toHaveProperty('name', testUser.name);
+      expect(body.user).toHaveProperty('email', email);
+      expect(body.user).toHaveProperty('name', TEST_NAME);
       expect(body.user).not.toHaveProperty('password');
     });
 
@@ -233,9 +206,7 @@ test.describe('Authentication Flow', () => {
 
     test('should return 401 with invalid token', async ({ request }) => {
       const response = await request.get(`${API_URL}/me`, {
-        headers: {
-          Authorization: 'Bearer invalid-token',
-        },
+        headers: { Authorization: 'Bearer invalid-token' },
       });
 
       expect(response.status()).toBe(401);
@@ -245,9 +216,7 @@ test.describe('Authentication Flow', () => {
 
     test('should return 401 with malformed authorization header', async ({ request }) => {
       const response = await request.get(`${API_URL}/me`, {
-        headers: {
-          Authorization: 'InvalidFormat token',
-        },
+        headers: { Authorization: 'InvalidFormat token' },
       });
 
       expect(response.status()).toBe(401);
@@ -269,7 +238,7 @@ test.describe('Authentication Flow', () => {
 
   test.describe('Protected Routes - Admin Access', () => {
     test('should return 401 when accessing protected route without token', async ({ request }) => {
-      const response = await request.post(`${API_BASE_URL}/api/projects`, {
+      const response = await request.post(`${SERVER_URL}/api/projects`, {
         data: {
           title: 'Test Project',
           description: 'Test',
@@ -287,21 +256,16 @@ test.describe('Authentication Flow', () => {
     });
 
     test('should return 403 when accessing admin route with non-admin token', async ({ request }) => {
+      const email = uniqueEmail('admin-403');
+
       // Register a regular user
-      const registerResponse = await request.post(`${API_URL}/register`, {
-        data: {
-          email: testUser.email,
-          password: testUser.password,
-          name: testUser.name,
-        },
-      });
-      const { token } = await registerResponse.json();
+      const registerResponse = await registerUser(request, email);
+      expect(registerResponse.status()).toBe(201);
+      const { accessToken } = await registerResponse.json();
 
       // Try to access admin route
-      const response = await request.post(`${API_BASE_URL}/api/projects`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await request.post(`${SERVER_URL}/api/projects`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
         data: {
           title: 'Test Project',
           description: 'Test',

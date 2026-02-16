@@ -21,7 +21,9 @@ export const categoriesPaths = {
     post: {
       tags: ['Categories'],
       summary: 'Create a new category',
-      description: 'Creates a new project category. Auth middleware is planned but not yet active.',
+      description:
+        'Creates a new project category. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
       requestBody: {
         required: true,
         content: {
@@ -41,6 +43,22 @@ export const categoriesPaths = {
         },
         '400': {
           description: 'Validation error',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '401': {
+          description: 'Not authenticated',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '403': {
+          description: 'Not authorized (admin only)',
           content: {
             'application/json': {
               schema: { $ref: '#/components/schemas/ErrorResponse' },
@@ -94,7 +112,9 @@ export const categoriesPaths = {
     put: {
       tags: ['Categories'],
       summary: 'Update a category',
-      description: 'Updates an existing category. Auth middleware is planned but not yet active.',
+      description:
+        'Updates an existing category. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
       parameters: [
         {
           name: 'id',
@@ -129,6 +149,22 @@ export const categoriesPaths = {
             },
           },
         },
+        '401': {
+          description: 'Not authenticated',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '403': {
+          description: 'Not authorized (admin only)',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
         '404': {
           description: 'Category not found',
           content: {
@@ -142,7 +178,9 @@ export const categoriesPaths = {
     delete: {
       tags: ['Categories'],
       summary: 'Delete a category',
-      description: 'Deletes a category by its ID. Auth middleware is planned but not yet active.',
+      description:
+        'Deletes a category by its ID. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
       parameters: [
         {
           name: 'id',
@@ -158,6 +196,22 @@ export const categoriesPaths = {
           content: {
             'application/json': {
               schema: { $ref: '#/components/schemas/MessageResponse' },
+            },
+          },
+        },
+        '401': {
+          description: 'Not authenticated',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '403': {
+          description: 'Not authorized (admin only)',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
             },
           },
         },

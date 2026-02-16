@@ -7,12 +7,12 @@ import { registerSchema, RegisterInput } from '@shirans/shared';
 import { useAuth } from '../../hooks/useAuth';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { ErrorDisplay } from '../../components/ErrorDisplay';
-import { AppError } from '../../types/error.types';
 import { BASE_URL } from '../../constants/urls';
 import { Input } from '../../components/ui/Input';
+import { ErrorMessage, getClientErrorMessage } from '../../constants/errorMessages';
 
 export default function Register() {
-  const [error, setError] = useState<AppError | null>(null);
+  const [error, setError] = useState<ErrorMessage | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const {
     register,
@@ -39,7 +39,7 @@ export default function Register() {
       navigate('/');
     } catch (err) {
       const appError = handleError(err, 'Register');
-      setError(appError);
+      setError(getClientErrorMessage(appError.errorKey));
     } finally {
       setIsLoading(false);
     }
@@ -56,7 +56,7 @@ export default function Register() {
       <div className="flex items-center justify-center py-section-all" dir="rtl">
         <div className="w-full max-w-md">
           <h1 className="heading mb-6 text-center">הרשמה</h1>
-          
+
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <Input
               borderColor="border-gray-300"
@@ -83,7 +83,7 @@ export default function Register() {
               autoComplete="new-password"
             />
 
-            {error && <ErrorDisplay error={error} />}
+            {error && <ErrorDisplay message={error} />}
 
             <button
               type="submit"

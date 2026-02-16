@@ -1,22 +1,16 @@
-import { AppError } from '@/types/error.types';
+import { ErrorMessage } from '@/constants/errorMessages';
 
 interface ErrorDisplayProps {
-  error: AppError | null;
-  onRetry?: () => void;
+  message: ErrorMessage;
   className?: string;
 }
 
-export function ErrorDisplay({ error, onRetry, className }: ErrorDisplayProps) {
-  if (!error) return null;
+export function ErrorDisplay({ message, className }: ErrorDisplayProps) {
+  if (!message) return null;
 
   return (
-    <div className={`error-display ${className || ''}`} dir="rtl">
-      <div className="error-message">{error.message}</div>
-      {onRetry && error.isNetworkError && (
-        <button onClick={onRetry} className="retry-button">
-          נסה שוב
-        </button>
-      )}
+    <div className={`error-display rounded-lg bg-red-50 p-3 text-red-700 ${className || ''}`} dir="rtl">
+      <div className="error-message">{message}</div>
     </div>
   );
 }

@@ -37,12 +37,9 @@ describe('Swagger Schema Definitions', () => {
       expect(commonSchemas.UserRole.enum).toEqual(['ADMIN', 'USER']);
     });
 
-    it('should define CategoryUrlCode enum with correct values', () => {
-      expect(commonSchemas.CategoryUrlCode.enum).toEqual([
-        'privateHouses',
-        'apartments',
-        'publicSpaces',
-      ]);
+    it('should define CategoryUrlCode as a string type', () => {
+      expect(commonSchemas.CategoryUrlCode.type).toBe('string');
+      expect(commonSchemas.CategoryUrlCode.pattern).toBeDefined();
     });
 
     it('should define ResponsiveImage with desktop as required', () => {

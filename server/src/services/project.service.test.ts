@@ -4,7 +4,7 @@ import { projectRepository } from '../repositories/project.repository';
 import { HttpError } from '../middleware/errorHandler';
 import { prisma } from '../config/database';
 import type { ProjectFilters } from '../repositories/project.repository';
-import type { CategoryUrlCode } from '@prisma/client';
+import type { CategoryUrlCode } from '@shirans/shared';
 import { Prisma } from '@prisma/client';
 
 // Mock dependencies
@@ -477,11 +477,49 @@ describe('projectService', () => {
     it('should throw HttpError 404 when project not found', async () => {
       vi.mocked(projectRepository.update).mockRejectedValue({
         code: 'P2025',
+        meta: { cause: 'Record to update not found.' },
       });
 
       await expect(
         projectService.updateProject('999', { title: 'New Title' })
       ).rejects.toThrow(HttpError);
+      await expect(
+        projectService.updateProject('999', { title: 'New Title' })
+      ).rejects.toThrow('Project not found');
+    });
+
+    it('should throw HttpError 404 when category not found during update', async () => {
+      vi.mocked(projectRepository.update).mockRejectedValue({
+        code: 'P2025',
+        meta: {
+          cause:
+            "No 'Category' record(s) (needed to inline the relation on 'Project' record(s)) was found for a nested set on one-to-many relation 'CategoryToProject'.",
+        },
+      });
+
+      await expect(
+        projectService.updateProject('1', {
+          categoryIds: ['clx999invalid999999'],
+        })
+      ).rejects.toThrow(HttpError);
+      await expect(
+        projectService.updateProject('1', {
+          categoryIds: ['clx999invalid999999'],
+        })
+      ).rejects.toThrow('categories not found');
+    });
+
+    it('should throw HttpError on repository error', async () => {
+      vi.mocked(projectRepository.update).mockRejectedValue(
+        new Error('Database error')
+      );
+
+      await expect(
+        projectService.updateProject('1', { title: 'New Title' })
+      ).rejects.toThrow(HttpError);
+      await expect(
+        projectService.updateProject('1', { title: 'New Title' })
+      ).rejects.toThrow('Failed to update project');
     });
   });
 

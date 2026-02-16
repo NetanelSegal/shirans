@@ -8,6 +8,7 @@ export const registerSchema = z.object({
   email: z
     .string()
     .min(1, 'Email is required')
+    .email('Invalid email format')
     .max(255, 'Email must be less than 255 characters')
     .transform((val) => DOMPurify.sanitize(val.trim())),
   password: z
@@ -33,8 +34,9 @@ export const registerSchema = z.object({
  */
 export const loginSchema = z.object({
   email: z
-    .email('Invalid email format')
+    .string()
     .min(1, 'Email is required')
+    .email('Invalid email format')
     .transform((val) => DOMPurify.sanitize(val.trim())),
   password: z
     .string()
