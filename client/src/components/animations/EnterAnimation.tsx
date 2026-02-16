@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { ReactNode, useSyncExternalStore } from 'react';
+import { ReactNode } from 'react';
 
 interface CommonProps {
   children: ReactNode;
@@ -25,28 +25,6 @@ interface NotAnimateWhileInViewProps {
 type IEnterAnimationProps = CommonProps &
   (AnimateWhileInViewProps | NotAnimateWhileInViewProps);
 
-const mediaQuery =
-  typeof window !== 'undefined'
-    ? window.matchMedia('(prefers-reduced-motion: reduce)')
-    : null;
-
-function subscribe(cb: () => void) {
-  mediaQuery?.addEventListener('change', cb);
-  return () => mediaQuery?.removeEventListener('change', cb);
-}
-
-function getSnapshot() {
-  return mediaQuery?.matches ?? false;
-}
-
-function getServerSnapshot() {
-  return false;
-}
-
-function usePrefersReducedMotion() {
-  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-}
-
 export default function EnterAnimation({
   children,
   opacity = true,
@@ -57,12 +35,6 @@ export default function EnterAnimation({
   runAnimation,
   dontAnimateWhileInView,
 }: IEnterAnimationProps) {
-  const prefersReducedMotion = usePrefersReducedMotion();
-
-  if (prefersReducedMotion) {
-    return <div style={{ width: '100%' }}>{children}</div>;
-  }
-
   const animationVariants = {
     initial: {
       opacity: opacity ? 0 : undefined,
