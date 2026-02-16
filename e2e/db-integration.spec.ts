@@ -1,5 +1,17 @@
 import { test, expect } from '@playwright/test';
 
+test.describe('Env verification (CI)', () => {
+  test('VITE_SKIP_ANIMATIONS is set in CI', async ({ page }) => {
+    await page.goto('/');
+    const html = page.locator('html');
+
+    if (process.env.CI) {
+      await expect(html).toHaveAttribute('data-vite-skip-animations', 'true');
+      await expect(html).toHaveAttribute('data-motion-skip-animations', 'true');
+    }
+  });
+});
+
 test.describe('Projects load from API', () => {
   test('should display project cards on the projects page', async ({ page }) => {
     await page.goto('/projects');
