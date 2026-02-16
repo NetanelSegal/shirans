@@ -13,11 +13,8 @@ test.describe('Homepage', () => {
   });
 
   test('should have working navigation', async ({ page }) => {
-    await page.goto('/');
-    
-    // Wait for navigation to be visible
-    await page.waitForLoadState('networkidle');
-    
+    await page.goto('/', { waitUntil: 'load' });
+
     // Check if navigation links exist (adjust selectors based on your actual navigation)
     const nav = page.locator('nav').first();
     await expect(nav).toBeVisible();
