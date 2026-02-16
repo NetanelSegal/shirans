@@ -114,9 +114,11 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Reset test database
+      - name: Setup test database
         working-directory: ./server
-        run: npx prisma migrate reset --force
+        run: |
+          npx prisma db push
+          npx prisma db seed
 
       - name: Run Playwright tests
         run: npx playwright test
