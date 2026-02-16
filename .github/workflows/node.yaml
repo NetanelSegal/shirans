@@ -37,8 +37,8 @@ jobs:
     env:
       NODE_ENV: test
       PORT: 3000
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      DIRECT_URL: ${{ secrets.DIRECT_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
+      DIRECT_URL: ${{ secrets.DIRECT_URL_TEST }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       CORS_ORIGIN: http://localhost:5174
       JWT_EXPIRES_IN: 15m
@@ -77,8 +77,8 @@ jobs:
     env:
       NODE_ENV: test
       PORT: 3000
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      DIRECT_URL: ${{ secrets.DIRECT_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
+      DIRECT_URL: ${{ secrets.DIRECT_URL_TEST }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       CORS_ORIGIN: http://localhost:5174
       JWT_EXPIRES_IN: 15m
@@ -113,6 +113,10 @@ jobs:
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+
+      - name: Reset test database
+        working-directory: ./server
+        run: npx prisma migrate reset --force
 
       - name: Run Playwright tests
         run: npx playwright test
