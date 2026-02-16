@@ -14,6 +14,7 @@ const CLIENT_URL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5174';
  */
 export default defineConfig({
   testDir: './e2e',
+  globalTeardown: './e2e/teardown.ts',
   /* Test match pattern */
   testMatch: /.*\.spec\.ts$/,
   /* Run tests in files in parallel */
