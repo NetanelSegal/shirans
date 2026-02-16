@@ -12,6 +12,7 @@ export default function HeroSection() {
           autoPlay
           muted
           loop
+          playsInline
           className='size-full object-cover'
         >
           <source src={video} />
