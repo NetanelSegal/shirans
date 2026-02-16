@@ -13,6 +13,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "prisma:release-locks": "tsx scripts/release-prisma-locks.ts",
+    "e2e:teardown": "tsx scripts/e2e-teardown.ts",
     "lint": "eslint . --ext .ts",
     "type-check": "tsc --noEmit",
     "test": "vitest",

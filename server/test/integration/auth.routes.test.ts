@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi, beforeAll } from 'vitest';
 import request from 'supertest';
-import { userRepository } from '../../src/repositories/user.repository';
 import { authService } from '../../src/services/auth.service';
 import { UserRole } from '@prisma/client';
 

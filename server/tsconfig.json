@@ -22,6 +22,6 @@
       "@shirans/shared": ["../shared/src/index.ts"]
     }
   },
-  "include": ["src/**/*", "prisma/seed.ts", "prisma/generated/**/*", "../shared/src/**/*"],
+  "include": ["src/**/*", "scripts/**/*", "prisma/seed.ts", "prisma/generated/**/*", "../shared/src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
