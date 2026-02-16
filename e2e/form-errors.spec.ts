@@ -176,7 +176,7 @@ test.describe('Form Error Display', () => {
     }) => {
       // Navigate to home page where footer is visible
       await page.goto('/');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Scroll to footer
       const footer = page.locator('footer');
