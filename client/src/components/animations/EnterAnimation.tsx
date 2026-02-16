@@ -57,10 +57,7 @@ export default function EnterAnimation({
       style={{ width: '100%' }}
       {...(dontAnimateWhileInView
         ? { animate: runAnimation ? 'animate' : 'initial' }
-        : {
-            whileInView: 'animate',
-            viewport: { once, root: typeof document !== 'undefined' ? document.body : undefined },
-          })}
+        : { whileInView: 'animate', viewport: { once } })}
       transition={{ duration, delay }}
     >
       {children}

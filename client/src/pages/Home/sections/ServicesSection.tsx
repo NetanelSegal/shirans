@@ -61,7 +61,7 @@ export default function E_ServicesSection() {
           className='heading mb-4 text-center font-semibold'
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, root: typeof document !== 'undefined' ? document.body : undefined }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           id='services-heading'
         >
