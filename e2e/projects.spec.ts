@@ -1,12 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-const skipWebKit = (browserName: string) =>
-  test.skip(browserName === 'webkit', 'Visibility flaky in WebKit');
-
 test.describe('Projects Page', () => {
-  test('should display projects list', async ({ page, browserName }) => {
-    skipWebKit(browserName);
-
+  test('should display projects list', async ({ page }) => {
     await page.goto('/projects');
     await page.waitForLoadState('networkidle');
 

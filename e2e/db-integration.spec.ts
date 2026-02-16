@@ -1,18 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-// Skip on WebKit (Safari) - IntersectionObserver bug causes motion.div whileInView
-// to keep elements hidden. VITE_SKIP_ANIMATIONS bypass helps but WebKit still has
-// flaky visibility detection for animated content.
-const skipWebKit = (browserName: string) =>
-  test.skip(browserName === 'webkit', 'Visibility flaky in WebKit');
-
 test.describe('Projects load from API', () => {
-  test('should display project cards on the projects page', async ({
-    page,
-    browserName,
-  }) => {
-    skipWebKit(browserName);
-
+  test('should display project cards on the projects page', async ({ page }) => {
     await page.goto('/projects');
     await page.waitForLoadState('networkidle');
 
@@ -29,10 +18,7 @@ test.describe('Projects load from API', () => {
 
   test('should navigate to a single project and show details', async ({
     page,
-    browserName,
   }) => {
-    skipWebKit(browserName);
-
     await page.goto('/projects');
     await page.waitForLoadState('networkidle');
 
@@ -54,10 +40,7 @@ test.describe('Projects load from API', () => {
 
   test('should show favourite projects carousel on homepage', async ({
     page,
-    browserName,
   }) => {
-    skipWebKit(browserName);
-
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
@@ -71,12 +54,7 @@ test.describe('Projects load from API', () => {
 });
 
 test.describe('Testimonials load from API', () => {
-  test('should display testimonials on the homepage', async ({
-    page,
-    browserName,
-  }) => {
-    skipWebKit(browserName);
-
+  test('should display testimonials on the homepage', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
