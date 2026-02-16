@@ -43,21 +43,21 @@ describe('Swagger API Docs Integration Tests', () => {
 
   describe('GET /docs', () => {
     it('should return 200 with HTML content', async () => {
-      const response = await request(app).get('/docs');
+      const response = await request(app).get('/docs/');
 
       expect(response.status).toBe(200);
       expect(response.headers['content-type']).toMatch(/text\/html/);
     });
 
     it('should contain Swagger UI markup', async () => {
-      const response = await request(app).get('/docs');
+      const response = await request(app).get('/docs/');
 
       expect(response.status).toBe(200);
       expect(response.text).toContain('swagger-ui');
     });
 
     it('should serve swagger UI at root path', async () => {
-      const response = await request(app).get('/docs');
+      const response = await request(app).get('/docs/');
 
       expect(response.status).toBe(200);
       expect(response.headers['content-type']).toMatch(/text\/html/);
