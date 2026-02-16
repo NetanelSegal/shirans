@@ -63,10 +63,10 @@ export default function UserMenu() {
             </>
           ) : (
             <>
-              <Link to='/login' className='block w-full rounded-xl bg-primary px-4 py-2 text-white hover:bg-primary/80 transition-all duration-200 text-center mb-2'>
+              <Link onClick={() => setShowUserMenu(false)} to='/login' className='block w-full rounded-xl bg-primary px-4 py-2 text-white hover:bg-primary/80 transition-all duration-200 text-center mb-2'>
                 התחברות
               </Link>
-              <Link to='/register' className='block w-full rounded-xl bg-secondary px-4 py-2 text-black hover:bg-secondary/80 transition-all duration-200 text-center'>
+              <Link onClick={() => setShowUserMenu(false)} to='/register' className='block w-full rounded-xl bg-secondary px-4 py-2 text-black hover:bg-secondary/80 transition-all duration-200 text-center'>
                 הרשמה
               </Link>
             </>
