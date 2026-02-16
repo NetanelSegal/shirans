@@ -34,10 +34,6 @@ export default defineConfig({
     trace: 'on-first-retry',
     /* Screenshot on failure */
     screenshot: 'only-on-failure',
-    /* Skip Framer Motion animations so elements are immediately visible in tests */
-    connectOptions: {
-      reducedMotion: 'reduce',
-    },
   },
 
   /* Configure projects for major browsers */

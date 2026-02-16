@@ -70,5 +70,5 @@ const swaggerDocument = {
 };
 
 export function setupSwagger(app: Express): void {
-  app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
