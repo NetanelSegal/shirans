@@ -6,7 +6,7 @@ import { ErrorKey, formatErrorMessage } from '@shirans/shared';
  * Uses shared ERROR_KEYS for consistency
  * Maintains backward compatibility with nested structure
  */
-const errorMessagesMap = {
+export const errorMessagesMap = {
   'AUTH.INVALID_CREDENTIALS': 'Invalid email or password',
   'AUTH.TOKEN_REQUIRED': 'Missing or invalid authorization header',
   'AUTH.TOKEN_INVALID': 'Invalid or expired token',

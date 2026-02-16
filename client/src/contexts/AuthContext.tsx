@@ -2,7 +2,6 @@ import { createContext, useContext, useState, useEffect, useMemo, ReactNode } fr
 import apiClient from '../utils/apiClient';
 import { setAccessToken, getAccessToken, removeAccessToken } from '../utils/tokenStorage';
 import { urls } from '../constants/urls';
-import { transformError } from '../utils/errorHandler';
 import { refreshAccessToken } from '../services/tokenRefresh.service';
 import type { UserResponse } from '@shirans/shared';
 
@@ -48,29 +47,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const login = async (email: string, password: string): Promise<void> => {
-    try {
-      const response = await apiClient.post(urls.auth.login, { email, password });
-      const { accessToken, user: userData } = response.data;
+    const response = await apiClient.post(urls.auth.login, { email, password });
+    const { accessToken, user: userData } = response.data;
 
-      setAccessToken(accessToken);
-      setUser(userData);
-    } catch (error) {
-      const appError = transformError(error);
-      throw appError;
-    }
+    setAccessToken(accessToken);
+    setUser(userData);
   };
 
   const register = async (email: string, password: string, name: string): Promise<void> => {
-    try {
-      const response = await apiClient.post(urls.auth.register, { email, password, name });
-      const { accessToken, user: userData } = response.data;
+    const response = await apiClient.post(urls.auth.register, { email, password, name });
+    const { accessToken, user: userData } = response.data;
 
-      setAccessToken(accessToken);
-      setUser(userData);
-    } catch (error) {
-      const appError = transformError(error);
-      throw appError;
-    }
+    setAccessToken(accessToken);
+    setUser(userData);
   };
 
   const logout = async (): Promise<void> => {

@@ -5,5 +5,6 @@
 export interface ApiErrorResponse {
   error: string;
   message: string;
+  errorKey?: string;
   stack?: string;
 }

@@ -1,6 +1,13 @@
-import apiClient from '../utils/apiClient';
+import axios from 'axios';
 import { urls } from '../constants/urls';
 import { setAccessToken, removeAccessToken } from '../utils/tokenStorage';
+
+// Use a plain axios instance (no interceptors) to avoid deadlock:
+// apiClient's interceptor tries to refresh on 401, and if the refresh call
+// itself goes through apiClient, a 401 on refresh triggers another refresh → infinite loop.
+const refreshClient = axios.create({
+  withCredentials: true, // Needed to send httpOnly refresh token cookie
+});
 
 let refreshPromise: Promise<boolean> | null = null;
 
@@ -16,7 +23,7 @@ export async function refreshAccessToken(): Promise<boolean> {
 
   refreshPromise = (async () => {
     try {
-      const response = await apiClient.post(urls.auth.refresh);
+      const response = await refreshClient.post(urls.auth.refresh);
       const { accessToken } = response.data;
       setAccessToken(accessToken);
       return true;

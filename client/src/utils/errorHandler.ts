@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { ERROR_MESSAGES } from '../constants/errorMessages';
-import { ERROR_KEYS } from '@shirans/shared';
+import { ERROR_KEYS, ErrorKey } from '@shirans/shared';
 import {
   ApiErrorResponse,
   AppError,
@@ -33,17 +33,31 @@ export function isNetworkError(error: unknown): boolean {
 }
 
 /**
+ * Get Hebrew message from errorKey if available
+ */
+function getHebrewMessageFromKey(errorKey: string | undefined): string | undefined {
+  if (!errorKey) return undefined;
+  return ERROR_MESSAGES[errorKey as ErrorKey];
+}
+
+/**
  * Extract error message from API error response
+ * Prefers Hebrew message via errorKey, falls back to raw API message
  */
 export function extractApiErrorMessage(
   error: AxiosError<ApiErrorResponse>,
 ): string {
-  // Try to get message from API response
+  // Try to get Hebrew message via errorKey from server
+  const hebrewMessage = getHebrewMessageFromKey(error.response?.data?.errorKey);
+  if (hebrewMessage) {
+    return hebrewMessage;
+  }
+
+  // Fallback to raw API message
   if (error.response?.data?.message) {
     return error.response.data.message;
   }
 
-  // Fallback to error message
   if (error.message) {
     return error.message;
   }
@@ -75,9 +89,28 @@ export function getErrorMessageForStatus(statusCode: number): string {
 }
 
 /**
+ * Check if error is already an AppError
+ */
+function isAppError(error: unknown): error is AppError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'statusCode' in error &&
+    'message' in error &&
+    typeof (error as AppError).statusCode === 'number' &&
+    typeof (error as AppError).message === 'string'
+  );
+}
+
+/**
  * Transform any error to AppError format
  */
 export function transformError(error: unknown): AppError {
+  // Already transformed - return as-is
+  if (isAppError(error)) {
+    return error;
+  }
+
   // Network error (no response)
   if (isNetworkError(error)) {
     return {
