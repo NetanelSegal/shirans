@@ -35,7 +35,9 @@ export default defineConfig({
     /* Screenshot on failure */
     screenshot: 'only-on-failure',
     /* Skip Framer Motion animations so elements are immediately visible in tests */
-    reducedMotion: 'reduce',
+    connectOptions: {
+      reducedMotion: 'reduce',
+    },
   },
 
   /* Configure projects for major browsers */
