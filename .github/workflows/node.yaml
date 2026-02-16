@@ -90,6 +90,7 @@ jobs:
       COOKIE_SAME_SITE: strict
       COOKIE_DOMAIN: ''
       VITE_API_URL: http://localhost:3000
+      VITE_SKIP_ANIMATIONS: 'true'
 
     steps:
       - uses: actions/checkout@v4
