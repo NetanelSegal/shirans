@@ -1,12 +1,7 @@
 import { AxiosError } from 'axios';
 import { HTTP_STATUS } from '../constants/httpStatus';
-import { ERROR_MESSAGES } from '../constants/errorMessages';
 import { ERROR_KEYS, ErrorKey } from '@shirans/shared';
-import {
-  ApiErrorResponse,
-  AppError,
-  ErrorHandlerResult,
-} from '../types/error.types';
+import { ApiErrorResponse, AppError } from '../types/error.types';
 
 /**
  * Check if error is an Axios error
@@ -33,58 +28,25 @@ export function isNetworkError(error: unknown): boolean {
 }
 
 /**
- * Get Hebrew message from errorKey if available
- */
-function getHebrewMessageFromKey(errorKey: string | undefined): string | undefined {
-  if (!errorKey) return undefined;
-  return ERROR_MESSAGES[errorKey as ErrorKey];
-}
-
-/**
- * Extract error message from API error response
- * Prefers Hebrew message via errorKey, falls back to raw API message
- */
-export function extractApiErrorMessage(
-  error: AxiosError<ApiErrorResponse>,
-): string {
-  // Try to get Hebrew message via errorKey from server
-  const hebrewMessage = getHebrewMessageFromKey(error.response?.data?.errorKey);
-  if (hebrewMessage) {
-    return hebrewMessage;
-  }
-
-  // Fallback to raw API message
-  if (error.response?.data?.message) {
-    return error.response.data.message;
-  }
-
-  if (error.message) {
-    return error.message;
-  }
-
-  return ERROR_MESSAGES[ERROR_KEYS.NETWORK.UNKNOWN_ERROR];
-}
-
-/**
  * Map HTTP status code to user-friendly Hebrew message
  */
-export function getErrorMessageForStatus(statusCode: number): string {
+export function getErrorKeyForStatus(statusCode: number): ErrorKey {
   switch (statusCode) {
     case HTTP_STATUS.BAD_REQUEST:
-      return ERROR_MESSAGES[ERROR_KEYS.VALIDATION.INVALID_INPUT];
+      return ERROR_KEYS.VALIDATION.INVALID_INPUT;
     case HTTP_STATUS.UNAUTHORIZED:
-      return ERROR_MESSAGES[ERROR_KEYS.AUTH.AUTHENTICATION_REQUIRED];
+      return ERROR_KEYS.AUTH.AUTHENTICATION_REQUIRED;
     case HTTP_STATUS.FORBIDDEN:
-      return ERROR_MESSAGES[ERROR_KEYS.AUTH.ADMIN_ACCESS_REQUIRED];
+      return ERROR_KEYS.AUTH.ADMIN_ACCESS_REQUIRED;
     case HTTP_STATUS.NOT_FOUND:
-      return ERROR_MESSAGES[ERROR_KEYS.NOT_FOUND.RESOURCE_NOT_FOUND];
+      return ERROR_KEYS.NOT_FOUND.RESOURCE_NOT_FOUND;
     case HTTP_STATUS.CONFLICT:
-      return ERROR_MESSAGES[ERROR_KEYS.CONFLICT.EMAIL_ALREADY_EXISTS];
+      return ERROR_KEYS.CONFLICT.EMAIL_ALREADY_EXISTS;
     case HTTP_STATUS.INTERNAL_SERVER_ERROR:
     case HTTP_STATUS.SERVICE_UNAVAILABLE:
-      return ERROR_MESSAGES[ERROR_KEYS.NETWORK.SERVER_ERROR];
+      return ERROR_KEYS.NETWORK.SERVER_ERROR;
     default:
-      return ERROR_MESSAGES[ERROR_KEYS.NETWORK.UNKNOWN_ERROR];
+      return ERROR_KEYS.NETWORK.UNKNOWN_ERROR;
   }
 }
 
@@ -115,7 +77,8 @@ export function transformError(error: unknown): AppError {
   if (isNetworkError(error)) {
     return {
       statusCode: 0,
-      message: ERROR_MESSAGES[ERROR_KEYS.NETWORK.CONNECTION_ERROR],
+      message: 'Network error',
+      errorKey: ERROR_KEYS.NETWORK.CONNECTION_ERROR,
       isNetworkError: true,
       originalError: error,
     };
@@ -125,15 +88,16 @@ export function transformError(error: unknown): AppError {
   if (isAxiosError(error)) {
     const statusCode =
       error.response?.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
-    const apiMessage = extractApiErrorMessage(error);
+    const apiMessage = error.response?.data?.message || error.message;
 
     // Try to match API message to our error constants
     // If API returns backend error message, use it directly
     // Otherwise, map status code to Hebrew message
 
     return {
+      errorKey: error.response?.data?.errorKey as ErrorKey,
       statusCode,
-      message: apiMessage || getErrorMessageForStatus(statusCode),
+      message: apiMessage,
       isAuthError:
         statusCode === HTTP_STATUS.UNAUTHORIZED ||
         statusCode === HTTP_STATUS.FORBIDDEN,
@@ -144,9 +108,9 @@ export function transformError(error: unknown): AppError {
   // Generic error
   if (error instanceof Error) {
     return {
+      errorKey: ERROR_KEYS.NETWORK.UNKNOWN_ERROR,
       statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-      message:
-        error.message || ERROR_MESSAGES[ERROR_KEYS.NETWORK.UNKNOWN_ERROR],
+      message: error.message,
       originalError: error,
     };
   }
@@ -154,24 +118,9 @@ export function transformError(error: unknown): AppError {
   // Unknown error
   return {
     statusCode: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-    message: ERROR_MESSAGES[ERROR_KEYS.NETWORK.UNKNOWN_ERROR],
+    message: 'Unknown error',
+    errorKey: ERROR_KEYS.NETWORK.UNKNOWN_ERROR,
     originalError: error,
-  };
-}
-
-/**
- * Handle error and determine action (retry, logout, etc.)
- */
-export function handleError(error: unknown): ErrorHandlerResult {
-  const appError = transformError(error);
-
-  return {
-    message: appError.message,
-    statusCode: appError.statusCode,
-    shouldRetry: appError.isNetworkError || appError.statusCode >= 500,
-    shouldLogout:
-      !!appError.isAuthError &&
-      appError.statusCode === HTTP_STATUS.UNAUTHORIZED,
   };
 }
 
@@ -184,6 +133,7 @@ export function logError(error: unknown, context?: string): void {
   if (import.meta.env.DEV) {
     console.error(`[Error${context ? ` in ${context}` : ''}]`, {
       message: appError.message,
+      errorKey: appError.errorKey,
       statusCode: appError.statusCode,
       originalError: appError.originalError,
     });

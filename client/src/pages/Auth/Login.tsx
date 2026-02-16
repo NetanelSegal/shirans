@@ -7,12 +7,12 @@ import { loginSchema, LoginInput } from '@shirans/shared';
 import { useAuth } from '../../hooks/useAuth';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { ErrorDisplay } from '../../components/ErrorDisplay';
-import { AppError } from '../../types/error.types';
 import { BASE_URL } from '../../constants/urls';
 import { Input } from '../../components/ui/Input';
+import { ErrorMessage, getClientErrorMessage } from '@/constants/errorMessages';
 
 export default function Login() {
-  const [error, setError] = useState<AppError | null>(null);
+  const [error, setError] = useState<ErrorMessage | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const {
     register,
@@ -39,7 +39,7 @@ export default function Login() {
       navigate('/');
     } catch (err) {
       const appError = handleError(err, 'Login');
-      setError(appError);
+      setError(getClientErrorMessage(appError.errorKey));
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +76,7 @@ export default function Login() {
               autoComplete="current-password"
             />
 
-            {error && <ErrorDisplay error={error} />}
+            {error && <ErrorDisplay message={error} />}
 
             <button
               type="submit"

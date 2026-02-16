@@ -1,9 +1,10 @@
-import { ApiErrorResponse } from '@shirans/shared';
+import { ApiErrorResponse, ErrorKey } from '@shirans/shared';
 
 /**
  * Frontend Error Object
  */
 export interface AppError {
+  errorKey: ErrorKey;
   statusCode: number;
   message: string;
   originalError?: unknown;
