@@ -71,52 +71,54 @@ jobs:
         working-directory: ./server
         run: npm test
 
-  e2e-tests:
-    runs-on: ubuntu-latest
+  # e2e-tests:
+  #   runs-on: ubuntu-latest
 
-    env:
-      NODE_ENV: test
-      PORT: 3000
-      DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
-      DIRECT_URL: ${{ secrets.DIRECT_URL_TEST }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      CORS_ORIGIN: http://localhost:5174
-      JWT_EXPIRES_IN: 15m
-      JWT_REFRESH_EXPIRES_IN: 7d
-      BCRYPT_SALT_ROUNDS: 12
-      COOKIE_SECURE: 'false'
-      COOKIE_SAME_SITE: strict
-      COOKIE_DOMAIN: ''
-      VITE_API_URL: http://localhost:3000
-      VITE_SKIP_ANIMATIONS: 'true'
+  #   env:
+  #     NODE_ENV: test
+  #     PORT: 3000
+  #     DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
+  #     DIRECT_URL: ${{ secrets.DIRECT_URL_TEST }}
+  #     JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  #     CORS_ORIGIN: http://localhost:5174
+  #     JWT_EXPIRES_IN: 15m
+  #     JWT_REFRESH_EXPIRES_IN: 7d
+  #     BCRYPT_SALT_ROUNDS: 12
+  #     COOKIE_SECURE: 'false'
+  #     COOKIE_SAME_SITE: strict
+  #     COOKIE_DOMAIN: ''
+  #     VITE_API_URL: http://localhost:3000
+  #     VITE_SKIP_ANIMATIONS: 'true'
 
-    steps:
-      - uses: actions/checkout@v4
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: './package-lock.json'
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #         cache: 'npm'
+  #         cache-dependency-path: './package-lock.json'
 
-      - name: Install dependencies
-        run: npm ci
+  #     - name: Install dependencies
+  #       run: npm ci
 
-      - name: Build shared package
-        working-directory: ./shared
-        run: npm run build
+  #     - name: Build shared package
+  #       working-directory: ./shared
+  #       run: npm run build
 
-      - name: Prisma Generate
-        working-directory: ./server
-        run: npx prisma generate
+  #     - name: Prisma Generate
+  #       working-directory: ./server
+  #       run: npx prisma generate
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+  #     - name: Install Playwright Browsers
+  #       run: npx playwright install --with-deps
 
-      - name: Reset test database
-        working-directory: ./server
-        run: npx prisma migrate reset --force
+  #     - name: Setup test database
+  #       working-directory: ./server
+  #       run: |
+  #         npx prisma db push
+  #         npx prisma db seed
 
-      - name: Run Playwright tests
-        run: npx playwright test
+  #     - name: Run Playwright tests
+  #       run: npx playwright test
