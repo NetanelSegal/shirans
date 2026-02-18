@@ -13,7 +13,6 @@ declare global {
 
 const existingPrisma = globalThis.prisma;
 
-// Create PostgreSQL adapter for Prisma 7
 const pool = new Pool({ connectionString: env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 
