@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 import ScreenProvider from './contexts/ScreenProvider';
 import { ProjectsProvider } from './contexts/ProjectsContext';
 import { CategoriesProvider } from './contexts/CategoriesContext';
@@ -8,6 +8,8 @@ import { HelmetProvider } from 'react-helmet-async';
 import { useAuth } from './hooks/useAuth';
 import { ProtectedRoute } from './components/Auth/ProtectedRoute'; // Import ProtectedRoute
 import Loader from './components/Loader/Loader'; // Import Loader for Suspense fallback
+import apiClient from './utils/apiClient';
+import { urls } from './constants/urls';
 
 const Layout = lazy(() => import('./components/Layout'));
 const Home = lazy(() => import('./pages/Home'));
@@ -19,7 +21,20 @@ const Login = lazy(() => import('./pages/Auth/Login'));
 const Register = lazy(() => import('./pages/Auth/Register'));
 const Dashboard = lazy(() => import('./pages/Admin/Dashboard'));
 
+const pingHealth = async () => {
+  try {
+    const response = await apiClient.get(urls.health);
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 function App() {
+  useEffect(() => {
+    pingHealth();
+  }, [])
   return (
     <HelmetProvider>
       <AuthProvider>
