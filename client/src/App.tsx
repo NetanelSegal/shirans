@@ -10,6 +10,7 @@ import { ProtectedRoute } from './components/Auth/ProtectedRoute'; // Import Pro
 import Loader from './components/Loader/Loader'; // Import Loader for Suspense fallback
 import apiClient from './utils/apiClient';
 import { urls } from './constants/urls';
+import { USE_FILE_DATA } from './constants/dataSource';
 
 const Layout = lazy(() => import('./components/Layout'));
 const Home = lazy(() => import('./pages/Home'));
@@ -33,7 +34,9 @@ const pingHealth = async () => {
 
 function App() {
   useEffect(() => {
-    pingHealth();
+    if (!USE_FILE_DATA) {
+      pingHealth();
+    }
   }, [])
   return (
     <HelmetProvider>
