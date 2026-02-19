@@ -1,7 +1,7 @@
 import { useScreenContext } from '@/contexts/ScreenProvider';
 import { fetchPublishedTestimonials } from '@/services/testimonials.service';
-import { motion, useMotionValue, animate } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import { motion, useMotionValue, animate, MotionValue } from 'motion/react';
+import { MutableRefObject, RefObject, useEffect, useRef, useState } from 'react';
 
 interface ITestimonial {
   name: string;
@@ -51,6 +51,8 @@ export default function Testimonials() {
     }
   }, [screenWidth, ref, testimonials]);
 
+
+
   useEffect(() => {
     if (totalOriginalContentWidth > 0) {
       x.set(totalOriginalContentWidth);
@@ -73,42 +75,28 @@ export default function Testimonials() {
   }, [totalOriginalContentWidth, x]);
 
   const handleMouseEnter = () => {
-    if (animationRef.current) {
-      animationRef.current.stop();
-    }
+    stopAnimation({ animationRef });
   };
 
   const handleMouseLeave = () => {
-    if (totalOriginalContentWidth > 0) {
-      const currentX = x.get();
-      animationRef.current = animate(x, 0, {
-        duration: 20,
-        repeat: Infinity,
-        ease: 'linear',
-        repeatType: 'loop',
-        from: currentX,
-      });
-    }
+    startAnimation({
+      x,
+      totalOriginalContentWidth,
+      animationRef,
+    });
   };
 
   // Touch handlers for mobile (same logic as mouse handlers)
   const handleTouchStart = () => {
-    if (animationRef.current) {
-      animationRef.current.stop();
-    }
+    stopAnimation({ animationRef });
   };
 
   const handleTouchEnd = () => {
-    if (totalOriginalContentWidth > 0) {
-      const currentX = x.get();
-      animationRef.current = animate(x, 0, {
-        duration: 20,
-        repeat: Infinity,
-        ease: 'linear',
-        repeatType: 'loop',
-        from: currentX,
-      });
-    }
+    startAnimation({
+      x,
+      totalOriginalContentWidth,
+      animationRef,
+    });
   };
 
   if (testimonials.length === 0) return null;
@@ -186,4 +174,37 @@ function TestimonialsQuote() {
   >
     <path d='M120 53.75C120 71.5681 105.616 86 87.8571 86H85.7143C80.9732 86 77.1429 82.1569 77.1429 77.4C77.1429 72.6431 80.9732 68.8 85.7143 68.8H87.8571C96.1339 68.8 102.857 62.0544 102.857 53.75V51.6H85.7143C76.2589 51.6 68.5714 43.8869 68.5714 34.4V17.2C68.5714 7.71313 76.2589 0 85.7143 0H102.857C112.312 0 120 7.71313 120 17.2V25.8V34.4V53.75ZM51.4286 53.75C51.4286 71.5681 37.0446 86 19.2857 86H17.1429C12.4018 86 8.57143 82.1569 8.57143 77.4C8.57143 72.6431 12.4018 68.8 17.1429 68.8H19.2857C27.5625 68.8 34.2857 62.0544 34.2857 53.75V51.6H17.1429C7.6875 51.6 0 43.8869 0 34.4V17.2C0 7.71313 7.6875 0 17.1429 0H34.2857C43.7411 0 51.4286 7.71313 51.4286 17.2V25.8V34.4V53.75Z' />
   </svg>
+}
+
+const startAnimation = ({
+  totalOriginalContentWidth,
+  x,
+  animationRef,
+}: {
+  totalOriginalContentWidth: number;
+  x: MotionValue<number>;
+  animationRef: MutableRefObject<ReturnType<typeof animate> | null>;
+}) => {
+  if (totalOriginalContentWidth > 0) {
+    const currentX = x.get();
+    const remainingRatio = currentX / totalOriginalContentWidth;
+    const duration = Math.max(2, remainingRatio * 20);
+    animationRef.current = animate(x, 0, {
+      duration,
+      repeat: Infinity,
+      ease: 'linear',
+      repeatType: 'loop',
+      from: currentX,
+    });
+  }
+}
+
+const stopAnimation = ({
+  animationRef,
+}: {
+  animationRef: RefObject<ReturnType<typeof animate> | null>;
+}) => {
+  if (animationRef.current) {
+    animationRef.current.stop();
+  }
 }
