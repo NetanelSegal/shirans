@@ -2,21 +2,58 @@ import { CategoryLabel } from '@/components/CategoryLabel';
 import FavoriteProjects from '@/components/FavoriteProjects';
 import ImageScaleHover from '@/components/ui/ImageScaleHover';
 import { useCategories } from '@/contexts/CategoriesContext';
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams, useNavigate } from 'react-router-dom';
 import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
 import { useProjects } from '@/contexts/ProjectsContext';
-import { Fragment } from 'react/jsx-runtime';
+import { Fragment, useEffect, useState } from 'react';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import { Helmet } from 'react-helmet-async';
-import type { ResponsiveImage } from '@shirans/shared';
+import type { ProjectResponse, ResponsiveImage } from '@shirans/shared';
 import { BASE_URL } from '@/constants/urls';
+import { LoadingState, ErrorState } from '@/components/DataState';
+import { fetchProject } from '@/services/projects.service';
 
 export default function Project() {
   const { id } = useParams<{ id: string }>();
-  const { projects } = useProjects();
+  const navigate = useNavigate();
+  const { projects, isLoading: projectsLoading } = useProjects();
   const { categoriesMap } = useCategories();
+  const [directProject, setDirectProject] = useState<ProjectResponse | null>(null);
+  const [directLoading, setDirectLoading] = useState(false);
+  const [directError, setDirectError] = useState<string | null>(null);
 
-  const project = projects.find((p) => p.id === id);
+  const projectFromList = projects.find((p) => p.id === id);
+
+  // When project not in list (direct nav), fetch single project
+  useEffect(() => {
+    if (!id || projectFromList || projectsLoading) return;
+    setDirectLoading(true);
+    setDirectError(null);
+    fetchProject(id)
+      .then(setDirectProject)
+      .catch((err) => setDirectError(err.message))
+      .finally(() => setDirectLoading(false));
+  }, [id, projectFromList, projectsLoading]);
+
+  const project = projectFromList ?? directProject;
+
+  if (projectsLoading && !projectFromList) {
+    return <LoadingState minHeight="40rem" />;
+  }
+
+  if (directLoading) {
+    return <LoadingState minHeight="40rem" />;
+  }
+
+  if (directError) {
+    return (
+      <ErrorState
+        message="פרוייקט לא נמצא"
+        onRetry={() => navigate('/projects')}
+        retryLabel="חזרה לפרויקטים"
+      />
+    );
+  }
 
   if (!project) return <Navigate to='/projects' />;
 
