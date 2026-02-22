@@ -12,6 +12,8 @@ import type { ProjectResponse, ResponsiveImage } from '@shirans/shared';
 import { BASE_URL } from '@/constants/urls';
 import { LoadingState, ErrorState } from '@/components/DataState';
 import { fetchProject } from '@/services/projects.service';
+import { transformError } from '@/utils/errorHandler';
+import { getClientErrorMessage } from '@/constants/errorMessages';
 
 export default function Project() {
   const { id } = useParams<{ id: string }>();
@@ -31,7 +33,10 @@ export default function Project() {
     setDirectError(null);
     fetchProject(id)
       .then(setDirectProject)
-      .catch((err) => setDirectError(err.message))
+      .catch((err) => {
+        const appError = transformError(err);
+        setDirectError(getClientErrorMessage(appError.errorKey));
+      })
       .finally(() => setDirectLoading(false));
   }, [id, projectFromList, projectsLoading]);
 
@@ -48,7 +53,7 @@ export default function Project() {
   if (directError) {
     return (
       <ErrorState
-        message="פרוייקט לא נמצא"
+        message={directError}
         onRetry={() => navigate('/projects')}
         retryLabel="חזרה לפרויקטים"
       />

@@ -1,6 +1,7 @@
 import apiClient from '../utils/apiClient';
 import { urls } from '../constants/urls';
 import { USE_FILE_DATA } from '../constants/dataSource';
+import { fetchWithFallback } from '../utils/fetchWithFallback';
 import type { CategoryResponse } from '@shirans/shared';
 
 async function getFileCategories(): Promise<CategoryResponse[]> {
@@ -16,6 +17,9 @@ export async function fetchCategories(): Promise<CategoryResponse[]> {
   if (USE_FILE_DATA) {
     return getFileCategories();
   }
-  const { data } = await apiClient.get<CategoryResponse[]>(urls.categories.getAll);
+  const { data } = await fetchWithFallback(
+    () => apiClient.get<CategoryResponse[]>(urls.categories.getAll).then((r) => r.data),
+    await getFileCategories(),
+  );
   return data;
 }
