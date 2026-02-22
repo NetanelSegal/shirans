@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { lazy, useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import ScreenProvider from './contexts/ScreenProvider';
 import { ProjectsProvider } from './contexts/ProjectsContext';
 import { CategoriesProvider } from './contexts/CategoriesContext';
@@ -21,6 +21,11 @@ const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 const Login = lazy(() => import('./pages/Auth/Login'));
 const Register = lazy(() => import('./pages/Auth/Register'));
 const Dashboard = lazy(() => import('./pages/Admin/Dashboard'));
+const Overview = lazy(() => import('./pages/Admin/Overview'));
+const ProjectsManagement = lazy(() => import('./pages/Admin/ProjectsManagement'));
+const CategoriesManagement = lazy(() => import('./pages/Admin/CategoriesManagement'));
+const TestimonialsManagement = lazy(() => import('./pages/Admin/TestimonialsManagement'));
+const ContactsManagement = lazy(() => import('./pages/Admin/ContactsManagement'));
 
 const pingHealth = async () => {
   try {
@@ -102,13 +107,17 @@ export const appRoutes = [
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Layout />
+      </Suspense>
+    ),
     children: appRoutes.map((route) => ({
       path: route.path,
       element: route.element,
     })),
   },
-  { // Admin routes
+  {
     path: '/admin',
     element: (
       <ProtectedRoute requireAdmin={true}>
@@ -118,26 +127,46 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <div>Dashboard Overview Placeholder</div>
+        element: (
+          <Suspense fallback={<Loader />}>
+            <Overview />
+          </Suspense>
+        ),
       },
       {
         path: 'projects',
-        element: <div>Projects Management Placeholder</div>
+        element: (
+          <Suspense fallback={<Loader />}>
+            <ProjectsManagement />
+          </Suspense>
+        ),
       },
       {
         path: 'categories',
-        element: <div>Categories Management Placeholder</div>
+        element: (
+          <Suspense fallback={<Loader />}>
+            <CategoriesManagement />
+          </Suspense>
+        ),
       },
       {
         path: 'testimonials',
-        element: <div>Testimonials Management Placeholder</div>
+        element: (
+          <Suspense fallback={<Loader />}>
+            <TestimonialsManagement />
+          </Suspense>
+        ),
       },
       {
         path: 'contacts',
-        element: <div>Contact Submissions Placeholder</div>
-      }
-    ]
-  }
+        element: (
+          <Suspense fallback={<Loader />}>
+            <ContactsManagement />
+          </Suspense>
+        ),
+      },
+    ],
+  },
 ]);
 
 const AppRoutes = () => {

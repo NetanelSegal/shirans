@@ -52,6 +52,15 @@ export default function UserMenu() {
                 <p className='font-bold text-primary'>{user.name}</p>
                 <p className='text-sm text-gray-600'>{user.email}</p>
               </div>
+              {user.role === 'ADMIN' && (
+                <Link
+                  onClick={() => setShowUserMenu(false)}
+                  to='/admin'
+                  className='mb-2 block w-full rounded-xl bg-primary px-4 py-2 text-white text-center hover:bg-primary/90 transition-colors'
+                >
+                  לוח בקרה
+                </Link>
+              )}
               <button
                 onClick={handleLogout}
                 className='w-full rounded-xl bg-red-500 px-4 py-2 text-white hover:bg-red-600 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 text-right flex items-center justify-between'

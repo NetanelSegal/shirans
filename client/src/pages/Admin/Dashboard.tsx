@@ -11,7 +11,7 @@ export default function Dashboard() {
       <Helmet>
         <title>ניהול מערכת - שירן גלעד</title>
       </Helmet>
-      <div className="min-h-screen bg-gray-50 px-page-all py-section-all" dir="rtl">
+      <div className="min-h-screen bg-gray-50" dir="rtl">
         <Suspense fallback={<Loader />}>
           <AdminLayout>
             <Outlet />

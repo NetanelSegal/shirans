@@ -50,12 +50,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 to="/admin"
                 end
                 className={({ isActive }) =>
-                  `flex items-center p-4 hover:bg-primary/80 transition-colors duration-200 ${
+                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
                     isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
                   }`
                 }
               >
-                <i className="fa-solid fa-home ml-3" />
+                <i className="fa-solid fa-home" aria-hidden />
                 <span>סקירה כללית</span>
               </NavLink>
             </li>
@@ -63,12 +63,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <NavLink
                 to="/admin/projects"
                 className={({ isActive }) =>
-                  `flex items-center p-4 hover:bg-primary/80 transition-colors duration-200 ${
+                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
                     isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
                   }`
                 }
               >
-                <i className="fa-solid fa-folder ml-3" />
+                <i className="fa-solid fa-folder" aria-hidden />
                 <span>פרויקטים</span>
               </NavLink>
             </li>
@@ -76,12 +76,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <NavLink
                 to="/admin/categories"
                 className={({ isActive }) =>
-                  `flex items-center p-4 hover:bg-primary/80 transition-colors duration-200 ${
+                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
                     isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
                   }`
                 }
               >
-                <i className="fa-solid fa-tags ml-3" />
+                <i className="fa-solid fa-tags" aria-hidden />
                 <span>קטגוריות</span>
               </NavLink>
             </li>
@@ -89,12 +89,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <NavLink
                 to="/admin/testimonials"
                 className={({ isActive }) =>
-                  `flex items-center p-4 hover:bg-primary/80 transition-colors duration-200 ${
+                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
                     isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
                   }`
                 }
               >
-                <i className="fa-solid fa-star ml-3" />
+                <i className="fa-solid fa-star" aria-hidden />
                 <span>המלצות</span>
               </NavLink>
             </li>
@@ -102,12 +102,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <NavLink
                 to="/admin/contacts"
                 className={({ isActive }) =>
-                  `flex items-center p-4 hover:bg-primary/80 transition-colors duration-200 ${
+                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
                     isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
                   }`
                 }
               >
-                <i className="fa-solid fa-envelope ml-3" />
+                <i className="fa-solid fa-envelope" aria-hidden />
                 <span>פניות צור קשר</span>
               </NavLink>
             </li>
@@ -123,8 +123,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         ></div>
       )}
 
-      {/* Main Content */}
-      <div className={`flex flex-1 flex-col ${!isSmallScreen ? 'ml-64' : ''}`}> {/* Adjust margin for desktop sidebar */}
+      {/* Main Content - mr-64 reserves space for fixed sidebar on right (RTL) */}
+      <div className={`flex flex-1 flex-col ${!isSmallScreen ? 'mr-64 min-w-0' : ''}`}>
         <AdminNavbar onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
         <main className="flex-1 p-6">
           {children}

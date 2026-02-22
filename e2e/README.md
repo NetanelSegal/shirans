@@ -18,6 +18,9 @@ E2E tests verify complete user flows from the browser perspective, testing the i
 # Run all E2E tests (automatically starts dev servers)
 npm run test:e2e
 
+# Run admin dashboard tests only (Chromium - fastest)
+npx playwright test e2e/admin-dashboard.spec.ts --project=chromium
+
 # Run with interactive UI mode
 npm run test:e2e:ui
 
@@ -31,11 +34,14 @@ npm run test:e2e:debug
 npm run test:e2e:report
 ```
 
+**Note:** Install browsers with `npx playwright install` if you get "Executable doesn't exist" errors.
+
 ## Test Structure
 
 - `example.spec.ts` - Homepage and basic navigation tests
 - `auth.spec.ts` - Authentication flow tests
 - `projects.spec.ts` - Projects page and filtering tests
+- `admin-dashboard.spec.ts` - Admin access control, navigation, overview, and section pages
 
 ## Writing New Tests
 

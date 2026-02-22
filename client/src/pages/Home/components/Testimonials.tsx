@@ -3,11 +3,7 @@ import { fetchPublishedTestimonials } from '@/services/testimonials.service';
 import { motion, useMotionValue, animate, MotionValue } from 'motion/react';
 import { MutableRefObject, RefObject, useEffect, useRef, useState } from 'react';
 import { LoadingState, EmptyState } from '@/components/DataState';
-
-interface ITestimonial {
-  name: string;
-  message: string;
-}
+import type { TestimonialResponse } from '@shirans/shared';
 
 export default function Testimonials() {
   const { screenWidth } = useScreenContext();
@@ -15,7 +11,9 @@ export default function Testimonials() {
   const [totalOriginalContentWidth, setTotalOriginalContentWidth] = useState(0);
   const x = useMotionValue(0);
   const animationRef = useRef<ReturnType<typeof animate> | null>(null);
-  const [testimonials, setTestimonials] = useState<ITestimonial[]>([]);
+  const [testimonials, setTestimonials] = useState<
+    Pick<TestimonialResponse, 'name' | 'message'>[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -143,7 +141,10 @@ export default function Testimonials() {
   );
 }
 
-const TestimonialItem = ({ name, message }: ITestimonial) => {
+const TestimonialItem = ({
+  name,
+  message,
+}: Pick<TestimonialResponse, 'name' | 'message'>) => {
   return (
     <div className='relative mr-36 max-w-72 shrink-0 md:mr-64 md:max-w-64 lg:mr-96 lg:max-w-96'>
       <TestimonialsQuote />

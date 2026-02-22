@@ -3,12 +3,12 @@
  * Mirrors server/prisma/seed.ts testimonialsData.
  */
 
-export interface FallbackTestimonial {
-  name: string;
-  message: string;
-}
+import type { TestimonialResponse } from '@shirans/shared';
 
-export const fallbackTestimonials: FallbackTestimonial[] = [
+export const fallbackTestimonials: Pick<
+  TestimonialResponse,
+  'name' | 'message'
+>[] = [
   {
     name: 'משפחת קליין',
     message: `חד משמעית לא ראיתי בעלת מקצוע כזאת!!! התחלנו יחד תהליך של בניית בית פרטי מ0 שירן ליוותה אותנו ויש בה הכל..החל מראש פתוח..זמינות בשעות שלא תאמינו אבל כן היינו מתכתבים גם ב 12 בלילה חרוצה מקצועית יש לה תשובה הפיתרון לכל דבר ..יצירתית ובלי שתשימו לב עושה דברים שהיא לא אמורה לעשות בכלל בקיצור אני אישית ממליץ מאוד וכמובן שכבר העברתי לה כמה פרוייקטים ..כי פשוט מגיע לה

@@ -39,11 +39,28 @@ export const urls = {
   // Categories endpoints
   categories: {
     getAll: `${BACKEND_URL}/api/categories`,
+    create: `${BACKEND_URL}/api/categories`,
+    update: (id: string) => `${BACKEND_URL}/api/categories/${id}`,
+    delete: (id: string) => `${BACKEND_URL}/api/categories/${id}`,
   },
 
   // Testimonials endpoints
   testimonials: {
     published: `${BACKEND_URL}/api/testimonials/published`,
+    getAll: `${BACKEND_URL}/api/testimonials`,
+    create: `${BACKEND_URL}/api/testimonials`,
+    getById: (id: string) => `${BACKEND_URL}/api/testimonials/${id}`,
+    update: (id: string) => `${BACKEND_URL}/api/testimonials/${id}`,
+    delete: (id: string) => `${BACKEND_URL}/api/testimonials/${id}`,
+    updateOrder: (id: string) => `${BACKEND_URL}/api/testimonials/${id}/order`,
+  },
+
+  // Admin contact endpoints
+  adminContacts: {
+    getAll: `${BACKEND_URL}/api/contact`,
+    getById: (id: string) => `${BACKEND_URL}/api/contact/${id}`,
+    updateRead: (id: string) => `${BACKEND_URL}/api/contact/${id}/read`,
+    delete: (id: string) => `${BACKEND_URL}/api/contact/${id}`,
   },
 
   // Health endpoint
