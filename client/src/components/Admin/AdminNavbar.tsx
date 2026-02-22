@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { useScreenContext } from '@/contexts/ScreenProvider';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect, startTransition } from 'react';
 
@@ -8,6 +9,7 @@ interface AdminNavbarProps {
 
 export default function AdminNavbar({ onMenuToggle }: AdminNavbarProps) {
   const { user, logout, isLoading } = useAuth();
+  const { isSmallScreen } = useScreenContext();
   const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -45,13 +47,15 @@ export default function AdminNavbar({ onMenuToggle }: AdminNavbarProps) {
           <i className="fa-solid fa-arrow-right" aria-hidden />
           <span className="hidden sm:inline">חזרה לאתר</span>
         </Link>
-        <button
-          onClick={onMenuToggle}
-          className="lg:hidden rounded-xl p-2 text-primary hover:bg-gray-100"
-          aria-label="תפריט"
-        >
-          <i className="fa-solid fa-bars text-xl" aria-hidden />
-        </button>
+        {isSmallScreen && (
+          <button
+            onClick={onMenuToggle}
+            className="bg-none p-0"
+            aria-label="תפריט"
+          >
+            <i className="fa-solid fa-bars flex size-8 items-center justify-center rounded-xl bg-secondary text-black" aria-hidden />
+          </button>
+        )}
       </div>
 
       {/* Spacer */}

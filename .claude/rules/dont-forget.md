@@ -125,3 +125,35 @@ import type { CreateProjectInput, TestimonialResponse } from '@shirans/shared';
 ```
 
 **Reference:** `shared/src/index.ts` (exports), `client/src/pages/Admin/ProjectsManagement.tsx`
+
+---
+
+## Admin Responsive — Hamburger vs Sidebar (SSOT)
+
+**Use `useScreenContext().isSmallScreen`** for all admin responsive logic. Do NOT use Tailwind breakpoints (`lg:hidden`, `md:block`, etc.) for hamburger/sidebar visibility.
+
+### Why
+
+- **ScreenProvider** defines `isSmallScreen` as `screenWidth < 768`.
+- **Tailwind `lg`** is 1024px. Using `lg:hidden` on the hamburger while the sidebar uses `isSmallScreen` causes both to show in the 768–1024px range (hamburger + always-open sidebar).
+
+### Rule
+
+| Component | Use | Don't Use |
+|-----------|-----|-----------|
+| AdminLayout sidebar visibility | `isSmallScreen` | — |
+| AdminNavbar hamburger visibility | `isSmallScreen` | `lg:hidden` or other Tailwind breakpoints |
+| Any admin mobile/desktop toggle | `useScreenContext()` | Tailwind responsive classes for layout decisions |
+
+### Hamburger Styling Consistency
+
+The admin hamburger must match the user-facing `Navbar.tsx`:
+
+```tsx
+// ✅ Same as Navbar.tsx
+<button className="bg-none p-0" aria-label="תפריט">
+  <i className="fa-solid fa-bars flex size-8 items-center justify-center rounded-xl bg-secondary text-black" aria-hidden />
+</button>
+```
+
+**Reference:** `client/src/components/Admin/AdminNavbar.tsx`, `client/src/components/Navbar/Navbar.tsx`, `client/src/contexts/ScreenProvider.tsx`
