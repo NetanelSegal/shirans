@@ -59,12 +59,28 @@ export default function ContactsManagement() {
     {
       key: 'email',
       header: 'אימייל',
-      render: (row: ContactResponse) => row.email,
+      render: (row: ContactResponse) => (
+        <a
+          href={`mailto:${row.email}`}
+          className="text-primary underline hover:text-primary/80"
+          aria-label={`שלח מייל ל${row.email}`}
+        >
+          {row.email}
+        </a>
+      ),
     },
     {
       key: 'phoneNumber',
       header: 'טלפון',
-      render: (row: ContactResponse) => row.phoneNumber,
+      render: (row: ContactResponse) => (
+        <a
+          href={`tel:${row.phoneNumber}`}
+          className="text-primary underline hover:text-primary/80"
+          aria-label={`התקשר ל${row.phoneNumber}`}
+        >
+          {row.phoneNumber}
+        </a>
+      ),
     },
     {
       key: 'message',

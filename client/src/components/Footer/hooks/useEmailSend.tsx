@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import emailjs, { EmailJSResponseStatus } from '@emailjs/browser';
+import { ERROR_KEYS } from '@shirans/shared';
+import { getClientErrorMessage } from '@/constants/errorMessages';
 
 interface IReturnUseEmailSend {
   error: string;
@@ -17,16 +19,18 @@ export default function useEmailSend(): IReturnUseEmailSend {
     setLoading(true);
     setError('');
     try {
-      const res = await emailjs.send(
-        'service_qowi0kn',
-        'shiran_contact_form',
-        data,
-      );
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error('EmailJS environment variables are not configured');
+      }
+      const res = await emailjs.send(serviceId, templateId, data);
       setSuccess(true);
       return res;
-    } catch (error) {
-      console.error(error);
-      setError('שגיאה - נא נסה שוב מאוחר יותר');
+    } catch (err) {
+      console.error(err);
+      setError(getClientErrorMessage(ERROR_KEYS.SERVER.CONTACT.SUBMIT_FAILED));
       setSuccess(false);
     } finally {
       setLoading(false);
@@ -36,9 +40,10 @@ export default function useEmailSend(): IReturnUseEmailSend {
   };
 
   useEffect(() => {
-    emailjs.init({
-      publicKey: '6CI1z7b1xE3KIliQo',
-    });
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    if (publicKey) {
+      emailjs.init({ publicKey });
+    }
   }, []);
   return { error, sendEmail, loading, success };
 }

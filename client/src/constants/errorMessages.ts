@@ -43,15 +43,16 @@ export const ERROR_MESSAGES = {
     'קטגוריה ישנה עם פרוייקטים מקושרים',
 
   'SERVER.USER.LOGIN_FAILED': 'כניסה לא נכשלה',
-  'SERVER.USER.FETCH_USER_FAILED': 'קביעת משתמש נכשלה',
+  'SERVER.USER.FETCH_USER_FAILED': 'טעינת המשתמש נכשלה',
+  'SERVER.USER.FETCH_USERS_FAILED': 'טעינת המשתמשים נכשלה',
   'SERVER.USER.REFRESH_TOKEN_FAILED': 'רענון טוקן נכשל',
   'SERVER.USER.REGISTRATION_FAILED': 'הרשמה נכשלה',
 
   'SERVER.CONTACT.SUBMIT_FAILED': 'שליחת הודעה נכשלה',
-  'SERVER.CONTACT.FETCH_SUBMISSIONS_FAILED': 'קביעת משתמש נכשלה',
-  'SERVER.CONTACT.FETCH_SUBMISSION_BY_ID_FAILED': 'רענון טוקן נכשל',
-  'SERVER.CONTACT.UPDATE_SUBMISSION_FAILED': 'שגיאת חיבור',
-  'SERVER.CONTACT.DELETE_SUBMISSION_FAILED': 'זמן חילוף חסר',
+  'SERVER.CONTACT.FETCH_SUBMISSIONS_FAILED': 'טעינת הפניות נכשלה',
+  'SERVER.CONTACT.FETCH_SUBMISSION_BY_ID_FAILED': 'טעינת הפנייה נכשלה',
+  'SERVER.CONTACT.UPDATE_SUBMISSION_FAILED': 'עדכון סטטוס הפנייה נכשל',
+  'SERVER.CONTACT.DELETE_SUBMISSION_FAILED': 'מחיקת הפנייה נכשלה',
 
   'SERVER.PROJECT.CREATE_FAILED': 'שגיאת שרת',
   'SERVER.PROJECT.UPDATE_FAILED': 'שגיאה לא ידועה',

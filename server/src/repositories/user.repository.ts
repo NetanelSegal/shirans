@@ -1,6 +1,7 @@
 import { prisma } from '../config/database';
 import type { Prisma } from '@prisma/client';
 import { UserRole } from '@prisma/client';
+import type { UserResponse } from '@shirans/shared';
 
 /**
  * User with all fields
@@ -12,6 +13,31 @@ type User = Prisma.UserGetPayload<Record<string, never>>;
  * Handles all database access for Users using Prisma ORM
  */
 export const userRepository = {
+  /**
+   * Find all users (excludes password)
+   * @returns Array of users with id, email, name, role, createdAt, updatedAt
+   */
+  async findAll(): Promise<UserResponse[]> {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    return users.map((u) => ({
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      role: u.role as UserResponse['role'],
+      createdAt: u.createdAt.toISOString(),
+      updatedAt: u.updatedAt.toISOString(),
+    }));
+  },
   /**
    * Find a user by email
    * @param email - User email

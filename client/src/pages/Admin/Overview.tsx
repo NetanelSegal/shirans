@@ -3,6 +3,7 @@ import { useAdminProjects } from '@/hooks/admin/useAdminProjects';
 import { useAdminCategories } from '@/hooks/admin/useAdminCategories';
 import { useAdminTestimonials } from '@/hooks/admin/useAdminTestimonials';
 import { useAdminContacts } from '@/hooks/admin/useAdminContacts';
+import { useAdminUsers } from '@/hooks/admin/useAdminUsers';
 import { StatsCard } from '@/components/Admin/StatsCard';
 import { LoadingState, ErrorState } from '@/components/DataState';
 
@@ -11,8 +12,9 @@ export default function Overview() {
   const { categories, isLoading: categoriesLoading } = useAdminCategories();
   const { testimonials, isLoading: testimonialsLoading } = useAdminTestimonials();
   const { contacts, isLoading: contactsLoading } = useAdminContacts();
+  const { users, isLoading: usersLoading } = useAdminUsers();
 
-  const isLoading = projectsLoading || categoriesLoading || testimonialsLoading || contactsLoading;
+  const isLoading = projectsLoading || categoriesLoading || testimonialsLoading || contactsLoading || usersLoading;
   const unreadContacts = contacts.filter((c) => !c.isRead).length;
 
   const refreshAll = () => {
@@ -58,9 +60,23 @@ export default function Overview() {
         />
         <Link to="/admin/contacts" className="block">
           <StatsCard
+            title="סה״כ פניות"
+            count={contacts.length}
+            icon={<i className="fa-solid fa-envelope text-2xl" aria-hidden />}
+          />
+        </Link>
+        <Link to="/admin/contacts" className="block">
+          <StatsCard
             title="פניות שלא נקראו"
             count={unreadContacts}
-            icon={<i className="fa-solid fa-envelope text-2xl" aria-hidden />}
+            icon={<i className="fa-solid fa-envelope-open text-2xl" aria-hidden />}
+          />
+        </Link>
+        <Link to="/admin/users" className="block">
+          <StatsCard
+            title="משתמשים"
+            count={users.length}
+            icon={<i className="fa-solid fa-users text-2xl" aria-hidden />}
           />
         </Link>
       </div>

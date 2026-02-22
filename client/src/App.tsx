@@ -26,6 +26,7 @@ const ProjectsManagement = lazy(() => import('./pages/Admin/ProjectsManagement')
 const CategoriesManagement = lazy(() => import('./pages/Admin/CategoriesManagement'));
 const TestimonialsManagement = lazy(() => import('./pages/Admin/TestimonialsManagement'));
 const ContactsManagement = lazy(() => import('./pages/Admin/ContactsManagement'));
+const UsersManagement = lazy(() => import('./pages/Admin/UsersManagement'));
 
 const pingHealth = async () => {
   try {
@@ -164,6 +165,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loader />}>
             <ContactsManagement />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'users',
+        element: (
+          <Suspense fallback={<Loader />}>
+            <UsersManagement />
           </Suspense>
         ),
       },

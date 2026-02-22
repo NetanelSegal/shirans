@@ -50,6 +50,7 @@ import { projectsPaths } from '../../src/docs/swagger/paths/projects.paths';
 import { categoriesPaths } from '../../src/docs/swagger/paths/categories.paths';
 import { contactPaths } from '../../src/docs/swagger/paths/contact.paths';
 import { testimonialsPaths } from '../../src/docs/swagger/paths/testimonials.paths';
+import { usersPaths } from '../../src/docs/swagger/paths/users.paths';
 
 // ---- Helpers ----
 
@@ -135,6 +136,7 @@ function getSwaggerRoutes(): Set<string> {
     ...categoriesPaths,
     ...contactPaths,
     ...testimonialsPaths,
+    ...usersPaths,
   };
 
   const routes = new Set<string>();
@@ -213,14 +215,14 @@ describe('Swagger ↔ Routes Sync Validation', () => {
   it('should extract the expected number of Express routes', () => {
     const expressRoutes = getExpressRoutes(app);
 
-    // 1 health + 5 auth + 9 project + 5 category + 5 contact + 7 testimonial = 32
-    expect(expressRoutes.size).toBe(32);
+    // 1 health + 5 auth + 9 project + 5 category + 5 contact + 7 testimonial + 1 users = 33
+    expect(expressRoutes.size).toBe(33);
   });
 
   it('should extract the expected number of Swagger routes', () => {
     const swaggerRoutes = getSwaggerRoutes();
 
-    // 32 routes total (all mounted)
-    expect(swaggerRoutes.size).toBe(32);
+    // 33 routes total (all mounted)
+    expect(swaggerRoutes.size).toBe(33);
   });
 });
