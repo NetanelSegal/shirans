@@ -1,0 +1,135 @@
+# Shirans Monorepo — Autonomous AI Development Rules
+
+## 0. Canonical Rule Source
+- This file is the single source of truth for AI behavior. `project-standards.md` supplements only; conflicts resolve in favor of this file.
+- **User workflow guide:** `docs/PROJECT_WORKFLOW_GUIDE.md` — reference when users ask how to work in this project.
+
+---
+
+## 1. Pre-flight Check (CRITICAL — Before Any Code)
+- **Read first:** `tasks.md`, `progress.md` (create `progress.md` if missing).
+- **Analyze patterns in:**
+  - `client/src/components` (UI, Tailwind, `twMerge`, `classnames`)
+  - `shared/src` (schemas, constants, errors)
+  - `server/src/repositories` (data access)
+- **Architecture:** Repositories → Services → Controllers (server); Component → Hook → Service (client).
+- **Styling:** Tailwind CSS with `tailwind-merge` (`twMerge`) and `classnames`.
+
+---
+
+## 2. Single Source of Truth (SSOT)
+- **Shared package:** NEVER duplicate Zod schemas or constants. New API types/schemas MUST go to `shared/src`. Global error codes MUST go to `shared/src/errors`.
+- **Environment:** Check `.env.example` (server) and `.env.development` (client) before adding variables. NEVER commit `.env` or `.env.local`.
+
+---
+
+## 3. Document-Driven Task Management
+- **Lifecycle:** [Pending] → [Active] → [WIP] → [Complete].
+- **Completion:** When [Complete], move the task to the "History" section in `progress.md` with a 1-sentence summary.
+- **Before marking [Complete]:** Run the Security & Accessibility Audit skill (or equivalent checks) on changed files.
+
+---
+
+## 4. Strict Git & Workflow
+
+### Branching
+- Create `feature/description-slug` for every task.
+- NEVER merge to `main`; use Pull Requests.
+- NEVER run `git push --force` or `--force-with-lease` without explicit user approval.
+
+### Protected Paths (Do Not Modify Without Explicit Approval)
+- `.env`, `.env.*`, `*.local`
+- `package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`
+- `prisma/schema.prisma` (migrations only via `prisma migrate`)
+- `server/dist/`, `client/dist/`, `shared/dist/`
+
+### Verification (Before Push — Run in Order)
+1. `npm run lint` (root)
+2. `npm run type-check` (root — runs server type-check)
+3. `npm run test:run` (root — runs server unit tests)
+4. If any fail: fix, then re-run. Do NOT push until all pass.
+
+### Staging
+- Use `git add <paths>` for specific changed files. NEVER use `git add .` without verifying no secrets, lockfiles, or build artifacts are staged.
+- Before commit: run `git diff --cached` and confirm no sensitive or unintended files.
+
+### Commits
+- Use Conventional Commits: `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`.
+
+---
+
+## 5. Coding Standards
+
+### React
+- Functional components with hooks. Use `lucide-react` for icons.
+- Memoize expensive components with `React.memo` when re-renders are costly.
+- Use `React.lazy` for route-level code splitting where appropriate.
+
+### Backend
+- All Express routes MUST use `express-async-errors`.
+- Use Zod for all input/output validation.
+- Avoid N+1 queries; use batch loading or `include` where applicable.
+
+### Security
+- Sanitize all HTML inputs with `isomorphic-dompurify`.
+- Never hardcode secrets; use environment variables.
+- Ensure all API routes have Zod validation and sanitization.
+
+### Performance
+- Prefer existing utilities in `shared/src/utils` over new implementations.
+- Avoid unnecessary re-renders; use `useMemo`/`useCallback` when dependencies justify it.
+- Keep bundle size in mind; avoid large dependencies without justification.
+
+---
+
+## 6. Accessibility (A11y)
+- **Standard:** WCAG 2.1 Level AA.
+- **Required for UI changes:**
+  - Semantic HTML (`main`, `nav`, `section`, `article`, etc.)
+  - `aria-label` or `aria-labelledby` on interactive elements without visible labels
+  - `alt` on all images
+  - Keyboard focus management for modals and custom controls
+- Before marking UI tasks [Complete], run the Security & Accessibility Audit skill.
+
+---
+
+## 7. Skill Orchestration (When to Use Which)
+| Trigger | Skill |
+|---------|-------|
+| "Start next task" / "Pick next task" | task-bootstrapper |
+| "Ready to commit" / "Ready to push" | pre-push-validator |
+| "Audit this task" / Before [Complete] on UI/API work | security-accessibility-audit |
+| "Refactor [X]" / "Improve architectural consistency" | context-refactor |
+| "Review my UI" / "Check accessibility" / "Audit design" | web-design-review |
+| "Complete the website" / "Work on features" / "Autonomous" / "Go ahead" | autonomous-task-runner |
+| Before [Complete] (after implementation) | code-review-subagent |
+
+---
+
+## 8. Subagent Orchestration
+
+### When to Use Subagents
+- **Parallel subtasks:** When a task has 2+ independent subtasks (e.g., "Add contact form" + "Add newsletter API"), launch separate subagents for each. Use `mcp_task` with `subagent_type: "generalPurpose"` or `"explore"` as appropriate.
+- **Code review before [Complete]:** After implementing a task, BEFORE marking [Complete], launch a subagent with `subagent_type: "generalPurpose"` to review the changed files for: architecture compliance, security, accessibility, and style. Incorporate feedback before finalizing.
+- **Exploration:** When you need to search the codebase broadly (e.g., "find all API endpoints"), use `subagent_type: "explore"` with thoroughness "medium" or "very thorough".
+
+### Subagent Launch Rules
+- Provide a detailed task description; subagents do not see prior context.
+- Specify exactly what to return (e.g., "List of files to change" or "Pass/Fail checklist with line numbers").
+- For code review: pass the list of changed file paths and ask for findings in `file:line:issue` format.
+- Launch up to 4 subagents in parallel when subtasks are independent.
+
+---
+
+## 9. Supplemental Rules (Read When Relevant)
+- **Error handling:** Read `.claude/rules/error-management.md` when implementing server/API logic.
+- **Forms:** Read `.claude/rules/form-management.md` when implementing forms.
+- **Performance:** Read `.claude/rules/react-performance.md` when optimizing React components.
+
+---
+
+## 10. Error Recovery
+- **Lint fails:** Run `npm run lint -w <workspace>` and fix reported issues. Use `eslint . --fix` in the affected workspace for auto-fix.
+- **Type-check fails:** Fix type errors; do not use `any` or `@ts-ignore` without justification.
+- **Tests fail:** Fix failing tests; do not skip or disable without user approval.
+- **Build fails:** Report logs and ask for direction; do not guess at structural changes.

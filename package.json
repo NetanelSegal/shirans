@@ -20,6 +20,7 @@
     "lint:server": "npm run lint -w server",
     "install:all": "npm install",
     "type-check": "npm run type-check -w server",
+    "test:run": "npm run test:run -w server",
     "prisma:generate": "npm run prisma:generate -w server",
     "prisma:migrate": "npm run prisma:migrate -w server",
     "prisma:studio": "npm run prisma:studio -w server",
