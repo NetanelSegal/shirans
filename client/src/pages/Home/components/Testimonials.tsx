@@ -141,7 +141,10 @@ export default function Testimonials() {
   );
 }
 
-const TestimonialItem = ({ name, message }: ITestimonial) => {
+const TestimonialItem = ({
+  name,
+  message,
+}: Pick<TestimonialResponse, 'name' | 'message'>) => {
   return (
     <div className='relative mr-36 max-w-72 shrink-0 md:mr-64 md:max-w-64 lg:mr-96 lg:max-w-96'>
       <TestimonialsQuote />
