@@ -121,7 +121,9 @@ const router = createBrowserRouter([
     path: '/admin',
     element: (
       <ProtectedRoute requireAdmin={true}>
-        <Dashboard />
+        <Suspense fallback={<Loader />}>
+          <Dashboard />
+        </Suspense>
       </ProtectedRoute>
     ),
     children: [
