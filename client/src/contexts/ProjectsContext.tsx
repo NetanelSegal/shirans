@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { fetchProjects } from '@/services/projects.service';
+import { transformError } from '@/utils/errorHandler';
+import { getClientErrorMessage } from '@/constants/errorMessages';
 import type { ProjectResponse } from '@shirans/shared';
 
 interface ProjectsContextType {
@@ -23,7 +25,10 @@ export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     fetchProjects()
       .then(setProjects)
-      .catch((err) => setError(err.message))
+      .catch((err) => {
+        const appError = transformError(err);
+        setError(getClientErrorMessage(appError.errorKey));
+      })
       .finally(() => setIsLoading(false));
   };
 

@@ -28,6 +28,25 @@ export function isNetworkError(error: unknown): boolean {
 }
 
 /**
+ * Check if error should trigger fallback to file data (network error or server down)
+ * Handles both raw Axios errors and AppError (transformed by apiClient interceptor)
+ */
+export function shouldUseFallback(error: unknown): boolean {
+  // AppError from apiClient interceptor (transformed before we catch)
+  if (isAppError(error)) {
+    if (error.isNetworkError) return true;
+    return error.statusCode >= 500 && error.statusCode < 600;
+  }
+  // Raw Axios error (if interceptor is bypassed)
+  if (isNetworkError(error)) return true;
+  if (isAxiosError(error) && error.response) {
+    const status = error.response.status;
+    return status >= 500 && status < 600;
+  }
+  return false;
+}
+
+/**
  * Map HTTP status code to user-friendly Hebrew message
  */
 export function getErrorKeyForStatus(statusCode: number): ErrorKey {

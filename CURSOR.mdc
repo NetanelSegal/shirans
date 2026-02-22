@@ -4,6 +4,33 @@ alwaysApply: true
 
 # Shirans Project - AI Development Rules
 
+## Before Starting Work (MANDATORY)
+
+**CRITICAL:** Do these steps in order before making any code edits.
+
+### 1. Clarifying Questions First
+
+Before implementing, ask clarifying questions when the task is ambiguous. Examples:
+
+- What exactly is broken? (e.g., which page, which error message?)
+- What is the expected behavior vs what you see?
+- Are there edge cases or constraints to consider?
+- Any environment-specific details? (e.g., production vs dev, browser)
+
+Do **not** assume or guess. If unsure, ask first.
+
+### 2. Git Workflow First
+
+Before any code edits:
+
+1. Create a feature branch: `git checkout -b feature/descriptive-name`
+2. Commit changes incrementally as you work
+3. Never push uncommitted changes to main
+
+If you start editing without a branch, stop and create one first.
+
+---
+
 ## Project Context
 
 This is a full-stack portfolio website for an architecture/interior design professional (Shiran Gilad).
@@ -80,6 +107,7 @@ This is a full-stack portfolio website for an architecture/interior design profe
 ### Branch Strategy
 
 - **CRITICAL:** One feature branch per task/feature
+- **CRITICAL:** Create the branch BEFORE making any code edits
 - Branch naming: `feature/task-name` (e.g., `feature/replace-testimonials`)
 - NEVER work on multiple tasks in the same branch
 - Keep branches focused on single task
@@ -93,7 +121,7 @@ This is a full-stack portfolio website for an architecture/interior design profe
 
 ### Workflow
 
-1. Create feature branch for task
+1. **First:** Create feature branch for task (before any edits)
 2. Make small, logical commits as work progresses
 3. Before pushing: Check for linting/build/TypeScript errors
 4. Push to feature branch (NEVER merge to main)
@@ -358,11 +386,11 @@ throw new HttpError(
 
 ## Questions & Clarifications
 
-**CRITICAL:** If anything is unclear, ask at least 3 clarifying questions before proceeding:
+**CRITICAL:** Ask clarifying questions before implementing. Do not assume.
 
-1. What is the expected behavior?
-2. Are there any edge cases to consider?
-3. What is the user experience goal?
+- When the task is vague or could have multiple interpretations, ask first
+- Examples: "What is the expected behavior?" "Which page/feature is affected?" "Any edge cases?"
+- If unsure, ask before writing code
 
 ---
 
