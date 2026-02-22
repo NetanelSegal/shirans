@@ -32,10 +32,10 @@ const Modal: FC<ModalProps> = ({
         e.stopPropagation();
         onBackdropClick(e);
       }}
-      className={`fixed left-0 top-0 z-20 h-dvh w-screen bg-gray-950/70 opacity-0 backdrop-blur-sm transition-opacity duration-150 ${backgroundClassname}`}
+      className={`fixed left-0 top-0 z-[100] h-dvh w-screen bg-gray-950/70 opacity-0 backdrop-blur-sm transition-opacity duration-150 ${backgroundClassname}`}
     >
       <div
-        className={`absolute left-1/2 top-1/2 w-fit -translate-x-1/2 -translate-y-1/2 ${containerClassName}`}
+        className={`absolute left-1/2 top-1/2 max-h-[90dvh] w-fit -translate-x-1/2 -translate-y-1/2 overflow-y-auto ${containerClassName}`}
         onClick={(e) => e.stopPropagation()}
       >
         {children}
