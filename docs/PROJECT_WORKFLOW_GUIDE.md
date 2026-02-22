@@ -10,7 +10,7 @@ This guide explains all the ways you can work in this project with AI assistance
 2. [Workflow Modes](#workflow-modes)
 3. [Skills Reference](#skills-reference)
 4. [Task Management](#task-management)
-5. [Autonomous Development](#autonomous-development)
+5. [Autonomous Development (Mega-Agent)](#autonomous-development-mega-agent)
 6. [Subagent Usage](#subagent-usage)
 7. [Pre-Commit Checklist](#pre-commit-checklist)
 8. [Troubleshooting](#troubleshooting)
@@ -52,19 +52,23 @@ AI proceeds without asking for confirmation on task selection.
 2. AI bootstraps and implements without stopping
 3. You can still say **"Audit this task"** and **"Ready to commit"** when done
 
-### 3. Fully Autonomous
+### 3. Fully Autonomous (Mega-Agent)
 
-AI runs the entire lifecycle: bootstrap → implement → review → audit → commit.
+AI runs the entire lifecycle via the **Mega-Agent Orchestrator**.
 
 **Flow:**
 1. Say **"Complete the website"** or **"Work on features"** or **"Go ahead and finish"**
-2. AI uses the `autonomous-task-runner` skill:
-   - Bootstraps next task (no confirmation)
-   - Implements (splits to subagents if task has independent subtasks)
-   - Launches code-review subagent
-   - Runs security-accessibility-audit
-   - Runs pre-push-validator
-3. AI reports what was done and the branch/commit
+2. AI activates the **Mega-Agent Orchestrator**:
+   - **Pre-check**: Exits if no [Pending] tasks in `tasks.md`.
+   - **Pre-execution (mandatory)**: Asks targeted questions, proposes subtasks, **waits for your approval** before any code.
+   - **UI subtasks**: Activates `ui-ux-designer` skill, asks design questions, obtains design sign-off before implementation.
+   - **Manifest**: Creates `.claude/active-task/manifest.md` to track state (after approval).
+   - **Subtasks**: Breaks work into isolated contexts (e.g., API, UI).
+   - **Sync**: Ensures shared types/contracts are updated in real-time.
+   - **Validation**: Runs `npm run type-check` after every subtask (stops after 3 failures).
+   - **Review**: Runs code review and security audits on all changed files.
+   - **Commit**: Stages and commits if tests pass.
+   - **Docs**: Updates `progress.md` and `tasks.md` with completion summary and visual proof (for UI tasks).
 
 ---
 
@@ -73,12 +77,15 @@ AI runs the entire lifecycle: bootstrap → implement → review → audit → c
 | Skill | Trigger | What It Does |
 |-------|---------|--------------|
 | **task-bootstrapper** | "Start next task", "Pick next task" | Reads `tasks.md`, picks next [Pending] task, creates branch, updates `progress.md` |
-| **autonomous-task-runner** | "Complete the website", "Work on features", "Autonomous", "Go ahead" | Full lifecycle: bootstrap → implement → review → audit → commit |
+| **autonomous-task-runner** | "Complete the website", "Work on features", "Autonomous", "Go ahead" | Full lifecycle via Mega-Agent Orchestrator |
+| **mega-agent-orchestrator** | Activated by autonomous runner | Manages subtask execution and context synchronization |
+| **idea-to-requirement** | "Turn this into a requirement" | Creates strict requirement docs with **Mandatory Design Sign-off** |
 | **pre-push-validator** | "Ready to commit", "Ready to push" | Runs lint, type-check, tests; stages files; generates Conventional Commit; commits |
 | **security-accessibility-audit** | "Audit this task", before [Complete] | Security scan + WCAG 2.1 AA accessibility check |
 | **code-review-subagent** | Before [Complete] (after implementation) | Launches subagent to review changed files |
 | **context-refactor** | "Refactor [X]", "Improve architectural consistency" | SSOT analysis, dependency mapping, refactor with type-check |
 | **web-design-review** | "Review my UI", "Check accessibility", "Audit design" | Fetches Vercel Web Interface Guidelines, checks files |
+| **ui-ux-designer** | "Give me design ideas", "Search for inspiration", "Make it look good", **Before client UI (Mega-Agent)** | Web search for design trends, competitor analysis, visual specs; **mandatory before UI implementation** |
 
 ---
 
@@ -118,7 +125,7 @@ The AI will create a branch like `feature/add-contact-form-with-validation` when
 
 ---
 
-## Autonomous Development
+## Autonomous Development (Mega-Agent)
 
 ### When to Use
 
@@ -129,11 +136,13 @@ The AI will create a branch like `feature/add-contact-form-with-validation` when
 ### How It Works
 
 1. **Task bootstrapping**: AI reads `tasks.md`, picks first [Pending], creates branch
-2. **Subtask splitting**: If a task has 2+ independent parts (e.g., API + UI), AI launches subagents in parallel
-3. **Implementation**: AI implements directly or integrates subagent results
-4. **Code review**: AI launches a subagent to review changed files
-5. **Audit**: Security & accessibility checks
-6. **Commit**: Lint, type-check, tests, then Conventional Commit
+2. **Pre-execution (mandatory)**: AI asks targeted questions, proposes subtasks, **waits for your approval** before any code
+3. **UI design phase**: For client-side UI work, AI activates `ui-ux-designer`, asks design questions, obtains design sign-off
+4. **Subtask splitting**: If a task has 2+ independent parts (e.g., API + UI), AI launches subagents in parallel (simulated via context switching)
+5. **Implementation**: AI implements directly or integrates subagent results
+6. **Code review**: AI launches a subagent to review changed files
+7. **Audit**: Security & accessibility checks
+8. **Commit**: Lint, type-check, tests, then Conventional Commit
 
 ### Example Prompt
 
@@ -244,6 +253,6 @@ Use this structure:
 
 - **Manual**: "Start next task" → confirm → implement → "Audit this task" → "Ready to commit"
 - **Semi-autonomous**: Add "go ahead" or "autonomous" to skip confirmation
-- **Fully autonomous**: "Complete the website" or "Work on features" for end-to-end execution
-- **Subagents**: Used automatically for parallel subtasks and code review
-- **Always**: Lint, type-check, and tests must pass before commit
+- **Fully autonomous**: "Complete the website" or "Work on features" for end-to-end execution via **Mega-Agent**.
+- **Subagents**: Used automatically for parallel subtasks and code review.
+- **Always**: Lint, type-check, and tests must pass before commit.

@@ -1,11 +1,16 @@
 ---
 name: security-accessibility-audit
-description: Scans the current working file for common vulnerabilities and WCAG 2.1 Level AA accessibility standards before marking a task as complete. Use when asked to "audit this task" or before marking a task [Complete].
+description: Scans all changed files for common vulnerabilities and WCAG 2.1 Level AA accessibility standards before marking a task as complete. Use when asked to "audit this task" or before marking a task [Complete].
 ---
 
 # Security & Accessibility Audit
 
-Audit the latest changes for security vulnerabilities and accessibility (WCAG 2.1 Level AA) compliance.
+Audit all changed files for security vulnerabilities and accessibility (WCAG 2.1 Level AA) compliance.
+
+## Scope
+
+- **Changed files**: Run `git diff main --name-only` (or `git diff --name-only` if on a feature branch) to get the list of modified files. Audit each file that falls under Focus Files below.
+- If no changes (e.g. manual audit request), audit the current working file or specified paths.
 
 ## Workflow
 

@@ -1,6 +1,13 @@
 # Shirans Monorepo — Autonomous AI Development Rules
 
-## 0. Canonical Rule Source
+## 0. Critical Mandates (NEW)
+1.  **Requirement Sign-off:** Before moving an idea from `docs/` to `tasks.md`, the AI **MUST** present a summary of the UI/UX and wait for a "Go ahead".
+2.  **Mega-Agent Pre-Approval:** Before starting any task via Mega-Agent, the AI **MUST** ask targeted questions, propose subtasks, and **wait for user approval** before writing code. Never skip this step.
+3.  **UI Design Sign-off:** Before implementing client-side UI elements, the AI **MUST** activate the `ui-ux-designer` skill, ask design questions, and obtain design sign-off. Do not start UI implementation without it.
+4.  **Type-Safety First:** Never mark a task [Complete] if `npm run type-check` fails in the root workspace. Self-healing is mandatory, but stop and ask after 3 failed attempts.
+5.  **Visual Proof:** For UI tasks, the AI must describe the visual result in the `History` section of `progress.md` so the user can verify the 'feel' at a glance.
+
+## 1. Canonical Rule Source
 - This file is the single source of truth for AI behavior. `project-standards.md` supplements only; conflicts resolve in favor of this file.
 - **User workflow guide:** `docs/PROJECT_WORKFLOW_GUIDE.md` — reference when users ask how to work in this project.
 
@@ -105,6 +112,7 @@
 | "Review my UI" / "Check accessibility" / "Audit design" | web-design-review |
 | "Complete the website" / "Work on features" / "Autonomous" / "Go ahead" | autonomous-task-runner |
 | Before [Complete] (after implementation) | code-review-subagent |
+| Before client-side UI implementation (Mega-Agent) | ui-ux-designer |
 
 ---
 
