@@ -157,3 +157,9 @@ The admin hamburger must match the user-facing `Navbar.tsx`:
 ```
 
 **Reference:** `client/src/components/Admin/AdminNavbar.tsx`, `client/src/components/Navbar/Navbar.tsx`, `client/src/contexts/ScreenProvider.tsx`
+
+### DataTable Mobile Layout
+
+On `isSmallScreen`, `DataTable` renders a **card layout** instead of a table. Each row becomes a vertical card with label-value pairs and actions. Do not override this with custom mobile layouts in page components.
+
+**Reference:** `client/src/components/Admin/DataTable.tsx`, `client/src/contexts/ScreenProvider.tsx`
