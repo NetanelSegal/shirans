@@ -40,7 +40,7 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
           />
         )}
         <label
-          htmlFor={props.name}
+          htmlFor={props.id ?? props.name}
           className='absolute start-2 z-10 top-2 rounded-md px-2 font-bold shadow-md transition-all duration-150 ease-in-out peer-focus:-translate-y-3/4 peer-focus:top-2 peer-[:not(:placeholder-shown)]:-translate-y-3/4 peer-[:not(:placeholder-shown)]:top-2 text-dark bg-secondary'
         >
           {label}

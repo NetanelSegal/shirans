@@ -27,6 +27,7 @@ const CategoriesManagement = lazy(() => import('./pages/Admin/CategoriesManageme
 const TestimonialsManagement = lazy(() => import('./pages/Admin/TestimonialsManagement'));
 const ContactsManagement = lazy(() => import('./pages/Admin/ContactsManagement'));
 const UsersManagement = lazy(() => import('./pages/Admin/UsersManagement'));
+const Calculator = lazy(() => import('./pages/Calculator'));
 
 const pingHealth = async () => {
   try {
@@ -79,6 +80,11 @@ export const appRoutes = [
     path: 'projects/:id',
     element: <Project />,
     notNavigateable: true,
+  },
+  {
+    path: 'calculator',
+    title: 'מחשבון אומדן',
+    element: <Calculator />,
   },
   {
     path: 'contact',
