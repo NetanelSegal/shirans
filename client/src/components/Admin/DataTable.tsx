@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import Loader from '@/components/Loader/Loader';
+import { useScreenContext } from '@/contexts/ScreenProvider';
 
 export interface ColumnConfig<T> {
   key: string;
@@ -27,6 +28,8 @@ export function DataTable<T>({
   actions,
   actionsHeader = 'פעולות',
 }: DataTableProps<T>) {
+  const { isSmallScreen } = useScreenContext();
+
   if (isLoading) {
     return (
       <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-gray-200 bg-white p-8">
@@ -43,6 +46,41 @@ export function DataTable<T>({
         aria-live="polite"
       >
         {emptyMessage}
+      </div>
+    );
+  }
+
+  if (isSmallScreen) {
+    return (
+      <div className="flex flex-col gap-4" role="list">
+        {data.map((row) => (
+          <article
+            key={getRowId(row)}
+            className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+            role="listitem"
+            aria-label={`פריט ${getRowId(row)}`}
+          >
+            <div className="flex flex-col gap-2">
+              {columns.map((col) => (
+                <div key={col.key} className="flex flex-col gap-0.5">
+                  <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                    {col.header}
+                  </span>
+                  <div
+                    className={`text-sm text-gray-900 ${col.className ?? ''}`}
+                  >
+                    {col.render(row)}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {actions && (
+              <div className="mt-3 flex flex-wrap gap-2 border-t border-gray-100 pt-3">
+                {actions(row)}
+              </div>
+            )}
+          </article>
+        ))}
       </div>
     );
   }

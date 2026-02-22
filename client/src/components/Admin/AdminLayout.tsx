@@ -124,7 +124,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       )}
 
       {/* Main Content - mr-64 reserves space for fixed sidebar on right (RTL) */}
-      <div className={`flex flex-1 flex-col ${!isSmallScreen ? 'mr-64 min-w-0' : ''}`}>
+      <div className={`flex min-w-0 flex-1 flex-col overflow-x-hidden ${!isSmallScreen ? 'mr-64' : ''}`}>
         <AdminNavbar onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
         <main className="flex-1 p-6">
           {children}
