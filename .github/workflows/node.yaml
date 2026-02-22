@@ -67,6 +67,10 @@ jobs:
         working-directory: ./server
         run: npx prisma generate
 
+      - name: Prisma DB Push
+        working-directory: ./server
+        run: npx prisma db push
+
       - name: Run Server Tests
         working-directory: ./server
         run: npm test

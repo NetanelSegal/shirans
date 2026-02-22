@@ -12,7 +12,6 @@ import {
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { getServerErrorMessage } from '@/constants/errorMessages';
-import { prisma } from '../config/database';
 import { Prisma } from '@prisma/client';
 import { ProjectImageType } from '@prisma/client';
 import logger from '../middleware/logger';
@@ -245,14 +244,11 @@ export const projectService = {
       }
 
       // Create image records
-      await prisma.projectImage.createMany({
-        data: images.map((img) => ({
-          url: img.url,
-          type: img.type,
-          order: img.order ?? 0,
-          projectId: id,
-        })),
-      });
+      await projectRepository.addImages(id, images.map((img) => ({
+        url: img.url,
+        type: img.type as ProjectImageType,
+        order: img.order ?? 0,
+      })));
 
       // Fetch updated project
       const updatedProject = await projectRepository.findById(id);
@@ -302,9 +298,7 @@ export const projectService = {
       }
 
       // Delete main image
-      await prisma.projectImage.delete({
-        where: { id: mainImage.id },
-      });
+      await projectRepository.deleteImage(mainImage.id);
     } catch (error) {
       if (error instanceof HttpError) {
         throw error;
@@ -374,14 +368,7 @@ export const projectService = {
       }
 
       // Delete images
-      await prisma.projectImage.deleteMany({
-        where: {
-          id: {
-            in: imageIds,
-          },
-          projectId: id,
-        },
-      });
+      await projectRepository.deleteImages(id, imageIds);
     } catch (error) {
       if (error instanceof HttpError) {
         throw error;

@@ -1,5 +1,6 @@
 import { prisma } from '../config/database';
 import type { Prisma } from '@prisma/client';
+import type { ProjectImageType } from '@prisma/client';
 
 /**
  * Filter options for finding projects
@@ -143,6 +144,52 @@ export const projectRepository = {
             order: 'asc',
           },
         },
+      },
+    });
+  },
+
+  /**
+   * Add images to a project
+   * @param projectId - Project ID
+   * @param images - Array of image data
+   */
+  async addImages(
+    projectId: string,
+    images: Array<{ url: string; type: ProjectImageType; order?: number }>,
+  ): Promise<void> {
+    await prisma.projectImage.createMany({
+      data: images.map((img) => ({
+        url: img.url,
+        type: img.type,
+        order: img.order ?? 0,
+        projectId,
+      })),
+    });
+  },
+
+  /**
+   * Delete a single image by ID
+   * @param imageId - Image ID
+   */
+  async deleteImage(imageId: string): Promise<void> {
+    await prisma.projectImage.delete({
+      where: { id: imageId },
+    });
+  },
+
+  /**
+   * Delete multiple images from a project
+   * @param projectId - Project ID
+   * @param imageIds - Array of image IDs to delete
+   */
+  async deleteImages(
+    projectId: string,
+    imageIds: string[],
+  ): Promise<void> {
+    await prisma.projectImage.deleteMany({
+      where: {
+        id: { in: imageIds },
+        projectId,
       },
     });
   },
