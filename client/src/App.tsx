@@ -107,7 +107,11 @@ export const appRoutes = [
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: (
+      <Suspense fallback={<Loader />}>
+        <Layout />
+      </Suspense>
+    ),
     children: appRoutes.map((route) => ({
       path: route.path,
       element: route.element,

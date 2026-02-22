@@ -4,12 +4,9 @@ import { AdminPageHeader } from '@/components/Admin/AdminPageHeader';
 import { DataTable } from '@/components/Admin/DataTable';
 import { ConfirmDialog } from '@/components/Admin/ConfirmDialog';
 import { StatusBadge } from '@/components/Admin/StatusBadge';
-import { ErrorState } from '@/components/DataState';
+import { DataStateGuard } from '@/components/DataState';
 import Button from '@/components/ui/Button';
 import type { ContactResponse } from '@shirans/shared';
-
-const truncate = (str: string, len: number) =>
-  str.length <= len ? str : `${str.slice(0, len)}...`;
 
 type FilterTab = 'all' | 'unread' | 'read';
 
@@ -29,13 +26,6 @@ export default function ContactsManagement() {
     null
   );
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const filteredContacts =
-    filter === 'all'
-      ? contacts
-      : filter === 'unread'
-        ? contacts.filter((c) => !c.isRead)
-        : contacts.filter((c) => c.isRead);
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
@@ -80,10 +70,19 @@ export default function ContactsManagement() {
       key: 'message',
       header: 'הודעה',
       render: (row: ContactResponse) =>
-        expandedId === row.id
-          ? row.message ?? ''
-          : truncate(row.message ?? '', 40),
-      className: 'max-w-[200px]',
+        expandedId === row.id ? (
+          <span className="block max-w-[320px] whitespace-normal">
+            {row.message ?? ''}
+          </span>
+        ) : (
+          <span
+            className="block max-w-[280px] truncate"
+            title={row.message ?? ''}
+          >
+            {row.message ?? ''}
+          </span>
+        ),
+      className: 'max-w-[320px] whitespace-normal',
     },
     {
       key: 'isRead',
@@ -102,76 +101,89 @@ export default function ContactsManagement() {
     },
   ];
 
-  if (error) {
-    return (
-      <div className="p-6" dir="rtl">
-        <ErrorState message={error} onRetry={refresh} />
-      </div>
-    );
-  }
-
   return (
-    <div className="p-6" dir="rtl">
-      <AdminPageHeader title="ניהול פניות צור קשר" />
-      <div className="mb-4 flex gap-2">
-        <Button
-          variant={filter === 'all' ? 'primary' : 'light'}
-          onClick={() => setFilter('all')}
-        >
-          הכל
-        </Button>
-        <Button
-          variant={filter === 'unread' ? 'primary' : 'light'}
-          onClick={() => setFilter('unread')}
-        >
-          שלא נקראו
-        </Button>
-        <Button
-          variant={filter === 'read' ? 'primary' : 'light'}
-          onClick={() => setFilter('read')}
-        >
-          נקראו
-        </Button>
-      </div>
-      <DataTable
-        columns={columns}
-        data={filteredContacts}
+    <div dir="rtl">
+      <DataStateGuard
+        data={contacts}
         isLoading={isLoading}
+        error={error}
         emptyMessage="אין פניות"
-        getRowId={(row) => row.id}
-        actions={(row) => (
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() =>
-                setExpandedId(expandedId === row.id ? null : row.id)
-              }
-              className="text-primary hover:underline"
-              aria-label={expandedId === row.id ? 'צמצם' : 'הרחב'}
-            >
-              {expandedId === row.id ? 'צמצם' : 'הצג'}
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                updateReadStatus(row.id, !row.isRead)
-              }
-              className="text-primary hover:underline"
-              aria-label={row.isRead ? 'סמן כלא נקרא' : 'סמן כנקרא'}
-            >
-              {row.isRead ? 'לא נקרא' : 'נקרא'}
-            </button>
-            <button
-              type="button"
-              onClick={() => setDeleteTarget(row)}
-              className="text-red-600 hover:underline"
-              aria-label={`מחק פנייה מ${row.name}`}
-            >
-              מחיקה
-            </button>
-          </div>
-        )}
-      />
+        onRetry={refresh}
+        loadingMinHeight="20rem"
+      >
+        {(data) => {
+          const filtered =
+            filter === 'all'
+              ? data
+              : filter === 'unread'
+                ? data.filter((c) => !c.isRead)
+                : data.filter((c) => c.isRead);
+          return (
+            <>
+              <AdminPageHeader title="ניהול פניות צור קשר" />
+              <div className="mb-4 flex gap-2">
+                <Button
+                  variant={filter === 'all' ? 'primary' : 'light'}
+                  onClick={() => setFilter('all')}
+                >
+                  הכל
+                </Button>
+                <Button
+                  variant={filter === 'unread' ? 'primary' : 'light'}
+                  onClick={() => setFilter('unread')}
+                >
+                  שלא נקראו
+                </Button>
+                <Button
+                  variant={filter === 'read' ? 'primary' : 'light'}
+                  onClick={() => setFilter('read')}
+                >
+                  נקראו
+                </Button>
+              </div>
+              <DataTable
+                columns={columns}
+                data={filtered}
+                isLoading={false}
+                emptyMessage="אין פניות"
+                getRowId={(row) => row.id}
+                actions={(row) => (
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpandedId(expandedId === row.id ? null : row.id)
+                      }
+                      className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary/90"
+                      aria-label={expandedId === row.id ? 'צמצם' : 'הרחב'}
+                    >
+                      {expandedId === row.id ? 'צמצם' : 'הצג'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateReadStatus(row.id, !row.isRead)
+                      }
+                      className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-secondary/80"
+                      aria-label={row.isRead ? 'סמן כלא נקרא' : 'סמן כנקרא'}
+                    >
+                      {row.isRead ? 'לא נקרא' : 'נקרא'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeleteTarget(row)}
+                      className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                      aria-label={`מחק פנייה מ${row.name}`}
+                    >
+                      מחיקה
+                    </button>
+                  </div>
+                )}
+              />
+            </>
+          );
+        }}
+      </DataStateGuard>
       <ConfirmDialog
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}

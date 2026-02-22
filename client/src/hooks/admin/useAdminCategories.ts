@@ -22,8 +22,24 @@ export function useAdminCategories() {
   }, []);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    let cancelled = false;
+    setError(null);
+    setIsLoading(true);
+    adminCategoriesService
+      .fetchAllCategories()
+      .then((data) => {
+        if (!cancelled) setCategories(data);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err?.message ?? 'שגיאה בטעינת הקטגוריות');
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const create = useCallback(
     async (input: CreateCategoryInput) => {

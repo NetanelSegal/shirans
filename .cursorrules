@@ -125,6 +125,8 @@
 - **Error handling:** Read `.claude/rules/error-management.md` when implementing server/API logic.
 - **Forms:** Read `.claude/rules/form-management.md` when implementing forms.
 - **Performance:** Read `.claude/rules/react-performance.md` when optimizing React components.
+- **Testing:** Read `.claude/rules/ai-testing-best-practices.md` when adding or modifying E2E/unit tests.
+- **DataState & padding:** Read `.claude/rules/dont-forget.md` when building data-fetching pages or admin UI.
 
 ---
 

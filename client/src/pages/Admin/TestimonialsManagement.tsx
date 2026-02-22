@@ -7,18 +7,12 @@ import { DataTable } from '@/components/Admin/DataTable';
 import { FormModal } from '@/components/Admin/FormModal';
 import { ConfirmDialog } from '@/components/Admin/ConfirmDialog';
 import { StatusBadge } from '@/components/Admin/StatusBadge';
-import { ErrorState } from '@/components/DataState';
-import type { TestimonialResponse } from '@shirans/shared';
+import { DataStateGuard } from '@/components/DataState';
+import type {
+  TestimonialResponse,
+  CreateTestimonialInput,
+} from '@shirans/shared';
 import { createTestimonialSchema } from '@shirans/shared';
-type FormData = {
-  name: string;
-  message: string;
-  isPublished?: boolean;
-  order: number;
-};
-
-const truncate = (str: string, len: number) =>
-  str.length <= len ? str : `${str.slice(0, len)}...`;
 
 export default function TestimonialsManagement() {
   const {
@@ -41,7 +35,7 @@ export default function TestimonialsManagement() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const form = useForm<FormData>({
+  const form = useForm<CreateTestimonialInput>({
     resolver: zodResolver(createTestimonialSchema) as never,
     defaultValues: {
       name: '',
@@ -81,7 +75,7 @@ export default function TestimonialsManagement() {
     setFormError(null);
   };
 
-  const onSubmit = form.handleSubmit(async (data: FormData) => {
+  const onSubmit = form.handleSubmit(async (data: CreateTestimonialInput) => {
     setFormError(null);
     try {
       if (editingTestimonial) {
@@ -120,8 +114,6 @@ export default function TestimonialsManagement() {
     await updateOrder(t.id, newOrder);
   };
 
-  const sortedTestimonials = [...testimonials].sort((a, b) => a.order - b.order);
-
   const columns = [
     {
       key: 'name',
@@ -131,8 +123,10 @@ export default function TestimonialsManagement() {
     {
       key: 'message',
       header: 'הודעה',
-      render: (row: TestimonialResponse) => truncate(row.message, 50),
-      className: 'max-w-[200px]',
+      render: (row: TestimonialResponse) => (
+        <span className="block max-w-md whitespace-normal">{row.message}</span>
+      ),
+      className: 'max-w-md !whitespace-normal align-top',
     },
     {
       key: 'isPublished',
@@ -151,71 +145,77 @@ export default function TestimonialsManagement() {
     },
   ];
 
-  if (error) {
-    return (
-      <div className="p-6" dir="rtl">
-        <ErrorState message={error} onRetry={refresh} />
-      </div>
-    );
-  }
-
   return (
-    <div className="p-6" dir="rtl">
-      <AdminPageHeader
-        title="ניהול המלצות"
-        actionLabel="הוסף המלצה"
-        onAction={handleOpenCreate}
-      />
-      <DataTable
-        columns={columns}
-        data={sortedTestimonials}
+    <div dir="rtl">
+      <DataStateGuard
+        data={testimonials}
         isLoading={isLoading}
+        error={error}
         emptyMessage="אין המלצות"
-        getRowId={(row) => row.id}
-        actions={(row) => (
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => handleMoveUp(row)}
-              className="text-gray-600 hover:text-primary"
-              aria-label="העלה"
-              disabled={
-                sortedTestimonials.findIndex((x) => x.id === row.id) <= 0
-              }
-            >
-              <i className="fa-solid fa-arrow-up" aria-hidden />
-            </button>
-            <button
-              type="button"
-              onClick={() => handleMoveDown(row)}
-              className="text-gray-600 hover:text-primary"
-              aria-label="הורד"
-              disabled={
-                sortedTestimonials.findIndex((x) => x.id === row.id) >=
-                sortedTestimonials.length - 1
-              }
-            >
-              <i className="fa-solid fa-arrow-down" aria-hidden />
-            </button>
-            <button
-              type="button"
-              onClick={() => handleOpenEdit(row)}
-              className="text-primary hover:underline"
-              aria-label={`ערוך ${row.name}`}
-            >
-              עריכה
-            </button>
-            <button
-              type="button"
-              onClick={() => setDeleteTarget(row)}
-              className="text-red-600 hover:underline"
-              aria-label={`מחק ${row.name}`}
-            >
-              מחיקה
-            </button>
-          </div>
-        )}
-      />
+        onRetry={refresh}
+        loadingMinHeight="20rem"
+      >
+        {(data) => {
+          const sorted = [...data].sort((a, b) => a.order - b.order);
+          return (
+            <>
+              <AdminPageHeader
+                title="ניהול המלצות"
+                actionLabel="הוסף המלצה"
+                onAction={handleOpenCreate}
+              />
+              <DataTable
+                columns={columns}
+                data={sorted}
+                isLoading={false}
+                emptyMessage="אין המלצות"
+                getRowId={(row) => row.id}
+                actions={(row) => (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleMoveUp(row)}
+                      className="rounded-lg bg-gray-300 px-2 py-1.5 text-sm font-medium text-black transition-colors hover:bg-gray-400 disabled:opacity-50"
+                      aria-label="העלה"
+                      disabled={sorted.findIndex((x) => x.id === row.id) <= 0}
+                    >
+                      <i className="fa-solid fa-arrow-up" aria-hidden />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleMoveDown(row)}
+                      className="rounded-lg bg-gray-300 px-2 py-1.5 text-sm font-medium text-black transition-colors hover:bg-gray-400 disabled:opacity-50"
+                      aria-label="הורד"
+                      disabled={
+                        sorted.findIndex((x) => x.id === row.id) >=
+                        sorted.length - 1
+                      }
+                    >
+                      <i className="fa-solid fa-arrow-down" aria-hidden />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleOpenEdit(row)}
+                      className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary/90"
+                      aria-label={`ערוך ${row.name}`}
+                    >
+                      עריכה
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeleteTarget(row)}
+                      className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                      aria-label={`מחק ${row.name}`}
+                    >
+                      מחיקה
+                    </button>
+                  </div>
+                )}
+              />
+            </>
+          );
+        }}
+      </DataStateGuard>
       <FormModal
         open={modalOpen}
         onClose={handleCloseModal}

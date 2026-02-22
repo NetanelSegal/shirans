@@ -21,8 +21,24 @@ export function useAdminTestimonials() {
   }, []);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    let cancelled = false;
+    setError(null);
+    setIsLoading(true);
+    adminTestimonialsService
+      .fetchAllTestimonials()
+      .then((data) => {
+        if (!cancelled) setTestimonials(data);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err?.message ?? 'שגיאה בטעינת ההמלצות');
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const create = useCallback(
     async (input: CreateTestimonialInput) => {

@@ -25,8 +25,24 @@ export function useAdminProjects() {
   }, []);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    let cancelled = false;
+    setError(null);
+    setIsLoading(true);
+    adminProjectsService
+      .fetchAllProjects()
+      .then((data) => {
+        if (!cancelled) setProjects(data);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err?.message ?? 'שגיאה בטעינת הפרויקטים');
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const create = useCallback(
     async (input: CreateProjectInput) => {

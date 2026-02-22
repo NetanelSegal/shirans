@@ -7,16 +7,13 @@ import { AdminPageHeader } from '@/components/Admin/AdminPageHeader';
 import { DataTable } from '@/components/Admin/DataTable';
 import { FormModal } from '@/components/Admin/FormModal';
 import { ConfirmDialog } from '@/components/Admin/ConfirmDialog';
-import { ErrorState } from '@/components/DataState';
-import type { ProjectResponse } from '@shirans/shared';
-import {
-  createProjectSchema,
-  updateProjectSchema,
+import { DataStateGuard } from '@/components/DataState';
+import type {
+  ProjectResponse,
+  CreateProjectInput,
+  UpdateProjectInput,
 } from '@shirans/shared';
-import type { z } from 'zod';
-
-type CreateFormData = z.infer<typeof createProjectSchema>;
-type UpdateFormData = z.infer<typeof updateProjectSchema>;
+import { createProjectSchema, updateProjectSchema } from '@shirans/shared';
 
 export default function ProjectsManagement() {
   const {
@@ -38,7 +35,7 @@ export default function ProjectsManagement() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const createForm = useForm<CreateFormData>({
+  const createForm = useForm<CreateProjectInput>({
     resolver: zodResolver(createProjectSchema) as never,
     defaultValues: {
       title: '',
@@ -53,7 +50,7 @@ export default function ProjectsManagement() {
     },
   });
 
-  const updateForm = useForm<UpdateFormData>({
+  const updateForm = useForm<UpdateProjectInput>({
     resolver: zodResolver(updateProjectSchema),
     defaultValues: {
       id: '',
@@ -117,7 +114,7 @@ export default function ProjectsManagement() {
     setFormError(null);
   };
 
-  const onSubmitCreate = createForm.handleSubmit(async (data: CreateFormData) => {
+  const onSubmitCreate = createForm.handleSubmit(async (data: CreateProjectInput) => {
     setFormError(null);
     try {
       await create(data);
@@ -186,13 +183,12 @@ export default function ProjectsManagement() {
         <button
           type="button"
           onClick={() => handleToggleFavourite(row)}
-          className="text-xl"
+          className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${
+            row.favourite ? 'bg-amber-400 text-black' : 'bg-gray-200 text-gray-600'
+          }`}
           aria-label={row.favourite ? 'הסר ממועדפים' : 'הוסף למועדפים'}
         >
-          <i
-            className={`fa-solid fa-star ${row.favourite ? 'text-amber-500' : 'text-gray-300'}`}
-            aria-hidden
-          />
+          <i className="fa-solid fa-star" aria-hidden />
         </button>
       ),
     },
@@ -203,7 +199,9 @@ export default function ProjectsManagement() {
         <button
           type="button"
           onClick={() => handleToggleCompleted(row)}
-          className="rounded px-2 py-1 text-sm"
+          className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
+            row.isCompleted ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'
+          }`}
           aria-label={row.isCompleted ? 'סמן כלא הושלם' : 'סמן כהושלם'}
         >
           {row.isCompleted ? 'כן' : 'לא'}
@@ -212,15 +210,7 @@ export default function ProjectsManagement() {
     },
   ];
 
-  if (error) {
-    return (
-      <div className="p-6" dir="rtl">
-        <ErrorState message={error} onRetry={refresh} />
-      </div>
-    );
-  }
-
-  type ProjectFormType = ReturnType<typeof useForm<CreateFormData>>;
+  type ProjectFormType = ReturnType<typeof useForm<CreateProjectInput>>;
   const ProjectFormFields = ({ form }: { form: ProjectFormType }) => (
     <>
       <div>
@@ -416,39 +406,52 @@ export default function ProjectsManagement() {
   };
 
   return (
-    <div className="p-6" dir="rtl">
-      <AdminPageHeader
-        title="ניהול פרויקטים"
-        actionLabel="הוסף פרויקט"
-        onAction={handleOpenCreate}
-      />
-      <DataTable
-        columns={columns}
+    <div dir="rtl">
+      <DataStateGuard
         data={projects}
         isLoading={isLoading}
+        error={error}
         emptyMessage="אין פרויקטים"
-        getRowId={(row) => row.id}
-        actions={(row) => (
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => handleOpenEdit(row)}
-              className="text-primary hover:underline"
-              aria-label={`ערוך ${row.title}`}
-            >
-              עריכה
-            </button>
-            <button
-              type="button"
-              onClick={() => setDeleteTarget(row)}
-              className="text-red-600 hover:underline"
-              aria-label={`מחק ${row.title}`}
-            >
-              מחיקה
-            </button>
-          </div>
+        onRetry={refresh}
+        loadingMinHeight="20rem"
+      >
+        {(data) => (
+          <>
+            <AdminPageHeader
+              title="ניהול פרויקטים"
+              actionLabel="הוסף פרויקט"
+              onAction={handleOpenCreate}
+            />
+            <DataTable
+              columns={columns}
+              data={data}
+              isLoading={false}
+              emptyMessage="אין פרויקטים"
+              getRowId={(row) => row.id}
+              actions={(row) => (
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenEdit(row)}
+                    className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary/90"
+                    aria-label={`ערוך ${row.title}`}
+                  >
+                    עריכה
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDeleteTarget(row)}
+                    className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                    aria-label={`מחק ${row.title}`}
+                  >
+                    מחיקה
+                  </button>
+                </div>
+              )}
+            />
+          </>
         )}
-      />
+      </DataStateGuard>
       {renderProjectForm()}
       <ConfirmDialog
         open={!!deleteTarget}

@@ -6,9 +6,7 @@ import type { CategoryResponse } from '@shirans/shared';
 async function getFileCategories(): Promise<CategoryResponse[]> {
   const { categories } = await import('../data/shiran.categories');
   return categories.map((cat) => ({
-    id: cat._id.$oid,
-    title: cat.title,
-    urlCode: cat.urlCode as CategoryResponse['urlCode'],
+    ...cat,
     createdAt: '',
     updatedAt: '',
   }));

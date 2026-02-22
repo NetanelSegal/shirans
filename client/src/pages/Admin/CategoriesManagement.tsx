@@ -7,22 +7,19 @@ import { AdminPageHeader } from '@/components/Admin/AdminPageHeader';
 import { DataTable } from '@/components/Admin/DataTable';
 import { FormModal } from '@/components/Admin/FormModal';
 import { ConfirmDialog } from '@/components/Admin/ConfirmDialog';
-import { ErrorState } from '@/components/DataState';
-import type { CategoryResponse } from '@shirans/shared';
-import {
-  createCategorySchema,
-  updateCategorySchema,
+import { DataStateGuard } from '@/components/DataState';
+import type {
+  CategoryResponse,
+  CreateCategoryInput,
+  UpdateCategoryInput,
 } from '@shirans/shared';
-import type { z } from 'zod';
+import { createCategorySchema, updateCategorySchema } from '@shirans/shared';
 
 const CATEGORY_URL_OPTIONS = [
   { value: 'privateHouses', label: 'בתים פרטיים' },
   { value: 'apartments', label: 'דירות' },
   { value: 'publicSpaces', label: 'חללים מסחריים' },
 ] as const;
-
-type CreateFormData = z.infer<typeof createCategorySchema>;
-type UpdateFormData = z.infer<typeof updateCategorySchema>;
 
 export default function CategoriesManagement() {
   const {
@@ -44,12 +41,12 @@ export default function CategoriesManagement() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const createForm = useForm<CreateFormData>({
+  const createForm = useForm<CreateCategoryInput>({
     resolver: zodResolver(createCategorySchema),
     defaultValues: { title: '', urlCode: 'privateHouses' },
   });
 
-  const updateForm = useForm<UpdateFormData>({
+  const updateForm = useForm<UpdateCategoryInput>({
     resolver: zodResolver(updateCategorySchema),
     defaultValues: { title: '', urlCode: 'privateHouses' },
   });
@@ -127,51 +124,56 @@ export default function CategoriesManagement() {
     },
   ];
 
-  if (error) {
-    return (
-      <div className="p-6" dir="rtl">
-        <ErrorState message={error} onRetry={refresh} />
-      </div>
-    );
-  }
-
   const Form = editingCategory ? updateForm : createForm;
   const onSubmit = editingCategory ? onSubmitUpdate : onSubmitCreate;
 
   return (
-    <div className="p-6" dir="rtl">
-      <AdminPageHeader
-        title="ניהול קטגוריות"
-        actionLabel="הוסף קטגוריה"
-        onAction={handleOpenCreate}
-      />
-      <DataTable
-        columns={columns}
+    <div dir="rtl">
+      <DataStateGuard
         data={categories}
         isLoading={isLoading}
+        error={error}
         emptyMessage="אין קטגוריות"
-        getRowId={(row) => row.id}
-        actions={(row) => (
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => handleOpenEdit(row)}
-              className="text-primary hover:underline"
-              aria-label={`ערוך ${row.title}`}
-            >
-              עריכה
-            </button>
-            <button
-              type="button"
-              onClick={() => setDeleteTarget(row)}
-              className="text-red-600 hover:underline"
-              aria-label={`מחק ${row.title}`}
-            >
-              מחיקה
-            </button>
-          </div>
+        onRetry={refresh}
+        loadingMinHeight="20rem"
+      >
+        {(data) => (
+          <>
+            <AdminPageHeader
+              title="ניהול קטגוריות"
+              actionLabel="הוסף קטגוריה"
+              onAction={handleOpenCreate}
+            />
+            <DataTable
+              columns={columns}
+              data={data}
+              isLoading={false}
+              emptyMessage="אין קטגוריות"
+              getRowId={(row) => row.id}
+              actions={(row) => (
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenEdit(row)}
+                    className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary/90"
+                    aria-label={`ערוך ${row.title}`}
+                  >
+                    עריכה
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDeleteTarget(row)}
+                    className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                    aria-label={`מחק ${row.title}`}
+                  >
+                    מחיקה
+                  </button>
+                </div>
+              )}
+            />
+          </>
         )}
-      />
+      </DataStateGuard>
       <FormModal
         open={modalOpen}
         onClose={handleCloseModal}

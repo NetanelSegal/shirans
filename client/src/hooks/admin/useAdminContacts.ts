@@ -18,8 +18,24 @@ export function useAdminContacts() {
   }, []);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    let cancelled = false;
+    setError(null);
+    setIsLoading(true);
+    adminContactsService
+      .fetchAllContacts()
+      .then((data) => {
+        if (!cancelled) setContacts(data);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err?.message ?? 'שגיאה בטעינת הפניות');
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const updateReadStatus = useCallback(
     async (id: string, isRead: boolean) => {
