@@ -11,9 +11,9 @@
 
 ## History
 
-### Construction Cost Calculator
+### Construction Cost Calculator [Complete]
 
-Client-side calculator at `/calculator` with form, price range result, and WhatsApp CTA.
+Calculator at `/admin/calculator` with form, price range, WhatsApp CTA, DB persistence, admin leads/config management.
 
 ### Monorepo Shared Package Fix
 
