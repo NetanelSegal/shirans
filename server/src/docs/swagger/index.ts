@@ -14,6 +14,7 @@ import { projectsPaths } from './paths/projects.paths';
 import { categoriesPaths } from './paths/categories.paths';
 import { contactPaths } from './paths/contact.paths';
 import { testimonialsPaths } from './paths/testimonials.paths';
+import { usersPaths } from './paths/users.paths';
 
 const swaggerDocument = {
   openapi: '3.0.3',
@@ -39,6 +40,7 @@ const swaggerDocument = {
       name: 'Testimonials',
       description: 'Testimonial management (routes not yet mounted in app)',
     },
+    { name: 'Users', description: 'User management (admin only)' },
   ],
   paths: {
     ...healthPaths,
@@ -47,6 +49,7 @@ const swaggerDocument = {
     ...categoriesPaths,
     ...contactPaths,
     ...testimonialsPaths,
+    ...usersPaths,
   },
   components: {
     schemas: {

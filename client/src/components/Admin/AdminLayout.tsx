@@ -38,8 +38,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             <img className="h-10" src={srcShiranLogo} alt="shiran logo icon" />
           </Link>
           {isSmallScreen && (
-            <button onClick={() => setIsSidebarOpen(false)} className="text-white text-2xl">
-              <i className="fa-solid fa-times" />
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="text-white text-2xl"
+              aria-label="סגור תפריט"
+            >
+              <i className="fa-solid fa-times" aria-hidden />
             </button>
           )}
         </div>
@@ -109,6 +113,19 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               >
                 <i className="fa-solid fa-envelope" aria-hidden />
                 <span>פניות צור קשר</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/admin/users"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
+                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
+                  }`
+                }
+              >
+                <i className="fa-solid fa-users" aria-hidden />
+                <span>משתמשים</span>
               </NavLink>
             </li>
           </ul>

@@ -55,6 +55,11 @@ export const urls = {
     updateOrder: (id: string) => `${BACKEND_URL}/api/testimonials/${id}/order`,
   },
 
+  // Admin user endpoints
+  adminUsers: {
+    getAll: `${BACKEND_URL}/api/users`,
+  },
+
   // Admin contact endpoints
   adminContacts: {
     getAll: `${BACKEND_URL}/api/contact`,

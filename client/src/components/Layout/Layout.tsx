@@ -1,9 +1,15 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import { Suspense } from 'react';
 import Loader from '@/components/Loader';
+
+const HIDE_FOOTER_PATHS = ['/login', '/register'];
+
 export default function Layout() {
+  const { pathname } = useLocation();
+  const showFooter = !HIDE_FOOTER_PATHS.includes(pathname);
+
   return (
     <>
       <Navbar />
@@ -18,7 +24,7 @@ export default function Layout() {
           <Outlet />
         </Suspense>
       </div>
-      <Footer />
+      {showFooter && <Footer />}
     </>
   );
 }

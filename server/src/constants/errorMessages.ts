@@ -85,6 +85,7 @@ export const errorMessagesMap = {
   'SERVER.USER.REGISTRATION_FAILED': 'Failed to register user',
   'SERVER.USER.LOGIN_FAILED': 'Failed to login user',
   'SERVER.USER.FETCH_USER_FAILED': 'Failed to fetch user',
+  'SERVER.USER.FETCH_USERS_FAILED': 'Failed to fetch users',
   'SERVER.USER.REFRESH_TOKEN_FAILED': 'Failed to refresh token',
 
   'SERVER.REFRESH_TOKEN.CREATE_FAILED': 'Failed to create refresh token',
