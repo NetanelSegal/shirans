@@ -117,3 +117,34 @@ model ContactSubmission {
 
   @@map("contact_submissions")
 }
+
+model CalculatorLead {
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  phoneNumber     String
+  builtAreaSqm    Int
+  constructionFinish String
+  pool            String
+  outdoorAreaSqm  Int
+  outdoorFinish   String
+  kitchen         String
+  carpentry       String
+  furniture       String
+  equipment       String
+  priceDisplay    String
+  estimateMin     Int
+  estimateMax     Int
+  isRead          Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  @@map("calculator_leads")
+}
+
+model CalculatorConfig {
+  id        String   @id @default(cuid())
+  config    Json
+  updatedAt DateTime @updatedAt
+
+  @@map("calculator_config")
+}

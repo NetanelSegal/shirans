@@ -68,6 +68,14 @@ export const urls = {
     delete: (id: string) => `${BACKEND_URL}/api/contact/${id}`,
   },
 
+  // Calculator endpoints (admin only)
+  calculator: {
+    leads: `${BACKEND_URL}/api/calculator/leads`,
+    leadById: (id: string) => `${BACKEND_URL}/api/calculator/leads/${id}`,
+    leadRead: (id: string) => `${BACKEND_URL}/api/calculator/leads/${id}/read`,
+    config: `${BACKEND_URL}/api/calculator/config`,
+  },
+
   // Health endpoint
   health: `${BACKEND_URL}/api/health`,
 

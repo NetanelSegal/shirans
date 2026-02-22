@@ -1,76 +1,67 @@
-import type { CalculatorFormInput } from '../schemas/calculator.schema';
+import type {
+  CalculatorFormInput,
+  CalculatorConfigInput,
+} from '../schemas/calculator.schema';
 
-const VAT_MULTIPLIER = 1.18;
+export const DEFAULT_CALCULATOR_CONFIG: CalculatorConfigInput = {
+  constructionBase: { min: 8000, max: 12000 },
+  outdoorBase: { min: 500, max: 1500 },
+  finishMultipliers: {
+    standard: { min: 1, max: 1.1 },
+    invested: { min: 1.2, max: 1.4 },
+    premium: { min: 1.5, max: 1.8 },
+  },
+  poolAddons: {
+    none: { min: 0, max: 0 },
+    small: { min: 120000, max: 180000 },
+    medium: { min: 200000, max: 300000 },
+    large: { min: 350000, max: 450000 },
+  },
+  kitchenAddons: {
+    standard: { min: 80000, max: 120000 },
+    invested: { min: 150000, max: 220000 },
+    premium: { min: 250000, max: 350000 },
+  },
+  carpentryAddons: {
+    none: { min: 0, max: 0 },
+    ready: { min: 30000, max: 60000 },
+    custom: { min: 80000, max: 150000 },
+  },
+  furnitureAddons: {
+    none: { min: 0, max: 0 },
+    basic: { min: 50000, max: 100000 },
+    full: { min: 150000, max: 300000 },
+  },
+  equipmentAddons: {
+    none: { min: 0, max: 0 },
+    basic: { min: 30000, max: 60000 },
+    full: { min: 80000, max: 150000 },
+  },
+  vatMultiplier: 1.18,
+};
 
-// Base rates per sqm (ILS) - min/max for range
-const CONSTRUCTION_BASE = { min: 8000, max: 12000 };
-const OUTDOOR_BASE = { min: 500, max: 1500 };
+export function calculateEstimate(
+  input: CalculatorFormInput,
+  config: CalculatorConfigInput = DEFAULT_CALCULATOR_CONFIG
+): { min: number; max: number } {
+  const finish = config.finishMultipliers[input.constructionFinish];
+  const outdoorFinish = config.finishMultipliers[input.outdoorFinish];
 
-// Finish level multipliers (standard=1, invested=1.3, premium=1.6)
-const FINISH_MULTIPLIERS = {
-  standard: { min: 1, max: 1.1 },
-  invested: { min: 1.2, max: 1.4 },
-  premium: { min: 1.5, max: 1.8 },
-} as const;
-
-// Pool add-ons (ILS)
-const POOL_ADDONS = {
-  none: { min: 0, max: 0 },
-  small: { min: 120000, max: 180000 },
-  medium: { min: 200000, max: 300000 },
-  large: { min: 350000, max: 450000 },
-} as const;
-
-// Kitchen add-ons (ILS)
-const KITCHEN_ADDONS = {
-  standard: { min: 80000, max: 120000 },
-  invested: { min: 150000, max: 220000 },
-  premium: { min: 250000, max: 350000 },
-} as const;
-
-// Carpentry add-ons (ILS)
-const CARPENTRY_ADDONS = {
-  none: { min: 0, max: 0 },
-  ready: { min: 30000, max: 60000 },
-  custom: { min: 80000, max: 150000 },
-} as const;
-
-// Furniture add-ons (ILS)
-const FURNITURE_ADDONS = {
-  none: { min: 0, max: 0 },
-  basic: { min: 50000, max: 100000 },
-  full: { min: 150000, max: 300000 },
-} as const;
-
-// Equipment add-ons (ILS)
-const EQUIPMENT_ADDONS = {
-  none: { min: 0, max: 0 },
-  basic: { min: 30000, max: 60000 },
-  full: { min: 80000, max: 150000 },
-} as const;
-
-export function calculateEstimate(input: CalculatorFormInput): { min: number; max: number } {
-  const finish = FINISH_MULTIPLIERS[input.constructionFinish];
-  const outdoorFinish = FINISH_MULTIPLIERS[input.outdoorFinish];
-
-  // Construction (main building)
   const constructionMin =
-    input.builtAreaSqm * CONSTRUCTION_BASE.min * finish.min;
+    input.builtAreaSqm * config.constructionBase.min * finish.min;
   const constructionMax =
-    input.builtAreaSqm * CONSTRUCTION_BASE.max * finish.max;
+    input.builtAreaSqm * config.constructionBase.max * finish.max;
 
-  // Outdoor development
   const outdoorMin =
-    input.outdoorAreaSqm * OUTDOOR_BASE.min * outdoorFinish.min;
+    input.outdoorAreaSqm * config.outdoorBase.min * outdoorFinish.min;
   const outdoorMax =
-    input.outdoorAreaSqm * OUTDOOR_BASE.max * outdoorFinish.max;
+    input.outdoorAreaSqm * config.outdoorBase.max * outdoorFinish.max;
 
-  // Add-ons
-  const pool = POOL_ADDONS[input.pool];
-  const kitchen = KITCHEN_ADDONS[input.kitchen];
-  const carpentry = CARPENTRY_ADDONS[input.carpentry];
-  const furniture = FURNITURE_ADDONS[input.furniture];
-  const equipment = EQUIPMENT_ADDONS[input.equipment];
+  const pool = config.poolAddons[input.pool];
+  const kitchen = config.kitchenAddons[input.kitchen];
+  const carpentry = config.carpentryAddons[input.carpentry];
+  const furniture = config.furnitureAddons[input.furniture];
+  const equipment = config.equipmentAddons[input.equipment];
 
   let totalMin =
     constructionMin +
@@ -90,14 +81,19 @@ export function calculateEstimate(input: CalculatorFormInput): { min: number; ma
     equipment.max;
 
   if (input.priceDisplay === 'including_vat') {
-    totalMin *= VAT_MULTIPLIER;
-    totalMax *= VAT_MULTIPLIER;
+    totalMin *= config.vatMultiplier;
+    totalMax *= config.vatMultiplier;
   }
 
   return {
     min: Math.round(totalMin),
     max: Math.round(totalMax),
   };
+}
+
+/** Format a number as Hebrew locale price (e.g. 1,234,567) */
+export function formatPrice(n: number): string {
+  return new Intl.NumberFormat('he-IL').format(n);
 }
 
 export const WHATSAPP_NUMBER = '97252174443';

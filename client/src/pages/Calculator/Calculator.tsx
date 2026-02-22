@@ -1,17 +1,21 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   calculatorFormSchema,
   type CalculatorFormInput,
+  type CalculatorConfigInput,
   calculateEstimate,
+  DEFAULT_CALCULATOR_CONFIG,
   WHATSAPP_NUMBER,
   WHATSAPP_MESSAGE,
+  formatPrice,
 } from '@shirans/shared';
 import { Helmet } from 'react-helmet-async';
 import { BASE_URL } from '@/constants/urls';
 import { Input } from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import { calculatorService } from '@/services/calculator.service';
 
 const FINISH_OPTIONS = [
   { value: 'standard', label: 'סטנדרט' },
@@ -43,39 +47,51 @@ const PRICE_DISPLAY_OPTIONS = [
   { value: 'including_vat', label: 'כולל מע״מ' },
 ] as const;
 
-function formatPrice(n: number): string {
-  return new Intl.NumberFormat('he-IL').format(n);
-}
-
 function Select({
   label,
   options,
   error,
-  ...props
+  value,
+  onChange,
+  onBlur,
+  name,
+  id,
 }: {
   label: string;
   options: readonly { value: string; label: string }[];
   error?: { message?: string };
-} & React.SelectHTMLAttributes<HTMLSelectElement>) {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onBlur: () => void;
+  name: string;
+  id?: string;
+}) {
+  const selectId = id ?? name;
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-bold text-dark">{label}</label>
+      <label htmlFor={selectId} className="text-sm font-bold text-dark">
+        {label}
+      </label>
       <select
-        {...props}
+        id={selectId}
+        name={name}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
         className={`rounded-xl border p-2 ${
           error ? 'border-red-500' : 'border-gray-300'
         } bg-secondary`}
         aria-invalid={!!error}
-        aria-describedby={error ? `${props.id}-error` : undefined}
+        aria-describedby={error ? `${selectId}-error` : undefined}
       >
-        {options.map(({ value, label: optLabel }) => (
-          <option key={value} value={value}>
+        {options.map(({ value: optValue, label: optLabel }) => (
+          <option key={optValue} value={optValue}>
             {optLabel}
           </option>
         ))}
       </select>
       {error && (
-        <span id={`${props.id}-error`} className="text-sm text-red-500">
+        <span id={`${selectId}-error`} className="text-sm text-red-500">
           {error.message}
         </span>
       )}
@@ -87,9 +103,22 @@ export default function Calculator() {
   const [result, setResult] = useState<{ min: number; max: number } | null>(
     null
   );
+  const [config, setConfig] = useState<CalculatorConfigInput | null>(null);
+  const [configLoading, setConfigLoading] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  useEffect(() => {
+    calculatorService
+      .getConfig()
+      .then((c) => setConfig(c ?? DEFAULT_CALCULATOR_CONFIG))
+      .catch(() => setConfig(DEFAULT_CALCULATOR_CONFIG))
+      .finally(() => setConfigLoading(false));
+  }, []);
 
   const {
     register,
+    control,
     handleSubmit,
     watch,
     formState: { errors },
@@ -111,14 +140,37 @@ export default function Calculator() {
 
   const priceDisplay = watch('priceDisplay');
 
-  const onSubmit = (data: CalculatorFormInput) => {
-    const estimate = calculateEstimate(data);
+  const effectiveConfig = config ?? DEFAULT_CALCULATOR_CONFIG;
+
+  const onSubmit = async (data: CalculatorFormInput) => {
+    const estimate = calculateEstimate(data, effectiveConfig);
     setResult(estimate);
+    setSubmitError(null);
+    setSubmitLoading(true);
+    try {
+      await calculatorService.submitLead({
+        ...data,
+        estimateMin: estimate.min,
+        estimateMax: estimate.max,
+      });
+    } catch {
+      setSubmitError('שמירת הליד נכשלה. החישוב הוצג בהצלחה.');
+    } finally {
+      setSubmitLoading(false);
+    }
   };
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
     WHATSAPP_MESSAGE
   )}`;
+
+  if (configLoading) {
+    return (
+      <div className="flex min-h-[200px] items-center justify-center" dir="rtl">
+        <span>טוען מחשבון...</span>
+      </div>
+    );
+  }
 
   return (
     <main dir="rtl" className="mx-auto max-w-3xl py-10" aria-label="מחשבון אומדן עלות לבנייה פרטית">
@@ -193,17 +245,35 @@ export default function Calculator() {
               min={160}
               max={500}
             />
-            <Select
-              label="רמת גמר בנייה"
-              options={FINISH_OPTIONS}
-              error={errors.constructionFinish}
-              {...register('constructionFinish')}
+            <Controller
+              name="constructionFinish"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="רמת גמר בנייה"
+                  options={FINISH_OPTIONS}
+                  error={errors.constructionFinish}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                />
+              )}
             />
-            <Select
-              label="בריכה"
-              options={POOL_OPTIONS}
-              error={errors.pool}
-              {...register('pool')}
+            <Controller
+              name="pool"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="בריכה"
+                  options={POOL_OPTIONS}
+                  error={errors.pool}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                />
+              )}
             />
             <Input
               id="calculator-outdoor-area"
@@ -213,46 +283,91 @@ export default function Calculator() {
               error={errors.outdoorAreaSqm}
               min={0}
             />
-            <Select
-              label="רמת גמר פיתוח"
-              options={FINISH_OPTIONS}
-              error={errors.outdoorFinish}
-              {...register('outdoorFinish')}
+            <Controller
+              name="outdoorFinish"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="רמת גמר פיתוח"
+                  options={FINISH_OPTIONS}
+                  error={errors.outdoorFinish}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                />
+              )}
             />
-            <Select
-              label="מטבח"
-              options={FINISH_OPTIONS}
-              error={errors.kitchen}
-              {...register('kitchen')}
+            <Controller
+              name="kitchen"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="מטבח"
+                  options={FINISH_OPTIONS}
+                  error={errors.kitchen}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                />
+              )}
             />
-            <Select
-              label="נגרות כללית"
-              options={CARPENTRY_OPTIONS}
-              error={errors.carpentry}
-              {...register('carpentry')}
+            <Controller
+              name="carpentry"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="נגרות כללית"
+                  options={CARPENTRY_OPTIONS}
+                  error={errors.carpentry}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                />
+              )}
             />
-            <Select
-              label="ריהוט"
-              options={FURNITURE_OPTIONS}
-              error={errors.furniture}
-              {...register('furniture')}
+            <Controller
+              name="furniture"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="ריהוט"
+                  options={FURNITURE_OPTIONS}
+                  error={errors.furniture}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                />
+              )}
             />
-            <Select
-              label="אבזור והלבשה"
-              options={FURNITURE_OPTIONS}
-              error={errors.equipment}
-              {...register('equipment')}
+            <Controller
+              name="equipment"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="אבזור והלבשה"
+                  options={FURNITURE_OPTIONS}
+                  error={errors.equipment}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                />
+              )}
             />
           </div>
         </section>
 
-        <section
+        <fieldset
           className="rounded-xl bg-secondary/30 p-6"
-          aria-labelledby="price-display-heading"
+          aria-labelledby="price-display-legend"
         >
-          <h2 id="price-display-heading" className="mb-4 text-xl font-semibold">
+          <legend id="price-display-legend" className="mb-4 text-xl font-semibold">
             הצגת מחירים
-          </h2>
+          </legend>
           <div className="flex flex-wrap gap-4">
             {PRICE_DISPLAY_OPTIONS.map(({ value, label }) => (
               <label
@@ -264,16 +379,25 @@ export default function Calculator() {
                   value={value}
                   {...register('priceDisplay')}
                   className="h-4 w-4"
-                  aria-describedby={`price-display-${value}`}
                 />
-                <span id={`price-display-${value}`}>{label}</span>
+                <span>{label}</span>
               </label>
             ))}
           </div>
-        </section>
+        </fieldset>
 
-        <Button type="submit" variant="primary" className="w-full md:w-auto">
-          הצגת אומדן תקציב
+        {submitError && (
+          <p className="text-sm text-amber-600" role="alert">
+            {submitError}
+          </p>
+        )}
+        <Button
+          type="submit"
+          variant="primary"
+          className="w-full md:w-auto"
+          disabled={submitLoading}
+        >
+          {submitLoading ? 'שומר...' : 'הצגת אומדן תקציב'}
         </Button>
       </form>
 

@@ -128,6 +128,45 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 <span>משתמשים</span>
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/admin/calculator"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
+                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
+                  }`
+                }
+              >
+                <i className="fa-solid fa-calculator" aria-hidden />
+                <span>מחשבון אומדן</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/admin/calculator-leads"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
+                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
+                  }`
+                }
+              >
+                <i className="fa-solid fa-list" aria-hidden />
+                <span>לידים מחשבון</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/admin/calculator-config"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
+                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
+                  }`
+                }
+              >
+                <i className="fa-solid fa-gear" aria-hidden />
+                <span>הגדרות מחשבון</span>
+              </NavLink>
+            </li>
           </ul>
         </nav>
       </aside>
