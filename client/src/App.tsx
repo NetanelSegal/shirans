@@ -27,6 +27,13 @@ const CategoriesManagement = lazy(() => import('./pages/Admin/CategoriesManageme
 const TestimonialsManagement = lazy(() => import('./pages/Admin/TestimonialsManagement'));
 const ContactsManagement = lazy(() => import('./pages/Admin/ContactsManagement'));
 const UsersManagement = lazy(() => import('./pages/Admin/UsersManagement'));
+const Calculator = lazy(() => import('./pages/Calculator'));
+const CalculatorLeadsManagement = lazy(
+  () => import('./pages/Admin/CalculatorLeadsManagement')
+);
+const CalculatorConfigManagement = lazy(
+  () => import('./pages/Admin/CalculatorConfigManagement')
+);
 
 const pingHealth = async () => {
   try {
@@ -173,6 +180,30 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loader />}>
             <UsersManagement />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'calculator',
+        element: (
+          <Suspense fallback={<Loader />}>
+            <Calculator />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'calculator-leads',
+        element: (
+          <Suspense fallback={<Loader />}>
+            <CalculatorLeadsManagement />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'calculator-config',
+        element: (
+          <Suspense fallback={<Loader />}>
+            <CalculatorConfigManagement />
           </Suspense>
         ),
       },

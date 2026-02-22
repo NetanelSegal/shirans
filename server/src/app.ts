@@ -14,6 +14,7 @@ import categoryRoutes from './routes/category.routes';
 import contactRoutes from './routes/contact.routes';
 import userRoutes from './routes/user.routes';
 import testimonialRoutes from './routes/testimonial.routes';
+import calculatorRoutes from './routes/calculator.routes';
 
 function createApp(): Express {
   const app = express();
@@ -42,6 +43,7 @@ function createApp(): Express {
   app.use('/api/contact', contactRoutes);
   app.use('/api/users', userRoutes);
   app.use('/api/testimonials', testimonialRoutes);
+  app.use('/api/calculator', calculatorRoutes);
 
   // Swagger API documentation (after API routes so it doesn't intercept them)
   setupSwagger(app);

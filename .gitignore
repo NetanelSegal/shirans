@@ -1,4 +1,3 @@
-
 # Logs
 */*/logs
 */*.log
@@ -40,6 +39,8 @@ dist/
 not_optimized_images
 .cursorignore
 
+# Transient Task Context
+.claude/active-task/
 
 # Playwright
 /test-results/

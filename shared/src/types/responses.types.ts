@@ -45,6 +45,27 @@ export interface ContactResponse {
   createdAt: string;
 }
 
+export interface CalculatorLeadResponse {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  builtAreaSqm: number;
+  constructionFinish: string;
+  pool: string;
+  outdoorAreaSqm: number;
+  outdoorFinish: string;
+  kitchen: string;
+  carpentry: string;
+  furniture: string;
+  equipment: string;
+  priceDisplay: string;
+  estimateMin: number;
+  estimateMax: number;
+  isRead: boolean;
+  createdAt: string;
+}
+
 export interface TestimonialResponse {
   id: string;
   name: string;

@@ -80,6 +80,9 @@ export const ERROR_MESSAGES = {
   'SERVER.REFRESH_TOKEN.CREATE_FAILED': 'שגיאת שרת',
   'SERVER.REFRESH_TOKEN.REVOKE_FAILED': 'שגיאת שרת',
   'SERVER.REFRESH_TOKEN.PROCESS_FAILED': 'שגיאת שרת',
+
+  'SERVER.CALCULATOR.UPDATE_LEAD_FAILED': 'עדכון ליד מחשבון נכשל',
+  'SERVER.CALCULATOR.DELETE_LEAD_FAILED': 'מחיקת ליד מחשבון נכשלה',
 } as const satisfies Record<ErrorKey, string>;
 
 export type ErrorMessage = (typeof ERROR_MESSAGES)[ErrorKey];
