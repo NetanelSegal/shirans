@@ -2,6 +2,7 @@ import { useScreenContext } from '@/contexts/ScreenProvider';
 import { fetchPublishedTestimonials } from '@/services/testimonials.service';
 import { motion, useMotionValue, animate, MotionValue } from 'motion/react';
 import { MutableRefObject, RefObject, useEffect, useRef, useState } from 'react';
+import { LoadingState, EmptyState } from '@/components/DataState';
 
 interface ITestimonial {
   name: string;
@@ -15,15 +16,18 @@ export default function Testimonials() {
   const x = useMotionValue(0);
   const animationRef = useRef<ReturnType<typeof animate> | null>(null);
   const [testimonials, setTestimonials] = useState<ITestimonial[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
+    setHasError(false);
     fetchPublishedTestimonials()
       .then((data) =>
         setTestimonials(data.map(({ name, message }) => ({ name, message }))),
       )
-      .catch(() => {
-        // Silently fail - testimonials section just won't show
-      });
+      .catch(() => setHasError(true))
+      .finally(() => setIsLoading(false));
   }, []);
 
   const duplicatedTestimonials = [
@@ -99,7 +103,18 @@ export default function Testimonials() {
     });
   };
 
-  if (testimonials.length === 0) return null;
+  if (isLoading) {
+    return <LoadingState minHeight="8rem" className="my-8" />;
+  }
+
+  if (hasError || testimonials.length === 0) {
+    return (
+      <EmptyState
+        message={hasError ? 'לא ניתן לטעון את המשובים' : 'אין משובים להצגה'}
+        className="my-8"
+      />
+    );
+  }
 
   if (totalOriginalContentWidth === 0) {
     return (

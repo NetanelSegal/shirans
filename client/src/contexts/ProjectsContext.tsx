@@ -6,6 +6,7 @@ interface ProjectsContextType {
   projects: ProjectResponse[];
   isLoading: boolean;
   error: string | null;
+  retry: () => void;
 }
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(
@@ -17,15 +18,23 @@ export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadProjects = () => {
+    setError(null);
+    setIsLoading(true);
     fetchProjects()
       .then(setProjects)
       .catch((err) => setError(err.message))
       .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    loadProjects();
   }, []);
 
+  const retry = () => loadProjects();
+
   return (
-    <ProjectsContext.Provider value={{ projects, isLoading, error }}>
+    <ProjectsContext.Provider value={{ projects, isLoading, error, retry }}>
       {children}
     </ProjectsContext.Provider>
   );

@@ -4,9 +4,10 @@ import Project from './components/Project';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import { Helmet } from 'react-helmet-async';
 import { BASE_URL } from '@/constants/urls';
+import { DataStateGuard } from '@/components/DataState';
 
 export default function Projects() {
-  const { projects, isLoading } = useProjects();
+  const { projects, isLoading, error, retry } = useProjects();
 
   // Get first project's main image for OG
   const getFirstProjectImage = (): string => {
@@ -46,13 +47,24 @@ export default function Projects() {
           חללים יפים ומותאמים בדיוק לצרכים שלכם"
         </p>
       </div>
-      {isLoading ? null : projects.map((e: ProjectResponse, i) => (
-        <EnterAnimation key={e.id}>
-          <div className={`${i !== 0 ? 'py-5 lg:py-10' : 'py-5 lg:pb-10'}`}>
-            <Project project={e} i={i} />
-          </div>
-        </EnterAnimation>
-      ))}
+      <DataStateGuard
+        data={projects}
+        isLoading={isLoading}
+        error={error}
+        emptyMessage="אין פרויקטים להצגה"
+        onRetry={retry}
+        loadingMinHeight="20rem"
+      >
+        {(data) =>
+          data.map((e: ProjectResponse, i) => (
+            <EnterAnimation key={e.id}>
+              <div className={`${i !== 0 ? 'py-5 lg:py-10' : 'py-5 lg:pb-10'}`}>
+                <Project project={e} i={i} />
+              </div>
+            </EnterAnimation>
+          ))
+        }
+      </DataStateGuard>
     </>
   );
 }
