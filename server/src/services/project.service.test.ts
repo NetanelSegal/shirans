@@ -2,20 +2,21 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { projectService } from './project.service';
 import { projectRepository } from '../repositories/project.repository';
 import { HttpError } from '../middleware/errorHandler';
-import { prisma } from '../config/database';
 import type { ProjectFilters } from '../repositories/project.repository';
 import type { CategoryUrlCode } from '@shirans/shared';
 import { Prisma } from '@prisma/client';
 
 // Mock dependencies
-vi.mock('../repositories/project.repository');
-vi.mock('../config/database', () => ({
-  prisma: {
-    projectImage: {
-      createMany: vi.fn(),
-      delete: vi.fn(),
-      deleteMany: vi.fn(),
-    },
+vi.mock('../repositories/project.repository', () => ({
+  projectRepository: {
+    findAll: vi.fn(),
+    findById: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    addImages: vi.fn(),
+    deleteImage: vi.fn(),
+    deleteImages: vi.fn(),
   },
 }));
 vi.mock('../middleware/logger', () => ({
@@ -556,11 +557,7 @@ describe('projectService', () => {
           ],
         } as never);
 
-      (
-        prisma.projectImage.createMany as ReturnType<typeof vi.fn>
-      ).mockResolvedValue({
-        count: 1,
-      });
+      vi.mocked(projectRepository.addImages).mockResolvedValue(undefined);
 
       const images = [
         {
@@ -572,16 +569,16 @@ describe('projectService', () => {
 
       const result = await projectService.uploadProjectImages('1', images);
 
-      expect(prisma.projectImage.createMany).toHaveBeenCalledWith({
-        data: [
-          {
+      expect(projectRepository.addImages).toHaveBeenCalledWith(
+        '1',
+        expect.arrayContaining([
+          expect.objectContaining({
             url: 'https://example.com/new.jpg',
             type: 'IMAGE',
             order: 0,
-            projectId: '1',
-          },
-        ],
-      });
+          }),
+        ])
+      );
       expect(result).toBeDefined();
     });
 
@@ -625,15 +622,11 @@ describe('projectService', () => {
       vi.mocked(projectRepository.findById).mockResolvedValue(
         mockProject as never
       );
-      (
-        prisma.projectImage.delete as ReturnType<typeof vi.fn>
-      ).mockResolvedValue(mockProject.images[0]);
+      vi.mocked(projectRepository.deleteImage).mockResolvedValue(undefined);
 
       await projectService.deleteMainImage('1');
 
-      expect(prisma.projectImage.delete).toHaveBeenCalledWith({
-        where: { id: 'img1' },
-      });
+      expect(projectRepository.deleteImage).toHaveBeenCalledWith('img1');
     });
 
     it('should throw HttpError 404 when project not found', async () => {
@@ -762,22 +755,14 @@ describe('projectService', () => {
       vi.mocked(projectRepository.findById).mockResolvedValue(
         mockProject as never
       );
-      (
-        prisma.projectImage.deleteMany as ReturnType<typeof vi.fn>
-      ).mockResolvedValue({
-        count: 2,
-      });
+      vi.mocked(projectRepository.deleteImages).mockResolvedValue(undefined);
 
       await projectService.deleteProjectImages('1', ['img1', 'img2']);
 
-      expect(prisma.projectImage.deleteMany).toHaveBeenCalledWith({
-        where: {
-          id: {
-            in: ['img1', 'img2'],
-          },
-          projectId: '1',
-        },
-      });
+      expect(projectRepository.deleteImages).toHaveBeenCalledWith('1', [
+        'img1',
+        'img2',
+      ]);
     });
 
     it('should throw HttpError 404 when project not found', async () => {

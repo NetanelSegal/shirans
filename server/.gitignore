@@ -20,9 +20,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Prisma
-prisma/migrations/
-
 # IDE
 .vscode/
 .idea/

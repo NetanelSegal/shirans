@@ -24,16 +24,9 @@ vi.mock('../../src/repositories/project.repository', () => ({
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
-  },
-}));
-
-vi.mock('../../src/config/database', () => ({
-  prisma: {
-    projectImage: {
-      createMany: vi.fn(),
-      delete: vi.fn(),
-      deleteMany: vi.fn(),
-    },
+    addImages: vi.fn(),
+    deleteImage: vi.fn(),
+    deleteImages: vi.fn(),
   },
 }));
 

@@ -1,9 +1,8 @@
 import { describe, it, expect, beforeEach, vi, beforeAll } from 'vitest';
 import request from 'supertest';
 import { projectRepository } from '../../src/repositories/project.repository';
-import { prisma } from '../../src/config/database';
 
-// Mock the repository and database BEFORE importing app
+// Mock the repository BEFORE importing app
 vi.mock('../../src/repositories/project.repository', () => ({
   projectRepository: {
     findAll: vi.fn(),
@@ -11,15 +10,9 @@ vi.mock('../../src/repositories/project.repository', () => ({
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
-  },
-}));
-vi.mock('../../src/config/database', () => ({
-  prisma: {
-    projectImage: {
-      createMany: vi.fn(),
-      delete: vi.fn(),
-      deleteMany: vi.fn(),
-    },
+    addImages: vi.fn(),
+    deleteImage: vi.fn(),
+    deleteImages: vi.fn(),
   },
 }));
 vi.mock('../../src/middleware/logger', () => ({
@@ -431,13 +424,24 @@ describe('Project Routes Integration Tests', () => {
         images: [],
       };
 
+      const mockProjectWithImages = {
+        ...mockProject,
+        images: [
+          {
+            id: 'img1',
+            url: 'https://example.com/image.jpg',
+            type: 'IMAGE',
+            order: 0,
+            projectId: 'clx123abc456def789',
+            createdAt: new Date(),
+          },
+        ],
+      };
+
       vi.mocked(projectRepository.findById)
         .mockResolvedValueOnce(mockProject as never)
-        .mockResolvedValueOnce(mockProject as never);
-
-      (prisma.projectImage.createMany as ReturnType<typeof vi.fn>).mockResolvedValue({
-        count: 1,
-      });
+        .mockResolvedValueOnce(mockProjectWithImages as never);
+      vi.mocked(projectRepository.addImages).mockResolvedValue(undefined);
 
       const response = await request(app)
         .post('/api/projects/uploadImgs')
@@ -590,9 +594,7 @@ describe('Project Routes Integration Tests', () => {
       vi.mocked(projectRepository.findById).mockResolvedValue(
         mockProject as never
       );
-      (prisma.projectImage.delete as ReturnType<typeof vi.fn>).mockResolvedValue(
-        mockProject.images[0]
-      );
+      vi.mocked(projectRepository.deleteImage).mockResolvedValue(undefined);
 
       const response = await request(app)
         .delete('/api/projects/deleteMainImage')
@@ -653,9 +655,7 @@ describe('Project Routes Integration Tests', () => {
       vi.mocked(projectRepository.findById).mockResolvedValue(
         mockProject as never
       );
-      (prisma.projectImage.deleteMany as ReturnType<typeof vi.fn>).mockResolvedValue({
-        count: 2,
-      });
+      vi.mocked(projectRepository.deleteImages).mockResolvedValue(undefined);
 
       const response = await request(app)
         .delete('/api/projects/deleteImages')
