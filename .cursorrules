@@ -7,6 +7,7 @@
 ---
 
 ## 1. Pre-flight Check (CRITICAL — Before Any Code)
+- **Git first:** Create `feature/description-slug` branch BEFORE making any edits. Every change, fix, or refactor — not just tasks from `tasks.md` — must be done on a feature branch. Never edit on `main`.
 - **Read first:** `tasks.md`, `progress.md` (create `progress.md` if missing).
 - **Analyze patterns in:**
   - `client/src/components` (UI, Tailwind, `twMerge`, `classnames`)
@@ -32,8 +33,9 @@
 
 ## 4. Strict Git & Workflow
 
-### Branching
-- Create `feature/description-slug` for every task.
+### Branching (MANDATORY — Before Any Code Change)
+- **Create `feature/description-slug` BEFORE writing or editing code.** Applies to: new features, bug fixes, refactors, docs updates, rule changes — everything.
+- NEVER commit to `main`; all work goes on feature branches.
 - NEVER merge to `main`; use Pull Requests.
 - NEVER run `git push --force` or `--force-with-lease` without explicit user approval.
 
@@ -126,7 +128,7 @@
 - **Forms:** Read `.claude/rules/form-management.md` when implementing forms.
 - **Performance:** Read `.claude/rules/react-performance.md` when optimizing React components.
 - **Testing:** Read `.claude/rules/ai-testing-best-practices.md` when adding or modifying E2E/unit tests.
-- **DataState & padding:** Read `.claude/rules/dont-forget.md` when building data-fetching pages or admin UI.
+- **DataState, padding & admin responsive:** Read `.claude/rules/dont-forget.md` when building data-fetching pages, admin UI, or admin responsive layout (hamburger/sidebar).
 
 ---
 
