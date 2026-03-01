@@ -9,7 +9,7 @@ import { BASE_URL } from '@/constants/urls';
 import { CalculatorForm } from '@/components/Calculator';
 import { calculatorService } from '@/services/calculator.service';
 
-export default function Calculator() {
+export default function LandingCalculator() {
   const [config, setConfig] = useState<CalculatorConfigInput | null>(null);
   const [configLoading, setConfigLoading] = useState(true);
 
@@ -53,7 +53,7 @@ export default function Calculator() {
           content="חשבו אומדן עלות לבנייה פרטית. הזינו פרטים וקבלו טווח מחירים משוער."
         />
         <meta property="og:title" content="מחשבון אומדן עלות - שירן גלעד" />
-        <meta property="og:url" content={`${BASE_URL}/admin/calculator`} />
+        <meta property="og:url" content={`${BASE_URL}/calculator`} />
       </Helmet>
 
       <h1 className="heading mb-8 text-center font-bold">

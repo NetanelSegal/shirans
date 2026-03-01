@@ -12,6 +12,7 @@ import {
 } from '../controllers/project.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { requireAdmin } from '../middleware/authorize.middleware';
+import { adminMutationLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
@@ -27,21 +28,21 @@ router.get('/single', getProjectById);
 
 // Protected admin routes (require authentication and ADMIN role)
 // POST /api/projects - Create a new project
-router.post('/', authenticate, requireAdmin, createProject);
+router.post('/', adminMutationLimiter, authenticate, requireAdmin, createProject);
 
 // PUT /api/projects - Update project (body contains id)
-router.put('/', authenticate, requireAdmin, updateProject);
+router.put('/', adminMutationLimiter, authenticate, requireAdmin, updateProject);
 
 // DELETE /api/projects - Delete a project (body contains id)
-router.delete('/', authenticate, requireAdmin, deleteProject);
+router.delete('/', adminMutationLimiter, authenticate, requireAdmin, deleteProject);
 
 // POST /api/projects/uploadImgs - Upload images to project
-router.post('/uploadImgs', authenticate, requireAdmin, uploadProjectImages);
+router.post('/uploadImgs', adminMutationLimiter, authenticate, requireAdmin, uploadProjectImages);
 
 // DELETE /api/projects/deleteMainImage - Delete main image from project
-router.delete('/deleteMainImage', authenticate, requireAdmin, deleteMainImage);
+router.delete('/deleteMainImage', adminMutationLimiter, authenticate, requireAdmin, deleteMainImage);
 
 // DELETE /api/projects/deleteImages - Delete specific images from project
-router.delete('/deleteImages', authenticate, requireAdmin, deleteProjectImages);
+router.delete('/deleteImages', adminMutationLimiter, authenticate, requireAdmin, deleteProjectImages);
 
 export default router;

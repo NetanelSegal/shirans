@@ -1,0 +1,47 @@
+---
+description: GLOBAL WORKFLOW: Mandatory lifecycle for task management, monorepo coordination, and verification. Enforces context isolation and architectural integrity.
+globs: "**/*"
+alwaysApply: true
+---
+
+# 01-Workflow: The Supreme Mandate
+
+This rule governs all AI operations in this workspace. It ensures structural integrity and maintains a clean context window.
+
+## 1. Research & Analysis Phase (MANDATORY)
+Before any code modification:
+- **Scan & Validate**: Analyze existing patterns in `client/`, `server/`, and the "Single Source of Truth" in `shared/`.
+- **Reference Docs**: Check `docs/` for progress (`00`), Architecture (`04`), and Design (`05`).
+- **Empirical Confirmation**: For bugs, reproduce the failure with a script or test before fixing.
+
+## 2. Monorepo Implementation Planning
+- **Data First**: If the task involves data models, propose changes to `shared/src/schemas/` first.
+- **Propose Subtasks**: Break the task into atomic units: `[Shared]`, `[Server]`, `[Client]`, `[E2E]`.
+- **Ask & Wait**: Propose clarifying questions about scope or architectural impact.
+- **MANDATORY STOP**: You MUST get explicit user approval before starting the Execution phase.
+
+## 3. Execution (Sequential & Isolated)
+- **One Package at a Time**: Complete `shared`, then `server`, then `client`.
+- **Zod & Types**: Ensure Zod schemas in `shared` drive validation in both `server` (validators) and `client` (forms).
+- **RTL Integrity**: All UI implementation must default to Right-to-Left (Hebrew) standards.
+
+## 4. Verification & Quality Assurance
+Before marking a task [Complete]:
+- **Validation Suite**: Run `npm run type-check` at the root and relevant workspace lints.
+- **Visual Audit**: For UI tasks, describe the final visual outcome and RTL alignment.
+- **Log Updates**: Update `docs/00-Context/progress.md` and move the task to "Completed" in `docs/00-Context/tasks.md`.
+
+## 5. Git & Branching (STRICT)
+
+- **Branch First**: ALWAYS create a feature branch before making any edits. Never commit directly to `main`.
+- **Branch Naming**: `feature/short-description` or `fix/short-description` (e.g. `feature/calculator-landing`).
+- **Workflow**: `git checkout -b feature/your-feature` → implement → `npm run build` / `npm run type-check` → commit → push.
+- **Conventional Commits**: Use `feat:`, `fix:`, `chore:`, `refactor:` focusing on the "Why." Example: `feat(calculator): add public landing page for lead capture`.
+- **Pre-Push**: Run build and tests before pushing. Fix any failures.
+- **Merge**: Merge to `main` via PR only after review.
+
+## 6. Testing & Validation (MANDATORY)
+- **Reproduce First**: For bug fixes, reproduce the issue before applying the fix.
+- **Cross-Platform**: Verify UI changes on mobile and desktop breakpoints.
+- **RTL First**: Ensure Hebrew alignment and layout flow are consistent with the "Assistant" font.
+- **Prisma**: If database schema changed, ensure `npx prisma generate` is run.

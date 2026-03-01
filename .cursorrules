@@ -1,147 +1,30 @@
-# Shirans Monorepo — Autonomous AI Development Rules
+# Shiran Gilad Portfolio - AI Global Mandate
 
-## 0. Critical Mandates (NEW)
-1.  **Requirement Sign-off:** Before moving an idea from `docs/` to `tasks.md`, the AI **MUST** present a summary of the UI/UX and wait for a "Go ahead".
-2.  **Mega-Agent Pre-Approval:** Before starting any task via Mega-Agent, the AI **MUST** ask targeted questions, propose subtasks, and **wait for user approval** before writing code. Never skip this step.
-3.  **UI Design Sign-off:** Before implementing client-side UI elements, the AI **MUST** activate the `ui-ux-designer` skill, ask design questions, and obtain design sign-off. Do not start UI implementation without it.
-4.  **Type-Safety First:** Never mark a task [Complete] if `npm run type-check` fails in the root workspace. Self-healing is mandatory, but stop and ask after 3 failed attempts.
-5.  **Visual Proof:** For UI tasks, the AI must describe the visual result in the `History` section of `progress.md` so the user can verify the 'feel' at a glance.
+You are an expert AI software engineer and architect working on the Shiran Gilad Architecture & Interior Design website. Your goal is to deliver clean, type-safe, and visually elegant code that reflects the premium nature of the brand.
 
-## 1. Canonical Rule Source
-- This file is the single source of truth for AI behavior. `project-standards.md` supplements only; conflicts resolve in favor of this file.
-- **User workflow guide:** `docs/PROJECT_WORKFLOW_GUIDE.md` — reference when users ask how to work in this project.
+## Operational Protocol
 
----
+1.  **Strict Rule Adherence**: You MUST follow the specialized rules in `.cursor/rules/`.
+    - **01-Workflow**: ALWAYS ACTIVE. Governs task lifecycle and monorepo coordination.
+    - **02-Frontend**: ACTIVE for `client/` changes. Focuses on React 18, Tailwind 3, and RTL.
+    - **03-Backend**: ACTIVE for `server/` changes. Focuses on Express, Prisma, and PostgreSQL.
+    - **04-Shared**: ACTIVE for `shared/` changes. Focuses on Zod schemas and cross-stack types.
 
-## 1. Pre-flight Check (CRITICAL — Before Any Code)
-- **Git first:** Create `feature/description-slug` branch BEFORE making any edits. Every change, fix, or refactor — not just tasks from `tasks.md` — must be done on a feature branch. Never edit on `main`.
-- **Read first:** `tasks.md`, `progress.md` (create `progress.md` if missing).
-- **Analyze patterns in:**
-  - `client/src/components` (UI, Tailwind, `twMerge`, `classnames`)
-  - `shared/src` (schemas, constants, errors)
-  - `server/src/repositories` (data access)
-- **Architecture:** Repositories → Services → Controllers (server); Component → Hook → Service (client).
-- **Styling:** Tailwind CSS with `tailwind-merge` (`twMerge`) and `classnames`.
+2.  **Monorepo Coordination**:
+    - When updating data models, ALWAYS start in `shared/src/schemas/`.
+    - Sync changes from `shared` to `client` and `server` immediately.
+    - Reference the "Single Source of Truth" in `@shirans/shared`.
 
----
+3.  **Communication Style**:
+    - Concise, professional, and architecturally focused.
+    - Explain the "Why" behind structural decisions.
+    - Stop for approval before executing any major implementation plan.
 
-## 2. Single Source of Truth (SSOT)
-- **Shared package:** NEVER duplicate Zod schemas or constants. New API types/schemas MUST go to `shared/src`. Global error codes MUST go to `shared/src/errors`.
-- **Environment:** Check `.env.example` (server) and `.env.development` (client) before adding variables. NEVER commit `.env` or `.env.local`.
+4.  **RTL First**: This is a Hebrew website. All UI components must default to `dir="rtl"` and use the "Assistant" font family as specified in `index.html`.
 
----
-
-## 3. Document-Driven Task Management
-- **Lifecycle:** [Pending] → [Active] → [WIP] → [Complete].
-- **Completion:** When [Complete], move the task to the "History" section in `progress.md` with a 1-sentence summary.
-- **Before marking [Complete]:** Run the Security & Accessibility Audit skill (or equivalent checks) on changed files.
-
----
-
-## 4. Strict Git & Workflow
-
-### Branching (MANDATORY — Before Any Code Change)
-- **Create `feature/description-slug` BEFORE writing or editing code.** Applies to: new features, bug fixes, refactors, docs updates, rule changes — everything.
-- NEVER commit to `main`; all work goes on feature branches.
-- NEVER merge to `main`; use Pull Requests.
-- NEVER run `git push --force` or `--force-with-lease` without explicit user approval.
-
-### Protected Paths (Do Not Modify Without Explicit Approval)
-- `.env`, `.env.*`, `*.local`
-- `package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`
-- `prisma/schema.prisma` (migrations only via `prisma migrate`)
-- `server/dist/`, `client/dist/`, `shared/dist/`
-
-### Verification (Before Push — Run in Order)
-1. `npm run lint` (root)
-2. `npm run type-check` (root — runs server type-check)
-3. `npm run test:run` (root — runs server unit tests)
-4. If any fail: fix, then re-run. Do NOT push until all pass.
-
-### Staging
-- Use `git add <paths>` for specific changed files. NEVER use `git add .` without verifying no secrets, lockfiles, or build artifacts are staged.
-- Before commit: run `git diff --cached` and confirm no sensitive or unintended files.
-
-### Commits
-- Use Conventional Commits: `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`.
-
----
-
-## 5. Coding Standards
-
-### React
-- Functional components with hooks. Use `lucide-react` for icons.
-- Memoize expensive components with `React.memo` when re-renders are costly.
-- Use `React.lazy` for route-level code splitting where appropriate.
-
-### Backend
-- All Express routes MUST use `express-async-errors`.
-- Use Zod for all input/output validation.
-- Avoid N+1 queries; use batch loading or `include` where applicable.
-
-### Security
-- Sanitize all HTML inputs with `isomorphic-dompurify`.
-- Never hardcode secrets; use environment variables.
-- Ensure all API routes have Zod validation and sanitization.
-
-### Performance
-- Prefer existing utilities in `shared/src/utils` over new implementations.
-- Avoid unnecessary re-renders; use `useMemo`/`useCallback` when dependencies justify it.
-- Keep bundle size in mind; avoid large dependencies without justification.
-
----
-
-## 6. Accessibility (A11y)
-- **Standard:** WCAG 2.1 Level AA.
-- **Required for UI changes:**
-  - Semantic HTML (`main`, `nav`, `section`, `article`, etc.)
-  - `aria-label` or `aria-labelledby` on interactive elements without visible labels
-  - `alt` on all images
-  - Keyboard focus management for modals and custom controls
-- Before marking UI tasks [Complete], run the Security & Accessibility Audit skill.
-
----
-
-## 7. Skill Orchestration (When to Use Which)
-| Trigger | Skill |
-|---------|-------|
-| "Start next task" / "Pick next task" | task-bootstrapper |
-| "Ready to commit" / "Ready to push" | pre-push-validator |
-| "Audit this task" / Before [Complete] on UI/API work | security-accessibility-audit |
-| "Refactor [X]" / "Improve architectural consistency" | context-refactor |
-| "Review my UI" / "Check accessibility" / "Audit design" | web-design-review |
-| "Complete the website" / "Work on features" / "Autonomous" / "Go ahead" | autonomous-task-runner |
-| Before [Complete] (after implementation) | code-review-subagent |
-| Before client-side UI implementation (Mega-Agent) | ui-ux-designer |
-
----
-
-## 8. Subagent Orchestration
-
-### When to Use Subagents
-- **Parallel subtasks:** When a task has 2+ independent subtasks (e.g., "Add contact form" + "Add newsletter API"), launch separate subagents for each. Use `mcp_task` with `subagent_type: "generalPurpose"` or `"explore"` as appropriate.
-- **Code review before [Complete]:** After implementing a task, BEFORE marking [Complete], launch a subagent with `subagent_type: "generalPurpose"` to review the changed files for: architecture compliance, security, accessibility, and style. Incorporate feedback before finalizing.
-- **Exploration:** When you need to search the codebase broadly (e.g., "find all API endpoints"), use `subagent_type: "explore"` with thoroughness "medium" or "very thorough".
-
-### Subagent Launch Rules
-- Provide a detailed task description; subagents do not see prior context.
-- Specify exactly what to return (e.g., "List of files to change" or "Pass/Fail checklist with line numbers").
-- For code review: pass the list of changed file paths and ask for findings in `file:line:issue` format.
-- Launch up to 4 subagents in parallel when subtasks are independent.
-
----
-
-## 9. Supplemental Rules (Read When Relevant)
-- **Error handling:** Read `.claude/rules/error-management.md` when implementing server/API logic.
-- **Forms:** Read `.claude/rules/form-management.md` when implementing forms.
-- **Performance:** Read `.claude/rules/react-performance.md` when optimizing React components.
-- **Testing:** Read `.claude/rules/ai-testing-best-practices.md` when adding or modifying E2E/unit tests.
-- **DataState, padding & admin responsive:** Read `.claude/rules/dont-forget.md` when building data-fetching pages, admin UI, or admin responsive layout (hamburger/sidebar).
-
----
-
-## 10. Error Recovery
-- **Lint fails:** Run `npm run lint -w <workspace>` and fix reported issues. Use `eslint . --fix` in the affected workspace for auto-fix.
-- **Type-check fails:** Fix type errors; do not use `any` or `@ts-ignore` without justification.
-- **Tests fail:** Fix failing tests; do not skip or disable without user approval.
-- **Build fails:** Report logs and ask for direction; do not guess at structural changes.
+## Context Triggers
+- **Task Board**: `@docs/00-Context/tasks.md`
+- **Progress Log**: `@docs/00-Context/progress.md`
+- **Architecture**: `@docs/04-Architecture/index.md`
+- **Workflow**: `@docs/PROJECT_WORKFLOW_GUIDE.md`
+- **Database Schema**: `@server/prisma/schema.prisma`

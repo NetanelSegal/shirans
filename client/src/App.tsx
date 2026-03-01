@@ -28,6 +28,7 @@ const TestimonialsManagement = lazy(() => import('./pages/Admin/TestimonialsMana
 const ContactsManagement = lazy(() => import('./pages/Admin/ContactsManagement'));
 const UsersManagement = lazy(() => import('./pages/Admin/UsersManagement'));
 const Calculator = lazy(() => import('./pages/Calculator'));
+const LandingCalculator = lazy(() => import('./pages/LandingCalculator'));
 const CalculatorLeadsManagement = lazy(
   () => import('./pages/Admin/CalculatorLeadsManagement')
 );
@@ -109,6 +110,11 @@ export const appRoutes = [
     title: 'הרשמה',
     element: <Register />,
     notNavigateable: true,
+  },
+  {
+    path: 'calculator',
+    title: 'מחשבון אומדן',
+    element: <LandingCalculator />,
   },
 ];
 

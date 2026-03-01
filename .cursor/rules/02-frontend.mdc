@@ -1,0 +1,54 @@
+---
+description: FRONTEND STANDARDS: Enforces React 18 patterns, Tailwind 3 styling, RTL (Hebrew) support, and UI/UX consistency. Triggered on all UI and client-side logic changes.
+globs: "client/src/**/*.{tsx,ts,css}, client/public/**/*"
+---
+
+# 02-Frontend: Architecture & Interior Design UI
+
+This rule applies to all frontend code in `client/src/`. It prioritizes performance, accessibility, and a premium, clean design.
+
+## 1. Design System & Styling
+- **Theme**: Premium architectural aesthetic. Use the "Assistant" font family.
+- **Components**: Use ONLY `client/src/components/ui/` for primitive elements. Avoid raw HTML tags for styled elements.
+- **Tailwind 3**: Use utility classes for all styling. Refer to `client/tailwind.config.js` for custom colors and spacing.
+- **RTL Support**: Default to Hebrew layout (`dir="rtl"`). Ensure text alignment (`text-right`), margins (`ml` instead of `mr`), and padding are handled correctly for RTL.
+- **Responsive Design**: Mobile-first approach. Verify all layouts on mobile (mobile-vid-hero) and desktop.
+
+## 2. React 18 & Performance
+- **React 18**: Use modern hooks and patterns. Ensure `main.tsx` uses `createRoot`.
+- **Bundle Optimization**: Use `React.lazy()` for page-level components to reduce the initial bundle size.
+- **Data Fetching**: Use Axios services from `client/src/services/` with proper error handling and loading states.
+- **Contexts**: Use contexts in `client/src/contexts/` for global state (Auth, Categories, Projects, Screen).
+
+## 3. Motion & Animation
+- **Motion Package**: Use `motion` primitives. Favor smooth, subtle architectural reveals (ease-in-out).
+- **Project Displays**: Ensure high-quality image handling with `react-zoom-pan-pinch` for project details.
+
+## 4. Forms & Validation
+- **React Hook Form**: Always use `react-hook-form` for all client-side forms.
+- **Zod Validation**: Use schemas from `@shirans/shared` to validate forms via `@hookform/resolvers/zod`.
+- **Loading States**: Every async action MUST show a `Loader`, `Skeleton`, or `Spinner` from `client/src/components/Loader/`.
+
+## 5. Directory Structure & Naming
+- **Components**: Follow the structure in `client/src/components/` (Admin, Auth, Layout, Navbar, etc.).
+- **Pages**: Define page components in `client/src/pages/`. Keep pages thin — orchestrate components and hooks only.
+- **Assets**: Store SVGs in `client/src/assets/`.
+
+## 6. Separation of Concerns (MANDATORY)
+
+Always separate client code into the right layer:
+
+- **Hooks** (`client/src/hooks/`): Reusable logic (data fetching, form state, API calls). Extract when logic is shared or complex.
+- **Components** (`client/src/components/`): Reusable UI. Extract subcomponents to separate files when they grow (>50 lines or clearly reusable).
+- **Pages** (`client/src/pages/`): Thin orchestrators. Compose components + hooks. No business logic inline.
+- **Constants/Options**: Extract option arrays, config objects to `constants.ts` or `options.ts` within the feature folder (e.g. `components/Calculator/constants.ts`).
+- **Utils**: Pure functions go in `client/src/utils/` or a local `utils.ts` in the feature folder.
+
+**Example**: A form with options, a Select subcomponent, and submit logic → `CalculatorForm.tsx` (component) + `calculatorOptions.ts` (constants) + `useCalculatorSubmit` (hook) + `Select.tsx` (extracted component if reused).
+
+## 7. Verification Checklist
+- [ ] Is it RTL compatible (Hebrew alignment)?
+- [ ] Does it use the UI component library in `client/src/components/ui/`?
+- [ ] Are animations smooth and accessible?
+- [ ] Is form validation synced with `@shirans/shared`?
+- [ ] Tested on both mobile and desktop views?

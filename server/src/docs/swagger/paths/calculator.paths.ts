@@ -4,8 +4,7 @@ export const calculatorPaths = {
       tags: ['Calculator'],
       summary: 'Submit a calculator lead',
       description:
-        'Submits calculator form data and estimate. Admin only. Requires authentication.',
-      security: [{ bearerAuth: [] }],
+        'Public endpoint. Submits calculator form data and estimate. Rate limited (10 req/15 min per IP).',
       requestBody: {
         required: true,
         content: {
@@ -24,8 +23,7 @@ export const calculatorPaths = {
           },
         },
         '400': { description: 'Validation error' },
-        '401': { description: 'Not authenticated' },
-        '403': { description: 'Not authorized (admin only)' },
+        '429': { description: 'Too many submissions, please try again later' },
       },
     },
     get: {
@@ -149,8 +147,8 @@ export const calculatorPaths = {
     get: {
       tags: ['Calculator'],
       summary: 'Get calculator config',
-      description: 'Returns calculator rates/config. Admin only.',
-      security: [{ bearerAuth: [] }],
+      description:
+        'Public endpoint. Returns calculator rates/config for the landing page and admin calculator.',
       responses: {
         '200': {
           description: 'Calculator config',
@@ -160,8 +158,6 @@ export const calculatorPaths = {
             },
           },
         },
-        '401': { description: 'Not authenticated' },
-        '403': { description: 'Not authorized (admin only)' },
       },
     },
     put: {
