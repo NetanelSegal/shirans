@@ -8,12 +8,13 @@ import {
 } from '../controllers/contact.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { requireAdmin } from '../middleware/authorize.middleware';
+import { leadLimiter, adminMutationLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
 // Public route
 // POST /api/contact - Submit contact form
-router.post('/', submitContact);
+router.post('/', leadLimiter, submitContact);
 
 // Protected admin routes
 // GET /api/contact - Get all contact submissions
@@ -23,9 +24,9 @@ router.get('/', authenticate, requireAdmin, getAllSubmissions);
 router.get('/:id', authenticate, requireAdmin, getSubmissionById);
 
 // PATCH /api/contact/:id/read - Update read status
-router.patch('/:id/read', authenticate, requireAdmin, updateReadStatus);
+router.patch('/:id/read', adminMutationLimiter, authenticate, requireAdmin, updateReadStatus);
 
 // DELETE /api/contact/:id - Delete a contact submission
-router.delete('/:id', authenticate, requireAdmin, deleteSubmission);
+router.delete('/:id', adminMutationLimiter, authenticate, requireAdmin, deleteSubmission);
 
 export default router;

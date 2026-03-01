@@ -63,8 +63,8 @@ export default function Navbar() {
             }`}
         >
           {appRoutes.map(
-            ({ title, path, notNavigateable }) =>
-              !notNavigateable && (
+            ({ title, path, notNavigateable, showInNavbar }) =>
+              !notNavigateable && showInNavbar !== false && (
                 <li key={path}>
                   <NavLink
                     to={path}

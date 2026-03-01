@@ -1,6 +1,7 @@
 import apiClient from '@/utils/apiClient';
 import { urls } from '@/constants/urls';
 import type {
+  CalculatorFormInput,
   SubmitCalculatorLeadInput,
   CalculatorConfigInput,
   CalculatorLeadResponse,
@@ -13,6 +14,13 @@ export const calculatorService = {
       data
     );
     return lead;
+  },
+
+  async submitLeadFromForm(
+    data: CalculatorFormInput,
+    estimate: number
+  ): Promise<CalculatorLeadResponse> {
+    return this.submitLead({ ...data, priceDisplay: 'before_vat', estimate });
   },
 
   async getLeads(filters?: { isRead?: boolean }): Promise<CalculatorLeadResponse[]> {

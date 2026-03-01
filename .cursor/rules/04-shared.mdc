@@ -1,0 +1,32 @@
+---
+description: SHARED LOGIC & TYPES: Enforces the "Single Source of Truth" pattern in @shirans/shared. Triggered on all shared types, schemas, and utility changes.
+globs: "shared/src/**/*.{ts,js}"
+---
+
+# 04-Shared: Monorepo Single Source of Truth
+
+This rule ensures that all shared types, Zod schemas, and utility functions in `shared/src/` are consistent across the monorepo.
+
+## 1. Data Modeling & Validation
+- **Zod Schemas**: Define all data models (User, Project, Category, Contact) in `shared/src/schemas/`.
+- **Zod Inferred Types**: Export Zod-inferred types for use in both `client/` and `server/`.
+- **Request/Response**: Use Zod schemas to define API request bodies and response shapes.
+
+## 2. Constants & Errors
+- **HTTP Status**: Use `shared/src/constants/` for standard HTTP status codes.
+- **Error Messages**: Define user-facing error messages centrally to ensure consistency.
+- **URLs**: Manage API and static asset URLs in `shared/src/constants/urls.ts`.
+
+## 3. Shared Utilities
+- **Sanitization**: Use `isomorphic-dompurify` in `shared/src/utils/` for cleaning user input on both ends.
+- **Formatting**: Centralize date, currency, and string formatting logic.
+
+## 4. Monorepo Coordination
+- **Build First**: After modifying `shared/`, run `npm run build -w @shirans/shared` at the root to propagate changes.
+- **Import Policy**: ALWAYS import from `@shirans/shared` in `client/` and `server/`. Avoid duplicating types or schemas.
+
+## 5. Verification Checklist
+- [ ] Are Zod schemas comprehensive (required fields, types)?
+- [ ] Is it exported in `shared/src/index.ts`?
+- [ ] Did you build the shared package to verify its integrity?
+- [ ] Is it used in BOTH the frontend and backend where applicable?

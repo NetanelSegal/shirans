@@ -10,21 +10,19 @@ import {
 } from '../controllers/calculator.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { requireAdmin } from '../middleware/authorize.middleware';
+import { leadLimiter, adminMutationLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// All calculator routes require admin (calculator is admin-only)
-router.use(authenticate, requireAdmin);
-
-// Leads
-router.post('/leads', submitLead);
-router.get('/leads', getAllLeads);
-router.get('/leads/:id', getLeadById);
-router.patch('/leads/:id/read', updateLeadReadStatus);
-router.delete('/leads/:id', deleteLead);
-
-// Config
+// Public routes (no auth)
+router.post('/leads', leadLimiter, submitLead);
 router.get('/config', getConfig);
-router.put('/config', updateConfig);
+
+// Protected admin routes
+router.get('/leads', authenticate, requireAdmin, getAllLeads);
+router.get('/leads/:id', authenticate, requireAdmin, getLeadById);
+router.patch('/leads/:id/read', adminMutationLimiter, authenticate, requireAdmin, updateLeadReadStatus);
+router.delete('/leads/:id', adminMutationLimiter, authenticate, requireAdmin, deleteLead);
+router.put('/config', adminMutationLimiter, authenticate, requireAdmin, updateConfig);
 
 export default router;

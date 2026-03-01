@@ -42,8 +42,8 @@ export const DEFAULT_CALCULATOR_CONFIG: CalculatorConfigInput = {
 
 export function calculateEstimate(
   input: CalculatorFormInput,
-  config: CalculatorConfigInput = DEFAULT_CALCULATOR_CONFIG
-): { min: number; max: number } {
+  config: CalculatorConfigInput,
+): number {
   const finish = config.finishMultipliers[input.constructionFinish];
   const outdoorFinish = config.finishMultipliers[input.outdoorFinish];
 
@@ -80,15 +80,7 @@ export function calculateEstimate(
     furniture.max +
     equipment.max;
 
-  if (input.priceDisplay === 'including_vat') {
-    totalMin *= config.vatMultiplier;
-    totalMax *= config.vatMultiplier;
-  }
-
-  return {
-    min: Math.round(totalMin),
-    max: Math.round(totalMax),
-  };
+  return Math.round((totalMin + totalMax) / 2);
 }
 
 /** Format a number as Hebrew locale price (e.g. 1,234,567) */
@@ -96,6 +88,10 @@ export function formatPrice(n: number): string {
   return new Intl.NumberFormat('he-IL').format(n);
 }
 
-export const WHATSAPP_NUMBER = '97252174443';
-export const WHATSAPP_MESSAGE =
-  'היי שירן,\nביצעתי חישוב במחשבון אומדן עלות לבנייה פרטית\nואשמח לקבוע פגישת היכרות';
+/** Get single display estimate from lead (handles legacy min/max or new single value) */
+export function getLeadDisplayEstimate(lead: {
+  estimateMin: number;
+  estimateMax: number;
+}): number {
+  return Math.round((lead.estimateMin + lead.estimateMax) / 2);
+}

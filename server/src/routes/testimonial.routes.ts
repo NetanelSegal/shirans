@@ -10,6 +10,7 @@ import {
 } from '../controllers/testimonial.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { requireAdmin } from '../middleware/authorize.middleware';
+import { adminMutationLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
@@ -18,10 +19,10 @@ router.get('/', getAllTestimonials); // Can be filtered by ?isPublished=true/fal
 router.get('/published', getPublishedTestimonials);
 
 // Protected admin routes
-router.post('/', authenticate, requireAdmin, createTestimonial);
+router.post('/', adminMutationLimiter, authenticate, requireAdmin, createTestimonial);
 router.get('/:id', authenticate, requireAdmin, getTestimonialById);
-router.put('/:id', authenticate, requireAdmin, updateTestimonial);
-router.delete('/:id', authenticate, requireAdmin, deleteTestimonial);
-router.patch('/:id/order', authenticate, requireAdmin, updateTestimonialOrder);
+router.put('/:id', adminMutationLimiter, authenticate, requireAdmin, updateTestimonial);
+router.delete('/:id', adminMutationLimiter, authenticate, requireAdmin, deleteTestimonial);
+router.patch('/:id/order', adminMutationLimiter, authenticate, requireAdmin, updateTestimonialOrder);
 
 export default router;

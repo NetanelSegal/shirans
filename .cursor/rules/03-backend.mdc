@@ -1,0 +1,49 @@
+---
+description: BACKEND & DATABASE: Enforces Node.js, Express, Prisma, and PostgreSQL best practices. Triggered on server-side logic, database schema, and API routes.
+globs: "server/src/**/*.{ts,js}, server/prisma/**/*"
+---
+
+# 03-Backend: Server Architecture & Data Integrity
+
+This rule ensures that all backend logic, database schema, and authentication flows are secure, scalable, and maintainable.
+
+## 1. Node.js & Express Architecture
+- **Framework**: Express with TypeScript.
+- **Pattern**: Controller-Service-Repository pattern.
+    - **Controllers**: Handle HTTP requests, parse inputs, and call services.
+    - **Services**: Contain business logic and orchestrate repositories.
+    - **Repositories**: Direct interaction with Prisma for database operations.
+    - **Validators**: Use Zod schemas from `@shirans/shared` to validate inputs.
+- **Error Handling**: Use `express-async-errors` to catch asynchronous errors. Use `server/src/middleware/errorHandler.ts` for unified error responses.
+
+## 2. Prisma & PostgreSQL
+- **Schema First**: Define database models in `server/prisma/schema.prisma`.
+- **Migrations**: Use `prisma migrate dev` for development schema changes.
+- **Validation**: Ensure all database writes are validated using Zod schemas from `shared/`.
+- **Database Connection**: Managed via `@prisma/client`.
+
+## 3. Authentication & Security
+- **JWT Auth**: Use JSON Web Tokens for authentication.
+- **Bcrypt**: Use `bcrypt` for password hashing.
+- **Security Middleware**: Always use `cors`, `helmet`, `cookie-parser`, and `express-rate-limit`.
+- **Rate Limiting**: Apply `express-rate-limit` to ALL mutation endpoints (POST, PUT, PATCH, DELETE). Use dedicated limiters: `authLimiter` (auth), `leadLimiter` (public contact/calculator submissions — strict, e.g. 10/15min), `adminMutationLimiter` (admin CRUD — moderate, e.g. 100/15min).
+- **CORS**: Ensure CORS is configured for the frontend domains (Netlify).
+- **Environment Variables**: Never hardcode secrets. Use `dotenv` and access via `process.env`.
+
+## 4. API Documentation & Testing
+- **Swagger**: Update `server/src/docs/` and `swagger-ui-express` configuration for new endpoints.
+- **Testing**: Use `vitest` for unit/integration tests and `supertest` for API endpoint testing.
+- **Validators**: All public-facing routes MUST have a corresponding Zod validator.
+
+## 5. Deployment & Performance
+- **Render**: Optimized for deployment on Render. Ensure `dist/` is correctly built and served.
+- **Pagination**: Use pagination on all project and category listings. No unbounded Prisma queries.
+- **Logging**: Use `winston` for structured logging in `server/src/utils/logger.ts`.
+
+## 6. Security Audit Checklist
+- [ ] Is input validated with Zod schemas?
+- [ ] Are authentication guards (`authMiddleware.ts`) applied to protected routes?
+- [ ] Are rate limiters applied to public submission endpoints (auth, contact, calculator)?
+- [ ] Are all secrets stored in `.env`?
+- [ ] Are Prisma queries optimized (no N+1 issues)?
+- [ ] Does the endpoint follow RESTful conventions?

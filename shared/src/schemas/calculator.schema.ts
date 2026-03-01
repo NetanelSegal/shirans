@@ -5,49 +5,48 @@ const finishLevel = z.enum(['standard', 'invested', 'premium']);
 const poolOption = z.enum(['none', 'small', 'medium', 'large']);
 const carpentryOption = z.enum(['none', 'ready', 'custom']);
 const furnitureOption = z.enum(['none', 'basic', 'full']);
-const priceDisplayOption = z.enum(['before_vat', 'including_vat']);
 
-export const calculatorFormSchema = z.object({
-  // User details
-  name: z
-    .string()
-    .min(2, 'שם חייב להכיל לפחות 2 תווים')
-    .max(50, 'שם חייב להכיל פחות מ-50 תווים')
-    .transform((val) => DOMPurify.sanitize(val.trim())),
-  phoneNumber: z
-    .string()
-    .length(10, 'מספר טלפון חייב להכיל בדיוק 10 ספרות')
-    .regex(/^\d+$/, 'מספר טלפון חייב להכיל ספרות בלבד')
-    .transform((val) => DOMPurify.sanitize(val.trim())),
-  email: z
-    .string()
-    .email('כתובת אימייל לא תקינה')
-    .min(5, 'אימייל חייב להכיל לפחות 5 תווים')
-    .max(50, 'אימייל חייב להכיל פחות מ-50 תווים')
-    .transform((val) => DOMPurify.sanitize(val.trim())),
+export const calculatorFormSchema = z
+  .object({
+    // User details
+    name: z
+      .string()
+      .min(2, 'שם חייב להכיל לפחות 2 תווים')
+      .max(50, 'שם חייב להכיל פחות מ-50 תווים')
+      .transform((val) => DOMPurify.sanitize(val.trim())),
+    phoneNumber: z
+      .string()
+      .length(10, 'מספר טלפון חייב להכיל בדיוק 10 ספרות')
+      .regex(/^\d+$/, 'מספר טלפון חייב להכיל ספרות בלבד')
+      .transform((val) => DOMPurify.sanitize(val.trim())),
+    email: z
+      .email('כתובת אימייל לא תקינה')
+      .min(5, 'אימייל חייב להכיל לפחות 5 תווים')
+      .max(50, 'אימייל חייב להכיל פחות מ-50 תווים')
+      .transform((val) => DOMPurify.sanitize(val.trim())),
 
-  // Building inputs
-  builtAreaSqm: z
-    .number()
-    .min(160, 'שטח בנוי מינימלי: 160 מ״ר')
-    .max(500, 'שטח בנוי מקסימלי: 500 מ״ר'),
-  constructionFinish: finishLevel,
-  pool: poolOption,
-  outdoorAreaSqm: z.number().min(0, 'שטח פיתוח חוץ לא יכול להיות שלילי'),
-  outdoorFinish: finishLevel,
-  kitchen: finishLevel,
-  carpentry: carpentryOption,
-  furniture: furnitureOption,
-  equipment: furnitureOption,
-  priceDisplay: priceDisplayOption,
-});
+    // Building inputs
+    builtAreaSqm: z
+      .number()
+      .min(160, 'שטח בנוי מינימלי: 160 מ״ר')
+      .max(500, 'שטח בנוי מקסימלי: 500 מ״ר'),
+    constructionFinish: finishLevel,
+    pool: poolOption,
+    outdoorAreaSqm: z.number().min(0, 'שטח פיתוח חוץ לא יכול להיות שלילי'),
+    outdoorFinish: finishLevel,
+    kitchen: finishLevel,
+    carpentry: carpentryOption,
+    furniture: furnitureOption,
+    equipment: furnitureOption,
+  })
+  .strict();
 
 export type CalculatorFormInput = z.infer<typeof calculatorFormSchema>;
 
-/** Schema for submitting a calculator lead to the API */
+/** Schema for submitting a calculator lead (API) — priceDisplay fixed as before_vat */
 export const submitCalculatorLeadSchema = calculatorFormSchema.extend({
-  estimateMin: z.number(),
-  estimateMax: z.number(),
+  estimate: z.number(),
+  priceDisplay: z.literal('before_vat').default('before_vat'),
 });
 
 export type SubmitCalculatorLeadInput = z.infer<typeof submitCalculatorLeadSchema>;
@@ -96,7 +95,9 @@ export const calculatorLeadsQuerySchema = z.object({
   isRead: z
     .enum(['true', 'false'])
     .optional()
-    .transform((v) => (v === 'true' ? true : v === 'false' ? false : undefined)),
+    .transform((v) =>
+      v === 'true' ? true : v === 'false' ? false : undefined,
+    ),
 });
 
 export const calculatorLeadIdSchema = z.object({

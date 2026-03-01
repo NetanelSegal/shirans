@@ -64,8 +64,8 @@ export const calculatorRepository = {
         furniture: data.furniture,
         equipment: data.equipment,
         priceDisplay: data.priceDisplay,
-        estimateMin: data.estimateMin,
-        estimateMax: data.estimateMax,
+        estimateMin: data.estimate,
+        estimateMax: data.estimate,
       },
     });
     return transformLead(lead);

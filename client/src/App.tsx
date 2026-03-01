@@ -11,6 +11,7 @@ import Loader from './components/Loader/Loader'; // Import Loader for Suspense f
 import apiClient from './utils/apiClient';
 import { urls } from './constants/urls';
 import { USE_FILE_DATA } from './constants/dataSource';
+import { SITE_CONFIG } from './constants/siteConfig';
 
 const Layout = lazy(() => import('./components/Layout'));
 const Home = lazy(() => import('./pages/Home'));
@@ -28,6 +29,7 @@ const TestimonialsManagement = lazy(() => import('./pages/Admin/TestimonialsMana
 const ContactsManagement = lazy(() => import('./pages/Admin/ContactsManagement'));
 const UsersManagement = lazy(() => import('./pages/Admin/UsersManagement'));
 const Calculator = lazy(() => import('./pages/Calculator'));
+const LandingCalculator = lazy(() => import('./pages/LandingCalculator'));
 const CalculatorLeadsManagement = lazy(
   () => import('./pages/Admin/CalculatorLeadsManagement')
 );
@@ -109,6 +111,12 @@ export const appRoutes = [
     title: 'הרשמה',
     element: <Register />,
     notNavigateable: true,
+  },
+  {
+    path: 'calculator',
+    title: 'מחשבון אומדן',
+    element: <LandingCalculator />,
+    showInNavbar: SITE_CONFIG.calculator.showInNavbar,
   },
 ];
 

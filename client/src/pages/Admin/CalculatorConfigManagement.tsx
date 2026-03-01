@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { calculatorService } from '@/services/calculator.service';
 import {
-  DEFAULT_CALCULATOR_CONFIG,
   type CalculatorConfigInput,
 } from '@shirans/shared';
 import { AdminPageHeader } from '@/components/Admin/AdminPageHeader';
@@ -17,8 +16,8 @@ export default function CalculatorConfigManagement() {
   useEffect(() => {
     calculatorService
       .getConfig()
-      .then((c) => setConfig(c ?? DEFAULT_CALCULATOR_CONFIG))
-      .catch(() => setConfig(DEFAULT_CALCULATOR_CONFIG))
+      .then((c) => setConfig(c))
+      .catch(() => setConfig(null))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -51,7 +50,7 @@ export default function CalculatorConfigManagement() {
   };
 
   const handleReset = () => {
-    setConfig(DEFAULT_CALCULATOR_CONFIG);
+    setConfig(null);
   };
 
   if (isLoading || !config) {
