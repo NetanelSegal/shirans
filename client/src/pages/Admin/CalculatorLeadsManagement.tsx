@@ -7,7 +7,7 @@ import { StatusBadge } from '@/components/Admin/StatusBadge';
 import { DataStateGuard } from '@/components/DataState';
 import Button from '@/components/ui/Button';
 import type { CalculatorLeadResponse } from '@shirans/shared';
-import { formatPrice } from '@shirans/shared';
+import { formatPrice, getLeadDisplayEstimate } from '@shirans/shared';
 
 type FilterTab = 'all' | 'unread' | 'read';
 
@@ -86,7 +86,7 @@ export default function CalculatorLeadsManagement() {
       key: 'estimate',
       header: 'אומדן',
       render: (row: CalculatorLeadResponse) =>
-        `₪ ${formatPrice(row.estimateMin)} – ₪ ${formatPrice(row.estimateMax)}`,
+        `₪ ${formatPrice(getLeadDisplayEstimate(row))}`,
     },
     {
       key: 'isRead',

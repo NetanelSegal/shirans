@@ -11,6 +11,7 @@ import Loader from './components/Loader/Loader'; // Import Loader for Suspense f
 import apiClient from './utils/apiClient';
 import { urls } from './constants/urls';
 import { USE_FILE_DATA } from './constants/dataSource';
+import { SITE_CONFIG } from './constants/siteConfig';
 
 const Layout = lazy(() => import('./components/Layout'));
 const Home = lazy(() => import('./pages/Home'));
@@ -115,6 +116,7 @@ export const appRoutes = [
     path: 'calculator',
     title: 'מחשבון אומדן',
     element: <LandingCalculator />,
+    showInNavbar: SITE_CONFIG.calculator.showInNavbar,
   },
 ];
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -6,9 +6,6 @@ import {
   type CalculatorFormInput,
   type CalculatorConfigInput,
   calculateEstimate,
-  DEFAULT_CALCULATOR_CONFIG,
-  WHATSAPP_NUMBER,
-  WHATSAPP_MESSAGE,
   formatPrice,
 } from '@shirans/shared';
 import { Input } from '@/components/ui/Input';
@@ -19,21 +16,20 @@ import {
   POOL_OPTIONS,
   CARPENTRY_OPTIONS,
   FURNITURE_OPTIONS,
-  PRICE_DISPLAY_OPTIONS,
 } from './constants';
+import { info } from '@/data/contact-info';
 
 export interface CalculatorFormProps {
   config: CalculatorConfigInput;
-  onSubmit: (
-    data: CalculatorFormInput,
-    estimate: { min: number; max: number }
-  ) => Promise<void>;
+  onSubmit: (data: CalculatorFormInput, estimate: number) => Promise<void>;
 }
 
 export function CalculatorForm({ config, onSubmit }: CalculatorFormProps) {
-  const effectiveConfig = config ?? DEFAULT_CALCULATOR_CONFIG;
+  const effectiveConfig = config;
 
   const {
+    trigger,
+    getValues,
     register,
     control,
     handleSubmit,
@@ -51,18 +47,37 @@ export function CalculatorForm({ config, onSubmit }: CalculatorFormProps) {
       carpentry: 'none',
       furniture: 'none',
       equipment: 'none',
-      priceDisplay: 'including_vat',
     },
   });
 
-  const priceDisplay = watch('priceDisplay');
-  const [result, setResult] = useState<{ min: number; max: number } | null>(null);
+  const watchedValues = watch();
+  const [liveEstimate, setLiveEstimate] = useState<number | null>(null);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const built = watchedValues.builtAreaSqm;
+    const outdoor = watchedValues.outdoorAreaSqm;
+    if (
+      typeof built === 'number' &&
+      !Number.isNaN(built) &&
+      built >= 160 &&
+      built <= 500 &&
+      typeof outdoor === 'number' &&
+      !Number.isNaN(outdoor) &&
+      outdoor >= 0
+    ) {
+      const estimate = calculateEstimate(watchedValues as CalculatorFormInput, effectiveConfig);
+      setLiveEstimate(estimate);
+    } else {
+      setLiveEstimate(null);
+    }
+  }, [watchedValues, effectiveConfig]);
+
+  const displayEstimate = liveEstimate;
+
   const handleFormSubmit = async (data: CalculatorFormInput) => {
     const estimate = calculateEstimate(data, effectiveConfig);
-    setResult(estimate);
     setSubmitError(null);
     setSubmitLoading(true);
     try {
@@ -74,9 +89,9 @@ export function CalculatorForm({ config, onSubmit }: CalculatorFormProps) {
     }
   };
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    WHATSAPP_MESSAGE
-  )}`;
+  const phoneForWhatsApp = (info.find((i) => i.icon === 'tel')?.text ?? '')
+    .replace(/\D/g, '')
+    .replace(/^0/, '972');
 
   return (
     <>
@@ -253,31 +268,6 @@ export function CalculatorForm({ config, onSubmit }: CalculatorFormProps) {
           </div>
         </section>
 
-        <fieldset
-          className="rounded-xl bg-secondary/30 p-6"
-          aria-labelledby="price-display-legend"
-        >
-          <legend id="price-display-legend" className="mb-4 text-xl font-semibold">
-            הצגת מחירים
-          </legend>
-          <div className="flex flex-wrap gap-4">
-            {PRICE_DISPLAY_OPTIONS.map(({ value, label }) => (
-              <label
-                key={value}
-                className="flex cursor-pointer items-center gap-2"
-              >
-                <input
-                  type="radio"
-                  value={value}
-                  {...register('priceDisplay')}
-                  className="h-4 w-4"
-                />
-                <span>{label}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
         {submitError && (
           <p className="text-sm text-amber-600" role="alert">
             {submitError}
@@ -293,23 +283,27 @@ export function CalculatorForm({ config, onSubmit }: CalculatorFormProps) {
         </Button>
       </form>
 
-      {result && (
+      {displayEstimate !== null && (
         <section
           className="mt-10 rounded-xl bg-primary/10 p-6"
           aria-live="polite"
           aria-label="תוצאת החישוב"
         >
           <h2 className="mb-4 text-xl font-semibold">אומדן תקציב</h2>
-          <p className="mb-6 text-2xl font-bold">
-            ₪ {formatPrice(result.min)} – ₪ {formatPrice(result.max)}
-          </p>
+          <p className="mb-6 text-2xl font-bold">₪ {formatPrice(displayEstimate)}</p>
           <p className="mb-4 text-sm text-gray-600">
-            {priceDisplay === 'including_vat'
-              ? 'המחירים כוללים מע״מ'
-              : 'המחירים לפני מע״מ'}
+            המחיר לא כולל מע״מ
           </p>
           <a
-            href={whatsappUrl}
+            onClick={async (e) => {
+              e.preventDefault();
+              if (!(await trigger())) {
+                document.getElementById('calculator-name')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+              }
+              window.open(getWhatsappLink(phoneForWhatsApp, getValues(), displayEstimate), '_blank');
+            }}
+            href={getWhatsappLink(phoneForWhatsApp, getValues(), displayEstimate)}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90"
@@ -330,4 +324,53 @@ export function CalculatorForm({ config, onSubmit }: CalculatorFormProps) {
       )}
     </>
   );
+}
+
+
+const FIELD_LABELS_HE: Record<keyof CalculatorFormInput, string> = {
+  name: 'שם',
+  phoneNumber: 'טלפון',
+  email: 'אימייל',
+  builtAreaSqm: 'שטח בנוי (מ״ר)',
+  constructionFinish: 'רמת גמר בנייה',
+  pool: 'בריכה',
+  outdoorAreaSqm: 'שטח פיתוח חוץ (מ״ר)',
+  outdoorFinish: 'רמת גמר פיתוח',
+  kitchen: 'מטבח',
+  carpentry: 'נגרות כללית',
+  furniture: 'ריהוט',
+  equipment: 'אבזור והלבשה',
+};
+
+const ENUM_LABELS_HE: Record<string, string> = {
+  standard: 'סטנדרט',
+  invested: 'מושקע',
+  premium: 'יוקרתי',
+  none: 'ללא',
+  small: 'קטנה',
+  medium: 'בינונית',
+  large: 'גדולה',
+  ready: 'קנייה מוכנה',
+  custom: 'ייצור לפי הזמנה',
+  basic: 'בסיסי',
+  full: 'מלא',
+};
+
+function formatValueForWhatsApp(_key: keyof CalculatorFormInput, value: unknown): string {
+  if (typeof value === 'number') return String(value);
+  if (typeof value === 'string' && ENUM_LABELS_HE[value]) return ENUM_LABELS_HE[value];
+  return String(value ?? '');
+}
+
+function getWhatsappLink(phoneNumber: string, data: CalculatorFormInput, result: number): string {
+  let message = 'היי שירן השתמשתי במחשבון אומדן תקציב באתר שלך ואלה הפרטים שהזנתי.\n';
+  message += 'פרטי החישוב:';
+  (Object.keys(FIELD_LABELS_HE) as (keyof CalculatorFormInput)[]).forEach((key) => {
+    const value = data[key];
+    if (value !== undefined) {
+      message += `\n${FIELD_LABELS_HE[key]}: ${formatValueForWhatsApp(key, value)}`;
+    }
+  });
+  message += `\nאומדן תקציב: ₪ ${formatPrice(result)}`;
+  return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 }

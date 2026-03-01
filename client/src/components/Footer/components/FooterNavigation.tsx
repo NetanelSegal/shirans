@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 
 export default function FooterNavigation() {
   const chunks = chunkArray(
-    appRoutes.filter(({ notNavigateable }) => !notNavigateable),
+    appRoutes.filter(
+      ({ notNavigateable, showInNavbar }) =>
+        !notNavigateable && showInNavbar !== false
+    ),
     2,
   );
   return (

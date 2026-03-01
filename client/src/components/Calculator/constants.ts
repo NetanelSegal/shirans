@@ -23,8 +23,3 @@ export const FURNITURE_OPTIONS = [
   { value: 'basic', label: 'בסיסי' },
   { value: 'full', label: 'מלא' },
 ] as const;
-
-export const PRICE_DISPLAY_OPTIONS = [
-  { value: 'before_vat', label: 'לפני מע״מ' },
-  { value: 'including_vat', label: 'כולל מע״מ' },
-] as const;

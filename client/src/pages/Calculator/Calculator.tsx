@@ -1,35 +1,15 @@
-import { useState, useEffect } from 'react';
-import {
-  type CalculatorFormInput,
-  type CalculatorConfigInput,
-  DEFAULT_CALCULATOR_CONFIG,
-} from '@shirans/shared';
+import type { CalculatorFormInput } from '@shirans/shared';
 import { Helmet } from 'react-helmet-async';
 import { BASE_URL } from '@/constants/urls';
 import { CalculatorForm } from '@/components/Calculator';
 import { calculatorService } from '@/services/calculator.service';
+import { useCalculatorConfig } from '@/hooks/useCalculatorConfig';
 
 export default function Calculator() {
-  const [config, setConfig] = useState<CalculatorConfigInput | null>(null);
-  const [configLoading, setConfigLoading] = useState(true);
+  const { config, isLoading: configLoading } = useCalculatorConfig();
 
-  useEffect(() => {
-    calculatorService
-      .getConfig()
-      .then((c) => setConfig(c ?? DEFAULT_CALCULATOR_CONFIG))
-      .catch(() => setConfig(DEFAULT_CALCULATOR_CONFIG))
-      .finally(() => setConfigLoading(false));
-  }, []);
-
-  const handleSubmit = async (
-    data: CalculatorFormInput,
-    estimate: { min: number; max: number }
-  ) => {
-    await calculatorService.submitLead({
-      ...data,
-      estimateMin: estimate.min,
-      estimateMax: estimate.max,
-    });
+  const handleSubmit = async (data: CalculatorFormInput, estimate: number) => {
+    await calculatorService.submitLeadFromForm(data, estimate);
   };
 
   if (configLoading) {
@@ -60,7 +40,7 @@ export default function Calculator() {
         מחשבון אומדן עלות לבנייה פרטית
       </h1>
 
-      <CalculatorForm config={config!} onSubmit={handleSubmit} />
+      {config && <CalculatorForm config={config} onSubmit={handleSubmit} />}
     </main>
   );
 }

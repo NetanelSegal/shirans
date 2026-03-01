@@ -37,9 +37,7 @@ export const calculatorSchemas = {
       'carpentry',
       'furniture',
       'equipment',
-      'priceDisplay',
-      'estimateMin',
-      'estimateMax',
+      'estimate',
     ],
     properties: {
       name: { type: 'string' },
@@ -54,9 +52,8 @@ export const calculatorSchemas = {
       carpentry: { type: 'string', enum: ['none', 'ready', 'custom'] },
       furniture: { type: 'string', enum: ['none', 'basic', 'full'] },
       equipment: { type: 'string', enum: ['none', 'basic', 'full'] },
-      priceDisplay: { type: 'string', enum: ['before_vat', 'including_vat'] },
-      estimateMin: { type: 'number' },
-      estimateMax: { type: 'number' },
+      priceDisplay: { type: 'string', enum: ['before_vat'], description: 'Optional; defaults to before_vat' },
+      estimate: { type: 'number' },
     },
   },
   CalculatorConfig: {
