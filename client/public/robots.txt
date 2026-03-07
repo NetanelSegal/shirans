@@ -10,6 +10,7 @@ Allow: /calculator
 
 # Block admin and auth areas from indexing
 Disallow: /admin
+Disallow: /assets
 Disallow: /login
 Disallow: /register
 
