@@ -1,0 +1,17 @@
+# robots.txt for shiran-gilad.com
+# Shirans portfolio website
+
+User-agent: *
+Allow: /
+Allow: /process
+Allow: /projects
+Allow: /contact
+Allow: /calculator
+
+# Block admin and auth areas from indexing
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+
+# Sitemap location
+Sitemap: https://shiran-gilad.com/sitemap.xml
