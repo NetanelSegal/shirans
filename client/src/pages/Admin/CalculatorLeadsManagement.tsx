@@ -3,6 +3,7 @@ import { useAdminCalculatorLeads } from '@/hooks/admin/useAdminCalculatorLeads';
 import { AdminPageHeader } from '@/components/Admin/AdminPageHeader';
 import { DataTable } from '@/components/Admin/DataTable';
 import { ConfirmDialog } from '@/components/Admin/ConfirmDialog';
+import { BulkActionBar } from '@/components/Admin/BulkActionBar';
 import { StatusBadge } from '@/components/Admin/StatusBadge';
 import { DataStateGuard } from '@/components/DataState';
 import Button from '@/components/ui/Button';
@@ -18,14 +19,19 @@ export default function CalculatorLeadsManagement() {
     error,
     updateReadStatus,
     delete: deleteLead,
+    updateReadStatusBulk,
+    deleteBulk,
     refresh,
   } = useAdminCalculatorLeads();
 
   const [filter, setFilter] = useState<FilterTab>('all');
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<CalculatorLeadResponse | null>(
     null
   );
+  const [bulkDeleteIds, setBulkDeleteIds] = useState<string[] | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isBulkBusy, setIsBulkBusy] = useState(false);
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
@@ -35,6 +41,40 @@ export default function CalculatorLeadsManagement() {
       setDeleteTarget(null);
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (!bulkDeleteIds?.length) return;
+    setIsBulkBusy(true);
+    try {
+      await deleteBulk(bulkDeleteIds);
+      setBulkDeleteIds(null);
+      setSelectedIds([]);
+    } finally {
+      setIsBulkBusy(false);
+    }
+  };
+
+  const handleBulkMarkRead = async () => {
+    if (!selectedIds.length) return;
+    setIsBulkBusy(true);
+    try {
+      await updateReadStatusBulk(selectedIds, true);
+      setSelectedIds([]);
+    } finally {
+      setIsBulkBusy(false);
+    }
+  };
+
+  const handleBulkMarkUnread = async () => {
+    if (!selectedIds.length) return;
+    setIsBulkBusy(true);
+    try {
+      await updateReadStatusBulk(selectedIds, false);
+      setSelectedIds([]);
+    } finally {
+      setIsBulkBusy(false);
     }
   };
 
@@ -125,6 +165,15 @@ export default function CalculatorLeadsManagement() {
           return (
             <>
               <AdminPageHeader title="לידים ממחשבון אומדן" />
+              <BulkActionBar
+                selectedCount={selectedIds.length}
+                onMarkRead={handleBulkMarkRead}
+                onMarkUnread={handleBulkMarkUnread}
+                onDelete={() => setBulkDeleteIds(selectedIds)}
+                onClearSelection={() => setSelectedIds([])}
+                mode="leads"
+                isBusy={isBulkBusy}
+              />
               <div className="mb-4 flex gap-2">
                 <Button
                   variant={filter === 'all' ? 'primary' : 'light'}
@@ -151,6 +200,9 @@ export default function CalculatorLeadsManagement() {
                 isLoading={false}
                 emptyMessage="אין לידים"
                 getRowId={(row) => row.id}
+                selectable
+                selectedIds={selectedIds}
+                onSelectionChange={setSelectedIds}
                 actions={(row) => (
                   <div className="flex flex-wrap gap-2">
                     <button
@@ -190,6 +242,19 @@ export default function CalculatorLeadsManagement() {
         }
         confirmLabel="מחק"
         isLoading={isDeleting}
+      />
+      <ConfirmDialog
+        open={!!bulkDeleteIds?.length}
+        onClose={() => setBulkDeleteIds(null)}
+        onConfirm={handleBulkDelete}
+        title="מחיקת לידים"
+        message={
+          bulkDeleteIds?.length
+            ? `האם אתה בטוח שברצונך למחוק ${bulkDeleteIds.length} לידים?`
+            : ''
+        }
+        confirmLabel="מחק"
+        isLoading={isBulkBusy}
       />
     </div>
   );

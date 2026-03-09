@@ -37,3 +37,22 @@ export async function updateContactReadStatus(
 export async function deleteContact(id: string): Promise<void> {
   await apiClient.delete(urls.adminContacts.delete(id));
 }
+
+export async function updateContactReadStatusBulk(
+  ids: string[],
+  isRead: boolean
+): Promise<{ count: number }> {
+  const { data } = await apiClient.patch<{ count: number }>(
+    urls.adminContacts.bulkRead,
+    { ids, isRead }
+  );
+  return data;
+}
+
+export async function deleteContactsBulk(ids: string[]): Promise<{ count: number }> {
+  const { data } = await apiClient.delete<{ count: number }>(
+    urls.adminContacts.bulkDelete,
+    { data: { ids } }
+  );
+  return data;
+}

@@ -7,6 +7,8 @@ import {
   updateTestimonial,
   deleteTestimonial,
   updateTestimonialOrder,
+  bulkUpdateTestimonials,
+  bulkDeleteTestimonials,
 } from '../controllers/testimonial.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { requireAdmin } from '../middleware/authorize.middleware';
@@ -20,6 +22,8 @@ router.get('/published', getPublishedTestimonials);
 
 // Protected admin routes
 router.post('/', adminMutationLimiter, authenticate, requireAdmin, createTestimonial);
+router.patch('/bulk', adminMutationLimiter, authenticate, requireAdmin, bulkUpdateTestimonials);
+router.delete('/bulk', adminMutationLimiter, authenticate, requireAdmin, bulkDeleteTestimonials);
 router.get('/:id', authenticate, requireAdmin, getTestimonialById);
 router.put('/:id', adminMutationLimiter, authenticate, requireAdmin, updateTestimonial);
 router.delete('/:id', adminMutationLimiter, authenticate, requireAdmin, deleteTestimonial);

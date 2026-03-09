@@ -5,6 +5,8 @@ import {
   getLeadById,
   updateLeadReadStatus,
   deleteLead,
+  bulkUpdateLeadReadStatus,
+  bulkDeleteLeads,
   getConfig,
   updateConfig,
 } from '../controllers/calculator.controller';
@@ -20,6 +22,8 @@ router.get('/config', getConfig);
 
 // Protected admin routes
 router.get('/leads', authenticate, requireAdmin, getAllLeads);
+router.patch('/leads/bulk/read', adminMutationLimiter, authenticate, requireAdmin, bulkUpdateLeadReadStatus);
+router.delete('/leads/bulk', adminMutationLimiter, authenticate, requireAdmin, bulkDeleteLeads);
 router.get('/leads/:id', authenticate, requireAdmin, getLeadById);
 router.patch('/leads/:id/read', adminMutationLimiter, authenticate, requireAdmin, updateLeadReadStatus);
 router.delete('/leads/:id', adminMutationLimiter, authenticate, requireAdmin, deleteLead);

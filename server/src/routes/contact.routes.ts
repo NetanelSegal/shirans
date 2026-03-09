@@ -5,6 +5,8 @@ import {
   getSubmissionById,
   updateReadStatus,
   deleteSubmission,
+  bulkUpdateReadStatus,
+  bulkDeleteSubmissions,
 } from '../controllers/contact.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { requireAdmin } from '../middleware/authorize.middleware';
@@ -19,6 +21,10 @@ router.post('/', leadLimiter, submitContact);
 // Protected admin routes
 // GET /api/contact - Get all contact submissions
 router.get('/', authenticate, requireAdmin, getAllSubmissions);
+
+// Bulk routes (must be before /:id)
+router.patch('/bulk/read', adminMutationLimiter, authenticate, requireAdmin, bulkUpdateReadStatus);
+router.delete('/bulk', adminMutationLimiter, authenticate, requireAdmin, bulkDeleteSubmissions);
 
 // GET /api/contact/:id - Get a contact submission by ID
 router.get('/:id', authenticate, requireAdmin, getSubmissionById);

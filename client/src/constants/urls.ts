@@ -53,6 +53,8 @@ export const urls = {
     update: (id: string) => `${BACKEND_URL}/api/testimonials/${id}`,
     delete: (id: string) => `${BACKEND_URL}/api/testimonials/${id}`,
     updateOrder: (id: string) => `${BACKEND_URL}/api/testimonials/${id}/order`,
+    bulkUpdate: `${BACKEND_URL}/api/testimonials/bulk`,
+    bulkDelete: `${BACKEND_URL}/api/testimonials/bulk`,
   },
 
   // Admin user endpoints
@@ -66,6 +68,8 @@ export const urls = {
     getById: (id: string) => `${BACKEND_URL}/api/contact/${id}`,
     updateRead: (id: string) => `${BACKEND_URL}/api/contact/${id}/read`,
     delete: (id: string) => `${BACKEND_URL}/api/contact/${id}`,
+    bulkRead: `${BACKEND_URL}/api/contact/bulk/read`,
+    bulkDelete: `${BACKEND_URL}/api/contact/bulk`,
   },
 
   // Calculator endpoints (admin only)
@@ -73,6 +77,8 @@ export const urls = {
     leads: `${BACKEND_URL}/api/calculator/leads`,
     leadById: (id: string) => `${BACKEND_URL}/api/calculator/leads/${id}`,
     leadRead: (id: string) => `${BACKEND_URL}/api/calculator/leads/${id}/read`,
+    leadsBulkRead: `${BACKEND_URL}/api/calculator/leads/bulk/read`,
+    leadsBulkDelete: `${BACKEND_URL}/api/calculator/leads/bulk`,
     config: `${BACKEND_URL}/api/calculator/config`,
   },
 

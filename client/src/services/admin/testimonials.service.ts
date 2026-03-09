@@ -47,3 +47,24 @@ export async function updateTestimonialOrder(
   );
   return data;
 }
+
+export async function updateTestimonialsBulk(
+  ids: string[],
+  isPublished: boolean
+): Promise<{ count: number }> {
+  const { data } = await apiClient.patch<{ count: number }>(
+    urls.testimonials.bulkUpdate,
+    { ids, isPublished }
+  );
+  return data;
+}
+
+export async function deleteTestimonialsBulk(
+  ids: string[]
+): Promise<{ count: number }> {
+  const { data } = await apiClient.delete<{ count: number }>(
+    urls.testimonials.bulkDelete,
+    { data: { ids } }
+  );
+  return data;
+}

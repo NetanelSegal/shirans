@@ -53,6 +53,21 @@ export function useAdminCalculatorLeads() {
     setLeads((prev) => prev.filter((l) => l.id !== id));
   }, []);
 
+  const updateReadStatusBulk = useCallback(
+    async (ids: string[], isRead: boolean) => {
+      await calculatorService.updateLeadReadBulk(ids, isRead);
+      setLeads((prev) =>
+        prev.map((l) => (ids.includes(l.id) ? { ...l, isRead } : l))
+      );
+    },
+    []
+  );
+
+  const deleteBulk = useCallback(async (ids: string[]) => {
+    await calculatorService.deleteLeadsBulk(ids);
+    setLeads((prev) => prev.filter((l) => !ids.includes(l.id)));
+  }, []);
+
   return {
     leads,
     isLoading,
@@ -60,5 +75,7 @@ export function useAdminCalculatorLeads() {
     refresh,
     updateReadStatus,
     delete: remove,
+    updateReadStatusBulk,
+    deleteBulk,
   };
 }

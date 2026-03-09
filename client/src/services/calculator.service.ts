@@ -53,6 +53,22 @@ export const calculatorService = {
     await apiClient.delete(urls.calculator.leadById(id));
   },
 
+  async updateLeadReadBulk(ids: string[], isRead: boolean): Promise<{ count: number }> {
+    const { data } = await apiClient.patch<{ count: number }>(
+      urls.calculator.leadsBulkRead,
+      { ids, isRead }
+    );
+    return data;
+  },
+
+  async deleteLeadsBulk(ids: string[]): Promise<{ count: number }> {
+    const { data } = await apiClient.delete<{ count: number }>(
+      urls.calculator.leadsBulkDelete,
+      { data: { ids } }
+    );
+    return data;
+  },
+
   async getConfig(): Promise<CalculatorConfigInput | null> {
     const { data } = await apiClient.get<CalculatorConfigInput | null>(
       urls.calculator.config

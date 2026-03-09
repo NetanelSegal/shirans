@@ -82,6 +82,21 @@ export function useAdminTestimonials() {
     []
   );
 
+  const updateBulk = useCallback(
+    async (ids: string[], isPublished: boolean) => {
+      await adminTestimonialsService.updateTestimonialsBulk(ids, isPublished);
+      setTestimonials((prev) =>
+        prev.map((t) => (ids.includes(t.id) ? { ...t, isPublished } : t))
+      );
+    },
+    []
+  );
+
+  const deleteBulk = useCallback(async (ids: string[]) => {
+    await adminTestimonialsService.deleteTestimonialsBulk(ids);
+    setTestimonials((prev) => prev.filter((t) => !ids.includes(t.id)));
+  }, []);
+
   return {
     testimonials,
     isLoading,
@@ -91,5 +106,7 @@ export function useAdminTestimonials() {
     update,
     delete: remove,
     updateOrder,
+    updateBulk,
+    deleteBulk,
   };
 }

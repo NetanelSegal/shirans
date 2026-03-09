@@ -83,6 +83,77 @@ export const testimonialsPaths = {
       },
     },
   },
+  '/api/testimonials/bulk': {
+    patch: {
+      tags: ['Testimonials'],
+      summary: 'Bulk update testimonials',
+      description:
+        'Updates isPublished for multiple testimonials. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                ids: { type: 'array', items: { type: 'string', format: 'cuid' } },
+                isPublished: { type: 'boolean' },
+              },
+              required: ['ids', 'isPublished'],
+            },
+          },
+        },
+      },
+      responses: {
+        '200': {
+          description: 'Bulk update successful',
+          content: {
+            'application/json': {
+              schema: { type: 'object', properties: { count: { type: 'number' } } },
+            },
+          },
+        },
+        '400': { description: 'Validation error' },
+        '401': { description: 'Not authenticated' },
+        '403': { description: 'Not authorized (admin only)' },
+      },
+    },
+    delete: {
+      tags: ['Testimonials'],
+      summary: 'Bulk delete testimonials',
+      description:
+        'Deletes multiple testimonials. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                ids: { type: 'array', items: { type: 'string', format: 'cuid' } },
+              },
+              required: ['ids'],
+            },
+          },
+        },
+      },
+      responses: {
+        '200': {
+          description: 'Bulk delete successful',
+          content: {
+            'application/json': {
+              schema: { type: 'object', properties: { count: { type: 'number' } } },
+            },
+          },
+        },
+        '400': { description: 'Validation error' },
+        '401': { description: 'Not authenticated' },
+        '403': { description: 'Not authorized (admin only)' },
+      },
+    },
+  },
   '/api/testimonials/published': {
     get: {
       tags: ['Testimonials'],

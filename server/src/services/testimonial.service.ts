@@ -125,4 +125,17 @@ export const testimonialService = {
       );
     }
   },
+
+  async updateBulk(
+    ids: string[],
+    data: { isPublished?: boolean }
+  ): Promise<{ count: number }> {
+    const count = await testimonialRepository.updateBulk(ids, data);
+    return { count };
+  },
+
+  async deleteBulk(ids: string[]): Promise<{ count: number }> {
+    const count = await testimonialRepository.deleteBulk(ids);
+    return { count };
+  },
 };

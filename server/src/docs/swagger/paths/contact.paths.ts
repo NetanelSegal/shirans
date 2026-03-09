@@ -76,6 +76,79 @@ export const contactPaths = {
       },
     },
   },
+  '/api/contact/bulk/read': {
+    patch: {
+      tags: ['Contact'],
+      summary: 'Bulk update read status',
+      description:
+        'Updates read status for multiple contact submissions. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                ids: { type: 'array', items: { type: 'string', format: 'cuid' } },
+                isRead: { type: 'boolean' },
+              },
+              required: ['ids', 'isRead'],
+            },
+          },
+        },
+      },
+      responses: {
+        '200': {
+          description: 'Bulk update successful',
+          content: {
+            'application/json': {
+              schema: { type: 'object', properties: { count: { type: 'number' } } },
+            },
+          },
+        },
+        '400': { description: 'Validation error' },
+        '401': { description: 'Not authenticated' },
+        '403': { description: 'Not authorized (admin only)' },
+      },
+    },
+  },
+  '/api/contact/bulk': {
+    delete: {
+      tags: ['Contact'],
+      summary: 'Bulk delete contact submissions',
+      description:
+        'Deletes multiple contact submissions. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                ids: { type: 'array', items: { type: 'string', format: 'cuid' } },
+              },
+              required: ['ids'],
+            },
+          },
+        },
+      },
+      responses: {
+        '200': {
+          description: 'Bulk delete successful',
+          content: {
+            'application/json': {
+              schema: { type: 'object', properties: { count: { type: 'number' } } },
+            },
+          },
+        },
+        '400': { description: 'Validation error' },
+        '401': { description: 'Not authenticated' },
+        '403': { description: 'Not authorized (admin only)' },
+      },
+    },
+  },
   '/api/contact/{id}': {
     get: {
       tags: ['Contact'],

@@ -6,6 +6,7 @@ import { AdminPageHeader } from '@/components/Admin/AdminPageHeader';
 import { DataTable } from '@/components/Admin/DataTable';
 import { FormModal } from '@/components/Admin/FormModal';
 import { ConfirmDialog } from '@/components/Admin/ConfirmDialog';
+import { BulkActionBar } from '@/components/Admin/BulkActionBar';
 import { StatusBadge } from '@/components/Admin/StatusBadge';
 import { DataStateGuard } from '@/components/DataState';
 import type {
@@ -23,16 +24,21 @@ export default function TestimonialsManagement() {
     update,
     delete: deleteTestimonial,
     updateOrder,
+    updateBulk,
+    deleteBulk,
     refresh,
   } = useAdminTestimonials();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTestimonial, setEditingTestimonial] =
     useState<TestimonialResponse | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<TestimonialResponse | null>(
     null
   );
+  const [bulkDeleteIds, setBulkDeleteIds] = useState<string[] | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isBulkBusy, setIsBulkBusy] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
   const form = useForm<CreateTestimonialInput>({
@@ -100,6 +106,40 @@ export default function TestimonialsManagement() {
     }
   };
 
+  const handleBulkDelete = async () => {
+    if (!bulkDeleteIds?.length) return;
+    setIsBulkBusy(true);
+    try {
+      await deleteBulk(bulkDeleteIds);
+      setBulkDeleteIds(null);
+      setSelectedIds([]);
+    } finally {
+      setIsBulkBusy(false);
+    }
+  };
+
+  const handleBulkPublish = async () => {
+    if (!selectedIds.length) return;
+    setIsBulkBusy(true);
+    try {
+      await updateBulk(selectedIds, true);
+      setSelectedIds([]);
+    } finally {
+      setIsBulkBusy(false);
+    }
+  };
+
+  const handleBulkUnpublish = async () => {
+    if (!selectedIds.length) return;
+    setIsBulkBusy(true);
+    try {
+      await updateBulk(selectedIds, false);
+      setSelectedIds([]);
+    } finally {
+      setIsBulkBusy(false);
+    }
+  };
+
   const handleMoveUp = async (t: TestimonialResponse) => {
     const idx = testimonials.findIndex((x) => x.id === t.id);
     if (idx <= 0) return;
@@ -164,12 +204,24 @@ export default function TestimonialsManagement() {
                 actionLabel="הוסף המלצה"
                 onAction={handleOpenCreate}
               />
+              <BulkActionBar
+                selectedCount={selectedIds.length}
+                onPublish={handleBulkPublish}
+                onUnpublish={handleBulkUnpublish}
+                onDelete={() => setBulkDeleteIds(selectedIds)}
+                onClearSelection={() => setSelectedIds([])}
+                mode="testimonials"
+                isBusy={isBulkBusy}
+              />
               <DataTable
                 columns={columns}
                 data={sorted}
                 isLoading={false}
                 emptyMessage="אין המלצות"
                 getRowId={(row) => row.id}
+                selectable
+                selectedIds={selectedIds}
+                onSelectionChange={setSelectedIds}
                 actions={(row) => (
                   <div className="flex flex-wrap items-center gap-2">
                     <button
@@ -304,6 +356,19 @@ export default function TestimonialsManagement() {
         }
         confirmLabel="מחק"
         isLoading={isDeleting}
+      />
+      <ConfirmDialog
+        open={!!bulkDeleteIds?.length}
+        onClose={() => setBulkDeleteIds(null)}
+        onConfirm={handleBulkDelete}
+        title="מחיקת המלצות"
+        message={
+          bulkDeleteIds?.length
+            ? `האם אתה בטוח שברצונך למחוק ${bulkDeleteIds.length} המלצות?`
+            : ''
+        }
+        confirmLabel="מחק"
+        isLoading={isBulkBusy}
       />
     </div>
   );

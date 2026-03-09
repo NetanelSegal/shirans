@@ -1,8 +1,10 @@
 import { Prisma } from '@prisma/client';
 import { calculatorRepository } from '../repositories/calculator.repository';
+import { emailService } from './email.service';
 import type {
   SubmitCalculatorLeadInput,
   CalculatorConfigInput,
+  CalculatorLeadResponse,
 } from '@shirans/shared';
 import { HTTP_STATUS } from '@shirans/shared';
 import { HttpError } from '../middleware/errorHandler';
@@ -10,8 +12,12 @@ import { getServerErrorMessage } from '../constants/errorMessages';
 import logger from '../middleware/logger';
 
 export const calculatorService = {
-  async submitLead(data: SubmitCalculatorLeadInput) {
-    return calculatorRepository.createLead(data);
+  async submitLead(data: SubmitCalculatorLeadInput): Promise<CalculatorLeadResponse> {
+    const lead = await calculatorRepository.createLead(data);
+    emailService.sendNewLeadNotification(lead).catch((err) => {
+      logger.error('Failed to send calculator lead notification email', { error: err, leadId: lead.id });
+    });
+    return lead;
   },
 
   async getLeads(filters?: { isRead?: boolean }) {
@@ -67,6 +73,16 @@ export const calculatorService = {
         getServerErrorMessage('SERVER.CALCULATOR.DELETE_LEAD_FAILED'),
       );
     }
+  },
+
+  async updateLeadReadStatusBulk(ids: string[], isRead: boolean): Promise<{ count: number }> {
+    const count = await calculatorRepository.updateLeadReadStatusBulk(ids, isRead);
+    return { count };
+  },
+
+  async deleteLeadsBulk(ids: string[]): Promise<{ count: number }> {
+    const count = await calculatorRepository.deleteLeadsBulk(ids);
+    return { count };
   },
 
   async getConfig(): Promise<CalculatorConfigInput | null> {

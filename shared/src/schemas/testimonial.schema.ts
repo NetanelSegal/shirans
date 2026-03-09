@@ -24,6 +24,16 @@ export const updateOrderSchema = z.object({
   order: z.number().int().nonnegative('Order must be a non-negative integer'),
 });
 
+/** Schema for bulk operations (ids array) */
+export const testimonialBulkIdsSchema = z.object({
+  ids: z.array(z.string().cuid('Invalid testimonial ID format')).min(1, 'At least one ID required'),
+});
+
+/** Schema for bulk update (ids + optional isPublished) */
+export const testimonialBulkUpdateSchema = testimonialBulkIdsSchema.extend({
+  isPublished: z.boolean().optional(),
+});
+
 export type CreateTestimonialInput = z.infer<typeof createTestimonialSchema>;
 export type UpdateTestimonialInput = z.infer<typeof updateTestimonialSchema>;
 export type TestimonialIdInput = z.infer<typeof testimonialIdSchema>;

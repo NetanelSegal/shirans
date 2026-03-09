@@ -104,6 +104,21 @@ export const calculatorRepository = {
     });
   },
 
+  async updateLeadReadStatusBulk(ids: string[], isRead: boolean): Promise<number> {
+    const result = await prisma.calculatorLead.updateMany({
+      where: { id: { in: ids } },
+      data: { isRead },
+    });
+    return result.count;
+  },
+
+  async deleteLeadsBulk(ids: string[]): Promise<number> {
+    const result = await prisma.calculatorLead.deleteMany({
+      where: { id: { in: ids } },
+    });
+    return result.count;
+  },
+
   async getConfig(): Promise<CalculatorConfigInput | null> {
     const row = await prisma.calculatorConfig.findFirst({
       orderBy: { updatedAt: 'desc' },

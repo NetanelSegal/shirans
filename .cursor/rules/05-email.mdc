@@ -1,0 +1,25 @@
+---
+description: EMAIL: Project uses EmailJS for all email sending. Client and server must use EmailJS, not Nodemailer or other SMTP providers.
+globs: "**/*"
+alwaysApply: true
+---
+
+# 05-Email: EmailJS as Single Email Service
+
+This project uses **EmailJS** for all email sending. Do not introduce Nodemailer, SendGrid, Resend, or other email providers.
+
+## Client-Side (Browser)
+- **Package**: `@emailjs/browser`
+- **Usage**: Footer contact form (`client/src/components/Footer/hooks/useEmailSend.tsx`)
+- **Env vars**: `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, `VITE_EMAILJS_PUBLIC_KEY`
+
+## Server-Side (Node.js)
+- **Package**: `@emailjs/nodejs`
+- **Usage**: Server-triggered notifications (e.g. new calculator lead)
+- **Env vars**: `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`, `EMAILJS_PUBLIC_KEY`, `EMAILJS_PRIVATE_KEY`, `ADMIN_EMAIL`
+- **Note**: Enable API requests in EmailJS Account → Security for non-browser apps.
+
+## When Adding New Email Flows
+1. Create or reuse an EmailJS template in the dashboard.
+2. Use `@emailjs/browser` for client-initiated sends; use `@emailjs/nodejs` for server-initiated sends.
+3. Never add Nodemailer, SMTP, or alternative email SDKs.
