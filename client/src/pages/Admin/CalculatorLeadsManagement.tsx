@@ -235,7 +235,7 @@ export default function CalculatorLeadsManagement() {
                     <button
                       type="button"
                       onClick={() =>
-                        updateReadStatus(row.id, !row.isRead)
+                        updateReadStatus(row.id, !row.isRead).catch(() => {})
                       }
                       className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover-capable:hover:bg-secondary/80"
                       aria-label={row.isRead ? 'סמן כלא נקרא' : 'סמן כנקרא'}

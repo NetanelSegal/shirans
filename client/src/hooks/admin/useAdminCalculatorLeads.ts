@@ -41,7 +41,7 @@ export function useAdminCalculatorLeads() {
     };
   }, [fetchLeads]);
 
-  const setActionErr = useCallback((err: unknown) => {
+  const handleActionError = useCallback((err: unknown) => {
     const appError = transformError(err);
     setActionError(getClientErrorMessage(appError.errorKey as ErrorKey));
   }, []);
@@ -56,11 +56,11 @@ export function useAdminCalculatorLeads() {
         setActionError(null);
         return updated;
       } catch (err) {
-        setActionErr(err);
+        handleActionError(err);
         throw err;
       }
     },
-    [setActionErr]
+    [handleActionError]
   );
 
   const remove = useCallback(async (id: string) => {
@@ -69,10 +69,10 @@ export function useAdminCalculatorLeads() {
       setLeads((prev) => prev.filter((l) => l.id !== id));
       setActionError(null);
     } catch (err) {
-      setActionErr(err);
+      handleActionError(err);
       throw err;
     }
-  }, [setActionErr]);
+  }, [handleActionError]);
 
   const updateReadStatusBulk = useCallback(
     async (ids: string[], isRead: boolean) => {
@@ -83,11 +83,11 @@ export function useAdminCalculatorLeads() {
         );
         setActionError(null);
       } catch (err) {
-        setActionErr(err);
+        handleActionError(err);
         throw err;
       }
     },
-    [setActionErr]
+    [handleActionError]
   );
 
   const deleteBulk = useCallback(async (ids: string[]) => {
@@ -96,10 +96,10 @@ export function useAdminCalculatorLeads() {
       setLeads((prev) => prev.filter((l) => !ids.includes(l.id)));
       setActionError(null);
     } catch (err) {
-      setActionErr(err);
+      handleActionError(err);
       throw err;
     }
-  }, [setActionErr]);
+  }, [handleActionError]);
 
   return {
     leads,

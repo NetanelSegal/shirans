@@ -30,7 +30,6 @@ export interface CalculatorFormProps {
 }
 
 export function CalculatorForm({ config, onSubmit }: CalculatorFormProps) {
-
   const {
     trigger,
     getValues,
@@ -350,7 +349,7 @@ const FIELD_LABELS_HE: Record<keyof CalculatorFormInput, string> = {
   equipment: 'אבזור והלבשה',
 };
 
-function formatValueForWhatsApp(_key: keyof CalculatorFormInput, value: unknown): string {
+function formatValueForWhatsApp(value: unknown): string {
   if (typeof value === 'number') return String(value);
   if (typeof value === 'string' && ENUM_LABELS_HE[value]) return ENUM_LABELS_HE[value];
   return String(value ?? '');
@@ -362,7 +361,7 @@ function getWhatsappLink(phoneNumber: string, data: CalculatorFormInput, result:
   (Object.keys(FIELD_LABELS_HE) as (keyof CalculatorFormInput)[]).forEach((key) => {
     const value = data[key];
     if (value !== undefined) {
-      message += `\n${FIELD_LABELS_HE[key]}: ${formatValueForWhatsApp(key, value)}`;
+      message += `\n${FIELD_LABELS_HE[key]}: ${formatValueForWhatsApp(value)}`;
     }
   });
   message += `\nאומדן תקציב: ₪ ${formatPrice(result)}`;
