@@ -7,6 +7,7 @@ import {
   type CalculatorConfigInput,
   calculateEstimate,
   formatPrice,
+  ERROR_KEYS,
 } from '@shirans/shared';
 import { Input } from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
@@ -18,6 +19,10 @@ import {
   FURNITURE_OPTIONS,
 } from './constants';
 import { info } from '@/data/contact-info';
+import { ENUM_LABELS_HE } from '@/constants/calculatorLabels';
+import { transformError } from '@/utils/errorHandler';
+import { getClientErrorMessage, ERROR_MESSAGES } from '@/constants/errorMessages';
+import type { ErrorKey } from '@shirans/shared';
 
 export interface CalculatorFormProps {
   config: CalculatorConfigInput;
@@ -25,8 +30,6 @@ export interface CalculatorFormProps {
 }
 
 export function CalculatorForm({ config, onSubmit }: CalculatorFormProps) {
-  const effectiveConfig = config;
-
   const {
     trigger,
     getValues,
@@ -67,23 +70,27 @@ export function CalculatorForm({ config, onSubmit }: CalculatorFormProps) {
       !Number.isNaN(outdoor) &&
       outdoor >= 0
     ) {
-      const estimate = calculateEstimate(watchedValues as CalculatorFormInput, effectiveConfig);
+      const estimate = calculateEstimate(watchedValues as CalculatorFormInput, config);
       setLiveEstimate(estimate);
     } else {
       setLiveEstimate(null);
     }
-  }, [watchedValues, effectiveConfig]);
-
-  const displayEstimate = liveEstimate;
+  }, [watchedValues, config]);
 
   const handleFormSubmit = async (data: CalculatorFormInput) => {
-    const estimate = calculateEstimate(data, effectiveConfig);
+    const estimate = calculateEstimate(data, config);
     setSubmitError(null);
     setSubmitLoading(true);
     try {
       await onSubmit(data, estimate);
-    } catch {
-      setSubmitError('שמירת הליד נכשלה. החישוב הוצג בהצלחה.');
+    } catch (err) {
+      const appError = transformError(err);
+      const key = appError.errorKey;
+      const message =
+        key && key in ERROR_MESSAGES
+          ? getClientErrorMessage(key as ErrorKey)
+          : getClientErrorMessage(ERROR_KEYS.SERVER.CALCULATOR.SUBMIT_FAILED);
+      setSubmitError(message);
     } finally {
       setSubmitLoading(false);
     }
@@ -283,14 +290,14 @@ export function CalculatorForm({ config, onSubmit }: CalculatorFormProps) {
         </Button>
       </form>
 
-      {displayEstimate !== null && (
+      {liveEstimate !== null && (
         <section
           className="mt-10 rounded-xl bg-primary/10 p-6"
           aria-live="polite"
           aria-label="תוצאת החישוב"
         >
           <h2 className="mb-4 text-xl font-semibold">אומדן תקציב</h2>
-          <p className="mb-6 text-2xl font-bold">₪ {formatPrice(displayEstimate)}</p>
+          <p className="mb-6 text-2xl font-bold">₪ {formatPrice(liveEstimate)}</p>
           <p className="mb-4 text-sm text-gray-600">
             המחיר לא כולל מע״מ
           </p>
@@ -301,12 +308,12 @@ export function CalculatorForm({ config, onSubmit }: CalculatorFormProps) {
                 document.getElementById('calculator-name')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
               }
-              window.open(getWhatsappLink(phoneForWhatsApp, getValues(), displayEstimate), '_blank');
+              window.open(getWhatsappLink(phoneForWhatsApp, getValues(), liveEstimate), '_blank');
             }}
-            href={getWhatsappLink(phoneForWhatsApp, getValues(), displayEstimate)}
+            href={getWhatsappLink(phoneForWhatsApp, getValues(), liveEstimate)}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 font-semibold text-white transition-opacity hover-capable:hover:opacity-90"
             aria-label="לקביעת פגישת היכרות בוואטסאפ"
           >
             <svg
@@ -342,21 +349,7 @@ const FIELD_LABELS_HE: Record<keyof CalculatorFormInput, string> = {
   equipment: 'אבזור והלבשה',
 };
 
-const ENUM_LABELS_HE: Record<string, string> = {
-  standard: 'סטנדרט',
-  invested: 'מושקע',
-  premium: 'יוקרתי',
-  none: 'ללא',
-  small: 'קטנה',
-  medium: 'בינונית',
-  large: 'גדולה',
-  ready: 'קנייה מוכנה',
-  custom: 'ייצור לפי הזמנה',
-  basic: 'בסיסי',
-  full: 'מלא',
-};
-
-function formatValueForWhatsApp(_key: keyof CalculatorFormInput, value: unknown): string {
+function formatValueForWhatsApp(value: unknown): string {
   if (typeof value === 'number') return String(value);
   if (typeof value === 'string' && ENUM_LABELS_HE[value]) return ENUM_LABELS_HE[value];
   return String(value ?? '');
@@ -368,7 +361,7 @@ function getWhatsappLink(phoneNumber: string, data: CalculatorFormInput, result:
   (Object.keys(FIELD_LABELS_HE) as (keyof CalculatorFormInput)[]).forEach((key) => {
     const value = data[key];
     if (value !== undefined) {
-      message += `\n${FIELD_LABELS_HE[key]}: ${formatValueForWhatsApp(key, value)}`;
+      message += `\n${FIELD_LABELS_HE[key]}: ${formatValueForWhatsApp(value)}`;
     }
   });
   message += `\nאומדן תקציב: ₪ ${formatPrice(result)}`;

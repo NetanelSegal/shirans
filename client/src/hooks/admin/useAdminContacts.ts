@@ -56,6 +56,21 @@ export function useAdminContacts() {
     setContacts((prev) => prev.filter((c) => c.id !== id));
   }, []);
 
+  const updateReadStatusBulk = useCallback(
+    async (ids: string[], isRead: boolean) => {
+      await adminContactsService.updateContactReadStatusBulk(ids, isRead);
+      setContacts((prev) =>
+        prev.map((c) => (ids.includes(c.id) ? { ...c, isRead } : c))
+      );
+    },
+    []
+  );
+
+  const deleteBulk = useCallback(async (ids: string[]) => {
+    await adminContactsService.deleteContactsBulk(ids);
+    setContacts((prev) => prev.filter((c) => !ids.includes(c.id)));
+  }, []);
+
   return {
     contacts,
     isLoading,
@@ -63,5 +78,7 @@ export function useAdminContacts() {
     refresh,
     updateReadStatus,
     delete: remove,
+    updateReadStatusBulk,
+    deleteBulk,
   };
 }

@@ -5,6 +5,8 @@ import {
   createTestimonialSchema,
   testimonialIdSchema,
   testimonialQuerySchema,
+  testimonialBulkUpdateSchema,
+  testimonialBulkIdsSchema,
 } from '@shirans/shared';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import z from 'zod';
@@ -63,4 +65,19 @@ export const updateTestimonialOrder = async (req: Request, res: Response) => {
     order,
   );
   res.status(HTTP_STATUS.OK).json(testimonial);
+};
+
+export const bulkUpdateTestimonials = async (req: Request, res: Response) => {
+  const { ids, isPublished } = validateRequest(testimonialBulkUpdateSchema, req.body);
+  if (isPublished === undefined) {
+    return res.status(400).json({ message: 'isPublished is required for bulk update' });
+  }
+  const { count } = await testimonialService.updateBulk(ids, { isPublished });
+  return res.status(HTTP_STATUS.OK).json({ count });
+};
+
+export const bulkDeleteTestimonials = async (req: Request, res: Response) => {
+  const { ids } = validateRequest(testimonialBulkIdsSchema, req.body);
+  const { count } = await testimonialService.deleteBulk(ids);
+  res.status(HTTP_STATUS.OK).json({ count });
 };

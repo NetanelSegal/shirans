@@ -60,4 +60,23 @@ export const testimonialRepository = {
     const testimonial = await prisma.testimonial.update({ where: { id }, data: { order } });
     return transformTestimonial(testimonial);
   },
+
+  async updateBulk(
+    ids: string[],
+    data: { isPublished?: boolean }
+  ): Promise<number> {
+    if (Object.keys(data).length === 0) return 0;
+    const result = await prisma.testimonial.updateMany({
+      where: { id: { in: ids } },
+      data,
+    });
+    return result.count;
+  },
+
+  async deleteBulk(ids: string[]): Promise<number> {
+    const result = await prisma.testimonial.deleteMany({
+      where: { id: { in: ids } },
+    });
+    return result.count;
+  },
 };

@@ -4,6 +4,8 @@ import {
   createContactSchema,
   contactIdSchema,
   updateReadStatusSchema,
+  contactBulkUpdateReadSchema,
+  contactBulkIdsSchema,
 } from '@shirans/shared';
 import { validateRequest } from '../utils/validation';
 
@@ -76,4 +78,30 @@ export async function deleteSubmission(
   const { id } = validateRequest(contactIdSchema, req.params);
   await contactService.deleteSubmission(id);
   return res.status(200).json({ message: 'Contact submission deleted successfully' });
+}
+
+/**
+ * Bulk update read status (admin only)
+ * PATCH /api/contact/bulk/read
+ */
+export async function bulkUpdateReadStatus(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const { ids, isRead } = validateRequest(contactBulkUpdateReadSchema, req.body);
+  const { count } = await contactService.updateReadStatusBulk(ids, isRead);
+  return res.status(200).json({ count });
+}
+
+/**
+ * Bulk delete contact submissions (admin only)
+ * DELETE /api/contact/bulk
+ */
+export async function bulkDeleteSubmissions(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const { ids } = validateRequest(contactBulkIdsSchema, req.body);
+  const { count } = await contactService.deleteBulk(ids);
+  return res.status(200).json({ count });
 }

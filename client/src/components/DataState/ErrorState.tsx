@@ -2,7 +2,7 @@ import Button from '@/components/ui/Button';
 
 interface ErrorStateProps {
   message: string;
-  onRetry?: () => void;
+  onRetry?: () => void | Promise<unknown>;
   retryLabel?: string;
   className?: string;
 }
@@ -21,7 +21,15 @@ export function ErrorState({
     >
       <p className="paragraph text-lg font-medium text-red-600">{message}</p>
       {onRetry && (
-        <Button onClick={onRetry} variant="secondary">
+        <Button
+          onClick={() => {
+            const ret = onRetry!();
+            if (ret instanceof Promise) {
+              ret.catch(() => {});
+            }
+          }}
+          variant="secondary"
+        >
           {retryLabel}
         </Button>
       )}

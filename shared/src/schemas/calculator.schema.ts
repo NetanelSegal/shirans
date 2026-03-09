@@ -107,3 +107,13 @@ export const calculatorLeadIdSchema = z.object({
 export const calculatorUpdateReadSchema = z.object({
   isRead: z.boolean(),
 });
+
+/** Schema for bulk operations (ids array) */
+export const calculatorBulkIdsSchema = z.object({
+  ids: z.array(z.string().cuid('Lead ID must be a valid CUID')).min(1, 'At least one ID required'),
+});
+
+/** Schema for bulk update read status */
+export const calculatorBulkUpdateReadSchema = calculatorBulkIdsSchema.extend({
+  isRead: z.boolean(),
+});

@@ -6,6 +6,8 @@ import {
   calculatorLeadIdSchema,
   calculatorLeadsQuerySchema,
   calculatorUpdateReadSchema,
+  calculatorBulkUpdateReadSchema,
+  calculatorBulkIdsSchema,
 } from '@shirans/shared';
 import { validateRequest } from '../utils/validation';
 import { HTTP_STATUS } from '../constants/httpStatus';
@@ -62,6 +64,29 @@ export async function deleteLead(req: Request, res: Response): Promise<Response>
   const { id } = validateRequest(calculatorLeadIdSchema, req.params);
   await calculatorService.deleteLead(id);
   return res.status(HTTP_STATUS.OK).json({ message: 'Lead deleted successfully' });
+}
+
+/**
+ * Bulk update read status (admin only)
+ * PATCH /api/calculator/leads/bulk/read
+ */
+export async function bulkUpdateLeadReadStatus(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const { ids, isRead } = validateRequest(calculatorBulkUpdateReadSchema, req.body);
+  const { count } = await calculatorService.updateLeadReadStatusBulk(ids, isRead);
+  return res.status(HTTP_STATUS.OK).json({ count });
+}
+
+/**
+ * Bulk delete calculator leads (admin only)
+ * DELETE /api/calculator/leads/bulk
+ */
+export async function bulkDeleteLeads(req: Request, res: Response): Promise<Response> {
+  const { ids } = validateRequest(calculatorBulkIdsSchema, req.body);
+  const { count } = await calculatorService.deleteLeadsBulk(ids);
+  return res.status(HTTP_STATUS.OK).json({ count });
 }
 
 /**

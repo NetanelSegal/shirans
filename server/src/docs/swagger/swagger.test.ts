@@ -539,7 +539,7 @@ describe('Swagger Spec Completeness', () => {
     ...testimonialSchemas,
   };
 
-  it('should have 31 total endpoint operations', () => {
+  it('should have expected total endpoint operations', () => {
     let operationCount = 0;
     for (const pathItem of Object.values(allPaths)) {
       for (const method of ['get', 'post', 'put', 'delete', 'patch']) {
@@ -548,7 +548,8 @@ describe('Swagger Spec Completeness', () => {
         }
       }
     }
-    expect(operationCount).toBe(32);
+    // health(1) + auth(5) + projects(9) + categories(5) + contact(7) + testimonials(9) = 36
+    expect(operationCount).toBe(36);
   });
 
   it('should have all expected path groups', () => {
@@ -568,9 +569,12 @@ describe('Swagger Spec Completeness', () => {
     expect(pathKeys).toContain('/api/categories');
     expect(pathKeys).toContain('/api/categories/{id}');
     expect(pathKeys).toContain('/api/contact');
+    expect(pathKeys).toContain('/api/contact/bulk');
+    expect(pathKeys).toContain('/api/contact/bulk/read');
     expect(pathKeys).toContain('/api/contact/{id}');
     expect(pathKeys).toContain('/api/contact/{id}/read');
     expect(pathKeys).toContain('/api/testimonials');
+    expect(pathKeys).toContain('/api/testimonials/bulk');
     expect(pathKeys).toContain('/api/testimonials/published');
     expect(pathKeys).toContain('/api/testimonials/{id}');
     expect(pathKeys).toContain('/api/testimonials/{id}/order');

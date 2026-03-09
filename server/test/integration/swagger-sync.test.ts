@@ -217,14 +217,14 @@ describe('Swagger ↔ Routes Sync Validation', () => {
   it('should extract the expected number of Express routes', () => {
     const expressRoutes = getExpressRoutes(app);
 
-    // 1 health + 5 auth + 9 project + 5 category + 5 contact + 7 testimonial + 1 users + 7 calculator = 40
-    expect(expressRoutes.size).toBe(40);
+    // 1 health + 5 auth + 9 project + 5 category + 7 contact + 9 testimonial + 1 users + 9 calculator = 46
+    expect(expressRoutes.size).toBe(46);
   });
 
   it('should extract the expected number of Swagger routes', () => {
     const swaggerRoutes = getSwaggerRoutes();
 
-    // 40 routes total (all mounted)
-    expect(swaggerRoutes.size).toBe(40);
+    // 46 routes total (all mounted)
+    expect(swaggerRoutes.size).toBe(46);
   });
 });

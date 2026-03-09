@@ -3,6 +3,7 @@ import { useAdminContacts } from '@/hooks/admin/useAdminContacts';
 import { AdminPageHeader } from '@/components/Admin/AdminPageHeader';
 import { DataTable } from '@/components/Admin/DataTable';
 import { ConfirmDialog } from '@/components/Admin/ConfirmDialog';
+import { BulkActionBar } from '@/components/Admin/BulkActionBar';
 import { StatusBadge } from '@/components/Admin/StatusBadge';
 import { DataStateGuard } from '@/components/DataState';
 import Button from '@/components/ui/Button';
@@ -17,15 +18,20 @@ export default function ContactsManagement() {
     error,
     updateReadStatus,
     delete: deleteContact,
+    updateReadStatusBulk,
+    deleteBulk,
     refresh,
   } = useAdminContacts();
 
   const [filter, setFilter] = useState<FilterTab>('all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<ContactResponse | null>(
     null
   );
+  const [bulkDeleteIds, setBulkDeleteIds] = useState<string[] | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isBulkBusy, setIsBulkBusy] = useState(false);
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
@@ -35,6 +41,40 @@ export default function ContactsManagement() {
       setDeleteTarget(null);
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (!bulkDeleteIds?.length) return;
+    setIsBulkBusy(true);
+    try {
+      await deleteBulk(bulkDeleteIds);
+      setBulkDeleteIds(null);
+      setSelectedIds([]);
+    } finally {
+      setIsBulkBusy(false);
+    }
+  };
+
+  const handleBulkMarkRead = async () => {
+    if (!selectedIds.length) return;
+    setIsBulkBusy(true);
+    try {
+      await updateReadStatusBulk(selectedIds, true);
+      setSelectedIds([]);
+    } finally {
+      setIsBulkBusy(false);
+    }
+  };
+
+  const handleBulkMarkUnread = async () => {
+    if (!selectedIds.length) return;
+    setIsBulkBusy(true);
+    try {
+      await updateReadStatusBulk(selectedIds, false);
+      setSelectedIds([]);
+    } finally {
+      setIsBulkBusy(false);
     }
   };
 
@@ -137,6 +177,15 @@ export default function ContactsManagement() {
           return (
             <>
               <AdminPageHeader title="ניהול פניות צור קשר" />
+              <BulkActionBar
+                selectedCount={selectedIds.length}
+                onMarkRead={handleBulkMarkRead}
+                onMarkUnread={handleBulkMarkUnread}
+                onDelete={() => setBulkDeleteIds(selectedIds)}
+                onClearSelection={() => setSelectedIds([])}
+                mode="contacts"
+                isBusy={isBulkBusy}
+              />
               <div className="mb-4 flex gap-2">
                 <Button
                   variant={filter === 'all' ? 'primary' : 'light'}
@@ -163,6 +212,9 @@ export default function ContactsManagement() {
                 isLoading={false}
                 emptyMessage="אין פניות"
                 getRowId={(row) => row.id}
+                selectable
+                selectedIds={selectedIds}
+                onSelectionChange={setSelectedIds}
                 actions={(row) => (
                   <div className="flex flex-wrap gap-2">
                     <button
@@ -212,6 +264,19 @@ export default function ContactsManagement() {
         }
         confirmLabel="מחק"
         isLoading={isDeleting}
+      />
+      <ConfirmDialog
+        open={!!bulkDeleteIds?.length}
+        onClose={() => setBulkDeleteIds(null)}
+        onConfirm={handleBulkDelete}
+        title="מחיקת פניות"
+        message={
+          bulkDeleteIds?.length
+            ? `האם אתה בטוח שברצונך למחוק ${bulkDeleteIds.length} פניות?`
+            : ''
+        }
+        confirmLabel="מחק"
+        isLoading={isBulkBusy}
       />
     </div>
   );

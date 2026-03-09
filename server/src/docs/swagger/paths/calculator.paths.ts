@@ -56,6 +56,77 @@ export const calculatorPaths = {
       },
     },
   },
+  '/api/calculator/leads/bulk/read': {
+    patch: {
+      tags: ['Calculator'],
+      summary: 'Bulk update calculator lead read status',
+      description: 'Updates read status for multiple calculator leads. Admin only.',
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                ids: { type: 'array', items: { type: 'string', format: 'cuid' } },
+                isRead: { type: 'boolean' },
+              },
+              required: ['ids', 'isRead'],
+            },
+          },
+        },
+      },
+      responses: {
+        '200': {
+          description: 'Bulk update successful',
+          content: {
+            'application/json': {
+              schema: { type: 'object', properties: { count: { type: 'number' } } },
+            },
+          },
+        },
+        '400': { description: 'Validation error' },
+        '401': { description: 'Not authenticated' },
+        '403': { description: 'Not authorized (admin only)' },
+      },
+    },
+  },
+  '/api/calculator/leads/bulk': {
+    delete: {
+      tags: ['Calculator'],
+      summary: 'Bulk delete calculator leads',
+      description: 'Deletes multiple calculator leads. Admin only.',
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                ids: { type: 'array', items: { type: 'string', format: 'cuid' } },
+              },
+              required: ['ids'],
+            },
+          },
+        },
+      },
+      responses: {
+        '200': {
+          description: 'Bulk delete successful',
+          content: {
+            'application/json': {
+              schema: { type: 'object', properties: { count: { type: 'number' } } },
+            },
+          },
+        },
+        '400': { description: 'Validation error' },
+        '401': { description: 'Not authenticated' },
+        '403': { description: 'Not authorized (admin only)' },
+      },
+    },
+  },
   '/api/calculator/leads/{id}': {
     get: {
       tags: ['Calculator'],

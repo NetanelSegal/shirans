@@ -3,6 +3,7 @@ import { calculatorRepository } from '../repositories/calculator.repository';
 import type {
   SubmitCalculatorLeadInput,
   CalculatorConfigInput,
+  CalculatorLeadResponse,
 } from '@shirans/shared';
 import { HTTP_STATUS } from '@shirans/shared';
 import { HttpError } from '../middleware/errorHandler';
@@ -10,8 +11,17 @@ import { getServerErrorMessage } from '../constants/errorMessages';
 import logger from '../middleware/logger';
 
 export const calculatorService = {
-  async submitLead(data: SubmitCalculatorLeadInput) {
-    return calculatorRepository.createLead(data);
+  async submitLead(data: SubmitCalculatorLeadInput): Promise<CalculatorLeadResponse> {
+    try {
+      return await calculatorRepository.createLead(data);
+    } catch (error) {
+      if (error instanceof HttpError) throw error;
+      logger.error('Error submitting calculator lead', { error });
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        getServerErrorMessage('SERVER.CALCULATOR.SUBMIT_FAILED'),
+      );
+    }
   },
 
   async getLeads(filters?: { isRead?: boolean }) {
@@ -62,6 +72,34 @@ export const calculatorService = {
         );
       }
       logger.error('Error deleting calculator lead', { error, id });
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        getServerErrorMessage('SERVER.CALCULATOR.DELETE_LEAD_FAILED'),
+      );
+    }
+  },
+
+  async updateLeadReadStatusBulk(ids: string[], isRead: boolean): Promise<{ count: number }> {
+    try {
+      const count = await calculatorRepository.updateLeadReadStatusBulk(ids, isRead);
+      return { count };
+    } catch (error) {
+      if (error instanceof HttpError) throw error;
+      logger.error('Error bulk updating calculator lead read status', { error, ids });
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        getServerErrorMessage('SERVER.CALCULATOR.UPDATE_LEAD_FAILED'),
+      );
+    }
+  },
+
+  async deleteLeadsBulk(ids: string[]): Promise<{ count: number }> {
+    try {
+      const count = await calculatorRepository.deleteLeadsBulk(ids);
+      return { count };
+    } catch (error) {
+      if (error instanceof HttpError) throw error;
+      logger.error('Error bulk deleting calculator leads', { error, ids });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
         getServerErrorMessage('SERVER.CALCULATOR.DELETE_LEAD_FAILED'),

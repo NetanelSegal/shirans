@@ -21,6 +21,8 @@
 - [x] Testimonials Management — Approval and publishing.
 - [x] Contacts Management — Tracking and reading leads.
 - [x] Calculator Leads — Managing and reviewing cost estimates.
+- [x] Admin Bulk Actions — Multi-select and bulk status change/delete for leads, contacts, testimonials.
+- [x] Calculator Lead Email — EmailJS notification on new lead from calculator.
 
 ## Phase 4: Quality & Deployment (IN PROGRESS)
 - [x] E2E Testing — Playwright tests for core flows.

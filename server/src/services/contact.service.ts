@@ -140,4 +140,14 @@ export const contactService = {
       );
     }
   },
+
+  async updateReadStatusBulk(ids: string[], isRead: boolean): Promise<{ count: number }> {
+    const count = await contactRepository.updateReadStatusBulk(ids, isRead);
+    return { count };
+  },
+
+  async deleteBulk(ids: string[]): Promise<{ count: number }> {
+    const count = await contactRepository.deleteBulk(ids);
+    return { count };
+  },
 };

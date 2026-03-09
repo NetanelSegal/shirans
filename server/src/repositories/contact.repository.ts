@@ -96,4 +96,19 @@ export const contactRepository = {
       where: { id },
     });
   },
+
+  async updateReadStatusBulk(ids: string[], isRead: boolean): Promise<number> {
+    const result = await prisma.contactSubmission.updateMany({
+      where: { id: { in: ids } },
+      data: { isRead },
+    });
+    return result.count;
+  },
+
+  async deleteBulk(ids: string[]): Promise<number> {
+    const result = await prisma.contactSubmission.deleteMany({
+      where: { id: { in: ids } },
+    });
+    return result.count;
+  },
 };

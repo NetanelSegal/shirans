@@ -32,6 +32,16 @@ export const updateReadStatusSchema = z.object({
   isRead: z.boolean(),
 });
 
+/** Schema for bulk operations (ids array) */
+export const contactBulkIdsSchema = z.object({
+  ids: z.array(z.string().cuid('Contact ID must be a valid CUID')).min(1, 'At least one ID required'),
+});
+
+/** Schema for bulk update read status */
+export const contactBulkUpdateReadSchema = contactBulkIdsSchema.extend({
+  isRead: z.boolean(),
+});
+
 // Type exports
 export type CreateContactInput = z.infer<typeof createContactSchema>;
 export type ContactIdInput = z.infer<typeof contactIdSchema>;
