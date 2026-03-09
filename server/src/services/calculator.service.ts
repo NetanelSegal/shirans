@@ -12,7 +12,16 @@ import logger from '../middleware/logger';
 
 export const calculatorService = {
   async submitLead(data: SubmitCalculatorLeadInput): Promise<CalculatorLeadResponse> {
-    return calculatorRepository.createLead(data);
+    try {
+      return await calculatorRepository.createLead(data);
+    } catch (error) {
+      if (error instanceof HttpError) throw error;
+      logger.error('Error submitting calculator lead', { error });
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        getServerErrorMessage('SERVER.CALCULATOR.SUBMIT_FAILED'),
+      );
+    }
   },
 
   async getLeads(filters?: { isRead?: boolean }) {
@@ -71,13 +80,31 @@ export const calculatorService = {
   },
 
   async updateLeadReadStatusBulk(ids: string[], isRead: boolean): Promise<{ count: number }> {
-    const count = await calculatorRepository.updateLeadReadStatusBulk(ids, isRead);
-    return { count };
+    try {
+      const count = await calculatorRepository.updateLeadReadStatusBulk(ids, isRead);
+      return { count };
+    } catch (error) {
+      if (error instanceof HttpError) throw error;
+      logger.error('Error bulk updating calculator lead read status', { error, ids });
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        getServerErrorMessage('SERVER.CALCULATOR.UPDATE_LEAD_FAILED'),
+      );
+    }
   },
 
   async deleteLeadsBulk(ids: string[]): Promise<{ count: number }> {
-    const count = await calculatorRepository.deleteLeadsBulk(ids);
-    return { count };
+    try {
+      const count = await calculatorRepository.deleteLeadsBulk(ids);
+      return { count };
+    } catch (error) {
+      if (error instanceof HttpError) throw error;
+      logger.error('Error bulk deleting calculator leads', { error, ids });
+      throw new HttpError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        getServerErrorMessage('SERVER.CALCULATOR.DELETE_LEAD_FAILED'),
+      );
+    }
   },
 
   async getConfig(): Promise<CalculatorConfigInput | null> {

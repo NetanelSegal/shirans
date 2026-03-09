@@ -92,6 +92,7 @@ export const errorMessagesMap = {
   'SERVER.REFRESH_TOKEN.REVOKE_FAILED': 'Failed to revoke refresh token',
   'SERVER.REFRESH_TOKEN.PROCESS_FAILED': 'Failed to process refresh token',
 
+  'SERVER.CALCULATOR.SUBMIT_FAILED': 'Failed to submit calculator lead',
   'SERVER.CALCULATOR.UPDATE_LEAD_FAILED': 'Failed to update calculator lead',
   'SERVER.CALCULATOR.DELETE_LEAD_FAILED': 'Failed to delete calculator lead',
 } as const satisfies Record<ErrorKey, string>;

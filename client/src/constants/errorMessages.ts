@@ -6,7 +6,7 @@ import { ErrorKey, formatErrorMessage } from '@shirans/shared';
  */
 export const ERROR_MESSAGES = {
   'NETWORK.CONNECTION_ERROR': 'שגיאת חיבור',
-  'NETWORK.TIMEOUT': 'זמן חילוף חסר',
+  'NETWORK.TIMEOUT': 'פסק זמן',
   'NETWORK.SERVER_ERROR': 'שגיאת שרת',
   'NETWORK.UNKNOWN_ERROR': 'שגיאה לא ידועה',
 
@@ -81,6 +81,7 @@ export const ERROR_MESSAGES = {
   'SERVER.REFRESH_TOKEN.REVOKE_FAILED': 'שגיאת שרת',
   'SERVER.REFRESH_TOKEN.PROCESS_FAILED': 'שגיאת שרת',
 
+  'SERVER.CALCULATOR.SUBMIT_FAILED': 'שמירת הליד נכשלה. החישוב הוצג בהצלחה.',
   'SERVER.CALCULATOR.UPDATE_LEAD_FAILED': 'עדכון ליד מחשבון נכשל',
   'SERVER.CALCULATOR.DELETE_LEAD_FAILED': 'מחיקת ליד מחשבון נכשלה',
 } as const satisfies Record<ErrorKey, string>;

@@ -2,20 +2,7 @@ import emailjs from '@emailjs/browser';
 import type { CalculatorFormInput } from '@shirans/shared';
 import { formatPrice } from '@shirans/shared';
 import { envConfig, isEmailJsCalculatorConfigured } from '@/config/env';
-
-const ENUM_LABELS_HE: Record<string, string> = {
-  standard: 'סטנדרט',
-  invested: 'מושקע',
-  premium: 'יוקרתי',
-  none: 'ללא',
-  small: 'קטנה',
-  medium: 'בינונית',
-  large: 'גדולה',
-  ready: 'קנייה מוכנה',
-  custom: 'ייצור לפי הזמנה',
-  basic: 'בסיסי',
-  full: 'מלא',
-};
+import { ENUM_LABELS_HE } from '@/constants/calculatorLabels';
 
 function formatEnum(value: string): string {
   return ENUM_LABELS_HE[value] ?? value;

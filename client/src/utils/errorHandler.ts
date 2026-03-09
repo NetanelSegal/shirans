@@ -114,7 +114,7 @@ export function transformError(error: unknown): AppError {
     // Otherwise, map status code to Hebrew message
 
     return {
-      errorKey: error.response?.data?.errorKey as ErrorKey,
+      errorKey: (error.response?.data?.errorKey ?? getErrorKeyForStatus(statusCode)) as ErrorKey,
       statusCode,
       message: apiMessage,
       isAuthError:

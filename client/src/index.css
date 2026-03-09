@@ -17,8 +17,11 @@ img {
 
 button {
   @apply rounded-xl bg-slate-500 px-6 py-2 text-lg font-semibold text-white transition-all duration-150 ease-in-out;
+}
 
-  &:hover {
+/* Hover only on devices with hover capability - prevents sticky hover on mobile */
+@media (hover: hover) {
+  button:hover {
     @apply scale-105;
   }
 }

@@ -17,6 +17,8 @@ export default function CalculatorLeadsManagement() {
     leads,
     isLoading,
     error,
+    actionError,
+    clearActionError,
     updateReadStatus,
     delete: deleteLead,
     updateReadStatusBulk,
@@ -39,6 +41,8 @@ export default function CalculatorLeadsManagement() {
     try {
       await deleteLead(deleteTarget.id);
       setDeleteTarget(null);
+    } catch {
+      setDeleteTarget(null);
     } finally {
       setIsDeleting(false);
     }
@@ -49,6 +53,9 @@ export default function CalculatorLeadsManagement() {
     setIsBulkBusy(true);
     try {
       await deleteBulk(bulkDeleteIds);
+      setBulkDeleteIds(null);
+      setSelectedIds([]);
+    } catch {
       setBulkDeleteIds(null);
       setSelectedIds([]);
     } finally {
@@ -62,6 +69,8 @@ export default function CalculatorLeadsManagement() {
     try {
       await updateReadStatusBulk(selectedIds, true);
       setSelectedIds([]);
+    } catch {
+      setSelectedIds([]);
     } finally {
       setIsBulkBusy(false);
     }
@@ -72,6 +81,8 @@ export default function CalculatorLeadsManagement() {
     setIsBulkBusy(true);
     try {
       await updateReadStatusBulk(selectedIds, false);
+      setSelectedIds([]);
+    } catch {
       setSelectedIds([]);
     } finally {
       setIsBulkBusy(false);
@@ -102,7 +113,7 @@ export default function CalculatorLeadsManagement() {
       render: (row: CalculatorLeadResponse) => (
         <a
           href={`mailto:${row.email}`}
-          className="text-primary underline hover:text-primary/80"
+          className="text-primary underline hover-capable:hover:text-primary/80"
           aria-label={`שלח מייל ל${row.email}`}
         >
           {row.email}
@@ -115,7 +126,7 @@ export default function CalculatorLeadsManagement() {
       render: (row: CalculatorLeadResponse) => (
         <a
           href={`tel:${row.phoneNumber}`}
-          className="text-primary underline hover:text-primary/80"
+          className="text-primary underline hover-capable:hover:text-primary/80"
           aria-label={`התקשר ל${row.phoneNumber}`}
         >
           {row.phoneNumber}
@@ -147,6 +158,22 @@ export default function CalculatorLeadsManagement() {
 
   return (
     <div dir="rtl">
+      {actionError && (
+        <div
+          className="mb-4 flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800"
+          role="alert"
+        >
+          <span>{actionError}</span>
+          <button
+            type="button"
+            onClick={clearActionError}
+            className="rounded px-2 py-1 text-sm font-medium hover:bg-amber-100"
+            aria-label="סגור"
+          >
+            ✕
+          </button>
+        </div>
+      )}
       <DataStateGuard
         data={leads}
         isLoading={isLoading}
@@ -210,7 +237,7 @@ export default function CalculatorLeadsManagement() {
                       onClick={() =>
                         updateReadStatus(row.id, !row.isRead)
                       }
-                      className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-secondary/80"
+                      className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover-capable:hover:bg-secondary/80"
                       aria-label={row.isRead ? 'סמן כלא נקרא' : 'סמן כנקרא'}
                     >
                       {row.isRead ? 'לא נקרא' : 'נקרא'}
@@ -218,7 +245,7 @@ export default function CalculatorLeadsManagement() {
                     <button
                       type="button"
                       onClick={() => setDeleteTarget(row)}
-                      className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                      className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover-capable:hover:bg-red-600"
                       aria-label={`מחק ליד מ${row.name}`}
                     >
                       מחיקה
