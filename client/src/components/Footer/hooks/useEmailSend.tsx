@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import emailjs, { EmailJSResponseStatus } from '@emailjs/browser';
 import { ERROR_KEYS } from '@shirans/shared';
 import { getClientErrorMessage } from '@/constants/errorMessages';
+import { envConfig, isEmailJsContactConfigured } from '@/config/env';
 
 interface IReturnUseEmailSend {
   error: string;
@@ -19,13 +20,11 @@ export default function useEmailSend(): IReturnUseEmailSend {
     setLoading(true);
     setError('');
     try {
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-      if (!serviceId || !templateId || !publicKey) {
+      const { serviceId, templateId, publicKey } = envConfig.emailjs;
+      if (!isEmailJsContactConfigured()) {
         throw new Error('EmailJS environment variables are not configured');
       }
-      const res = await emailjs.send(serviceId, templateId, data);
+      const res = await emailjs.send(serviceId, templateId, data, { publicKey });
       setSuccess(true);
       return res;
     } catch (err) {
@@ -40,9 +39,8 @@ export default function useEmailSend(): IReturnUseEmailSend {
   };
 
   useEffect(() => {
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-    if (publicKey) {
-      emailjs.init({ publicKey });
+    if (envConfig.emailjs.publicKey) {
+      emailjs.init({ publicKey: envConfig.emailjs.publicKey });
     }
   }, []);
   return { error, sendEmail, loading, success };

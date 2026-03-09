@@ -1,6 +1,7 @@
 import emailjs from '@emailjs/browser';
 import type { CalculatorFormInput } from '@shirans/shared';
 import { formatPrice } from '@shirans/shared';
+import { envConfig, isEmailJsCalculatorConfigured } from '@/config/env';
 
 const ENUM_LABELS_HE: Record<string, string> = {
   standard: 'סטנדרט',
@@ -29,14 +30,11 @@ export async function sendCalculatorLeadNotification(
   data: CalculatorFormInput,
   estimate: number
 ): Promise<void> {
-  const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-  const templateId = import.meta.env.VITE_EMAILJS_CALCULATOR_TEMPLATE_ID;
-  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-  if (!serviceId || !templateId || !publicKey) {
+  if (!isEmailJsCalculatorConfigured()) {
     return;
   }
 
+  const { serviceId, calculatorTemplateId: templateId, publicKey } = envConfig.emailjs;
   const templateParams = {
     lead_name: data.name,
     lead_email: data.email,

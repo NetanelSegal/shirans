@@ -1,0 +1,151 @@
+<!--
+  EmailJS Template: Calculator Lead Notification
+  Site colors: primary #152b44, secondary #F2EDE9
+  Paste this into EmailJS dashboard → Email Templates → Create New Template
+  Subject: ליד חדש ממחשבון אומדן - {{lead_name}}
+-->
+<div
+  style="
+    font-family: system-ui, sans-serif, Arial;
+    font-size: 14px;
+    color: #152b44;
+    padding: 14px 8px;
+    background-color: #F2EDE9;
+  "
+>
+  <div style="max-width: 600px; margin: auto; background-color: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(21, 43, 68, 0.1)">
+    <div style="border-top: 6px solid #152b44; padding: 16px; direction: rtl; text-align: right; background-color: #fff">
+      <a
+        style="text-decoration: none; outline: none; margin-left: 8px; vertical-align: middle"
+        href="https://shiran-gilad.com"
+        target="_blank"
+      >
+        <img
+          style="height: 32px; vertical-align: middle"
+          height="32px"
+          src="[YOUR_LOGO_URL]"
+          alt="שירן גלעד"
+        />
+      </a>
+      <span
+        style="
+          font-size: 16px;
+          vertical-align: middle;
+          border-right: 1px solid #152b44;
+          padding-right: 8px;
+          color: #152b44;
+        "
+      >
+        <strong>ליד חדש ממחשבון אומדן</strong>
+      </span>
+    </div>
+    <div style="padding: 16px; direction: rtl; text-align: right; background-color: #fff">
+      <p style="margin-bottom: 20px; color: #152b44">
+        התקבל ליד חדש ממחשבון אומדן העלות באתר. פרטי הלקוח והחישוב:
+      </p>
+
+      <div
+        style="
+          font-size: 14px;
+          padding-bottom: 8px;
+          margin-bottom: 16px;
+          border-bottom: 2px solid #152b44;
+          color: #152b44;
+        "
+      >
+        <strong>פרטי התקשרות</strong>
+      </div>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px">
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d; width: 120px">שם:</td>
+          <td style="padding: 6px 0; color: #152b44"><strong>{{lead_name}}</strong></td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d">אימייל:</td>
+          <td style="padding: 6px 0">
+            <a href="mailto:{{lead_email}}" style="color: #152b44; text-decoration: underline">{{lead_email}}</a>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d">טלפון:</td>
+          <td style="padding: 6px 0">
+            <a href="tel:{{lead_phone}}" style="color: #152b44; text-decoration: underline">{{lead_phone}}</a>
+          </td>
+        </tr>
+      </table>
+
+      <div
+        style="
+          font-size: 18px;
+          padding: 12px 0;
+          margin: 16px 0;
+          border-bottom: 2px solid #152b44;
+          background-color: #F2EDE9;
+          padding: 12px 16px;
+          border-radius: 6px;
+        "
+      >
+        <strong style="color: #152b44">אומדן תקציב: {{estimate}}</strong>
+      </div>
+
+      <div
+        style="
+          font-size: 14px;
+          padding-bottom: 8px;
+          margin-bottom: 12px;
+          border-bottom: 2px solid #152b44;
+          color: #152b44;
+        "
+      >
+        <strong>פרטי הבנייה</strong>
+      </div>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px">
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d; width: 140px">שטח בנוי:</td>
+          <td style="padding: 6px 0; color: #152b44">{{built_area}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d">רמת גמר בנייה:</td>
+          <td style="padding: 6px 0; color: #152b44">{{construction_finish}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d">בריכה:</td>
+          <td style="padding: 6px 0; color: #152b44">{{pool}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d">שטח פיתוח חוץ:</td>
+          <td style="padding: 6px 0; color: #152b44">{{outdoor_area}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d">גמר פיתוח:</td>
+          <td style="padding: 6px 0; color: #152b44">{{outdoor_finish}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d">מטבח:</td>
+          <td style="padding: 6px 0; color: #152b44">{{kitchen}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d">נגרות:</td>
+          <td style="padding: 6px 0; color: #152b44">{{carpentry}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d">ריהוט:</td>
+          <td style="padding: 6px 0; color: #152b44">{{furniture}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #5a6d7d">אבזור:</td>
+          <td style="padding: 6px 0; color: #152b44">{{equipment}}</td>
+        </tr>
+      </table>
+
+      <div style="padding: 16px 0; color: #5a6d7d; font-size: 12px">
+        תאריך: {{created_at}}
+      </div>
+    </div>
+  </div>
+  <div style="max-width: 600px; margin: auto; padding-top: 12px; direction: rtl; text-align: right">
+    <p style="color: #5a6d7d; font-size: 12px">
+      הודעה זו נשלחה אוטומטית ממחשבון האומדן באתר שירן גלעד
+    </p>
+  </div>
+</div>
