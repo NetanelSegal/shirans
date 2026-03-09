@@ -4,12 +4,14 @@ import { BASE_URL } from '@/constants/urls';
 import { CalculatorForm } from '@/components/Calculator';
 import { calculatorService } from '@/services/calculator.service';
 import { useCalculatorConfig } from '@/hooks/useCalculatorConfig';
+import { sendCalculatorLeadNotification } from '@/utils/calculatorLeadEmail';
 
 export default function Calculator() {
   const { config, isLoading: configLoading } = useCalculatorConfig();
 
   const handleSubmit = async (data: CalculatorFormInput, estimate: number) => {
     await calculatorService.submitLeadFromForm(data, estimate);
+    sendCalculatorLeadNotification(data, estimate).catch(() => {});
   };
 
   if (configLoading) {

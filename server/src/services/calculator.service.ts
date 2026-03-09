@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
 import { calculatorRepository } from '../repositories/calculator.repository';
-import { emailService } from './email.service';
 import type {
   SubmitCalculatorLeadInput,
   CalculatorConfigInput,
@@ -13,11 +12,7 @@ import logger from '../middleware/logger';
 
 export const calculatorService = {
   async submitLead(data: SubmitCalculatorLeadInput): Promise<CalculatorLeadResponse> {
-    const lead = await calculatorRepository.createLead(data);
-    emailService.sendNewLeadNotification(lead).catch((err) => {
-      logger.error('Failed to send calculator lead notification email', { error: err, leadId: lead.id });
-    });
-    return lead;
+    return calculatorRepository.createLead(data);
   },
 
   async getLeads(filters?: { isRead?: boolean }) {
