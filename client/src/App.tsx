@@ -1,19 +1,21 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense, useEffect } from 'react';
+import { QueryClientProvider } from '@tanstack/react-query';
 import ScreenProvider from './contexts/ScreenProvider';
 import { ProjectsProvider } from './contexts/ProjectsContext';
 import { CategoriesProvider } from './contexts/CategoriesContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
+import { queryClient } from './lib/queryClient';
 import { useAuth } from './hooks/useAuth';
 import { ProtectedRoute } from './components/Auth/ProtectedRoute'; // Import ProtectedRoute
+import Layout from './components/Layout';
 import Loader from './components/Loader/Loader'; // Import Loader for Suspense fallback
 import apiClient from './utils/apiClient';
 import { urls } from './constants/urls';
 import { USE_FILE_DATA } from './constants/dataSource';
 import { SITE_CONFIG } from './constants/siteConfig';
 
-const Layout = lazy(() => import('./components/Layout'));
 const Home = lazy(() => import('./pages/Home'));
 const Process = lazy(() => import('./pages/Process'));
 const Projects = lazy(() => import('./pages/Projects'));
@@ -56,13 +58,15 @@ function App() {
   return (
     <HelmetProvider>
       <AuthProvider>
-        <ProjectsProvider>
-          <CategoriesProvider>
-            <ScreenProvider>
-              <AppRoutes />
-            </ScreenProvider>
-          </CategoriesProvider>
-        </ProjectsProvider>
+        <QueryClientProvider client={queryClient}>
+          <ProjectsProvider>
+            <CategoriesProvider>
+              <ScreenProvider>
+                <AppRoutes />
+              </ScreenProvider>
+            </CategoriesProvider>
+          </ProjectsProvider>
+        </QueryClientProvider>
       </AuthProvider>
     </HelmetProvider>
   );
@@ -123,11 +127,7 @@ export const appRoutes = [
 const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <Suspense fallback={<Loader />}>
-        <Layout />
-      </Suspense>
-    ),
+    element: <Layout />,
     children: appRoutes.map((route) => ({
       path: route.path,
       element: route.element,

@@ -13,8 +13,10 @@
 - **Calculator Lead Email:** Complete — EmailJS notification sent to admin when a new lead is submitted from the calculator page.
 - **Authentication:** Complete — Login/Register with JWT, refresh tokens, and role-based access control (ADMIN/USER).
 - **Testing Suite:** Complete — Playwright E2E tests for admin dashboard, auth, projects, calculator, and data state. Server integration tests for calculator routes.
+- **Client-Side Caching:** Complete — TanStack Query for projects, categories, testimonials, calculator config, and admin data. Public routes: 5 min stale time; admin: 1 min with invalidation on mutations.
 
 ## Current Focus
+- **CLS / initial load (Mar 2026):** Public [`Layout`](client/src/components/Layout/Layout.tsx) is imported eagerly in [`App.tsx`](client/src/App.tsx) so the navbar mounts with the router instead of after a `Suspense` fallback (`Loader` only). Route-level code-splitting remains for pages.
 - **Optimization:** Image conversion and optimization (found `scripts/convert-project2-images.js`).
 - **Deployment:** Render (Server) and Netlify (Client) configuration.
 - **Content:** Finalizing project data and testimonials.
