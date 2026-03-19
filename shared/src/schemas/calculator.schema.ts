@@ -26,10 +26,7 @@ export const calculatorFormSchema = z
       .transform((val) => DOMPurify.sanitize(val.trim())),
 
     // Building inputs
-    builtAreaSqm: z
-      .number()
-      .min(160, 'שטח בנוי מינימלי: 160 מ״ר')
-      .max(500, 'שטח בנוי מקסימלי: 500 מ״ר'),
+    builtAreaSqm: z.number().min(1, 'שטח בנוי חייב להיות חיובי').max(10000, 'שטח בנוי מקסימלי: 10000 מ״ר'),
     constructionFinish: finishLevel,
     pool: poolOption,
     outdoorAreaSqm: z.number().min(0, 'שטח פיתוח חוץ לא יכול להיות שלילי'),
@@ -87,9 +84,57 @@ export const calculatorConfigSchema = z.object({
     full: z.object({ min: z.number(), max: z.number() }),
   }),
   vatMultiplier: z.number(),
+  builtAreaSqmRange: z.object({ min: z.number(), max: z.number() }),
 });
 
 export type CalculatorConfigInput = z.infer<typeof calculatorConfigSchema>;
+
+/** Schema factory for calculator form — uses config for builtAreaSqm range and allows placeholder for selects */
+export function createCalculatorFormSchema(config: CalculatorConfigInput) {
+  const { min: builtMin, max: builtMax } = config.builtAreaSqmRange;
+
+  return z
+    .object({
+      name: z
+        .string()
+        .min(2, 'שם חייב להכיל לפחות 2 תווים')
+        .max(50, 'שם חייב להכיל פחות מ-50 תווים')
+        .transform((val) => DOMPurify.sanitize(val.trim())),
+      phoneNumber: z
+        .string()
+        .length(10, 'מספר טלפון חייב להכיל בדיוק 10 ספרות')
+        .regex(/^\d+$/, 'מספר טלפון חייב להכיל ספרות בלבד')
+        .transform((val) => DOMPurify.sanitize(val.trim())),
+      email: z
+        .email('כתובת אימייל לא תקינה')
+        .min(5, 'אימייל חייב להכיל לפחות 5 תווים')
+        .max(50, 'אימייל חייב להכיל פחות מ-50 תווים')
+        .transform((val) => DOMPurify.sanitize(val.trim())),
+      builtAreaSqm: z.preprocess(
+        (val) => (typeof val === 'number' && Number.isNaN(val) ? undefined : val),
+        z
+          .union([
+            z.undefined(),
+            z.number().min(builtMin, `שטח בנוי מינימלי: ${builtMin} מ״ר`).max(builtMax, `שטח בנוי מקסימלי: ${builtMax} מ״ר`),
+          ])
+          .refine((v) => v !== undefined, 'שדה חובה'),
+      ),
+      constructionFinish: z.union([finishLevel, z.literal('')]).refine((v) => v !== '', 'שדה חובה'),
+      pool: z.union([poolOption, z.literal('')]).refine((v) => v !== '', 'שדה חובה'),
+      outdoorAreaSqm: z.preprocess(
+        (val) => (typeof val === 'number' && Number.isNaN(val) ? undefined : val),
+        z
+          .union([z.undefined(), z.number().min(0, 'שטח פיתוח חוץ לא יכול להיות שלילי')])
+          .refine((v) => v !== undefined, 'שדה חובה'),
+      ),
+      outdoorFinish: z.union([finishLevel, z.literal('')]).refine((v) => v !== '', 'שדה חובה'),
+      kitchen: z.union([finishLevel, z.literal('')]).refine((v) => v !== '', 'שדה חובה'),
+      carpentry: z.union([carpentryOption, z.literal('')]).refine((v) => v !== '', 'שדה חובה'),
+      furniture: z.union([furnitureOption, z.literal('')]).refine((v) => v !== '', 'שדה חובה'),
+      equipment: z.union([furnitureOption, z.literal('')]).refine((v) => v !== '', 'שדה חובה'),
+    })
+    .strict();
+}
 
 export const calculatorLeadsQuerySchema = z.object({
   isRead: z

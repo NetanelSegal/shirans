@@ -1,16 +1,15 @@
-import { forwardRef, InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
-import { FieldError } from 'react-hook-form';
+import { forwardRef, InputHTMLAttributes, Ref, TextareaHTMLAttributes } from 'react';
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
-  error?: FieldError;
+  error?: { message?: string };
   borderColor?: string;
   as?: 'input';
 };
 
 type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   label: string;
-  error?: FieldError;
+  error?: { message?: string };
   borderColor?: string;
   as: 'textarea';
 };
@@ -22,7 +21,7 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
     const commonProps = {
       ...props,
       placeholder: ' ',
-      className: `peer w-full rounded-xl p-2 ${as === 'textarea' ? 'resize-none' : ''} ${error ? 'border border-red-500' : borderColor ? `border ${borderColor}` : 'border-none'
+      className: `peer w-full rounded-xl p-2 [-webkit-tap-highlight-color:transparent] focus:outline-none focus:ring-2 focus:ring-offset-0 ${as === 'textarea' ? 'resize-none' : ''} ${error ? 'border border-red-500 focus:border-red-500 focus:ring-red-500' : borderColor ? `border ${borderColor} focus:border-primary focus:ring-primary` : 'border border-gray-200 focus:border-primary focus:ring-primary'
         }`,
     };
 
@@ -31,12 +30,12 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
         {as === 'textarea' ? (
           <textarea
             {...(commonProps as TextareaHTMLAttributes<HTMLTextAreaElement>)}
-            ref={ref as React.Ref<HTMLTextAreaElement>}
+            ref={ref as Ref<HTMLTextAreaElement>}
           />
         ) : (
           <input
             {...(commonProps as InputHTMLAttributes<HTMLInputElement>)}
-            ref={ref as React.Ref<HTMLInputElement>}
+            ref={ref as Ref<HTMLInputElement>}
           />
         )}
         <label

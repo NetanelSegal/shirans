@@ -13,6 +13,14 @@ import logger from '../middleware/logger';
 export const calculatorService = {
   async submitLead(data: SubmitCalculatorLeadInput): Promise<CalculatorLeadResponse> {
     try {
+      const config = await calculatorRepository.getConfig();
+      const { min, max } = config.builtAreaSqmRange;
+      if (data.builtAreaSqm < min || data.builtAreaSqm > max) {
+        throw new HttpError(
+          HTTP_STATUS.BAD_REQUEST,
+          getServerErrorMessage('VALIDATION.BUILT_AREA_OUT_OF_RANGE'),
+        );
+      }
       return await calculatorRepository.createLead(data);
     } catch (error) {
       if (error instanceof HttpError) throw error;
@@ -107,7 +115,7 @@ export const calculatorService = {
     }
   },
 
-  async getConfig(): Promise<CalculatorConfigInput | null> {
+  async getConfig(): Promise<CalculatorConfigInput> {
     return calculatorRepository.getConfig();
   },
 

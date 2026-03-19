@@ -26,6 +26,7 @@ export const ERROR_MESSAGES = {
   'VALIDATION.PASSWORD_TOO_SHORT': 'סיסמה חלשה מדי',
   'VALIDATION.PASSWORD_WEAK': 'סיסמה חלשה',
   'VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT': 'תמונות לא שייכות לפרוייקט',
+  'VALIDATION.BUILT_AREA_OUT_OF_RANGE': 'שטח בנוי מחוץ לטווח המוגדר',
 
   'NOT_FOUND.USER_NOT_FOUND': 'משתמש לא נמצא',
   'NOT_FOUND.PROJECT_NOT_FOUND': 'פרוייקט לא נמצא',

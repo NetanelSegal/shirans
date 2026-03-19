@@ -23,6 +23,7 @@
 - [x] Calculator Leads — Managing and reviewing cost estimates.
 - [x] Admin Bulk Actions — Multi-select and bulk status change/delete for leads, contacts, testimonials.
 - [x] Calculator Lead Email — EmailJS notification on new lead from calculator.
+- [x] Calculator Form Enhancements — Configurable built area (100–500), empty initial state, validation-gated display, icon dropdowns, admin builtAreaSqmRange.
 
 ## Phase 4: Quality & Deployment (IN PROGRESS)
 - [x] E2E Testing — Playwright tests for core flows.

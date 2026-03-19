@@ -23,6 +23,7 @@ export const errorMessagesMap = {
   'VALIDATION.PASSWORD_TOO_SHORT': 'Password too short',
   'VALIDATION.PASSWORD_WEAK': 'Password weak',
   'VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT': `Images do not belong to project`,
+  'VALIDATION.BUILT_AREA_OUT_OF_RANGE': 'Built area is out of configured range',
 
   'NOT_FOUND.USER_NOT_FOUND': 'User not found',
   'NOT_FOUND.PROJECT_NOT_FOUND': 'Project not found',
