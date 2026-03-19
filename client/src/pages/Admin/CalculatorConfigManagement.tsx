@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { calculatorService } from '@/services/calculator.service';
 import {
   type CalculatorConfigInput,
+  DEFAULT_CALCULATOR_CONFIG,
 } from '@shirans/shared';
 import { AdminPageHeader } from '@/components/Admin/AdminPageHeader';
 import Button from '@/components/ui/Button';
@@ -50,7 +51,7 @@ export default function CalculatorConfigManagement() {
   };
 
   const handleReset = () => {
-    setConfig(null);
+    setConfig(JSON.parse(JSON.stringify(DEFAULT_CALCULATOR_CONFIG)) as CalculatorConfigInput);
   };
 
   if (isLoading || !config) {
@@ -76,6 +77,40 @@ export default function CalculatorConfigManagement() {
       )}
 
       <div className="space-y-6 rounded-xl bg-white p-6 shadow">
+        <section>
+          <h3 className="mb-3 font-semibold">טווח שטח בנוי (מ״ר)</h3>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label htmlFor="built-area-min" className="block text-sm font-medium">
+                מינימום
+              </label>
+              <input
+                id="built-area-min"
+                type="number"
+                value={config.builtAreaSqmRange.min}
+                onChange={(e) =>
+                  updateConfig('builtAreaSqmRange.min', Number(e.target.value))
+                }
+                className="mt-1 w-full rounded-lg border p-2"
+              />
+            </div>
+            <div>
+              <label htmlFor="built-area-max" className="block text-sm font-medium">
+                מקסימום
+              </label>
+              <input
+                id="built-area-max"
+                type="number"
+                value={config.builtAreaSqmRange.max}
+                onChange={(e) =>
+                  updateConfig('builtAreaSqmRange.max', Number(e.target.value))
+                }
+                className="mt-1 w-full rounded-lg border p-2"
+              />
+            </div>
+          </div>
+        </section>
+
         <section>
           <h3 className="mb-3 font-semibold">מחירי בסיס (₪/מ״ר)</h3>
           <div className="grid gap-4 md:grid-cols-2">

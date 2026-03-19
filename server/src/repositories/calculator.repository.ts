@@ -4,6 +4,7 @@ import type {
   CalculatorConfigInput,
 } from '@shirans/shared';
 import type { SubmitCalculatorLeadInput } from '@shirans/shared';
+import { DEFAULT_CALCULATOR_CONFIG } from '@shirans/shared';
 
 function transformLead(lead: {
   id: string;
@@ -119,11 +120,16 @@ export const calculatorRepository = {
     return result.count;
   },
 
-  async getConfig(): Promise<CalculatorConfigInput | null> {
+  async getConfig(): Promise<CalculatorConfigInput> {
     const row = await prisma.calculatorConfig.findFirst({
       orderBy: { updatedAt: 'desc' },
     });
-    return row ? (row.config as unknown as CalculatorConfigInput) : null;
+    if (!row) return DEFAULT_CALCULATOR_CONFIG;
+    const config = row.config as unknown as Record<string, unknown>;
+    if (!config.builtAreaSqmRange) {
+      config.builtAreaSqmRange = DEFAULT_CALCULATOR_CONFIG.builtAreaSqmRange;
+    }
+    return config as CalculatorConfigInput;
   },
 
   async upsertConfig(config: CalculatorConfigInput): Promise<CalculatorConfigInput> {

@@ -4,6 +4,7 @@ import type {
 } from '../schemas/calculator.schema';
 
 export const DEFAULT_CALCULATOR_CONFIG: CalculatorConfigInput = {
+  builtAreaSqmRange: { min: 100, max: 500 },
   constructionBase: { min: 8000, max: 12000 },
   outdoorBase: { min: 500, max: 1500 },
   finishMultipliers: {

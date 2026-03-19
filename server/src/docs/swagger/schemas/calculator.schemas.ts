@@ -59,6 +59,11 @@ export const calculatorSchemas = {
   CalculatorConfig: {
     type: 'object',
     properties: {
+      builtAreaSqmRange: {
+        type: 'object',
+        properties: { min: { type: 'number' }, max: { type: 'number' } },
+        description: 'Allowed built area range in sqm (e.g. 100–500)',
+      },
       constructionBase: {
         type: 'object',
         properties: { min: { type: 'number' }, max: { type: 'number' } },
