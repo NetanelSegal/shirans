@@ -1,7 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as adminProjectsService from '../../services/admin/projects.service';
+import { transformError } from '@/utils/errorHandler';
+import { getClientErrorMessage } from '@/constants/errorMessages';
+import { queryKeys } from '@/constants/queryKeys';
 import type {
-  ProjectResponse,
   CreateProjectInput,
   UpdateProjectInput,
   UploadImagesInput,
@@ -9,103 +11,81 @@ import type {
   DeleteImagesInput,
 } from '@shirans/shared';
 
+const ONE_MIN = 60 * 1000;
+
 export function useAdminProjects() {
-  const [projects, setProjects] = useState<ProjectResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const refresh = useCallback(() => {
-    setError(null);
-    setIsLoading(true);
-    adminProjectsService
-      .fetchAllProjects()
-      .then(setProjects)
-      .catch((err) => setError(err?.message ?? 'שגיאה בטעינת הפרויקטים'))
-      .finally(() => setIsLoading(false));
-  }, []);
+  const {
+    data: projects = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.admin.projects,
+    queryFn: adminProjectsService.fetchAllProjects,
+    staleTime: ONE_MIN,
+  });
 
-  useEffect(() => {
-    let cancelled = false;
-    setError(null);
-    setIsLoading(true);
-    adminProjectsService
-      .fetchAllProjects()
-      .then((data) => {
-        if (!cancelled) setProjects(data);
-      })
-      .catch((err) => {
-        if (!cancelled) setError(err?.message ?? 'שגיאה בטעינת הפרויקטים');
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const errorMessage = error
+    ? getClientErrorMessage(transformError(error).errorKey)
+    : null;
 
-  const create = useCallback(
-    async (input: CreateProjectInput) => {
-      const created = await adminProjectsService.createProject(input);
-      setProjects((prev) => [created, ...prev]);
-      return created;
+  const createMutation = useMutation({
+    mutationFn: adminProjectsService.createProject,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
     },
-    []
-  );
+  });
 
-  const update = useCallback(
-    async (input: UpdateProjectInput) => {
-      const updated = await adminProjectsService.updateProject(input);
-      setProjects((prev) =>
-        prev.map((p) => (p.id === updated.id ? updated : p))
-      );
-      return updated;
+  const updateMutation = useMutation({
+    mutationFn: adminProjectsService.updateProject,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
     },
-    []
-  );
+  });
 
-  const remove = useCallback(async (id: string) => {
-    await adminProjectsService.deleteProject(id);
-    setProjects((prev) => prev.filter((p) => p.id !== id));
-  }, []);
-
-  const uploadImages = useCallback(
-    async (input: UploadImagesInput) => {
-      const updated = await adminProjectsService.uploadProjectImages(input);
-      setProjects((prev) =>
-        prev.map((p) => (p.id === updated.id ? updated : p))
-      );
-      return updated;
+  const deleteMutation = useMutation({
+    mutationFn: adminProjectsService.deleteProject,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
     },
-    []
-  );
+  });
 
-  const deleteMainImage = useCallback(
-    async (input: DeleteMainImageInput) => {
-      await adminProjectsService.deleteMainImage(input);
-      await refresh();
+  const uploadImagesMutation = useMutation({
+    mutationFn: adminProjectsService.uploadProjectImages,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
     },
-    [refresh]
-  );
+  });
 
-  const deleteProjectImages = useCallback(
-    async (input: DeleteImagesInput) => {
-      await adminProjectsService.deleteProjectImages(input);
-      await refresh();
+  const deleteMainImageMutation = useMutation({
+    mutationFn: adminProjectsService.deleteMainImage,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
     },
-    [refresh]
-  );
+  });
+
+  const deleteProjectImagesMutation = useMutation({
+    mutationFn: adminProjectsService.deleteProjectImages,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
+    },
+  });
 
   return {
     projects,
     isLoading,
-    error,
-    refresh,
-    create,
-    update,
-    delete: remove,
-    uploadImages,
-    deleteMainImage,
-    deleteProjectImages,
+    error: errorMessage,
+    refresh: () => void refetch(),
+    create: (input: CreateProjectInput) => createMutation.mutateAsync(input),
+    update: (input: UpdateProjectInput) => updateMutation.mutateAsync(input),
+    delete: (id: string) => deleteMutation.mutateAsync(id),
+    uploadImages: (input: UploadImagesInput) =>
+      uploadImagesMutation.mutateAsync(input),
+    deleteMainImage: (input: DeleteMainImageInput) =>
+      deleteMainImageMutation.mutateAsync(input),
+    deleteProjectImages: (input: DeleteImagesInput) =>
+      deleteProjectImagesMutation.mutateAsync(input),
   };
 }

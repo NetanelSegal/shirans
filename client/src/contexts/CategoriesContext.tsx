@@ -1,5 +1,10 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useMemo, ReactNode } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { fetchCategories } from '@/services/categories.service';
+import { queryKeys } from '@/constants/queryKeys';
+
+const FIVE_MIN = 5 * 60 * 1000;
+const TEN_MIN = 10 * 60 * 1000;
 
 interface CategoriesContextType {
   categoriesMap: Record<string, string>;
@@ -11,23 +16,22 @@ const CategoriesContext = createContext<CategoriesContextType | undefined>(
 );
 
 export const CategoriesProvider = ({ children }: { children: ReactNode }) => {
-  const [categoriesMap, setCategoriesMap] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, isLoading } = useQuery({
+    queryKey: queryKeys.categories,
+    queryFn: fetchCategories,
+    staleTime: FIVE_MIN,
+    gcTime: TEN_MIN,
+  });
 
-  useEffect(() => {
-    fetchCategories()
-      .then((data) => {
-        const map: Record<string, string> = {};
-        for (const cat of data) {
-          map[cat.urlCode] = cat.title;
-        }
-        setCategoriesMap(map);
-      })
-      .catch(() => {
-        // Silently fail - categories will just show empty labels
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
+  const categoriesMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    if (data) {
+      for (const cat of data) {
+        map[cat.urlCode] = cat.title;
+      }
+    }
+    return map;
+  }, [data]);
 
   return (
     <CategoriesContext.Provider value={{ categoriesMap, isLoading }}>

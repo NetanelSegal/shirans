@@ -20,7 +20,7 @@ The application uses PostgreSQL as the primary database, managed through Prisma 
 ## Frontend Architecture
 - **Framework:** React 18 + Vite.
 - **Routing:** Centralized React Router configuration in `client/src/App.tsx`. Public routes (Home, Process, Projects, `/calculator`) use main Layout (Navbar + Footer); admin routes under `/admin` use Dashboard layout.
-- **State Management:** Custom React Contexts (Auth, Projects, Categories, Screen).
+- **State Management:** TanStack Query for cacheable API data (projects, categories, testimonials, calculator config, admin data). Custom React Contexts (Auth, Projects, Categories, Screen) wrap `useQuery` where shared.
 - **Styling:** Tailwind CSS with RTL (Hebrew) focus.
 - **Components:** Custom UI library in `client/src/components/ui/`.
 

@@ -1,84 +1,78 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as adminContactsService from '../../services/admin/contacts.service';
+import { transformError } from '@/utils/errorHandler';
+import { getClientErrorMessage } from '@/constants/errorMessages';
+import { queryKeys } from '@/constants/queryKeys';
 import type { ContactResponse } from '@shirans/shared';
 
+const ONE_MIN = 60 * 1000;
+
 export function useAdminContacts() {
-  const [contacts, setContacts] = useState<ContactResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const refresh = useCallback(() => {
-    setError(null);
-    setIsLoading(true);
-    adminContactsService
-      .fetchAllContacts()
-      .then(setContacts)
-      .catch((err) => setError(err?.message ?? 'שגיאה בטעינת הפניות'))
-      .finally(() => setIsLoading(false));
-  }, []);
+  const {
+    data: contacts = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery<ContactResponse[]>({
+    queryKey: queryKeys.admin.contacts,
+    queryFn: () => adminContactsService.fetchAllContacts(),
+    staleTime: ONE_MIN,
+  });
 
-  useEffect(() => {
-    let cancelled = false;
-    setError(null);
-    setIsLoading(true);
-    adminContactsService
-      .fetchAllContacts()
-      .then((data) => {
-        if (!cancelled) setContacts(data);
-      })
-      .catch((err) => {
-        if (!cancelled) setError(err?.message ?? 'שגיאה בטעינת הפניות');
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoading(false);
+  const errorMessage = error
+    ? getClientErrorMessage(transformError(error).errorKey)
+    : null;
+
+  const updateReadStatusMutation = useMutation({
+    mutationFn: ({ id, isRead }: { id: string; isRead: boolean }) =>
+      adminContactsService.updateContactReadStatus(id, isRead),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.contacts,
       });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const updateReadStatus = useCallback(
-    async (id: string, isRead: boolean) => {
-      const updated = await adminContactsService.updateContactReadStatus(
-        id,
-        isRead
-      );
-      setContacts((prev) =>
-        prev.map((c) => (c.id === updated.id ? updated : c))
-      );
-      return updated;
     },
-    []
-  );
+  });
 
-  const remove = useCallback(async (id: string) => {
-    await adminContactsService.deleteContact(id);
-    setContacts((prev) => prev.filter((c) => c.id !== id));
-  }, []);
-
-  const updateReadStatusBulk = useCallback(
-    async (ids: string[], isRead: boolean) => {
-      await adminContactsService.updateContactReadStatusBulk(ids, isRead);
-      setContacts((prev) =>
-        prev.map((c) => (ids.includes(c.id) ? { ...c, isRead } : c))
-      );
+  const deleteMutation = useMutation({
+    mutationFn: adminContactsService.deleteContact,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.contacts,
+      });
     },
-    []
-  );
+  });
 
-  const deleteBulk = useCallback(async (ids: string[]) => {
-    await adminContactsService.deleteContactsBulk(ids);
-    setContacts((prev) => prev.filter((c) => !ids.includes(c.id)));
-  }, []);
+  const updateReadStatusBulkMutation = useMutation({
+    mutationFn: ({ ids, isRead }: { ids: string[]; isRead: boolean }) =>
+      adminContactsService.updateContactReadStatusBulk(ids, isRead),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.contacts,
+      });
+    },
+  });
+
+  const deleteBulkMutation = useMutation({
+    mutationFn: adminContactsService.deleteContactsBulk,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.contacts,
+      });
+    },
+  });
 
   return {
     contacts,
     isLoading,
-    error,
-    refresh,
-    updateReadStatus,
-    delete: remove,
-    updateReadStatusBulk,
-    deleteBulk,
+    error: errorMessage,
+    refresh: () => void refetch(),
+    updateReadStatus: (id: string, isRead: boolean) =>
+      updateReadStatusMutation.mutateAsync({ id, isRead }),
+    delete: (id: string) => deleteMutation.mutateAsync(id),
+    updateReadStatusBulk: (ids: string[], isRead: boolean) =>
+      updateReadStatusBulkMutation.mutateAsync({ ids, isRead }),
+    deleteBulk: (ids: string[]) => deleteBulkMutation.mutateAsync(ids),
   };
 }

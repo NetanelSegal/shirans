@@ -1,26 +1,28 @@
-import { useState, useEffect } from 'react';
-import type { CalculatorConfigInput, ErrorKey } from '@shirans/shared';
+import { useQuery } from '@tanstack/react-query';
+import type { ErrorKey } from '@shirans/shared';
 import { calculatorService } from '@/services/calculator.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
+import { queryKeys } from '@/constants/queryKeys';
+
+const FIVE_MIN = 5 * 60 * 1000;
+const TEN_MIN = 10 * 60 * 1000;
 
 export function useCalculatorConfig() {
-  const [config, setConfig] = useState<CalculatorConfigInput | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: config, isLoading, error } = useQuery({
+    queryKey: queryKeys.calculatorConfig,
+    queryFn: () => calculatorService.getConfig(),
+    staleTime: FIVE_MIN,
+    gcTime: TEN_MIN,
+  });
 
-  useEffect(() => {
-    setError(null);
-    calculatorService
-      .getConfig()
-      .then((c) => setConfig(c))
-      .catch((err) => {
-        const appError = transformError(err);
-        setConfig(null);
-        setError(getClientErrorMessage(appError.errorKey as ErrorKey));
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
+  const errorMessage = error
+    ? getClientErrorMessage(transformError(error).errorKey as ErrorKey)
+    : null;
 
-  return { config, isLoading, error };
+  return {
+    config: config ?? null,
+    isLoading,
+    error: errorMessage,
+  };
 }

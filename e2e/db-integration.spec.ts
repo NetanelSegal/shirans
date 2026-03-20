@@ -68,11 +68,15 @@ test.describe('Projects load from API', () => {
 
 test.describe('Testimonials load from API', () => {
   test('should display testimonials on the homepage', async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('load');
+
+    const testimonialsHeading = page.getByRole('heading', {
+      name: 'מה אומרים עלינו',
+    });
+    await expect(testimonialsHeading).toBeVisible({ timeout: 15000 });
 
     const testimonialName = page.locator('h3').filter({ hasText: 'משפחת' });
-    await testimonialName.first().scrollIntoViewIfNeeded();
     await expect(testimonialName.first()).toBeVisible({ timeout: 15000 });
   });
 });

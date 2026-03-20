@@ -12,8 +12,8 @@
 - **Admin Dashboard:** Complete — Unified dashboard for managing projects, categories, testimonials, contacts, users, and calculator leads. Bulk actions (select multiple, change status, delete) on leads, contacts, and testimonials.
 - **Calculator Lead Email:** Complete — EmailJS notification sent to admin when a new lead is submitted from the calculator page.
 - **Authentication:** Complete — Login/Register with JWT, refresh tokens, and role-based access control (ADMIN/USER).
-- **Testing Suite:** Complete — Playwright E2E tests for admin dashboard, auth, projects, calculator, and data state. Server integration tests for calculator routes.
-- **Client-Side Caching:** Complete — TanStack Query for projects, categories, testimonials, calculator config, and admin data. Public routes: 5 min stale time; admin: 1 min with invalidation on mutations.
+- **Testing Suite:** Complete — Playwright E2E tests for admin dashboard, auth, projects, calculator, data state, and TanStack Query caching (`e2e/caching.spec.ts`). Server integration tests for calculator routes.
+- **Client-Side Caching:** Complete — TanStack Query for projects, categories, testimonials, calculator config, and admin data. Defaults: 5 min stale time; admin queries: 1 min stale time with invalidation on mutations.
 
 ## Current Focus
 - **CLS / initial load (Mar 2026):** Public [`Layout`](client/src/components/Layout/Layout.tsx) is imported eagerly in [`App.tsx`](client/src/App.tsx) so the navbar mounts with the router instead of after a `Suspense` fallback (`Loader` only). Route-level code-splitting remains for pages.
@@ -22,7 +22,7 @@
 - **Content:** Finalizing project data and testimonials.
 
 ## Tech Stack
-- **Frontend:** React 18.3.1, Vite 7.3.1, Tailwind 3.4.14, Motion 12.29.2, React Hook Form, Zod.
+- **Frontend:** React 18.3.1, Vite 7.3.1, Tailwind 3.4.14, Motion 12.29.2, React Hook Form, Zod, TanStack Query.
 - **Backend:** Node.js, Express 4.21.1, Prisma 7.4.0, PostgreSQL, JWT, Bcrypt.
 - **Testing:** Playwright 1.58.1, Vitest 4.0.18.
 - **Shared:** @shirans/shared (Zod, Types).

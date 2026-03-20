@@ -5,42 +5,45 @@ import { useCategories } from '@/contexts/CategoriesContext';
 import { Navigate, useParams, useNavigate } from 'react-router-dom';
 import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
 import { useProjects } from '@/contexts/ProjectsContext';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import { Helmet } from 'react-helmet-async';
-import type { ProjectResponse, ResponsiveImage } from '@shirans/shared';
+import type { ResponsiveImage } from '@shirans/shared';
 import { BASE_URL } from '@/constants/urls';
 import { LoadingState, ErrorState } from '@/components/DataState';
 import { fetchProject } from '@/services/projects.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
+import { queryKeys } from '@/constants/queryKeys';
+
+const FIVE_MIN = 5 * 60 * 1000;
+const TEN_MIN = 10 * 60 * 1000;
 
 export default function Project() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { projects, isLoading: projectsLoading } = useProjects();
   const { categoriesMap } = useCategories();
-  const [directProject, setDirectProject] = useState<ProjectResponse | null>(null);
-  const [directLoading, setDirectLoading] = useState(false);
-  const [directError, setDirectError] = useState<string | null>(null);
 
   const projectFromList = projects.find((p) => p.id === id);
 
-  // When project not in list (direct nav), fetch single project
-  useEffect(() => {
-    if (!id || projectFromList || projectsLoading) return;
-    setDirectLoading(true);
-    setDirectError(null);
-    fetchProject(id)
-      .then(setDirectProject)
-      .catch((err) => {
-        const appError = transformError(err);
-        setDirectError(getClientErrorMessage(appError.errorKey));
-      })
-      .finally(() => setDirectLoading(false));
-  }, [id, projectFromList, projectsLoading]);
+  const {
+    data: directProject,
+    isLoading: directLoading,
+    error: directError,
+  } = useQuery({
+    queryKey: queryKeys.project(id ?? ''),
+    queryFn: () => fetchProject(id!),
+    enabled: !!id && !projectFromList && !projectsLoading,
+    staleTime: FIVE_MIN,
+    gcTime: TEN_MIN,
+  });
 
-  const project = projectFromList ?? directProject;
+  const project = projectFromList ?? directProject ?? null;
+  const directErrorMessage = directError
+    ? getClientErrorMessage(transformError(directError).errorKey)
+    : null;
 
   if (projectsLoading && !projectFromList) {
     return <LoadingState minHeight="40rem" />;
@@ -50,10 +53,10 @@ export default function Project() {
     return <LoadingState minHeight="40rem" />;
   }
 
-  if (directError) {
+  if (directErrorMessage) {
     return (
       <ErrorState
-        message={directError}
+        message={directErrorMessage}
         onRetry={() => navigate('/projects')}
         retryLabel="חזרה לפרויקטים"
       />

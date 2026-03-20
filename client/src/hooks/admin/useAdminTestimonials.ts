@@ -1,112 +1,107 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as adminTestimonialsService from '../../services/admin/testimonials.service';
-import type {
-  TestimonialResponse,
-  CreateTestimonialInput,
-} from '@shirans/shared';
+import { transformError } from '@/utils/errorHandler';
+import { getClientErrorMessage } from '@/constants/errorMessages';
+import { queryKeys } from '@/constants/queryKeys';
+import type { CreateTestimonialInput } from '@shirans/shared';
+
+const ONE_MIN = 60 * 1000;
 
 export function useAdminTestimonials() {
-  const [testimonials, setTestimonials] = useState<TestimonialResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const refresh = useCallback(() => {
-    setError(null);
-    setIsLoading(true);
-    adminTestimonialsService
-      .fetchAllTestimonials()
-      .then(setTestimonials)
-      .catch((err) => setError(err?.message ?? 'שגיאה בטעינת ההמלצות'))
-      .finally(() => setIsLoading(false));
-  }, []);
+  const {
+    data: testimonials = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.admin.testimonials,
+    queryFn: adminTestimonialsService.fetchAllTestimonials,
+    staleTime: ONE_MIN,
+  });
 
-  useEffect(() => {
-    let cancelled = false;
-    setError(null);
-    setIsLoading(true);
-    adminTestimonialsService
-      .fetchAllTestimonials()
-      .then((data) => {
-        if (!cancelled) setTestimonials(data);
-      })
-      .catch((err) => {
-        if (!cancelled) setError(err?.message ?? 'שגיאה בטעינת ההמלצות');
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoading(false);
+  const errorMessage = error
+    ? getClientErrorMessage(transformError(error).errorKey)
+    : null;
+
+  const createMutation = useMutation({
+    mutationFn: adminTestimonialsService.createTestimonial,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.testimonials,
       });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const create = useCallback(
-    async (input: CreateTestimonialInput) => {
-      const created = await adminTestimonialsService.createTestimonial(input);
-      setTestimonials((prev) => [created, ...prev]);
-      return created;
     },
-    []
-  );
+  });
 
-  const update = useCallback(
-    async (id: string, input: Partial<CreateTestimonialInput>) => {
-      const updated = await adminTestimonialsService.updateTestimonial(
-        id,
-        input
-      );
-      setTestimonials((prev) =>
-        prev.map((t) => (t.id === updated.id ? updated : t))
-      );
-      return updated;
+  const updateMutation = useMutation({
+    mutationFn: ({
+      id,
+      input,
+    }: { id: string; input: Partial<CreateTestimonialInput> }) =>
+      adminTestimonialsService.updateTestimonial(id, input),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.testimonials,
+      });
     },
-    []
-  );
+  });
 
-  const remove = useCallback(async (id: string) => {
-    await adminTestimonialsService.deleteTestimonial(id);
-    setTestimonials((prev) => prev.filter((t) => t.id !== id));
-  }, []);
-
-  const updateOrder = useCallback(
-    async (id: string, order: number) => {
-      const updated = await adminTestimonialsService.updateTestimonialOrder(
-        id,
-        order
-      );
-      setTestimonials((prev) =>
-        prev.map((t) => (t.id === updated.id ? updated : t))
-      );
-      return updated;
+  const deleteMutation = useMutation({
+    mutationFn: adminTestimonialsService.deleteTestimonial,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.testimonials,
+      });
     },
-    []
-  );
+  });
 
-  const updateBulk = useCallback(
-    async (ids: string[], isPublished: boolean) => {
-      await adminTestimonialsService.updateTestimonialsBulk(ids, isPublished);
-      setTestimonials((prev) =>
-        prev.map((t) => (ids.includes(t.id) ? { ...t, isPublished } : t))
-      );
+  const updateOrderMutation = useMutation({
+    mutationFn: ({ id, order }: { id: string; order: number }) =>
+      adminTestimonialsService.updateTestimonialOrder(id, order),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.testimonials,
+      });
     },
-    []
-  );
+  });
 
-  const deleteBulk = useCallback(async (ids: string[]) => {
-    await adminTestimonialsService.deleteTestimonialsBulk(ids);
-    setTestimonials((prev) => prev.filter((t) => !ids.includes(t.id)));
-  }, []);
+  const updateBulkMutation = useMutation({
+    mutationFn: ({
+      ids,
+      isPublished,
+    }: { ids: string[]; isPublished: boolean }) =>
+      adminTestimonialsService.updateTestimonialsBulk(ids, isPublished),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.testimonials,
+      });
+    },
+  });
+
+  const deleteBulkMutation = useMutation({
+    mutationFn: adminTestimonialsService.deleteTestimonialsBulk,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.testimonials,
+      });
+    },
+  });
 
   return {
     testimonials,
     isLoading,
-    error,
-    refresh,
-    create,
-    update,
-    delete: remove,
-    updateOrder,
-    updateBulk,
-    deleteBulk,
+    error: errorMessage,
+    refresh: () => void refetch(),
+    create: (input: CreateTestimonialInput) =>
+      createMutation.mutateAsync(input),
+    update: (id: string, input: Partial<CreateTestimonialInput>) =>
+      updateMutation.mutateAsync({ id, input }),
+    delete: (id: string) => deleteMutation.mutateAsync(id),
+    updateOrder: (id: string, order: number) =>
+      updateOrderMutation.mutateAsync({ id, order }),
+    updateBulk: (ids: string[], isPublished: boolean) =>
+      updateBulkMutation.mutateAsync({ ids, isPublished }),
+    deleteBulk: (ids: string[]) => deleteBulkMutation.mutateAsync(ids),
   };
 }
