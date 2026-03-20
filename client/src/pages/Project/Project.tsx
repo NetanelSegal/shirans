@@ -28,14 +28,19 @@ export default function Project() {
 
   const projectFromList = projects.find((p) => p.id === id);
 
+  const detailFetchEnabled =
+    Boolean(id) && !projectFromList && !projectsLoading;
+
   const {
     data: directProject,
     isLoading: directLoading,
     error: directError,
   } = useQuery({
-    queryKey: queryKeys.project(id ?? ''),
+    queryKey: id
+      ? queryKeys.project(id)
+      : queryKeys.projectDetailDisabled,
     queryFn: () => fetchProject(id!),
-    enabled: !!id && !projectFromList && !projectsLoading,
+    enabled: detailFetchEnabled,
     staleTime: FIVE_MIN,
     gcTime: TEN_MIN,
   });

@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as adminContactsService from '../../services/admin/contacts.service';
 import { transformError } from '@/utils/errorHandler';
@@ -24,6 +25,10 @@ export function useAdminContacts() {
   const errorMessage = error
     ? getClientErrorMessage(transformError(error).errorKey)
     : null;
+
+  const refresh = useCallback(() => {
+    void refetch();
+  }, [refetch]);
 
   const updateReadStatusMutation = useMutation({
     mutationFn: ({ id, isRead }: { id: string; isRead: boolean }) =>
@@ -67,7 +72,7 @@ export function useAdminContacts() {
     contacts,
     isLoading,
     error: errorMessage,
-    refresh: () => void refetch(),
+    refresh,
     updateReadStatus: (id: string, isRead: boolean) =>
       updateReadStatusMutation.mutateAsync({ id, isRead }),
     delete: (id: string) => deleteMutation.mutateAsync(id),

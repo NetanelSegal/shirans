@@ -32,6 +32,10 @@ export function useAdminCalculatorLeads() {
     setActionError(getClientErrorMessage(appError.errorKey as ErrorKey));
   }, []);
 
+  const refresh = useCallback(() => {
+    void refetch();
+  }, [refetch]);
+
   const updateReadStatusMutation = useMutation({
     mutationFn: ({ id, isRead }: { id: string; isRead: boolean }) =>
       calculatorService.updateLeadRead(id, isRead),
@@ -84,7 +88,7 @@ export function useAdminCalculatorLeads() {
     error: errorMessage,
     actionError,
     clearActionError: useCallback(() => setActionError(null), []),
-    refresh: () => void refetch(),
+    refresh,
     updateReadStatus: (id: string, isRead: boolean) =>
       updateReadStatusMutation.mutateAsync({ id, isRead }),
     delete: (id: string) => deleteMutation.mutateAsync(id),

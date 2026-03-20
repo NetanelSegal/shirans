@@ -5,6 +5,8 @@
 export const queryKeys = {
   projects: ['projects'] as const,
   project: (id: string) => ['projects', id] as const,
+  /** Placeholder key when project id is missing; query stays disabled. */
+  projectDetailDisabled: ['projects', 'detail', '__disabled__'] as const,
   categories: ['categories'] as const,
   testimonials: ['testimonials'] as const,
   calculatorConfig: ['calculator', 'config'] as const,

@@ -12,7 +12,7 @@
     - `projects.spec.ts`: Tests project filtering and details.
     - `calculator.spec.ts`: Tests calculator form and lead submission.
     - `data-state.spec.ts`: Tests data persistence.
-    - `caching.spec.ts`: Tests TanStack Query caching (public and admin routes).
+    - `react-query-smoke.spec.ts`: Smoke tests for pages backed by TanStack Query (public and admin).
 - **Unit/Integration (Vitest):** Located in `server/test/`.
     - `auth.test.ts`: Server-side auth logic.
     - `projects.test.ts`: Project management logic.

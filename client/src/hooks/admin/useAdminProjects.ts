@@ -1,8 +1,10 @@
+import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as adminProjectsService from '../../services/admin/projects.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { queryKeys } from '@/constants/queryKeys';
+import { invalidateAfterAdminProjectsChange } from '@/lib/queryInvalidation';
 import type {
   CreateProjectInput,
   UpdateProjectInput,
@@ -31,53 +33,45 @@ export function useAdminProjects() {
     ? getClientErrorMessage(transformError(error).errorKey)
     : null;
 
+  const refresh = useCallback(() => {
+    void refetch();
+  }, [refetch]);
+
   const createMutation = useMutation({
     mutationFn: adminProjectsService.createProject,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
-    },
+    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
   });
 
   const updateMutation = useMutation({
     mutationFn: adminProjectsService.updateProject,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
-    },
+    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
   });
 
   const deleteMutation = useMutation({
     mutationFn: adminProjectsService.deleteProject,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
-    },
+    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
   });
 
   const uploadImagesMutation = useMutation({
     mutationFn: adminProjectsService.uploadProjectImages,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
-    },
+    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
   });
 
   const deleteMainImageMutation = useMutation({
     mutationFn: adminProjectsService.deleteMainImage,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
-    },
+    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
   });
 
   const deleteProjectImagesMutation = useMutation({
     mutationFn: adminProjectsService.deleteProjectImages,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: queryKeys.admin.projects });
-    },
+    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
   });
 
   return {
     projects,
     isLoading,
     error: errorMessage,
-    refresh: () => void refetch(),
+    refresh,
     create: (input: CreateProjectInput) => createMutation.mutateAsync(input),
     update: (input: UpdateProjectInput) => updateMutation.mutateAsync(input),
     delete: (id: string) => deleteMutation.mutateAsync(id),

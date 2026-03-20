@@ -1,8 +1,10 @@
+import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as adminTestimonialsService from '../../services/admin/testimonials.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { queryKeys } from '@/constants/queryKeys';
+import { invalidateAfterAdminTestimonialsChange } from '@/lib/queryInvalidation';
 import type { CreateTestimonialInput } from '@shirans/shared';
 
 const ONE_MIN = 60 * 1000;
@@ -25,13 +27,13 @@ export function useAdminTestimonials() {
     ? getClientErrorMessage(transformError(error).errorKey)
     : null;
 
+  const refresh = useCallback(() => {
+    void refetch();
+  }, [refetch]);
+
   const createMutation = useMutation({
     mutationFn: adminTestimonialsService.createTestimonial,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: queryKeys.admin.testimonials,
-      });
-    },
+    onSuccess: () => invalidateAfterAdminTestimonialsChange(queryClient),
   });
 
   const updateMutation = useMutation({
@@ -40,30 +42,18 @@ export function useAdminTestimonials() {
       input,
     }: { id: string; input: Partial<CreateTestimonialInput> }) =>
       adminTestimonialsService.updateTestimonial(id, input),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: queryKeys.admin.testimonials,
-      });
-    },
+    onSuccess: () => invalidateAfterAdminTestimonialsChange(queryClient),
   });
 
   const deleteMutation = useMutation({
     mutationFn: adminTestimonialsService.deleteTestimonial,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: queryKeys.admin.testimonials,
-      });
-    },
+    onSuccess: () => invalidateAfterAdminTestimonialsChange(queryClient),
   });
 
   const updateOrderMutation = useMutation({
     mutationFn: ({ id, order }: { id: string; order: number }) =>
       adminTestimonialsService.updateTestimonialOrder(id, order),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: queryKeys.admin.testimonials,
-      });
-    },
+    onSuccess: () => invalidateAfterAdminTestimonialsChange(queryClient),
   });
 
   const updateBulkMutation = useMutation({
@@ -72,27 +62,19 @@ export function useAdminTestimonials() {
       isPublished,
     }: { ids: string[]; isPublished: boolean }) =>
       adminTestimonialsService.updateTestimonialsBulk(ids, isPublished),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: queryKeys.admin.testimonials,
-      });
-    },
+    onSuccess: () => invalidateAfterAdminTestimonialsChange(queryClient),
   });
 
   const deleteBulkMutation = useMutation({
     mutationFn: adminTestimonialsService.deleteTestimonialsBulk,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: queryKeys.admin.testimonials,
-      });
-    },
+    onSuccess: () => invalidateAfterAdminTestimonialsChange(queryClient),
   });
 
   return {
     testimonials,
     isLoading,
     error: errorMessage,
-    refresh: () => void refetch(),
+    refresh,
     create: (input: CreateTestimonialInput) =>
       createMutation.mutateAsync(input),
     update: (id: string, input: Partial<CreateTestimonialInput>) =>

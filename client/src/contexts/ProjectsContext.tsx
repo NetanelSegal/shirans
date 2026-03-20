@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, useCallback, ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchProjects } from '@/services/projects.service';
 import { transformError } from '@/utils/errorHandler';
@@ -32,13 +32,17 @@ export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
     ? getClientErrorMessage(transformError(error).errorKey)
     : null;
 
+  const retry = useCallback(() => {
+    void refetch();
+  }, [refetch]);
+
   return (
     <ProjectsContext.Provider
       value={{
         projects: data ?? [],
         isLoading,
         error: errorMessage,
-        retry: () => void refetch(),
+        retry,
       }}
     >
       {children}

@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import * as adminUsersService from '../../services/admin/users.service';
 import { transformError } from '@/utils/errorHandler';
@@ -25,10 +26,14 @@ export function useAdminUsers() {
       )
     : null;
 
+  const refresh = useCallback(() => {
+    void refetch();
+  }, [refetch]);
+
   return {
     users,
     isLoading,
     error: errorMessage,
-    refresh: () => void refetch(),
+    refresh,
   };
 }

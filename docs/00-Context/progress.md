@@ -12,7 +12,7 @@
 - **Admin Dashboard:** Complete — Unified dashboard for managing projects, categories, testimonials, contacts, users, and calculator leads. Bulk actions (select multiple, change status, delete) on leads, contacts, and testimonials.
 - **Calculator Lead Email:** Complete — EmailJS notification sent to admin when a new lead is submitted from the calculator page.
 - **Authentication:** Complete — Login/Register with JWT, refresh tokens, and role-based access control (ADMIN/USER).
-- **Testing Suite:** Complete — Playwright E2E tests for admin dashboard, auth, projects, calculator, data state, and TanStack Query caching (`e2e/caching.spec.ts`). Server integration tests for calculator routes.
+- **Testing Suite:** Complete — Playwright E2E tests for admin dashboard, auth, projects, calculator, data state, and TanStack Query smoke (`e2e/react-query-smoke.spec.ts`). Server integration tests for calculator routes.
 - **Client-Side Caching:** Complete — TanStack Query for projects, categories, testimonials, calculator config, and admin data. Defaults: 5 min stale time; admin queries: 1 min stale time with invalidation on mutations.
 
 ## Current Focus
