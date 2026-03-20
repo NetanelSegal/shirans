@@ -1,8 +1,11 @@
 import { useScreenContext } from '@/contexts/ScreenProvider';
 import { fetchPublishedTestimonials } from '@/services/testimonials.service';
 import { motion, useMotionValue, animate, MotionValue } from 'motion/react';
-import { MutableRefObject, RefObject, useEffect, useRef, useState } from 'react';
+import { MutableRefObject, RefObject, useEffect, useMemo, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { LoadingState, EmptyState } from '@/components/DataState';
+import { queryKeys } from '@/constants/queryKeys';
+import { QUERY_GC_TIME_MS, QUERY_STALE_TIME_MS } from '@/lib/queryClient';
 import type { TestimonialResponse } from '@shirans/shared';
 
 export default function Testimonials() {
@@ -11,22 +14,18 @@ export default function Testimonials() {
   const [totalOriginalContentWidth, setTotalOriginalContentWidth] = useState(0);
   const x = useMotionValue(0);
   const animationRef = useRef<ReturnType<typeof animate> | null>(null);
-  const [testimonials, setTestimonials] = useState<
-    Pick<TestimonialResponse, 'name' | 'message'>[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
 
-  useEffect(() => {
-    setIsLoading(true);
-    setHasError(false);
-    fetchPublishedTestimonials()
-      .then((data) =>
-        setTestimonials(data.map(({ name, message }) => ({ name, message }))),
-      )
-      .catch(() => setHasError(true))
-      .finally(() => setIsLoading(false));
-  }, []);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: queryKeys.testimonials,
+    queryFn: fetchPublishedTestimonials,
+    staleTime: QUERY_STALE_TIME_MS,
+    gcTime: QUERY_GC_TIME_MS,
+  });
+
+  const testimonials = useMemo(
+    () => (data ?? []).map(({ name, message }) => ({ name, message })),
+    [data],
+  );
 
   const duplicatedTestimonials = [
     ...testimonials,
@@ -105,10 +104,10 @@ export default function Testimonials() {
     return <LoadingState minHeight="8rem" className="my-8" />;
   }
 
-  if (hasError || testimonials.length === 0) {
+  if (isError || testimonials.length === 0) {
     return (
       <EmptyState
-        message={hasError ? 'לא ניתן לטעון את המשובים' : 'אין משובים להצגה'}
+        message={isError ? 'לא ניתן לטעון את המשובים' : 'אין משובים להצגה'}
         className="my-8"
       />
     );

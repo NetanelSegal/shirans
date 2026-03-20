@@ -30,13 +30,14 @@ test.describe('Calculator Page', () => {
     await page.goto('/calculator', { waitUntil: 'domcontentloaded' });
 
     await expect(page).toHaveURL(/\/calculator/);
-    await expect(page.getByRole('heading', { name: 'מחשבון אומדן עלות לבנייה פרטית' })).toBeVisible({
-      timeout: 15000,
-    });
+    // Main has aria-label; h1 is "דמיינו את הבית החדש שלכם"
+    await expect(
+      page.getByRole('main', { name: 'מחשבון אומדן עלות לבנייה פרטית' })
+    ).toBeVisible({ timeout: 15000 });
 
-    await expect(page.getByText('מלא את כל השדות למעלה כדי לראות את אומדן התקציב')).toBeVisible({
-      timeout: 5000,
-    });
+    await expect(
+      page.getByText(/מלא את כל השדות|צריך להכניס את כל הפרטים.*אומדן התקציב/)
+    ).toBeVisible({ timeout: 5000 });
 
     await expect(page.getByLabel('שם מלא')).toBeVisible();
     await expect(page.getByLabel('מספר טלפון')).toBeVisible();

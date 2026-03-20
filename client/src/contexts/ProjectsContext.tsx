@@ -1,7 +1,13 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useCallback, ReactNode } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { fetchProjects } from '@/services/projects.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
+import { queryKeys } from '@/constants/queryKeys';
+import {
+  QUERY_GC_TIME_MS,
+  QUERY_STALE_TIME_MS,
+} from '@/lib/queryClient';
 import type { ProjectResponse } from '@shirans/shared';
 
 interface ProjectsContextType {
@@ -16,30 +22,30 @@ const ProjectsContext = createContext<ProjectsContextType | undefined>(
 );
 
 export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
-  const [projects, setProjects] = useState<ProjectResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: queryKeys.projects,
+    queryFn: fetchProjects,
+    staleTime: QUERY_STALE_TIME_MS,
+    gcTime: QUERY_GC_TIME_MS,
+  });
 
-  const loadProjects = () => {
-    setError(null);
-    setIsLoading(true);
-    fetchProjects()
-      .then(setProjects)
-      .catch((err) => {
-        const appError = transformError(err);
-        setError(getClientErrorMessage(appError.errorKey));
-      })
-      .finally(() => setIsLoading(false));
-  };
+  const errorMessage = error
+    ? getClientErrorMessage(transformError(error).errorKey)
+    : null;
 
-  useEffect(() => {
-    loadProjects();
-  }, []);
-
-  const retry = () => loadProjects();
+  const retry = useCallback(() => {
+    void refetch();
+  }, [refetch]);
 
   return (
-    <ProjectsContext.Provider value={{ projects, isLoading, error, retry }}>
+    <ProjectsContext.Provider
+      value={{
+        projects: data ?? [],
+        isLoading,
+        error: errorMessage,
+        retry,
+      }}
+    >
       {children}
     </ProjectsContext.Provider>
   );

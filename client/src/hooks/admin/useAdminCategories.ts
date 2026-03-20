@@ -1,78 +1,65 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as adminCategoriesService from '../../services/admin/categories.service';
+import { transformError } from '@/utils/errorHandler';
+import { getClientErrorMessage } from '@/constants/errorMessages';
+import { queryKeys } from '@/constants/queryKeys';
+import { QUERY_STALE_TIME_ADMIN_MS } from '@/lib/queryClient';
+import { invalidateAfterAdminCategoriesChange } from '@/lib/queryInvalidation';
 import type {
-  CategoryResponse,
   CreateCategoryInput,
   UpdateCategoryInput,
 } from '@shirans/shared';
 
 export function useAdminCategories() {
-  const [categories, setCategories] = useState<CategoryResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+
+  const {
+    data: categories = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.admin.categories,
+    queryFn: adminCategoriesService.fetchAllCategories,
+    staleTime: QUERY_STALE_TIME_ADMIN_MS,
+  });
+
+  const errorMessage = error
+    ? getClientErrorMessage(transformError(error).errorKey)
+    : null;
 
   const refresh = useCallback(() => {
-    setError(null);
-    setIsLoading(true);
-    adminCategoriesService
-      .fetchAllCategories()
-      .then(setCategories)
-      .catch((err) => setError(err?.message ?? 'שגיאה בטעינת הקטגוריות'))
-      .finally(() => setIsLoading(false));
-  }, []);
+    void refetch();
+  }, [refetch]);
 
-  useEffect(() => {
-    let cancelled = false;
-    setError(null);
-    setIsLoading(true);
-    adminCategoriesService
-      .fetchAllCategories()
-      .then((data) => {
-        if (!cancelled) setCategories(data);
-      })
-      .catch((err) => {
-        if (!cancelled) setError(err?.message ?? 'שגיאה בטעינת הקטגוריות');
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const createMutation = useMutation({
+    mutationFn: adminCategoriesService.createCategory,
+    onSuccess: () => invalidateAfterAdminCategoriesChange(queryClient),
+  });
 
-  const create = useCallback(
-    async (input: CreateCategoryInput) => {
-      const created = await adminCategoriesService.createCategory(input);
-      setCategories((prev) => [created, ...prev]);
-      return created;
-    },
-    []
-  );
+  const updateMutation = useMutation({
+    mutationFn: ({
+      id,
+      input,
+    }: { id: string; input: UpdateCategoryInput }) =>
+      adminCategoriesService.updateCategory(id, input),
+    onSuccess: () => invalidateAfterAdminCategoriesChange(queryClient),
+  });
 
-  const update = useCallback(
-    async (id: string, input: UpdateCategoryInput) => {
-      const updated = await adminCategoriesService.updateCategory(id, input);
-      setCategories((prev) =>
-        prev.map((c) => (c.id === updated.id ? updated : c))
-      );
-      return updated;
-    },
-    []
-  );
-
-  const remove = useCallback(async (id: string) => {
-    await adminCategoriesService.deleteCategory(id);
-    setCategories((prev) => prev.filter((c) => c.id !== id));
-  }, []);
+  const deleteMutation = useMutation({
+    mutationFn: adminCategoriesService.deleteCategory,
+    onSuccess: () => invalidateAfterAdminCategoriesChange(queryClient),
+  });
 
   return {
     categories,
     isLoading,
-    error,
+    error: errorMessage,
     refresh,
-    create,
-    update,
-    delete: remove,
+    create: (input: CreateCategoryInput) => createMutation.mutateAsync(input),
+    update: (id: string, input: UpdateCategoryInput) =>
+      updateMutation.mutateAsync({ id, input }),
+    delete: (id: string) => deleteMutation.mutateAsync(id),
   };
 }

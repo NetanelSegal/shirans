@@ -38,6 +38,15 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', '*.js', 'prisma.config.ts', 'vitest.config.ts', 'test/', 'prisma/seed.ts'],
+    ignores: [
+      'dist/',
+      'node_modules/',
+      '*.js',
+      '**/*.mjs',
+      'prisma.config.ts',
+      'vitest.config.ts',
+      'test/',
+      'prisma/seed.ts',
+    ],
   }
 );

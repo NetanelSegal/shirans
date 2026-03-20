@@ -1,9 +1,25 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useCallback,
+  ReactNode,
+} from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { fetchCategories } from '@/services/categories.service';
+import { queryKeys } from '@/constants/queryKeys';
+import {
+  QUERY_GC_TIME_MS,
+  QUERY_STALE_TIME_MS,
+} from '@/lib/queryClient';
+import { transformError } from '@/utils/errorHandler';
+import { getClientErrorMessage } from '@/constants/errorMessages';
 
 interface CategoriesContextType {
   categoriesMap: Record<string, string>;
   isLoading: boolean;
+  error: string | null;
+  retry: () => void;
 }
 
 const CategoriesContext = createContext<CategoriesContextType | undefined>(
@@ -11,26 +27,35 @@ const CategoriesContext = createContext<CategoriesContextType | undefined>(
 );
 
 export const CategoriesProvider = ({ children }: { children: ReactNode }) => {
-  const [categoriesMap, setCategoriesMap] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: queryKeys.categories,
+    queryFn: fetchCategories,
+    staleTime: QUERY_STALE_TIME_MS,
+    gcTime: QUERY_GC_TIME_MS,
+  });
 
-  useEffect(() => {
-    fetchCategories()
-      .then((data) => {
-        const map: Record<string, string> = {};
-        for (const cat of data) {
-          map[cat.urlCode] = cat.title;
-        }
-        setCategoriesMap(map);
-      })
-      .catch(() => {
-        // Silently fail - categories will just show empty labels
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
+  const categoriesMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    if (data) {
+      for (const cat of data) {
+        map[cat.urlCode] = cat.title;
+      }
+    }
+    return map;
+  }, [data]);
+
+  const errorMessage = error
+    ? getClientErrorMessage(transformError(error).errorKey)
+    : null;
+
+  const retry = useCallback(() => {
+    void refetch();
+  }, [refetch]);
 
   return (
-    <CategoriesContext.Provider value={{ categoriesMap, isLoading }}>
+    <CategoriesContext.Provider
+      value={{ categoriesMap, isLoading, error: errorMessage, retry }}
+    >
       {children}
     </CategoriesContext.Provider>
   );

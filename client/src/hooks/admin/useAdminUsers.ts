@@ -1,51 +1,38 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import * as adminUsersService from '../../services/admin/users.service';
-import type { UserResponse } from '@shirans/shared';
+import { transformError } from '@/utils/errorHandler';
+import { getClientErrorMessage } from '@/constants/errorMessages';
+import { queryKeys } from '@/constants/queryKeys';
+import { QUERY_STALE_TIME_ADMIN_MS } from '@/lib/queryClient';
 import { ERROR_KEYS } from '@shirans/shared';
-import { getClientErrorMessage } from '../../constants/errorMessages';
 
 export function useAdminUsers() {
-  const [users, setUsers] = useState<UserResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    data: users = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.admin.users,
+    queryFn: adminUsersService.fetchAllUsers,
+    staleTime: QUERY_STALE_TIME_ADMIN_MS,
+  });
+
+  const errorMessage = error
+    ? getClientErrorMessage(
+        transformError(error).errorKey ?? ERROR_KEYS.SERVER.USER.FETCH_USERS_FAILED,
+      )
+    : null;
 
   const refresh = useCallback(() => {
-    setError(null);
-    setIsLoading(true);
-    adminUsersService
-      .fetchAllUsers()
-      .then(setUsers)
-      .catch((err) =>
-        setError(err?.message ?? getClientErrorMessage(ERROR_KEYS.SERVER.USER.FETCH_USERS_FAILED))
-      )
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    setError(null);
-    setIsLoading(true);
-    adminUsersService
-      .fetchAllUsers()
-      .then((data) => {
-        if (!cancelled) setUsers(data);
-      })
-      .catch((err) => {
-        if (!cancelled)
-          setError(err?.message ?? getClientErrorMessage(ERROR_KEYS.SERVER.USER.FETCH_USERS_FAILED));
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    void refetch();
+  }, [refetch]);
 
   return {
     users,
     isLoading,
-    error,
+    error: errorMessage,
     refresh,
   };
 }

@@ -26,13 +26,14 @@
 - [x] Calculator Form Enhancements — Configurable built area (100–500), empty initial state, validation-gated display, icon dropdowns, admin builtAreaSqmRange.
 
 ## Phase 4: Quality & Deployment (IN PROGRESS)
-- [x] E2E Testing — Playwright tests for core flows.
+- [x] E2E Testing — Playwright tests for core flows (admin, auth, projects, calculator, data state, react-query-smoke).
 - [x] Unit/Integration Testing — Vitest for server logic.
+- [x] Client-side caching — TanStack Query for projects, categories, testimonials, calculator config, admin data.
 - [ ] **⚠️ Image Optimization** — Processing large project images (found scripts).
 - [ ] **⚠️ Production Deploy** — Finalize Render (Server) and Netlify (Client) settings.
 - [ ] **⚠️ SEO & Meta** — Refining metadata for search engines.
 
 ## Phase 5: Polish & Launch
 - [ ] Content Review — Finalizing project descriptions and testimonials.
-- [ ] Performance Audit — Lighthouse scores and load times.
+- [ ] Performance Audit — Lighthouse scores and load times (initial CLS: navbar shell fixed via eager Layout import, Mar 2026).
 - [ ] Final Launch — Domain pointing and production go-live.

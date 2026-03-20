@@ -10,7 +10,9 @@
     - `admin-dashboard.spec.ts`: Tests all admin CRUD operations.
     - `auth.spec.ts`: Tests login, logout, and token refresh.
     - `projects.spec.ts`: Tests project filtering and details.
+    - `calculator.spec.ts`: Tests calculator form and lead submission.
     - `data-state.spec.ts`: Tests data persistence.
+    - `react-query-smoke.spec.ts`: Smoke tests for pages backed by TanStack Query (public and admin).
 - **Unit/Integration (Vitest):** Located in `server/test/`.
     - `auth.test.ts`: Server-side auth logic.
     - `projects.test.ts`: Project management logic.
