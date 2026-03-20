@@ -1,10 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense, useEffect } from 'react';
+import { QueryClientProvider } from '@tanstack/react-query';
 import ScreenProvider from './contexts/ScreenProvider';
 import { ProjectsProvider } from './contexts/ProjectsContext';
 import { CategoriesProvider } from './contexts/CategoriesContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
+import { queryClient } from './lib/queryClient';
 import { useAuth } from './hooks/useAuth';
 import { ProtectedRoute } from './components/Auth/ProtectedRoute'; // Import ProtectedRoute
 import Loader from './components/Loader/Loader'; // Import Loader for Suspense fallback
@@ -56,13 +58,15 @@ function App() {
   return (
     <HelmetProvider>
       <AuthProvider>
-        <ProjectsProvider>
-          <CategoriesProvider>
-            <ScreenProvider>
-              <AppRoutes />
-            </ScreenProvider>
-          </CategoriesProvider>
-        </ProjectsProvider>
+        <QueryClientProvider client={queryClient}>
+          <ProjectsProvider>
+            <CategoriesProvider>
+              <ScreenProvider>
+                <AppRoutes />
+              </ScreenProvider>
+            </CategoriesProvider>
+          </ProjectsProvider>
+        </QueryClientProvider>
       </AuthProvider>
     </HelmetProvider>
   );

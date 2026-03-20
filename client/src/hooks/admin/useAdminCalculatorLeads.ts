@@ -1,116 +1,95 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { calculatorService } from '@/services/calculator.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
-import type { CalculatorLeadResponse, ErrorKey } from '@shirans/shared';
+import { queryKeys } from '@/constants/queryKeys';
+import type { ErrorKey } from '@shirans/shared';
+
+const ONE_MIN = 60 * 1000;
 
 export function useAdminCalculatorLeads() {
-  const [leads, setLeads] = useState<CalculatorLeadResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const [actionError, setActionError] = useState<string | null>(null);
 
-  const fetchLeads = useCallback((isCancelled?: () => boolean) => {
-    setError(null);
-    setIsLoading(true);
-    return calculatorService
-      .getLeads()
-      .then((data) => {
-        if (!isCancelled?.()) setLeads(data);
-        return data;
-      })
-      .catch((err) => {
-        if (!isCancelled?.()) {
-          const appError = transformError(err);
-          setError(getClientErrorMessage(appError.errorKey as ErrorKey));
-        }
-        throw err;
-      })
-      .finally(() => {
-        if (!isCancelled?.()) setIsLoading(false);
-      });
-  }, []);
+  const {
+    data: leads = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.admin.calculatorLeads,
+    queryFn: () => calculatorService.getLeads(),
+    staleTime: ONE_MIN,
+  });
 
-  const refresh = useCallback(() => fetchLeads(), [fetchLeads]);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchLeads(() => cancelled);
-    return () => {
-      cancelled = true;
-    };
-  }, [fetchLeads]);
+  const errorMessage = error
+    ? getClientErrorMessage(transformError(error).errorKey as ErrorKey)
+    : null;
 
   const handleActionError = useCallback((err: unknown) => {
     const appError = transformError(err);
     setActionError(getClientErrorMessage(appError.errorKey as ErrorKey));
   }, []);
 
-  const updateReadStatus = useCallback(
-    async (id: string, isRead: boolean) => {
-      try {
-        const updated = await calculatorService.updateLeadRead(id, isRead);
-        setLeads((prev) =>
-          prev.map((l) => (l.id === updated.id ? updated : l))
-        );
-        setActionError(null);
-        return updated;
-      } catch (err) {
-        handleActionError(err);
-        throw err;
-      }
-    },
-    [handleActionError]
-  );
-
-  const remove = useCallback(async (id: string) => {
-    try {
-      await calculatorService.deleteLead(id);
-      setLeads((prev) => prev.filter((l) => l.id !== id));
+  const updateReadStatusMutation = useMutation({
+    mutationFn: ({ id, isRead }: { id: string; isRead: boolean }) =>
+      calculatorService.updateLeadRead(id, isRead),
+    onSuccess: () => {
       setActionError(null);
-    } catch (err) {
-      handleActionError(err);
-      throw err;
-    }
-  }, [handleActionError]);
-
-  const updateReadStatusBulk = useCallback(
-    async (ids: string[], isRead: boolean) => {
-      try {
-        await calculatorService.updateLeadReadBulk(ids, isRead);
-        setLeads((prev) =>
-          prev.map((l) => (ids.includes(l.id) ? { ...l, isRead } : l))
-        );
-        setActionError(null);
-      } catch (err) {
-        handleActionError(err);
-        throw err;
-      }
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.calculatorLeads,
+      });
     },
-    [handleActionError]
-  );
+    onError: handleActionError,
+  });
 
-  const deleteBulk = useCallback(async (ids: string[]) => {
-    try {
-      await calculatorService.deleteLeadsBulk(ids);
-      setLeads((prev) => prev.filter((l) => !ids.includes(l.id)));
+  const deleteMutation = useMutation({
+    mutationFn: calculatorService.deleteLead,
+    onSuccess: () => {
       setActionError(null);
-    } catch (err) {
-      handleActionError(err);
-      throw err;
-    }
-  }, [handleActionError]);
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.calculatorLeads,
+      });
+    },
+    onError: handleActionError,
+  });
+
+  const updateReadStatusBulkMutation = useMutation({
+    mutationFn: ({ ids, isRead }: { ids: string[]; isRead: boolean }) =>
+      calculatorService.updateLeadReadBulk(ids, isRead),
+    onSuccess: () => {
+      setActionError(null);
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.calculatorLeads,
+      });
+    },
+    onError: handleActionError,
+  });
+
+  const deleteBulkMutation = useMutation({
+    mutationFn: calculatorService.deleteLeadsBulk,
+    onSuccess: () => {
+      setActionError(null);
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.calculatorLeads,
+      });
+    },
+    onError: handleActionError,
+  });
 
   return {
     leads,
     isLoading,
-    error,
+    error: errorMessage,
     actionError,
     clearActionError: useCallback(() => setActionError(null), []),
-    refresh,
-    updateReadStatus,
-    delete: remove,
-    updateReadStatusBulk,
-    deleteBulk,
+    refresh: () => void refetch(),
+    updateReadStatus: (id: string, isRead: boolean) =>
+      updateReadStatusMutation.mutateAsync({ id, isRead }),
+    delete: (id: string) => deleteMutation.mutateAsync(id),
+    updateReadStatusBulk: (ids: string[], isRead: boolean) =>
+      updateReadStatusBulkMutation.mutateAsync({ ids, isRead }),
+    deleteBulk: (ids: string[]) => deleteBulkMutation.mutateAsync(ids),
   };
 }

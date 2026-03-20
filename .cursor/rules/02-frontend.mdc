@@ -17,8 +17,8 @@ This rule applies to all frontend code in `client/src/`. It prioritizes performa
 ## 2. React 18 & Performance
 - **React 18**: Use modern hooks and patterns. Ensure `main.tsx` uses `createRoot`.
 - **Bundle Optimization**: Use `React.lazy()` for page-level components to reduce the initial bundle size.
-- **Data Fetching**: Use Axios services from `client/src/services/` with proper error handling and loading states.
-- **Contexts**: Use contexts in `client/src/contexts/` for global state (Auth, Categories, Projects, Screen).
+- **Data Fetching**: Use TanStack Query (`useQuery`, `useMutation`) for cacheable API data. Query keys live in `client/src/constants/queryKeys.ts`. Use Axios services from `client/src/services/` with proper error handling and loading states.
+- **Contexts**: Use contexts in `client/src/contexts/` for global state (Auth, Categories, Projects, Screen). Projects and Categories contexts wrap `useQuery` for shared cached data.
 
 ## 3. Motion & Animation
 - **Motion Package**: Use `motion` primitives. Favor smooth, subtle architectural reveals (ease-in-out).

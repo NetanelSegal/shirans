@@ -1,8 +1,13 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { fetchProjects } from '@/services/projects.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
+import { queryKeys } from '@/constants/queryKeys';
 import type { ProjectResponse } from '@shirans/shared';
+
+const FIVE_MIN = 5 * 60 * 1000;
+const TEN_MIN = 10 * 60 * 1000;
 
 interface ProjectsContextType {
   projects: ProjectResponse[];
@@ -16,30 +21,26 @@ const ProjectsContext = createContext<ProjectsContextType | undefined>(
 );
 
 export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
-  const [projects, setProjects] = useState<ProjectResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: queryKeys.projects,
+    queryFn: fetchProjects,
+    staleTime: FIVE_MIN,
+    gcTime: TEN_MIN,
+  });
 
-  const loadProjects = () => {
-    setError(null);
-    setIsLoading(true);
-    fetchProjects()
-      .then(setProjects)
-      .catch((err) => {
-        const appError = transformError(err);
-        setError(getClientErrorMessage(appError.errorKey));
-      })
-      .finally(() => setIsLoading(false));
-  };
-
-  useEffect(() => {
-    loadProjects();
-  }, []);
-
-  const retry = () => loadProjects();
+  const errorMessage = error
+    ? getClientErrorMessage(transformError(error).errorKey)
+    : null;
 
   return (
-    <ProjectsContext.Provider value={{ projects, isLoading, error, retry }}>
+    <ProjectsContext.Provider
+      value={{
+        projects: data ?? [],
+        isLoading,
+        error: errorMessage,
+        retry: () => void refetch(),
+      }}
+    >
       {children}
     </ProjectsContext.Provider>
   );
