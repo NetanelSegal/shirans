@@ -4,6 +4,7 @@ import * as adminProjectsService from '../../services/admin/projects.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { queryKeys } from '@/constants/queryKeys';
+import { QUERY_STALE_TIME_ADMIN_MS } from '@/lib/queryClient';
 import { invalidateAfterAdminProjectsChange } from '@/lib/queryInvalidation';
 import type {
   CreateProjectInput,
@@ -12,8 +13,6 @@ import type {
   DeleteMainImageInput,
   DeleteImagesInput,
 } from '@shirans/shared';
-
-const ONE_MIN = 60 * 1000;
 
 export function useAdminProjects() {
   const queryClient = useQueryClient();
@@ -26,7 +25,7 @@ export function useAdminProjects() {
   } = useQuery({
     queryKey: queryKeys.admin.projects,
     queryFn: adminProjectsService.fetchAllProjects,
-    staleTime: ONE_MIN,
+    staleTime: QUERY_STALE_TIME_ADMIN_MS,
   });
 
   const errorMessage = error

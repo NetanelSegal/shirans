@@ -4,16 +4,14 @@ import { calculatorService } from '@/services/calculator.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { queryKeys } from '@/constants/queryKeys';
-
-const FIVE_MIN = 5 * 60 * 1000;
-const TEN_MIN = 10 * 60 * 1000;
+import { QUERY_GC_TIME_MS, QUERY_STALE_TIME_MS } from '@/lib/queryClient';
 
 export function useCalculatorConfig() {
   const { data: config, isLoading, error } = useQuery({
     queryKey: queryKeys.calculatorConfig,
     queryFn: () => calculatorService.getConfig(),
-    staleTime: FIVE_MIN,
-    gcTime: TEN_MIN,
+    staleTime: QUERY_STALE_TIME_MS,
+    gcTime: QUERY_GC_TIME_MS,
   });
 
   const errorMessage = error

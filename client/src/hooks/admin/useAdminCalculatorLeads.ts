@@ -4,9 +4,8 @@ import { calculatorService } from '@/services/calculator.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { queryKeys } from '@/constants/queryKeys';
+import { QUERY_STALE_TIME_ADMIN_MS } from '@/lib/queryClient';
 import type { ErrorKey } from '@shirans/shared';
-
-const ONE_MIN = 60 * 1000;
 
 export function useAdminCalculatorLeads() {
   const queryClient = useQueryClient();
@@ -20,7 +19,7 @@ export function useAdminCalculatorLeads() {
   } = useQuery({
     queryKey: queryKeys.admin.calculatorLeads,
     queryFn: () => calculatorService.getLeads(),
-    staleTime: ONE_MIN,
+    staleTime: QUERY_STALE_TIME_ADMIN_MS,
   });
 
   const errorMessage = error

@@ -4,10 +4,11 @@ import { fetchProjects } from '@/services/projects.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { queryKeys } from '@/constants/queryKeys';
+import {
+  QUERY_GC_TIME_MS,
+  QUERY_STALE_TIME_MS,
+} from '@/lib/queryClient';
 import type { ProjectResponse } from '@shirans/shared';
-
-const FIVE_MIN = 5 * 60 * 1000;
-const TEN_MIN = 10 * 60 * 1000;
 
 interface ProjectsContextType {
   projects: ProjectResponse[];
@@ -24,8 +25,8 @@ export const ProjectsProvider = ({ children }: { children: ReactNode }) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: queryKeys.projects,
     queryFn: fetchProjects,
-    staleTime: FIVE_MIN,
-    gcTime: TEN_MIN,
+    staleTime: QUERY_STALE_TIME_MS,
+    gcTime: QUERY_GC_TIME_MS,
   });
 
   const errorMessage = error

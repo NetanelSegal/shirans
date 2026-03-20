@@ -8,11 +8,12 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { fetchCategories } from '@/services/categories.service';
 import { queryKeys } from '@/constants/queryKeys';
+import {
+  QUERY_GC_TIME_MS,
+  QUERY_STALE_TIME_MS,
+} from '@/lib/queryClient';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
-
-const FIVE_MIN = 5 * 60 * 1000;
-const TEN_MIN = 10 * 60 * 1000;
 
 interface CategoriesContextType {
   categoriesMap: Record<string, string>;
@@ -29,8 +30,8 @@ export const CategoriesProvider = ({ children }: { children: ReactNode }) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: queryKeys.categories,
     queryFn: fetchCategories,
-    staleTime: FIVE_MIN,
-    gcTime: TEN_MIN,
+    staleTime: QUERY_STALE_TIME_MS,
+    gcTime: QUERY_GC_TIME_MS,
   });
 
   const categoriesMap = useMemo(() => {

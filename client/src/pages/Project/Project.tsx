@@ -16,9 +16,7 @@ import { fetchProject } from '@/services/projects.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { queryKeys } from '@/constants/queryKeys';
-
-const FIVE_MIN = 5 * 60 * 1000;
-const TEN_MIN = 10 * 60 * 1000;
+import { QUERY_GC_TIME_MS, QUERY_STALE_TIME_MS } from '@/lib/queryClient';
 
 export default function Project() {
   const { id } = useParams<{ id: string }>();
@@ -41,8 +39,8 @@ export default function Project() {
       : queryKeys.projectDetailDisabled,
     queryFn: () => fetchProject(id!),
     enabled: detailFetchEnabled,
-    staleTime: FIVE_MIN,
-    gcTime: TEN_MIN,
+    staleTime: QUERY_STALE_TIME_MS,
+    gcTime: QUERY_GC_TIME_MS,
   });
 
   const project = projectFromList ?? directProject ?? null;

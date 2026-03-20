@@ -4,10 +4,9 @@ import * as adminTestimonialsService from '../../services/admin/testimonials.ser
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { queryKeys } from '@/constants/queryKeys';
+import { QUERY_STALE_TIME_ADMIN_MS } from '@/lib/queryClient';
 import { invalidateAfterAdminTestimonialsChange } from '@/lib/queryInvalidation';
 import type { CreateTestimonialInput } from '@shirans/shared';
-
-const ONE_MIN = 60 * 1000;
 
 export function useAdminTestimonials() {
   const queryClient = useQueryClient();
@@ -20,7 +19,7 @@ export function useAdminTestimonials() {
   } = useQuery({
     queryKey: queryKeys.admin.testimonials,
     queryFn: adminTestimonialsService.fetchAllTestimonials,
-    staleTime: ONE_MIN,
+    staleTime: QUERY_STALE_TIME_ADMIN_MS,
   });
 
   const errorMessage = error

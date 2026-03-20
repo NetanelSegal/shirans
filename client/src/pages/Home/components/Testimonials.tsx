@@ -5,10 +5,8 @@ import { MutableRefObject, RefObject, useEffect, useMemo, useRef, useState } fro
 import { useQuery } from '@tanstack/react-query';
 import { LoadingState, EmptyState } from '@/components/DataState';
 import { queryKeys } from '@/constants/queryKeys';
+import { QUERY_GC_TIME_MS, QUERY_STALE_TIME_MS } from '@/lib/queryClient';
 import type { TestimonialResponse } from '@shirans/shared';
-
-const FIVE_MIN = 5 * 60 * 1000;
-const TEN_MIN = 10 * 60 * 1000;
 
 export default function Testimonials() {
   const { screenWidth } = useScreenContext();
@@ -20,8 +18,8 @@ export default function Testimonials() {
   const { data, isLoading, isError } = useQuery({
     queryKey: queryKeys.testimonials,
     queryFn: fetchPublishedTestimonials,
-    staleTime: FIVE_MIN,
-    gcTime: TEN_MIN,
+    staleTime: QUERY_STALE_TIME_MS,
+    gcTime: QUERY_GC_TIME_MS,
   });
 
   const testimonials = useMemo(
