@@ -54,6 +54,7 @@ export async function uploadProjectImages(
   const { data } = await apiClient.post<ProjectResponse>(
     urls.uploadImgs,
     formData,
+    { timeout: 120_000 },
   );
   return resolveProjectImages(data);
 }

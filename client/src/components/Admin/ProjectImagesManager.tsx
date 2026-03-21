@@ -3,8 +3,8 @@ import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import { useAdminProjects } from '@/hooks/admin/useAdminProjects';
-import type { ProjectResponse, ProjectImageType } from '@shirans/shared';
 import { IMAGE_UPLOAD } from '@shirans/shared';
+import type { ProjectResponse, ProjectImageType } from '@shirans/shared';
 
 interface ProjectImagesManagerProps {
   project: ProjectResponse | null;
@@ -18,6 +18,13 @@ const IMAGE_TYPE_LABELS: Record<ProjectImageType, string> = {
   VIDEO: 'סרטון',
 };
 
+const ACCEPTED_MIME_TYPES = IMAGE_UPLOAD.ALLOWED_MIME_TYPES as readonly string[];
+
+function filterValidFiles(files: File[]): { valid: File[]; rejected: number } {
+  const valid = files.filter((f) => ACCEPTED_MIME_TYPES.includes(f.type));
+  return { valid, rejected: files.length - valid.length };
+}
+
 export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerProps) {
   const { uploadImages, deleteMainImage } = useAdminProjects();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -27,23 +34,44 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
 
+  const isBusy = uploading;
+
   const handleFilesSelected = useCallback(async (files: FileList | null) => {
     if (!files || files.length === 0 || !project) return;
     setError(null);
-    setUploading(true);
+
+    const { valid, rejected } = filterValidFiles(Array.from(files));
+    if (valid.length === 0) {
+      setError('אף קובץ לא תקין. מותר: JPEG, PNG, WebP, HEIC, HEIF');
+      return;
+    }
+
+    if (valid.length > IMAGE_UPLOAD.MAX_FILES_PER_REQUEST) {
+      setError(`מותר עד ${IMAGE_UPLOAD.MAX_FILES_PER_REQUEST} קבצים בבת אחת`);
+      return;
+    }
+
+    if (selectedType === 'MAIN' && project.mainImage) {
+      setError('כבר קיימת תמונה ראשית. מחק אותה לפני העלאת חדשה');
+      return;
+    }
 
     try {
-      const fileArray = Array.from(files);
-      const metadata = fileArray.map((_, i) => ({
+      setUploading(true);
+      const metadata = valid.map((_, i) => ({
         type: selectedType,
         order: i,
       }));
 
       await uploadImages({
         projectId: project.id,
-        files: fileArray,
+        files: valid,
         metadata,
       });
+
+      if (rejected > 0) {
+        setError(`${rejected} קבצים נדחו (סוג לא נתמך)`);
+      }
     } catch (err) {
       setError((err as Error)?.message ?? 'העלאה נכשלה');
     } finally {
@@ -54,8 +82,8 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    handleFilesSelected(e.dataTransfer.files);
-  }, [handleFilesSelected]);
+    if (!isBusy) handleFilesSelected(e.dataTransfer.files);
+  }, [handleFilesSelected, isBusy]);
 
   const handleDeleteImage = useCallback(async (imageUrl: string, type: string) => {
     if (!project) return;
@@ -65,11 +93,6 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
     try {
       if (type === 'MAIN') {
         await deleteMainImage({ id: project.id });
-      } else {
-        // We don't have image DB IDs in ProjectResponse, so we need to use the URL
-        // For now, this will be enhanced when we add image IDs to the response
-        // For MVP, we'll delete by telling the server the project ID
-        // TODO: When backend returns image IDs in response, use deleteProjectImages
       }
     } catch (err) {
       setError((err as Error)?.message ?? 'מחיקה נכשלה');
@@ -82,6 +105,10 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
     }
   }, [project, deleteMainImage]);
 
+  const safeClose = useCallback(() => {
+    if (!isBusy) onClose();
+  }, [isBusy, onClose]);
+
   if (!project) return null;
 
   const allImages = [
@@ -91,12 +118,12 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
     ...(project.videos ?? []).map((url) => ({ url, type: 'VIDEO' as const })),
   ];
 
-  const acceptedTypes = IMAGE_UPLOAD.ALLOWED_MIME_TYPES.join(',');
+  const acceptedTypes = ACCEPTED_MIME_TYPES.join(',');
 
   return (
     <Modal
       open
-      onBackdropClick={onClose}
+      onBackdropClick={safeClose}
       center
       containerClassName="w-full max-w-3xl"
     >
@@ -105,7 +132,12 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
           <h2 className="text-xl font-bold text-primary">
             ניהול תמונות - {project.title}
           </h2>
-          <Button variant="light" onClick={onClose} className="!px-2 !py-1 text-lg leading-none">
+          <Button
+            variant="light"
+            onClick={safeClose}
+            disabled={isBusy}
+            className="!px-2 !py-1 text-lg leading-none"
+          >
             ×
           </Button>
         </div>
@@ -124,6 +156,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value as ProjectImageType)}
               className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm"
+              disabled={isBusy}
             >
               {(Object.entries(IMAGE_TYPE_LABELS) as [ProjectImageType, string][]).map(
                 ([value, label]) => (
@@ -136,15 +169,15 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
           <div
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
-            className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-8 transition-colors hover:border-primary/50 hover:bg-gray-100"
-            onClick={() => fileInputRef.current?.click()}
+            className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors ${isBusy ? 'cursor-wait border-gray-200 bg-gray-100' : 'cursor-pointer border-gray-300 bg-gray-50 hover:border-primary/50 hover:bg-gray-100'}`}
+            onClick={isBusy ? undefined : () => fileInputRef.current?.click()}
           >
             <i className="fa-solid fa-cloud-arrow-up mb-2 text-3xl text-gray-400" />
             <p className="text-sm text-gray-600">
-              {uploading ? 'מעלה...' : 'גרור קבצים לכאן או לחץ לבחירה'}
+              {uploading ? 'מעלה ומעבד תמונות...' : 'גרור קבצים לכאן או לחץ לבחירה'}
             </p>
             <p className="mt-1 text-xs text-gray-400">
-              JPEG, PNG, WebP · עד 10MB · עד 20 קבצים
+              JPEG, PNG, WebP, HEIC · עד 20 קבצים
             </p>
           </div>
           <input
@@ -196,7 +229,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
         )}
 
         <div className="mt-6 flex justify-end">
-          <Button variant="secondary" onClick={onClose}>סגור</Button>
+          <Button variant="secondary" onClick={safeClose} disabled={isBusy}>סגור</Button>
         </div>
       </div>
     </Modal>

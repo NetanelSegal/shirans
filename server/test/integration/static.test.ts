@@ -68,28 +68,25 @@ vi.mock('../../src/middleware/authorize.middleware', () => ({
 
 import app from '../../src/app';
 
-describe('Static File Serving', () => {
-  it('should serve an existing image file with 200 status', async () => {
+describe('Legacy /uploads static paths', () => {
+  it('does not serve project files from Express (images use Cloudinary CDN)', async () => {
     const response = await request(app)
       .get('/uploads/projects/project1/images/main_desktop.webp');
 
-    expect(response.status).toBe(200);
-    expect(response.headers['content-type']).toMatch(/webp|octet-stream/);
+    expect(response.status).toBe(404);
   });
 
-  it('should not serve non-existent files as static content', async () => {
+  it('should not serve non-existent paths as image content', async () => {
     const response = await request(app)
       .get('/uploads/projects/nonexistent/image.webp');
 
-    // Non-existent static files fall through to other handlers (swagger, etc.)
-    // The important thing is it doesn't return a valid image
     expect(response.headers['content-type']).not.toMatch(/webp/);
   });
 
-  it('should serve plan images', async () => {
+  it('does not serve plan files from local /uploads', async () => {
     const response = await request(app)
       .get('/uploads/projects/project1/plans/1_desktop.webp');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(404);
   });
 });

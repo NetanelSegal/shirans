@@ -15,6 +15,7 @@ import { Prisma } from '@prisma/client';
 import { ProjectImageType } from '@prisma/client';
 import logger from '../middleware/logger';
 import * as cloudinaryService from './cloudinary.service';
+import { compressImageBuffer } from '../utils/imageProcessing';
 
 /**
  * Project Service
@@ -246,28 +247,42 @@ export const projectService = {
         );
       }
 
-      const imageRows: Array<{
-        url: string;
-        publicId: string;
-        type: ProjectImageType;
-        order: number;
-      }> = [];
+      const uploadResults = await Promise.allSettled(
+        files.map(async (file, i) => {
+          const meta = metadata[i] ?? { type: 'IMAGE' };
+          const folder = `shirans/projects/${id}/${meta.type.toLowerCase()}`;
+          const compressed = await compressImageBuffer(file.buffer);
+          const result = await cloudinaryService.uploadImage(compressed, folder);
+          return {
+            url: result.url,
+            publicId: result.publicId,
+            type: meta.type as ProjectImageType,
+            order: meta.order ?? 0,
+          };
+        }),
+      );
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const meta = metadata[i] ?? { type: 'IMAGE' };
-        const folder = `shirans/projects/${id}/${meta.type.toLowerCase()}`;
+      const succeeded = uploadResults.flatMap((r) =>
+        r.status === 'fulfilled' ? [r.value] : [],
+      );
+      const failed = uploadResults.filter((r) => r.status === 'rejected');
 
-        const result = await cloudinaryService.uploadImage(file.buffer, folder);
-        imageRows.push({
-          url: result.url,
-          publicId: result.publicId,
-          type: meta.type as ProjectImageType,
-          order: meta.order ?? 0,
-        });
+      if (failed.length > 0) {
+        // Clean up any images that did upload before throwing
+        const cleanupIds = succeeded.map((s) => s.publicId);
+        if (cleanupIds.length > 0) {
+          await cloudinaryService.deleteImages(cleanupIds).catch((e) =>
+            logger.error('Failed to clean up partial uploads', { error: e }),
+          );
+        }
+        logger.error('Some image uploads failed', { failedCount: failed.length, id });
+        throw new HttpError(
+          HTTP_STATUS.INTERNAL_SERVER_ERROR,
+          getServerErrorMessage('SERVER.PROJECT.CLOUDINARY_UPLOAD_FAILED'),
+        );
       }
 
-      await projectRepository.addImages(id, imageRows);
+      await projectRepository.addImages(id, succeeded);
 
       const updatedProject = await projectRepository.findById(id);
       if (!updatedProject) {

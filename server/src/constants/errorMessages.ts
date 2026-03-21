@@ -25,8 +25,9 @@ export const errorMessagesMap = {
   'VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT': `Images do not belong to project`,
   'VALIDATION.BUILT_AREA_OUT_OF_RANGE': 'Built area is out of configured range',
   'VALIDATION.INVALID_FILE_TYPE':
-    'File type not allowed. Accepted: JPEG, PNG, WebP',
-  'VALIDATION.FILE_TOO_LARGE': 'File exceeds the maximum allowed size (10 MB)',
+    'File type not allowed. Accepted: JPEG, PNG, WebP, HEIC, HEIF',
+  'VALIDATION.FILE_TOO_LARGE': 'File exceeds the maximum allowed size (50 MB)',
+  'VALIDATION.TOO_MANY_FILES': 'Too many files. Maximum 20 files per request',
 
   'NOT_FOUND.USER_NOT_FOUND': 'User not found',
   'NOT_FOUND.PROJECT_NOT_FOUND': 'Project not found',

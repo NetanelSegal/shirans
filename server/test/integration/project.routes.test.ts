@@ -13,7 +13,19 @@ vi.mock('../../src/repositories/project.repository', () => ({
     addImages: vi.fn(),
     deleteImage: vi.fn(),
     deleteImages: vi.fn(),
+    reorderImages: vi.fn(),
   },
+}));
+vi.mock('../../src/utils/imageProcessing', () => ({
+  compressImageBuffer: vi.fn((buffer: Buffer) => Promise.resolve(buffer)),
+}));
+vi.mock('../../src/services/cloudinary.service', () => ({
+  uploadImage: vi.fn().mockResolvedValue({
+    url: 'https://res.cloudinary.com/test/image.webp',
+    publicId: 'shirans/projects/test/img',
+  }),
+  deleteImage: vi.fn(),
+  deleteImages: vi.fn(),
 }));
 vi.mock('../../src/middleware/logger', () => ({
   default: {
@@ -86,6 +98,12 @@ vi.mock('../../src/middleware/authorize.middleware', () => ({
 
 // Import app after all mocks (app.ts exports the app instance, not a function)
 import app from '../../src/app';
+
+/** Minimal valid PNG for multipart upload tests */
+const TINY_PNG = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+  'base64',
+);
 
 describe('Project Routes Integration Tests', () => {
   beforeEach(() => {
@@ -446,15 +464,9 @@ describe('Project Routes Integration Tests', () => {
       const response = await request(app)
         .post('/api/projects/uploadImgs')
         .set('Authorization', 'Bearer admin-token')
-        .send({
-          id: 'clx123abc456def789',
-          images: [
-            {
-              url: 'https://example.com/image.jpg',
-              type: 'IMAGE',
-            },
-          ],
-        });
+        .field('id', 'clx123abc456def789')
+        .field('metadata', JSON.stringify([{ type: 'IMAGE', order: 0 }]))
+        .attach('files', TINY_PNG, 'tiny.png');
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('id', 'clx123abc456def789');
@@ -464,39 +476,31 @@ describe('Project Routes Integration Tests', () => {
       const response = await request(app)
         .post('/api/projects/uploadImgs')
         .set('Authorization', 'Bearer admin-token')
-        .send({
-          images: [],
-        });
-
-      expect(response.status).toBe(400);
-      expect(response.body.message).toMatch(/id|CUID/);
-    });
-
-    it('should return 400 when images is missing', async () => {
-      const response = await request(app)
-        .post('/api/projects/uploadImgs')
-        .set('Authorization', 'Bearer admin-token')
-        .send({
-          id: 'clx123abc456def789',
-        });
+        .field('metadata', JSON.stringify([{ type: 'IMAGE' }]))
+        .attach('files', TINY_PNG, 'tiny.png');
 
       expect(response.status).toBe(400);
       expect(response.body.message).toBe('Invalid input data');
     });
 
-    it('should return 400 when image type is invalid', async () => {
+    it('should return 400 when no files are uploaded', async () => {
       const response = await request(app)
         .post('/api/projects/uploadImgs')
         .set('Authorization', 'Bearer admin-token')
-        .send({
-          id: 'clx123abc456def789',
-          images: [
-            {
-              url: 'https://example.com/image.jpg',
-              type: 'INVALID_TYPE',
-            },
-          ],
-        });
+        .field('id', 'clx123abc456def789')
+        .field('metadata', JSON.stringify([{ type: 'IMAGE' }]));
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Invalid input data');
+    });
+
+    it('should return 400 when metadata has invalid image type', async () => {
+      const response = await request(app)
+        .post('/api/projects/uploadImgs')
+        .set('Authorization', 'Bearer admin-token')
+        .field('id', 'clx123abc456def789')
+        .field('metadata', JSON.stringify([{ type: 'INVALID_TYPE' }]))
+        .attach('files', TINY_PNG, 'tiny.png');
 
       expect(response.status).toBe(400);
       expect(response.body.message).toBe('Invalid input data');

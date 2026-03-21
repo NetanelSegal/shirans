@@ -27,8 +27,10 @@ export const ERROR_MESSAGES = {
   'VALIDATION.PASSWORD_WEAK': 'סיסמה חלשה',
   'VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT': 'תמונות לא שייכות לפרוייקט',
   'VALIDATION.BUILT_AREA_OUT_OF_RANGE': 'שטח בנוי מחוץ לטווח המוגדר',
-  'VALIDATION.INVALID_FILE_TYPE': 'סוג קובץ לא נתמך. מותר: JPEG, PNG, WebP',
-  'VALIDATION.FILE_TOO_LARGE': 'הקובץ חורג מהגודל המרבי (10 MB)',
+  'VALIDATION.INVALID_FILE_TYPE':
+    'סוג קובץ לא נתמך. מותר: JPEG, PNG, WebP, HEIC, HEIF',
+  'VALIDATION.FILE_TOO_LARGE': 'הקובץ חורג מהגודל המרבי (50 MB)',
+  'VALIDATION.TOO_MANY_FILES': 'יותר מדי קבצים. מותר עד 20 קבצים',
 
   'NOT_FOUND.USER_NOT_FOUND': 'משתמש לא נמצא',
   'NOT_FOUND.PROJECT_NOT_FOUND': 'פרוייקט לא נמצא',

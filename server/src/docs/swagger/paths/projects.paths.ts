@@ -257,12 +257,13 @@ export const projectsPaths = {
     post: {
       tags: ['Projects'],
       summary: 'Upload images to a project',
-      description: 'Adds images to an existing project. Requires admin authentication.',
+      description:
+        'Multipart form-data: files (one or more images), id (project CUID), metadata (JSON array of {type, order?} per file). Server compresses with sharp then uploads to Cloudinary.',
       security: [{ bearerAuth: [] }],
       requestBody: {
         required: true,
         content: {
-          'application/json': {
+          'multipart/form-data': {
             schema: { $ref: '#/components/schemas/UploadImagesRequest' },
           },
         },
@@ -270,6 +271,65 @@ export const projectsPaths = {
       responses: {
         '200': {
           description: 'Images uploaded successfully',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ProjectResponse' },
+            },
+          },
+        },
+        '400': {
+          description: 'Validation error',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '401': {
+          description: 'Not authenticated',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '403': {
+          description: 'Not authorized (admin only)',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        '404': {
+          description: 'Project not found',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+      },
+    },
+  },
+  '/api/projects/reorderImages': {
+    patch: {
+      tags: ['Projects'],
+      summary: 'Reorder project images',
+      description:
+        'Sets display order from the order of imageIds in the body. Requires admin authentication.',
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: { $ref: '#/components/schemas/ReorderImagesRequest' },
+          },
+        },
+      },
+      responses: {
+        '200': {
+          description: 'Project returned with updated image order',
           content: {
             'application/json': {
               schema: { $ref: '#/components/schemas/ProjectResponse' },

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { MulterError } from 'multer';
 import logger from './logger';
 import { env } from '../utils/env';
 import {
@@ -36,6 +37,23 @@ export function errorHandler(
     method: req.method,
     ip: req.ip,
   });
+
+  // Handle Multer file-upload errors as 400 Bad Request
+  if (err instanceof MulterError) {
+    const multerKey =
+      err.code === 'LIMIT_FILE_SIZE'
+        ? 'VALIDATION.FILE_TOO_LARGE'
+        : err.code === 'LIMIT_FILE_COUNT'
+          ? 'VALIDATION.TOO_MANY_FILES'
+          : 'VALIDATION.INVALID_INPUT';
+    const message = getServerErrorMessage(multerKey as ErrorKey);
+    res.status(HTTP_STATUS.BAD_REQUEST).json({
+      error: 'MulterError',
+      message,
+      errorKey: multerKey,
+    } satisfies ErrorResponse);
+    return;
+  }
 
   // Determine status code
   let statusCode: HttpStatus = HTTP_STATUS.INTERNAL_SERVER_ERROR;

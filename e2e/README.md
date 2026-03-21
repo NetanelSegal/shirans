@@ -21,6 +21,11 @@ npm run test:e2e
 # Run admin dashboard tests only (Chromium - fastest)
 npx playwright test e2e/admin-dashboard.spec.ts --project=chromium
 
+# Admin projects CRUD + images (Chromium). Image upload step is skipped unless Cloudinary is enabled:
+npm run test:e2e:admin-projects
+# Full flow including real uploads (server must have CLOUDINARY_* in server/.env):
+# PowerShell: $env:E2E_CLOUDINARY_UPLOAD='1'; npm run test:e2e:admin-projects
+
 # Run with interactive UI mode
 npm run test:e2e:ui
 
