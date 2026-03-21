@@ -16,6 +16,9 @@ interface EnvConfig {
   COOKIE_SECURE: string;
   COOKIE_SAME_SITE: string;
   COOKIE_DOMAIN: string;
+  CLOUDINARY_CLOUD_NAME: string;
+  CLOUDINARY_API_KEY: string;
+  CLOUDINARY_API_SECRET: string;
 }
 
 function getEnvVar(name: string, defaultValue?: string): string {
@@ -70,4 +73,7 @@ export const env: EnvConfig = {
   COOKIE_SECURE: getEnvVar('COOKIE_SECURE', 'false'),
   COOKIE_SAME_SITE: getEnvVar('COOKIE_SAME_SITE', 'strict'),
   COOKIE_DOMAIN: getEnvVar('COOKIE_DOMAIN', ''),
+  CLOUDINARY_CLOUD_NAME: getEnvVar('CLOUDINARY_CLOUD_NAME'),
+  CLOUDINARY_API_KEY: getEnvVar('CLOUDINARY_API_KEY'),
+  CLOUDINARY_API_SECRET: getEnvVar('CLOUDINARY_API_SECRET'),
 };

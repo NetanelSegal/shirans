@@ -21,29 +21,14 @@ export const projectSchemas = {
         items: { $ref: '#/components/schemas/CategoryUrlCode' },
       },
       description: { type: 'string' },
-      mainImage: {
-        oneOf: [
-          { type: 'string', format: 'uri' },
-          { $ref: '#/components/schemas/ResponsiveImage' },
-        ],
-      },
+      mainImage: { type: 'string', format: 'uri' },
       images: {
         type: 'array',
-        items: {
-          oneOf: [
-            { type: 'string', format: 'uri' },
-            { $ref: '#/components/schemas/ResponsiveImage' },
-          ],
-        },
+        items: { type: 'string', format: 'uri' },
       },
       plans: {
         type: 'array',
-        items: {
-          oneOf: [
-            { type: 'string', format: 'uri' },
-            { $ref: '#/components/schemas/ResponsiveImage' },
-          ],
-        },
+        items: { type: 'string', format: 'uri' },
       },
       videos: {
         type: 'array',
@@ -121,15 +106,31 @@ export const projectSchemas = {
   },
   UploadImagesRequest: {
     type: 'object',
+    description: 'Multipart form: files (binary array), id (string), metadata (JSON string)',
     properties: {
       id: { type: 'string', format: 'cuid' },
-      images: {
+      files: {
         type: 'array',
-        items: { $ref: '#/components/schemas/ImageInput' },
+        items: { type: 'string', format: 'binary' },
+      },
+      metadata: {
+        type: 'string',
+        description: 'JSON array of {type, order?} per file',
+      },
+    },
+    required: ['id', 'files', 'metadata'],
+  },
+  ReorderImagesRequest: {
+    type: 'object',
+    properties: {
+      id: { type: 'string', format: 'cuid' },
+      imageIds: {
+        type: 'array',
+        items: { type: 'string', format: 'cuid' },
         minItems: 1,
       },
     },
-    required: ['id', 'images'],
+    required: ['id', 'imageIds'],
   },
   DeleteProjectRequest: {
     type: 'object',

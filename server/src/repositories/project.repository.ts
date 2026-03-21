@@ -148,18 +148,19 @@ export const projectRepository = {
     });
   },
 
-  /**
-   * Add images to a project
-   * @param projectId - Project ID
-   * @param images - Array of image data
-   */
   async addImages(
     projectId: string,
-    images: Array<{ url: string; type: ProjectImageType; order?: number }>,
+    images: Array<{
+      url: string;
+      publicId?: string;
+      type: ProjectImageType;
+      order?: number;
+    }>,
   ): Promise<void> {
     await prisma.projectImage.createMany({
       data: images.map((img) => ({
         url: img.url,
+        publicId: img.publicId ?? null,
         type: img.type,
         order: img.order ?? 0,
         projectId,
@@ -167,21 +168,12 @@ export const projectRepository = {
     });
   },
 
-  /**
-   * Delete a single image by ID
-   * @param imageId - Image ID
-   */
   async deleteImage(imageId: string): Promise<void> {
     await prisma.projectImage.delete({
       where: { id: imageId },
     });
   },
 
-  /**
-   * Delete multiple images from a project
-   * @param projectId - Project ID
-   * @param imageIds - Array of image IDs to delete
-   */
   async deleteImages(
     projectId: string,
     imageIds: string[],
@@ -192,5 +184,23 @@ export const projectRepository = {
         projectId,
       },
     });
+  },
+
+  /**
+   * Set the order of images based on the position of each ID in the array.
+   * Runs inside a transaction so all updates succeed or none do.
+   */
+  async reorderImages(
+    _projectId: string,
+    imageIds: string[],
+  ): Promise<void> {
+    await prisma.$transaction(
+      imageIds.map((id, index) =>
+        prisma.projectImage.update({
+          where: { id },
+          data: { order: index },
+        }),
+      ),
+    );
   },
 };

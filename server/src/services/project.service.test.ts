@@ -559,21 +559,27 @@ describe('projectService', () => {
 
       vi.mocked(projectRepository.addImages).mockResolvedValue(undefined);
 
-      const images = [
-        {
-          url: 'https://example.com/new.jpg',
-          type: 'IMAGE' as const,
-          order: 0,
-        },
-      ];
+      const mockFiles = [
+        { buffer: Buffer.from('fake'), originalname: 'new.jpg', mimetype: 'image/jpeg' },
+      ] as Express.Multer.File[];
 
-      const result = await projectService.uploadProjectImages('1', images);
+      const metadata = [{ type: 'IMAGE', order: 0 }];
+
+      // Mock cloudinary upload
+      const cloudinaryService = await import('./cloudinary.service');
+      vi.spyOn(cloudinaryService, 'uploadImage').mockResolvedValue({
+        url: 'https://res.cloudinary.com/test/image.webp',
+        publicId: 'shirans/projects/1/image/abc',
+      });
+
+      const result = await projectService.uploadProjectImages('1', mockFiles, metadata);
 
       expect(projectRepository.addImages).toHaveBeenCalledWith(
         '1',
         expect.arrayContaining([
           expect.objectContaining({
-            url: 'https://example.com/new.jpg',
+            url: 'https://res.cloudinary.com/test/image.webp',
+            publicId: 'shirans/projects/1/image/abc',
             type: 'IMAGE',
             order: 0,
           }),
@@ -585,10 +591,12 @@ describe('projectService', () => {
     it('should throw HttpError 404 when project not found', async () => {
       vi.mocked(projectRepository.findById).mockResolvedValue(null);
 
+      const mockFiles = [
+        { buffer: Buffer.from('fake'), originalname: 'img.jpg', mimetype: 'image/jpeg' },
+      ] as Express.Multer.File[];
+
       await expect(
-        projectService.uploadProjectImages('999', [
-          { url: 'https://example.com/img.jpg', type: 'IMAGE' },
-        ])
+        projectService.uploadProjectImages('999', mockFiles, [{ type: 'IMAGE' }])
       ).rejects.toThrow(HttpError);
     });
   });

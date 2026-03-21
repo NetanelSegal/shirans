@@ -27,6 +27,8 @@ export const ERROR_MESSAGES = {
   'VALIDATION.PASSWORD_WEAK': 'סיסמה חלשה',
   'VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT': 'תמונות לא שייכות לפרוייקט',
   'VALIDATION.BUILT_AREA_OUT_OF_RANGE': 'שטח בנוי מחוץ לטווח המוגדר',
+  'VALIDATION.INVALID_FILE_TYPE': 'סוג קובץ לא נתמך. מותר: JPEG, PNG, WebP',
+  'VALIDATION.FILE_TOO_LARGE': 'הקובץ חורג מהגודל המרבי (10 MB)',
 
   'NOT_FOUND.USER_NOT_FOUND': 'משתמש לא נמצא',
   'NOT_FOUND.PROJECT_NOT_FOUND': 'פרוייקט לא נמצא',
@@ -61,9 +63,11 @@ export const ERROR_MESSAGES = {
   'SERVER.PROJECT.FETCHS_FAILED': 'שגיאת שרת',
   'SERVER.PROJECT.FETCH_FAVOURITES_FAILED': 'שגיאת שרת',
   'SERVER.PROJECT.FETCH_BY_ID_FAILED': 'שגיאת שרת',
-  'SERVER.PROJECT.UPLOAD_IMAGES_FAILED': 'שגיאת שרת',
-  'SERVER.PROJECT.DELETE_PROJECT_IMAGES_FAILED': 'שגיאת שרת',
-  'SERVER.PROJECT.DELETE_MAIN_IMAGE_FAILED': 'שגיאת שרת',
+  'SERVER.PROJECT.UPLOAD_IMAGES_FAILED': 'העלאת תמונות נכשלה',
+  'SERVER.PROJECT.DELETE_PROJECT_IMAGES_FAILED': 'מחיקת תמונות נכשלה',
+  'SERVER.PROJECT.DELETE_MAIN_IMAGE_FAILED': 'מחיקת תמונה ראשית נכשלה',
+  'SERVER.PROJECT.REORDER_IMAGES_FAILED': 'סידור מחדש של תמונות נכשל',
+  'SERVER.PROJECT.CLOUDINARY_UPLOAD_FAILED': 'העלאת תמונה לאחסון ענן נכשלה',
 
   'SERVER.CATEGORY.CREATE_FAILED': 'שגיאת שרת',
   'SERVER.CATEGORY.UPDATE_FAILED': 'שגיאת שרת',

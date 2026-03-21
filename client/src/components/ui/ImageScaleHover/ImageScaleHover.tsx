@@ -1,12 +1,11 @@
 import { ImgHTMLAttributes } from 'react';
 import Image from '../Image/Image';
-import type { ResponsiveImage } from '@shirans/shared';
 
 interface IImageScaleHoverProps
   extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   containerOnClick?: () => void;
   containerClassName?: string;
-  src: string | ResponsiveImage;
+  src: string;
 }
 
 export default function ImageScaleHover({

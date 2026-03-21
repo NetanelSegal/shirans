@@ -8,6 +8,7 @@ import { DataTable } from '@/components/Admin/DataTable';
 import { FormModal } from '@/components/Admin/FormModal';
 import { ConfirmDialog } from '@/components/Admin/ConfirmDialog';
 import { DataStateGuard } from '@/components/DataState';
+import { ProjectImagesManager } from '@/components/Admin/ProjectImagesManager';
 import type {
   ProjectResponse,
   CreateProjectInput,
@@ -32,6 +33,7 @@ export default function ProjectsManagement() {
     null
   );
   const [deleteTarget, setDeleteTarget] = useState<ProjectResponse | null>(null);
+  const [imagesTarget, setImagesTarget] = useState<ProjectResponse | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -432,6 +434,14 @@ export default function ProjectsManagement() {
                 <div className="flex gap-2">
                   <button
                     type="button"
+                    onClick={() => setImagesTarget(row)}
+                    className="rounded-lg bg-blue-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-600"
+                    aria-label={`תמונות ${row.title}`}
+                  >
+                    תמונות
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => handleOpenEdit(row)}
                     className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary/90"
                     aria-label={`ערוך ${row.title}`}
@@ -465,6 +475,10 @@ export default function ProjectsManagement() {
         }
         confirmLabel="מחק"
         isLoading={isDeleting}
+      />
+      <ProjectImagesManager
+        project={imagesTarget}
+        onClose={() => setImagesTarget(null)}
       />
     </div>
   );

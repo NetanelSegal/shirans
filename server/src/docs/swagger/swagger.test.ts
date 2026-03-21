@@ -42,21 +42,8 @@ describe('Swagger Schema Definitions', () => {
       expect(commonSchemas.CategoryUrlCode.pattern).toBeDefined();
     });
 
-    it('should define ResponsiveImage with desktop as required', () => {
-      expect(commonSchemas.ResponsiveImage).toBeDefined();
-      expect(commonSchemas.ResponsiveImage.required).toContain('desktop');
-      expect(commonSchemas.ResponsiveImage.properties).toHaveProperty(
-        'mobile',
-      );
-      expect(commonSchemas.ResponsiveImage.properties).toHaveProperty(
-        'tablet',
-      );
-      expect(commonSchemas.ResponsiveImage.properties).toHaveProperty(
-        'desktop',
-      );
-      expect(commonSchemas.ResponsiveImage.properties).toHaveProperty(
-        'fallback',
-      );
+    it('should not define ResponsiveImage (removed in favour of plain string URLs)', () => {
+      expect((commonSchemas as Record<string, unknown>).ResponsiveImage).toBeUndefined();
     });
   });
 

@@ -82,13 +82,14 @@ model Project {
 }
 
 model ProjectImage {
-  id        String          @id @default(cuid())
+  id        String           @id @default(cuid())
   url       String
+  publicId  String?
   type      ProjectImageType
-  order     Int             @default(0)
+  order     Int              @default(0)
   projectId String
-  project   Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  createdAt DateTime        @default(now())
+  project   Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
 
   @@index([projectId])
   @@map("project_images")

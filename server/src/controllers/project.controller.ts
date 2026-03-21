@@ -6,12 +6,17 @@ import {
   updateProjectSchema,
   projectQuerySchema,
   singleProjectQuerySchema,
-  uploadImagesSchema,
   deleteProjectSchema,
   deleteMainImageSchema,
   deleteImagesSchema,
+  reorderImagesSchema,
+  uploadImageMetadataSchema,
 } from '@shirans/shared';
+import { z } from 'zod';
 import { validateRequest } from '../utils/validation';
+import { HttpError } from '../middleware/errorHandler';
+import { HTTP_STATUS } from '../constants/httpStatus';
+import { getServerErrorMessage } from '@/constants/errorMessages';
 
 /**
  * Create a new project
@@ -94,18 +99,44 @@ export async function updateProject(
 }
 
 /**
- * Upload images to a project
- * POST /api/projects/uploadImgs
- * Body: UploadImagesInput
+ * Upload images to a project via multipart/form-data.
+ * Fields: files (binary), id (string), metadata (JSON array of {type, order?}).
  */
 export async function uploadProjectImages(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const validatedData = validateRequest(uploadImagesSchema, req.body);
+  const files = req.files as Express.Multer.File[] | undefined;
+  if (!files || files.length === 0) {
+    throw new HttpError(
+      HTTP_STATUS.BAD_REQUEST,
+      getServerErrorMessage('VALIDATION.INVALID_INPUT'),
+    );
+  }
+
+  const id = req.body.id as string;
+  if (!id) {
+    throw new HttpError(
+      HTTP_STATUS.BAD_REQUEST,
+      getServerErrorMessage('VALIDATION.INVALID_INPUT'),
+    );
+  }
+
+  let metadata: Array<{ type: string; order?: number }> = [];
+  try {
+    const raw = JSON.parse(req.body.metadata ?? '[]');
+    metadata = z.array(uploadImageMetadataSchema).parse(raw);
+  } catch {
+    throw new HttpError(
+      HTTP_STATUS.BAD_REQUEST,
+      getServerErrorMessage('VALIDATION.INVALID_INPUT'),
+    );
+  }
+
   const updatedProject = await projectService.uploadProjectImages(
-    validatedData.id,
-    validatedData.images
+    id,
+    files,
+    metadata,
   );
   return res.status(200).json(updatedProject);
 }
@@ -150,4 +181,18 @@ export async function deleteProjectImages(
   const { id, imageIds } = validateRequest(deleteImagesSchema, req.body);
   await projectService.deleteProjectImages(id, imageIds);
   return res.status(200).json({ message: 'Images deleted successfully' });
+}
+
+/**
+ * Reorder images within a project.
+ * PATCH /api/projects/reorderImages
+ * Body: { id, imageIds } — imageIds in desired order.
+ */
+export async function reorderProjectImages(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const { id, imageIds } = validateRequest(reorderImagesSchema, req.body);
+  const updatedProject = await projectService.reorderImages(id, imageIds);
+  return res.status(200).json(updatedProject);
 }

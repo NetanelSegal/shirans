@@ -3,27 +3,14 @@ import ImageClickModal from './ImageClickModal';
 import useCounter from '@/hooks/useCounter';
 import arrowIconSrc from '@/assets/icons/select-arrow.svg';
 import Image from '@/components/ui/Image';
-import type { ResponsiveImage } from '@shirans/shared';
 import Modal from '@/components/ui/Modal';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 interface IProjectImagePlanShowcaseProps {
-  arr: (string | ResponsiveImage)[];
+  arr: string[];
   containerClassname?: string;
   imageClassname?: string;
 }
-
-// Helper function to get a unique key from image (string or ResponsiveImage)
-const getImageKey = (
-  image: string | ResponsiveImage,
-  index: number,
-): string => {
-  if (typeof image === 'string') {
-    return image;
-  }
-  // For ResponsiveImage, use desktop URL as key
-  return image.desktop || `image-${index}`;
-};
 
 export default function ProjectImagePlanShowcase({
   arr,
@@ -170,7 +157,7 @@ export default function ProjectImagePlanShowcase({
             imageClassname={`${singleImageClassname} ${arr.length % 2 == 1 ? (index + 1 === arr.length ? 'sm:basis-auto grow' : '') : ''}`} // if length is odd, the last image should be full width
             onClick={() => setCount(index)}
             img={item}
-            key={getImageKey(item, index)}
+            key={item}
           />
         ))}
       </div>
@@ -242,11 +229,9 @@ export default function ProjectImagePlanShowcase({
                 contentClass='!w-fit !h-fit flex items-center justify-center'
               >
                 <Image
-                  key={getImageKey(arr[count], count)}
+                  key={arr[count]}
                   src={arr[count]}
-                  alt={
-                    typeof arr[count] === 'string' ? arr[count] : arr[count].desktop
-                  }
+                  alt={arr[count]}
                   className='max-h-[90vh] max-w-[90vw] w-auto h-auto object-contain rounded-xl'
                 />
               </TransformComponent>

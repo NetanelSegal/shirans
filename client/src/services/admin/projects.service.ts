@@ -1,30 +1,15 @@
 import apiClient from '../../utils/apiClient';
 import { urls } from '../../constants/urls';
-import { resolveImageUrl } from '../../utils/imageUrl';
+import { resolveProjectImages } from '../../utils/imageUrl';
 import type {
   ProjectResponse,
   CreateProjectInput,
   UpdateProjectInput,
-  UploadImagesInput,
   DeleteMainImageInput,
   DeleteImagesInput,
+  ReorderImagesInput,
+  ProjectImageType,
 } from '@shirans/shared';
-
-function resolveProjectImages(project: ProjectResponse): ProjectResponse {
-  return {
-    ...project,
-    mainImage:
-      typeof project.mainImage === 'string'
-        ? resolveImageUrl(project.mainImage)
-        : project.mainImage,
-    images: project.images.map((img) =>
-      typeof img === 'string' ? resolveImageUrl(img) : img,
-    ),
-    plans: project.plans?.map((plan) =>
-      typeof plan === 'string' ? resolveImageUrl(plan) : plan,
-    ),
-  };
-}
 
 export async function fetchAllProjects(): Promise<ProjectResponse[]> {
   const { data } = await apiClient.get<ProjectResponse[]>(urls.projects);
@@ -52,12 +37,23 @@ export async function deleteProject(id: string): Promise<void> {
   await apiClient.delete(urls.projects, { data: { id } });
 }
 
+export interface UploadProjectImagesInput {
+  projectId: string;
+  files: File[];
+  metadata: Array<{ type: ProjectImageType; order?: number }>;
+}
+
 export async function uploadProjectImages(
-  input: UploadImagesInput
+  input: UploadProjectImagesInput
 ): Promise<ProjectResponse> {
+  const formData = new FormData();
+  formData.append('id', input.projectId);
+  input.files.forEach((f) => formData.append('files', f));
+  formData.append('metadata', JSON.stringify(input.metadata));
+
   const { data } = await apiClient.post<ProjectResponse>(
     urls.uploadImgs,
-    input
+    formData,
   );
   return resolveProjectImages(data);
 }
@@ -72,4 +68,14 @@ export async function deleteProjectImages(
   input: DeleteImagesInput
 ): Promise<void> {
   await apiClient.delete(urls.deleteProjectImages, { data: input });
+}
+
+export async function reorderImages(
+  input: ReorderImagesInput
+): Promise<ProjectResponse> {
+  const { data } = await apiClient.patch<ProjectResponse>(
+    urls.reorderImages,
+    input,
+  );
+  return resolveProjectImages(data);
 }

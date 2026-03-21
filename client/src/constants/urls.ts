@@ -22,6 +22,7 @@ export const urls = {
   uploadImgs: `${BACKEND_URL}/api/projects/uploadImgs`,
   deleteMainImage: `${BACKEND_URL}/api/projects/deleteMainImage`,
   deleteProjectImages: `${BACKEND_URL}/api/projects/deleteImages`,
+  reorderImages: `${BACKEND_URL}/api/projects/reorderImages`,
 
   // Auth endpoints (SSOT - Single Source of Truth)
   auth: {
