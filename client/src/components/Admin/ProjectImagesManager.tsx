@@ -105,13 +105,9 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
           <h2 className="text-xl font-bold text-primary">
             ניהול תמונות - {project.title}
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-primary text-2xl leading-none transition-colors"
-            aria-label="סגור"
-          >
+          <Button variant="light" onClick={onClose} className="!px-2 !py-1 text-lg leading-none">
             ×
-          </button>
+          </Button>
         </div>
 
         {error && (
