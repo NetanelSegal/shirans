@@ -3,7 +3,12 @@ import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import { useAdminProjects } from '@/hooks/admin/useAdminProjects';
-import { IMAGE_UPLOAD } from '@shirans/shared';
+import { useProjectImageUpload } from '@/hooks/admin/useProjectImageUpload';
+import {
+  ADMIN_IMAGE_UPLOAD_MIME_TYPES,
+  ADMIN_UPLOADABLE_PROJECT_IMAGE_TYPES,
+  type AdminUploadableProjectImageType,
+} from '@/utils/adminProjectImageUpload';
 import type { ProjectResponse, ProjectImageType } from '@shirans/shared';
 
 interface ProjectImagesManagerProps {
@@ -18,92 +23,54 @@ const IMAGE_TYPE_LABELS: Record<ProjectImageType, string> = {
   VIDEO: 'סרטון',
 };
 
-const ACCEPTED_MIME_TYPES = IMAGE_UPLOAD.ALLOWED_MIME_TYPES as readonly string[];
-
-function filterValidFiles(files: File[]): { valid: File[]; rejected: number } {
-  const valid = files.filter((f) => ACCEPTED_MIME_TYPES.includes(f.type));
-  return { valid, rejected: files.length - valid.length };
-}
-
 export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerProps) {
   const { uploadImages, deleteMainImage } = useAdminProjects();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [selectedType, setSelectedType] = useState<ProjectImageType>('IMAGE');
-  const [uploading, setUploading] = useState(false);
-  const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
+  const [selectedType, setSelectedType] =
+    useState<AdminUploadableProjectImageType>('IMAGE');
   const [error, setError] = useState<string | null>(null);
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
+
+  const { uploading, handleFilesSelected } = useProjectImageUpload(fileInputRef, {
+    project,
+    selectedType,
+    uploadImages,
+    setError,
+  });
 
   const isBusy = uploading;
 
-  const handleFilesSelected = useCallback(async (files: FileList | null) => {
-    if (!files || files.length === 0 || !project) return;
-    setError(null);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      if (!isBusy) handleFilesSelected(e.dataTransfer.files);
+    },
+    [handleFilesSelected, isBusy],
+  );
 
-    const { valid, rejected } = filterValidFiles(Array.from(files));
-    if (valid.length === 0) {
-      setError('אף קובץ לא תקין. מותר: JPEG, PNG, WebP, HEIC, HEIF');
-      return;
-    }
+  const handleDeleteImage = useCallback(
+    async (imageUrl: string, type: string) => {
+      if (!project) return;
+      setError(null);
+      setDeletingIds((prev) => new Set(prev).add(imageUrl));
 
-    if (valid.length > IMAGE_UPLOAD.MAX_FILES_PER_REQUEST) {
-      setError(`מותר עד ${IMAGE_UPLOAD.MAX_FILES_PER_REQUEST} קבצים בבת אחת`);
-      return;
-    }
-
-    if (selectedType === 'MAIN' && project.mainImage) {
-      setError('כבר קיימת תמונה ראשית. מחק אותה לפני העלאת חדשה');
-      return;
-    }
-
-    try {
-      setUploading(true);
-      const metadata = valid.map((_, i) => ({
-        type: selectedType,
-        order: i,
-      }));
-
-      await uploadImages({
-        projectId: project.id,
-        files: valid,
-        metadata,
-      });
-
-      if (rejected > 0) {
-        setError(`${rejected} קבצים נדחו (סוג לא נתמך)`);
+      try {
+        if (type === 'MAIN') {
+          await deleteMainImage({ id: project.id });
+        }
+      } catch (err) {
+        setError((err as Error)?.message ?? 'מחיקה נכשלה');
+      } finally {
+        setDeletingIds((prev) => {
+          const next = new Set(prev);
+          next.delete(imageUrl);
+          return next;
+        });
       }
-    } catch (err) {
-      setError((err as Error)?.message ?? 'העלאה נכשלה');
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    }
-  }, [project, selectedType, uploadImages]);
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    if (!isBusy) handleFilesSelected(e.dataTransfer.files);
-  }, [handleFilesSelected, isBusy]);
-
-  const handleDeleteImage = useCallback(async (imageUrl: string, type: string) => {
-    if (!project) return;
-    setError(null);
-    setDeletingIds((prev) => new Set(prev).add(imageUrl));
-
-    try {
-      if (type === 'MAIN') {
-        await deleteMainImage({ id: project.id });
-      }
-    } catch (err) {
-      setError((err as Error)?.message ?? 'מחיקה נכשלה');
-    } finally {
-      setDeletingIds((prev) => {
-        const next = new Set(prev);
-        next.delete(imageUrl);
-        return next;
-      });
-    }
-  }, [project, deleteMainImage]);
+    },
+    [project, deleteMainImage],
+  );
 
   const safeClose = useCallback(() => {
     if (!isBusy) onClose();
@@ -118,7 +85,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
     ...(project.videos ?? []).map((url) => ({ url, type: 'VIDEO' as const })),
   ];
 
-  const acceptedTypes = ACCEPTED_MIME_TYPES.join(',');
+  const acceptedTypes = ADMIN_IMAGE_UPLOAD_MIME_TYPES.join(',');
 
   return (
     <Modal
@@ -148,21 +115,22 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
           </div>
         )}
 
-        {/* Upload section */}
         <div className="mb-6">
           <div className="mb-3 flex items-center gap-3">
             <label className="text-sm font-medium">סוג:</label>
             <select
               value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value as ProjectImageType)}
+              onChange={(e) =>
+                setSelectedType(e.target.value as AdminUploadableProjectImageType)
+              }
               className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm"
               disabled={isBusy}
             >
-              {(Object.entries(IMAGE_TYPE_LABELS) as [ProjectImageType, string][]).map(
-                ([value, label]) => (
-                  <option key={value} value={value}>{label}</option>
-                )
-              )}
+              {ADMIN_UPLOADABLE_PROJECT_IMAGE_TYPES.map((value) => (
+                <option key={value} value={value}>
+                  {IMAGE_TYPE_LABELS[value]}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -190,7 +158,6 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
           />
         </div>
 
-        {/* Images grid */}
         {allImages.length === 0 ? (
           <p className="text-center text-sm text-gray-500 py-8">אין תמונות</p>
         ) : (
@@ -208,11 +175,9 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
                     className="aspect-video w-full object-cover"
                   />
                 )}
-                {/* Type badge */}
                 <span className="absolute top-1 right-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-white">
                   {IMAGE_TYPE_LABELS[img.type]}
                 </span>
-                {/* Delete button */}
                 {img.type === 'MAIN' && (
                   <button
                     onClick={() => handleDeleteImage(img.url, img.type)}
@@ -229,7 +194,9 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
         )}
 
         <div className="mt-6 flex justify-end">
-          <Button variant="secondary" onClick={safeClose} disabled={isBusy}>סגור</Button>
+          <Button variant="secondary" onClick={safeClose} disabled={isBusy}>
+            סגור
+          </Button>
         </div>
       </div>
     </Modal>

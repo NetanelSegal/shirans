@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { projectService } from '../services/project.service';
+import { projectImageService } from '../services/projectImage.service';
 import type { ProjectFilters } from '../repositories/project.repository';
 import {
   createProjectSchema,
@@ -10,13 +11,9 @@ import {
   deleteMainImageSchema,
   deleteImagesSchema,
   reorderImagesSchema,
-  uploadImageMetadataSchema,
 } from '@shirans/shared';
-import { z } from 'zod';
 import { validateRequest } from '../utils/validation';
-import { HttpError } from '../middleware/errorHandler';
-import { HTTP_STATUS } from '../constants/httpStatus';
-import { getServerErrorMessage } from '@/constants/errorMessages';
+import { parseProjectImageUploadRequest } from '../utils/parseProjectImageUploadRequest';
 
 /**
  * Create a new project
@@ -106,34 +103,8 @@ export async function uploadProjectImages(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const files = req.files as Express.Multer.File[] | undefined;
-  if (!files || files.length === 0) {
-    throw new HttpError(
-      HTTP_STATUS.BAD_REQUEST,
-      getServerErrorMessage('VALIDATION.INVALID_INPUT'),
-    );
-  }
-
-  const id = req.body.id as string;
-  if (!id) {
-    throw new HttpError(
-      HTTP_STATUS.BAD_REQUEST,
-      getServerErrorMessage('VALIDATION.INVALID_INPUT'),
-    );
-  }
-
-  let metadata: Array<{ type: string; order?: number }> = [];
-  try {
-    const raw = JSON.parse(req.body.metadata ?? '[]');
-    metadata = z.array(uploadImageMetadataSchema).parse(raw);
-  } catch {
-    throw new HttpError(
-      HTTP_STATUS.BAD_REQUEST,
-      getServerErrorMessage('VALIDATION.INVALID_INPUT'),
-    );
-  }
-
-  const updatedProject = await projectService.uploadProjectImages(
+  const { id, files, metadata } = parseProjectImageUploadRequest(req);
+  const updatedProject = await projectImageService.uploadProjectImages(
     id,
     files,
     metadata,
@@ -165,7 +136,7 @@ export async function deleteMainImage(
   res: Response
 ): Promise<Response> {
   const { id } = validateRequest(deleteMainImageSchema, req.body);
-  await projectService.deleteMainImage(id);
+  await projectImageService.deleteMainImage(id);
   return res.status(200).json({ message: 'Main image deleted successfully' });
 }
 
@@ -179,7 +150,7 @@ export async function deleteProjectImages(
   res: Response
 ): Promise<Response> {
   const { id, imageIds } = validateRequest(deleteImagesSchema, req.body);
-  await projectService.deleteProjectImages(id, imageIds);
+  await projectImageService.deleteProjectImages(id, imageIds);
   return res.status(200).json({ message: 'Images deleted successfully' });
 }
 
@@ -193,6 +164,6 @@ export async function reorderProjectImages(
   res: Response
 ): Promise<Response> {
   const { id, imageIds } = validateRequest(reorderImagesSchema, req.body);
-  const updatedProject = await projectService.reorderImages(id, imageIds);
+  const updatedProject = await projectImageService.reorderImages(id, imageIds);
   return res.status(200).json(updatedProject);
 }

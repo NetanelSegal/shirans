@@ -20,5 +20,6 @@ export function resolveProjectImages(project: ProjectResponse): ProjectResponse 
     mainImage: resolveImageUrl(project.mainImage),
     images: project.images.map(resolveImageUrl),
     plans: project.plans?.map(resolveImageUrl),
+    videos: project.videos?.map(resolveImageUrl),
   };
 }
