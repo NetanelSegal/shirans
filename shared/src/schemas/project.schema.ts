@@ -106,13 +106,19 @@ export const deleteImagesSchema = z.object({
 /**
  * Zod schema for reordering project images.
  * imageIds is the full ordered list — position in the array becomes the new order value.
+ * The service also requires imageIds.length === project.images.length (see project.service).
  */
-export const reorderImagesSchema = z.object({
-  id: z.cuid('Project ID must be a valid CUID'),
-  imageIds: z
-    .array(z.cuid('Image ID must be a valid CUID'))
-    .min(1, 'At least one image ID is required'),
-});
+export const reorderImagesSchema = z
+  .object({
+    id: z.cuid('Project ID must be a valid CUID'),
+    imageIds: z
+      .array(z.cuid('Image ID must be a valid CUID'))
+      .min(1, 'At least one image ID is required'),
+  })
+  .refine((data) => new Set(data.imageIds).size === data.imageIds.length, {
+    message: 'Image IDs must be unique',
+    path: ['imageIds'],
+  });
 
 /**
  * Zod schema for multipart upload metadata (parsed from the JSON metadata field).

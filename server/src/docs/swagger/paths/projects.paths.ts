@@ -317,7 +317,7 @@ export const projectsPaths = {
       tags: ['Projects'],
       summary: 'Reorder project images',
       description:
-        'Sets display order from the order of imageIds in the body. Requires admin authentication.',
+        'Sets display order from the order of imageIds in the body. imageIds must include every image on the project exactly once (unique IDs). Requires admin authentication.',
       security: [{ bearerAuth: [] }],
       requestBody: {
         required: true,

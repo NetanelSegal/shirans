@@ -106,7 +106,8 @@ export const projectSchemas = {
   },
   UploadImagesRequest: {
     type: 'object',
-    description: 'Multipart form: files (binary array), id (string), metadata (JSON string)',
+    description:
+      'Multipart form: files (binary array), id (CUID string), metadata (JSON string). metadata must be a JSON array with the same length as files.',
     properties: {
       id: { type: 'string', format: 'cuid' },
       files: {
@@ -115,19 +116,23 @@ export const projectSchemas = {
       },
       metadata: {
         type: 'string',
-        description: 'JSON array of {type, order?} per file',
+        description:
+          'JSON array of {type, order?} — one entry per file, same order as files',
       },
     },
     required: ['id', 'files', 'metadata'],
   },
   ReorderImagesRequest: {
     type: 'object',
+    description:
+      'imageIds must list every image on the project exactly once (full permutation). IDs must be unique.',
     properties: {
       id: { type: 'string', format: 'cuid' },
       imageIds: {
         type: 'array',
         items: { type: 'string', format: 'cuid' },
         minItems: 1,
+        uniqueItems: true,
       },
     },
     required: ['id', 'imageIds'],

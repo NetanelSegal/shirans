@@ -505,6 +505,31 @@ describe('Project Routes Integration Tests', () => {
       expect(response.status).toBe(400);
       expect(response.body.message).toBe('Invalid input data');
     });
+
+    it('should return 400 when metadata length does not match file count', async () => {
+      const response = await request(app)
+        .post('/api/projects/uploadImgs')
+        .set('Authorization', 'Bearer admin-token')
+        .field('id', 'clx123abc456def789')
+        .field('metadata', JSON.stringify([{ type: 'IMAGE', order: 0 }]))
+        .attach('files', TINY_PNG, 'one.png')
+        .attach('files', TINY_PNG, 'two.png');
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toMatch(/metadata|files/i);
+    });
+
+    it('should return 400 when id is not a valid CUID', async () => {
+      const response = await request(app)
+        .post('/api/projects/uploadImgs')
+        .set('Authorization', 'Bearer admin-token')
+        .field('id', 'not-a-cuid')
+        .field('metadata', JSON.stringify([{ type: 'IMAGE' }]))
+        .attach('files', TINY_PNG, 'tiny.png');
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Invalid input data');
+    });
   });
 
   describe('DELETE /api/projects', () => {

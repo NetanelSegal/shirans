@@ -28,6 +28,10 @@ export const errorMessagesMap = {
     'File type not allowed. Accepted: JPEG, PNG, WebP, HEIC, HEIF',
   'VALIDATION.FILE_TOO_LARGE': 'File exceeds the maximum allowed size (50 MB)',
   'VALIDATION.TOO_MANY_FILES': 'Too many files. Maximum 20 files per request',
+  'VALIDATION.REORDER_IMAGE_IDS_INVALID':
+    'imageIds must list every project image exactly once',
+  'VALIDATION.UPLOAD_METADATA_FILE_COUNT_MISMATCH':
+    'metadata array length must match the number of uploaded files',
 
   'NOT_FOUND.USER_NOT_FOUND': 'User not found',
   'NOT_FOUND.PROJECT_NOT_FOUND': 'Project not found',

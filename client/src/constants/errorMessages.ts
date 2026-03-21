@@ -31,6 +31,10 @@ export const ERROR_MESSAGES = {
     'סוג קובץ לא נתמך. מותר: JPEG, PNG, WebP, HEIC, HEIF',
   'VALIDATION.FILE_TOO_LARGE': 'הקובץ חורג מהגודל המרבי (50 MB)',
   'VALIDATION.TOO_MANY_FILES': 'יותר מדי קבצים. מותר עד 20 קבצים',
+  'VALIDATION.REORDER_IMAGE_IDS_INVALID':
+    'יש לכלול את כל תמונות הפרויקט בסדר החדש, בדיוק פעם אחת לכל תמונה',
+  'VALIDATION.UPLOAD_METADATA_FILE_COUNT_MISMATCH':
+    'מספר פריטי המטא-דאטה חייב להתאים למספר הקבצים שהועלו',
 
   'NOT_FOUND.USER_NOT_FOUND': 'משתמש לא נמצא',
   'NOT_FOUND.PROJECT_NOT_FOUND': 'פרוייקט לא נמצא',
