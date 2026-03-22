@@ -1,5 +1,8 @@
 import type { ColumnConfig } from '@/components/Admin/DataTable';
+import Button from '@/components/ui/Button';
 import type { CategoryResponse, ProjectResponse } from '@shirans/shared';
+
+const tableControlClass = '!rounded-lg !px-3 !py-1.5 text-sm font-medium';
 
 function getCategoryTitles(
   project: ProjectResponse,
@@ -38,32 +41,30 @@ export function getProjectColumns(
       key: 'favourite',
       header: 'מועדף',
       render: (row: ProjectResponse) => (
-        <button
+        <Button
           type="button"
+          variant={row.favourite ? 'warning' : 'light'}
           onClick={() => void onToggleFavourite(row)}
-          className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${
-            row.favourite ? 'bg-amber-400 text-black' : 'bg-gray-200 text-gray-600'
-          }`}
-          aria-label={row.favourite ? 'הסר ממועדפים' : 'הוסף למועדפים'}
+          className={`${tableControlClass} ${row.favourite ? '' : '!text-gray-600'}`}
+          ariaLabel={row.favourite ? 'הסר ממועדפים' : 'הוסף למועדפים'}
         >
           <i className="fa-solid fa-star" aria-hidden />
-        </button>
+        </Button>
       ),
     },
     {
       key: 'isCompleted',
       header: 'הושלם',
       render: (row: ProjectResponse) => (
-        <button
+        <Button
           type="button"
+          variant={row.isCompleted ? 'success' : 'light'}
           onClick={() => void onToggleCompleted(row)}
-          className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
-            row.isCompleted ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
-          aria-label={row.isCompleted ? 'סמן כלא הושלם' : 'סמן כהושלם'}
+          className={`${tableControlClass} ${row.isCompleted ? '' : '!text-gray-700'}`}
+          ariaLabel={row.isCompleted ? 'סמן כלא הושלם' : 'סמן כהושלם'}
         >
           {row.isCompleted ? 'כן' : 'לא'}
-        </button>
+        </Button>
       ),
     },
   ];

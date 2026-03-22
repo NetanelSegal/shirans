@@ -1,6 +1,7 @@
 import { Controller } from 'react-hook-form';
 import type { UseFormReturn } from 'react-hook-form';
 import type { CategoryResponse, CreateProjectInput } from '@shirans/shared';
+import { Input } from '@/components/ui/Input';
 
 export interface ProjectFormFieldsProps {
   /** Create form instance; for update flows cast from `UseFormReturn<UpdateProjectInput>` (same field UI). */
@@ -9,130 +10,87 @@ export interface ProjectFormFieldsProps {
   formError: string | null;
 }
 
+const checkboxClass =
+  'h-4 w-4 rounded border border-gray-200 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0';
+
 export function ProjectFormFields({
   form,
   categories,
   formError,
 }: ProjectFormFieldsProps) {
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = form;
+
   return (
     <>
-      <div>
-        <label htmlFor="title" className="mb-1 block text-sm font-medium">
-          כותרת
-        </label>
-        <input
-          id="title"
-          type="text"
-          {...form.register('title')}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2"
-          aria-invalid={!!form.formState.errors.title}
-        />
-        {form.formState.errors.title && (
-          <p className="mt-1 text-sm text-red-600">
-            {form.formState.errors.title.message}
-          </p>
-        )}
-      </div>
-      <div>
-        <label htmlFor="description" className="mb-1 block text-sm font-medium">
-          תיאור
-        </label>
-        <textarea
-          id="description"
-          rows={4}
-          {...form.register('description')}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2"
-          aria-invalid={!!form.formState.errors.description}
-        />
-        {form.formState.errors.description && (
-          <p className="mt-1 text-sm text-red-600">
-            {form.formState.errors.description.message}
-          </p>
-        )}
-      </div>
-      <div>
-        <label htmlFor="location" className="mb-1 block text-sm font-medium">
-          מיקום
-        </label>
-        <input
-          id="location"
-          type="text"
-          {...form.register('location')}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2"
-          aria-invalid={!!form.formState.errors.location}
-        />
-        {form.formState.errors.location && (
-          <p className="mt-1 text-sm text-red-600">
-            {form.formState.errors.location.message}
-          </p>
-        )}
-      </div>
-      <div>
-        <label htmlFor="client" className="mb-1 block text-sm font-medium">
-          לקוח
-        </label>
-        <input
-          id="client"
-          type="text"
-          {...form.register('client')}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2"
-          aria-invalid={!!form.formState.errors.client}
-        />
-        {form.formState.errors.client && (
-          <p className="mt-1 text-sm text-red-600">
-            {form.formState.errors.client.message}
-          </p>
-        )}
-      </div>
-      <div>
-        <label
-          htmlFor="constructionArea"
-          className="mb-1 block text-sm font-medium"
-        >
-          שטח בנייה (מ"ר)
-        </label>
-        <input
-          id="constructionArea"
-          type="number"
-          min={1}
-          {...form.register('constructionArea', { valueAsNumber: true })}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2"
-          aria-invalid={!!form.formState.errors.constructionArea}
-        />
-        {form.formState.errors.constructionArea && (
-          <p className="mt-1 text-sm text-red-600">
-            {form.formState.errors.constructionArea.message}
-          </p>
-        )}
-      </div>
-      <div className="flex items-center gap-4">
+      <Input
+        id="project-form-title"
+        label="כותרת"
+        type="text"
+        {...register('title')}
+        error={errors.title}
+      />
+      <Input
+        id="project-form-description"
+        as="textarea"
+        label="תיאור"
+        rows={4}
+        {...register('description')}
+        error={errors.description}
+      />
+      <Input
+        id="project-form-location"
+        label="מיקום"
+        type="text"
+        {...register('location')}
+        error={errors.location}
+      />
+      <Input
+        id="project-form-client"
+        label="לקוח"
+        type="text"
+        {...register('client')}
+        error={errors.client}
+      />
+      <Input
+        id="project-form-construction-area"
+        label='שטח בנייה (מ"ר)'
+        type="number"
+        min={1}
+        {...register('constructionArea', { valueAsNumber: true })}
+        error={errors.constructionArea}
+      />
+      <div className="flex flex-wrap items-center gap-6">
         <div className="flex items-center gap-2">
           <input
-            id="isCompleted"
+            id="project-form-is-completed"
             type="checkbox"
-            {...form.register('isCompleted')}
-            className="h-4 w-4 rounded"
+            {...register('isCompleted')}
+            className={checkboxClass}
           />
-          <label htmlFor="isCompleted" className="text-sm font-medium">
+          <label htmlFor="project-form-is-completed" className="text-sm font-medium">
             הושלם
           </label>
         </div>
         <div className="flex items-center gap-2">
           <input
-            id="favourite"
+            id="project-form-favourite"
             type="checkbox"
-            {...form.register('favourite')}
-            className="h-4 w-4 rounded"
+            {...register('favourite')}
+            className={checkboxClass}
           />
-          <label htmlFor="favourite" className="text-sm font-medium">
+          <label htmlFor="project-form-favourite" className="text-sm font-medium">
             מועדף
           </label>
         </div>
       </div>
       <div>
-        <span className="mb-2 block text-sm font-medium">קטגוריות</span>
+        <span className="mb-2 block text-sm font-medium text-dark">קטגוריות</span>
         <Controller
-          control={form.control}
+          control={control}
           name="categoryIds"
           render={({ field }) => {
             const value = field.value ?? [];
@@ -141,7 +99,7 @@ export function ProjectFormFields({
                 {categories.map((cat) => (
                   <div key={cat.id} className="flex items-center gap-2">
                     <input
-                      id={`cat-${cat.id}`}
+                      id={`project-form-cat-${cat.id}`}
                       type="checkbox"
                       checked={value.includes(cat.id)}
                       onChange={(e) => {
@@ -151,14 +109,12 @@ export function ProjectFormFields({
                           field.onChange(value.filter((id) => id !== cat.id));
                         }
                       }}
-                      className="h-4 w-4 rounded"
+                      className={checkboxClass}
                       aria-describedby={
-                        form.formState.errors.categoryIds
-                          ? 'categoryIds-error'
-                          : undefined
+                        errors.categoryIds ? 'categoryIds-error' : undefined
                       }
                     />
-                    <label htmlFor={`cat-${cat.id}`} className="text-sm">
+                    <label htmlFor={`project-form-cat-${cat.id}`} className="text-sm">
                       {cat.title}
                     </label>
                   </div>
@@ -167,14 +123,14 @@ export function ProjectFormFields({
             );
           }}
         />
-        {form.formState.errors.categoryIds && (
-          <p id="categoryIds-error" className="mt-1 text-sm text-red-600">
-            {form.formState.errors.categoryIds.message}
+        {errors.categoryIds && (
+          <p id="categoryIds-error" className="mt-1 text-sm text-red-500">
+            {errors.categoryIds.message}
           </p>
         )}
       </div>
       {formError && (
-        <p className="text-sm text-red-600" role="alert">
+        <p className="text-sm text-red-500" role="alert">
           {formError}
         </p>
       )}
