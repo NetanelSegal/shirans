@@ -32,6 +32,8 @@ export const errorMessagesMap = {
     'imageIds must list every project image exactly once',
   'VALIDATION.UPLOAD_METADATA_FILE_COUNT_MISMATCH':
     'metadata array length must match the number of uploaded files',
+  'VALIDATION.MAIN_IMAGE_ALREADY_EXISTS':
+    'A main image already exists; remove it before uploading a new one',
 
   'NOT_FOUND.USER_NOT_FOUND': 'User not found',
   'NOT_FOUND.PROJECT_NOT_FOUND': 'Project not found',

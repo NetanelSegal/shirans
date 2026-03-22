@@ -9,7 +9,9 @@ import {
   ADMIN_UPLOADABLE_PROJECT_IMAGE_TYPES,
   type AdminUploadableProjectImageType,
 } from '@/utils/adminProjectImageUpload';
-import type { ProjectResponse, ProjectImageType } from '@shirans/shared';
+import { getClientErrorMessage } from '@/constants/errorMessages';
+import { transformError } from '@/utils/errorHandler';
+import type { ErrorKey, ProjectResponse, ProjectImageType } from '@shirans/shared';
 
 interface ProjectImagesManagerProps {
   project: ProjectResponse | null;
@@ -22,6 +24,8 @@ const IMAGE_TYPE_LABELS: Record<ProjectImageType, string> = {
   PLAN: 'תוכנית',
   VIDEO: 'סרטון',
 };
+
+type GalleryImageType = 'MAIN' | 'IMAGE' | 'PLAN' | 'VIDEO';
 
 export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerProps) {
   const { uploadImages, deleteMainImage } = useAdminProjects();
@@ -49,18 +53,17 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
     [handleFilesSelected, isBusy],
   );
 
-  const handleDeleteImage = useCallback(
-    async (imageUrl: string, type: string) => {
+  const handleDeleteMainImage = useCallback(
+    async (imageUrl: string) => {
       if (!project) return;
       setError(null);
       setDeletingIds((prev) => new Set(prev).add(imageUrl));
 
       try {
-        if (type === 'MAIN') {
-          await deleteMainImage({ id: project.id });
-        }
+        await deleteMainImage({ id: project.id });
       } catch (err) {
-        setError((err as Error)?.message ?? 'מחיקה נכשלה');
+        const app = transformError(err);
+        setError(getClientErrorMessage(app.errorKey as ErrorKey));
       } finally {
         setDeletingIds((prev) => {
           const next = new Set(prev);
@@ -78,7 +81,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
 
   if (!project) return null;
 
-  const allImages = [
+  const allImages: Array<{ url: string; type: GalleryImageType }> = [
     ...(project.mainImage ? [{ url: project.mainImage, type: 'MAIN' as const }] : []),
     ...project.images.map((url) => ({ url, type: 'IMAGE' as const })),
     ...(project.plans ?? []).map((url) => ({ url, type: 'PLAN' as const })),
@@ -104,6 +107,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
             onClick={safeClose}
             disabled={isBusy}
             className="!px-2 !py-1 text-lg leading-none"
+            ariaLabel="סגור"
           >
             ×
           </Button>
@@ -117,8 +121,14 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
 
         <div className="mb-6">
           <div className="mb-3 flex items-center gap-3">
-            <label className="text-sm font-medium">סוג:</label>
+            <label
+              htmlFor="project-image-upload-type"
+              className="text-sm font-medium"
+            >
+              סוג:
+            </label>
             <select
+              id="project-image-upload-type"
               value={selectedType}
               onChange={(e) =>
                 setSelectedType(e.target.value as AdminUploadableProjectImageType)
@@ -137,16 +147,26 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
           <div
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
-            className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors ${isBusy ? 'cursor-wait border-gray-200 bg-gray-100' : 'cursor-pointer border-gray-300 bg-gray-50 hover:border-primary/50 hover:bg-gray-100'}`}
-            onClick={isBusy ? undefined : () => fileInputRef.current?.click()}
+            role="region"
+            aria-label="אזור גרירת קבצים להעלאה"
+            className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors ${isBusy ? 'border-gray-200 bg-gray-100' : 'border-gray-300 bg-gray-50'}`}
           >
-            <i className="fa-solid fa-cloud-arrow-up mb-2 text-3xl text-gray-400" />
+            <i className="fa-solid fa-cloud-arrow-up mb-2 text-3xl text-gray-400" aria-hidden />
             <p className="text-sm text-gray-600">
-              {uploading ? 'מעלה ומעבד תמונות...' : 'גרור קבצים לכאן או לחץ לבחירה'}
+              {uploading ? 'מעלה ומעבד תמונות...' : 'גרור קבצים לכאן'}
             </p>
-            <p className="mt-1 text-xs text-gray-400">
+            <p className="mt-1 mb-3 text-xs text-gray-400">
               JPEG, PNG, WebP, HEIC · עד 20 קבצים
             </p>
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={isBusy}
+              className="text-sm"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              בחר קבצים
+            </Button>
           </div>
           <input
             ref={fileInputRef}
@@ -163,15 +183,15 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
             {allImages.map((img) => (
-              <div key={img.url} className="group relative overflow-hidden rounded-lg">
+              <div key={img.url} className="relative overflow-hidden rounded-lg">
                 {img.type === 'VIDEO' ? (
                   <div className="flex aspect-video items-center justify-center bg-gray-100">
-                    <i className="fa-solid fa-video text-2xl text-gray-400" />
+                    <i className="fa-solid fa-video text-2xl text-gray-400" aria-hidden />
                   </div>
                 ) : (
                   <Image
                     src={img.url}
-                    alt=""
+                    alt={`${project.title} — ${IMAGE_TYPE_LABELS[img.type]}`}
                     className="aspect-video w-full object-cover"
                   />
                 )}
@@ -179,14 +199,16 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
                   {IMAGE_TYPE_LABELS[img.type]}
                 </span>
                 {img.type === 'MAIN' && (
-                  <button
-                    onClick={() => handleDeleteImage(img.url, img.type)}
+                  <Button
+                    type="button"
+                    variant="danger"
+                    ariaLabel="מחק תמונה ראשית"
+                    onClick={() => handleDeleteMainImage(img.url)}
                     disabled={deletingIds.has(img.url)}
-                    className="absolute top-1 left-1 rounded bg-red-500/80 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-red-600"
-                    aria-label="מחק תמונה"
+                    className="absolute top-1 left-1 !min-h-0 !min-w-0 !px-2 !py-1.5"
                   >
-                    <i className="fa-solid fa-trash text-xs" />
-                  </button>
+                    <i className="fa-solid fa-trash text-xs" aria-hidden />
+                  </Button>
                 )}
               </div>
             ))}

@@ -1,5 +1,10 @@
 import image404src from '@/assets/Image_404.svg';
-import { ImgHTMLAttributes, SyntheticEvent, useState } from 'react';
+import {
+  ImgHTMLAttributes,
+  SyntheticEvent,
+  useEffect,
+  useState,
+} from 'react';
 
 interface ImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   src: string;
@@ -7,6 +12,10 @@ interface ImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
 
 export default function Image({ src, ...rest }: ImageProps) {
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(true);
+  }, [src]);
 
   return (
     <img

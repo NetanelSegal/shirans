@@ -35,6 +35,8 @@ export const ERROR_MESSAGES = {
     'יש לכלול את כל תמונות הפרויקט בסדר החדש, בדיוק פעם אחת לכל תמונה',
   'VALIDATION.UPLOAD_METADATA_FILE_COUNT_MISMATCH':
     'מספר פריטי המטא-דאטה חייב להתאים למספר הקבצים שהועלו',
+  'VALIDATION.MAIN_IMAGE_ALREADY_EXISTS':
+    'כבר קיימת תמונה ראשית. מחק אותה לפני העלאת חדשה',
 
   'NOT_FOUND.USER_NOT_FOUND': 'משתמש לא נמצא',
   'NOT_FOUND.PROJECT_NOT_FOUND': 'פרוייקט לא נמצא',

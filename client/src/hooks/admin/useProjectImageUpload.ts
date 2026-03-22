@@ -1,7 +1,8 @@
 import { useState, useCallback, type RefObject } from 'react';
-import { IMAGE_UPLOAD } from '@shirans/shared';
-import type { ProjectResponse } from '@shirans/shared';
+import { ERROR_KEYS, IMAGE_UPLOAD, type ErrorKey, type ProjectResponse } from '@shirans/shared';
 import type { UploadProjectImagesInput } from '@/services/admin/projects.service';
+import { getClientErrorMessage } from '@/constants/errorMessages';
+import { transformError } from '@/utils/errorHandler';
 import {
   filterAdminImageUploadFiles,
   type AdminUploadableProjectImageType,
@@ -26,17 +27,19 @@ export function useProjectImageUpload(
 
       const { valid, rejected } = filterAdminImageUploadFiles(Array.from(files));
       if (valid.length === 0) {
-        setError('אף קובץ לא תקין. מותר: JPEG, PNG, WebP, HEIC, HEIF');
+        setError(getClientErrorMessage(ERROR_KEYS.VALIDATION.INVALID_FILE_TYPE));
         return;
       }
 
       if (valid.length > IMAGE_UPLOAD.MAX_FILES_PER_REQUEST) {
-        setError(`מותר עד ${IMAGE_UPLOAD.MAX_FILES_PER_REQUEST} קבצים בבת אחת`);
+        setError(getClientErrorMessage(ERROR_KEYS.VALIDATION.TOO_MANY_FILES));
         return;
       }
 
       if (selectedType === 'MAIN' && project.mainImage) {
-        setError('כבר קיימת תמונה ראשית. מחק אותה לפני העלאת חדשה');
+        setError(
+          getClientErrorMessage(ERROR_KEYS.VALIDATION.MAIN_IMAGE_ALREADY_EXISTS),
+        );
         return;
       }
 
@@ -54,10 +57,13 @@ export function useProjectImageUpload(
         });
 
         if (rejected > 0) {
-          setError(`${rejected} קבצים נדחו (סוג לא נתמך)`);
+          setError(
+            `${rejected} קבצים נדחו — ${getClientErrorMessage(ERROR_KEYS.VALIDATION.INVALID_FILE_TYPE)}`,
+          );
         }
       } catch (err) {
-        setError((err as Error)?.message ?? 'העלאה נכשלה');
+        const app = transformError(err);
+        setError(getClientErrorMessage(app.errorKey as ErrorKey));
       } finally {
         setUploading(false);
         if (fileInputRef.current) fileInputRef.current.value = '';
