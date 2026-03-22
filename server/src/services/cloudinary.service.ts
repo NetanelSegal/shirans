@@ -1,5 +1,8 @@
 import cloudinary from '../config/cloudinary';
 import logger from '../middleware/logger';
+import { HttpError } from '../middleware/errorHandler';
+import { HTTP_STATUS } from '../constants/httpStatus';
+import { getServerErrorMessage } from '@/constants/errorMessages';
 
 export interface CloudinaryUploadResult {
   url: string;
@@ -26,7 +29,12 @@ export async function uploadImage(
       (error, result) => {
         if (error || !result) {
           logger.error('Cloudinary upload failed', { error, folder });
-          return reject(error ?? new Error('No result from Cloudinary'));
+          return reject(
+            new HttpError(
+              HTTP_STATUS.INTERNAL_SERVER_ERROR,
+              getServerErrorMessage('SERVER.PROJECT.CLOUDINARY_UPLOAD_FAILED'),
+            ),
+          );
         }
         resolve({ url: result.secure_url, publicId: result.public_id });
       },
@@ -41,7 +49,13 @@ export async function deleteImage(publicId: string): Promise<void> {
     await cloudinary.uploader.destroy(publicId, { resource_type: 'image' });
   } catch (error) {
     logger.error('Cloudinary delete failed', { error, publicId });
-    throw error;
+    if (error instanceof HttpError) {
+      throw error;
+    }
+    throw new HttpError(
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      getServerErrorMessage('SERVER.PROJECT.CLOUDINARY_DELETE_FAILED'),
+    );
   }
 }
 
@@ -52,6 +66,12 @@ export async function deleteImages(publicIds: string[]): Promise<void> {
     await cloudinary.api.delete_resources(publicIds, { resource_type: 'image' });
   } catch (error) {
     logger.error('Cloudinary bulk delete failed', { error, publicIds });
-    throw error;
+    if (error instanceof HttpError) {
+      throw error;
+    }
+    throw new HttpError(
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      getServerErrorMessage('SERVER.PROJECT.CLOUDINARY_DELETE_FAILED'),
+    );
   }
 }

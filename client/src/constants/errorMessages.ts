@@ -76,6 +76,7 @@ export const ERROR_MESSAGES = {
   'SERVER.PROJECT.DELETE_MAIN_IMAGE_FAILED': 'מחיקת תמונה ראשית נכשלה',
   'SERVER.PROJECT.REORDER_IMAGES_FAILED': 'סידור מחדש של תמונות נכשל',
   'SERVER.PROJECT.CLOUDINARY_UPLOAD_FAILED': 'העלאת תמונה לאחסון ענן נכשלה',
+  'SERVER.PROJECT.CLOUDINARY_DELETE_FAILED': 'מחיקת תמונה מאחסון ענן נכשלה',
 
   'SERVER.CATEGORY.CREATE_FAILED': 'שגיאת שרת',
   'SERVER.CATEGORY.UPDATE_FAILED': 'שגיאת שרת',

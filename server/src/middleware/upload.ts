@@ -10,7 +10,7 @@ function fileFilter(
   _req: Express.Request,
   file: Express.Multer.File,
   cb: multer.FileFilterCallback,
-) {
+): void {
   if (
     (IMAGE_UPLOAD.ALLOWED_MIME_TYPES as readonly string[]).includes(
       file.mimetype,

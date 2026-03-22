@@ -89,6 +89,8 @@ export const errorMessagesMap = {
   'SERVER.PROJECT.REORDER_IMAGES_FAILED': 'Failed to reorder project images',
   'SERVER.PROJECT.CLOUDINARY_UPLOAD_FAILED':
     'Failed to upload image to cloud storage',
+  'SERVER.PROJECT.CLOUDINARY_DELETE_FAILED':
+    'Failed to delete image from cloud storage',
 
   'SERVER.TESTIMONIAL.CREATE_FAILED': 'Failed to create testimonial',
   'SERVER.TESTIMONIAL.DELETE_FAILED': 'Failed to delete testimonial',

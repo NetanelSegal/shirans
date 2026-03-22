@@ -32,7 +32,15 @@ export const projectImageService = {
 
       const uploadResults = await Promise.allSettled(
         files.map(async (file, i) => {
-          const meta = metadata[i]!;
+          const meta = metadata.at(i);
+          if (meta === undefined) {
+            throw new HttpError(
+              HTTP_STATUS.BAD_REQUEST,
+              getServerErrorMessage(
+                'VALIDATION.UPLOAD_METADATA_FILE_COUNT_MISMATCH',
+              ),
+            );
+          }
           const folder = `shirans/projects/${id}/${meta.type.toLowerCase()}`;
           const compressed = await compressImageBuffer(file.buffer);
           const result = await cloudinaryService.uploadImage(compressed, folder);
@@ -61,6 +69,11 @@ export const projectImageService = {
           failedCount: failed.length,
           id,
         });
+        const first = failed[0];
+        const reason = first?.status === 'rejected' ? first.reason : undefined;
+        if (reason instanceof HttpError) {
+          throw reason;
+        }
         throw new HttpError(
           HTTP_STATUS.INTERNAL_SERVER_ERROR,
           getServerErrorMessage('SERVER.PROJECT.CLOUDINARY_UPLOAD_FAILED'),

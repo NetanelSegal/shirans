@@ -247,6 +247,9 @@ export const projectService = {
 
       await projectRepository.delete(id);
     } catch (error) {
+      if (error instanceof HttpError) {
+        throw error;
+      }
       if (error && typeof error === 'object' && 'code' in error) {
         const prismaError = error as { code: string };
         if (prismaError.code === 'P2025') {
