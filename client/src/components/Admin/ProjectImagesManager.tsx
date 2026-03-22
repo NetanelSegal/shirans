@@ -4,10 +4,10 @@ import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import { useAdminProjects } from '@/hooks/admin/useAdminProjects';
 import { useProjectImageUpload } from '@/hooks/admin/useProjectImageUpload';
-import { ADMIN_IMAGE_UPLOAD_MIME_TYPES } from '@/utils/adminProjectImageUpload';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { transformError } from '@/utils/errorHandler';
 import {
+  IMAGE_UPLOAD,
   PROJECT_IMAGE_TYPE_LABELS_HE,
   PROJECT_IMAGE_TYPES_UPLOADABLE,
   type ErrorKey,
@@ -82,7 +82,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
     ...(project.videos ?? []).map((url) => ({ url, type: 'VIDEO' as const })),
   ];
 
-  const acceptedTypes = ADMIN_IMAGE_UPLOAD_MIME_TYPES.join(',');
+  const acceptedTypes = IMAGE_UPLOAD.ALLOWED_MIME_TYPES.join(',');
 
   return (
     <Modal
