@@ -1,8 +1,7 @@
 import Image from '@/components/ui/Image';
-import type { ResponsiveImage } from '@shirans/shared';
 
 interface IImageClickModalProps {
-  img: string | ResponsiveImage;
+  img: string;
   onClick?: () => void;
   imageClassname?: string;
 }
@@ -12,13 +11,11 @@ export default function ImageClickModal({
   onClick = () => {},
   imageClassname = '',
 }: IImageClickModalProps) {
-  const altText = typeof img === 'string' ? img : img.desktop;
-  
   return (
     <Image
       onClick={onClick}
       src={img}
-      alt={altText}
+      alt={img}
       className={`${imageClassname}`}
     />
   );

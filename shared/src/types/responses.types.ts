@@ -1,4 +1,4 @@
-import type { UserRole, CategoryUrlCode, ResponsiveImage } from './common.types';
+import type { UserRole, CategoryUrlCode } from './common.types';
 
 export interface UserResponse {
   id: string;
@@ -14,9 +14,9 @@ export interface ProjectResponse {
   title: string;
   categories: CategoryUrlCode[];
   description: string;
-  mainImage: string | ResponsiveImage;
-  images: (string | ResponsiveImage)[];
-  plans?: (string | ResponsiveImage)[];
+  mainImage: string;
+  images: string[];
+  plans?: string[];
   videos?: string[];
   location: string;
   client: string;

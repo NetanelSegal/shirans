@@ -28,14 +28,4 @@ export const commonSchemas = {
     description: 'URL-safe code for the category (e.g. privateHouses, apartments)',
     pattern: '^[a-zA-Z][a-zA-Z0-9]*$',
   },
-  ResponsiveImage: {
-    type: 'object',
-    properties: {
-      mobile: { type: 'string', format: 'uri' },
-      tablet: { type: 'string', format: 'uri' },
-      desktop: { type: 'string', format: 'uri' },
-      fallback: { type: 'string', format: 'uri' },
-    },
-    required: ['desktop'],
-  },
 } as const;

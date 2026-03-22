@@ -21,29 +21,14 @@ export const projectSchemas = {
         items: { $ref: '#/components/schemas/CategoryUrlCode' },
       },
       description: { type: 'string' },
-      mainImage: {
-        oneOf: [
-          { type: 'string', format: 'uri' },
-          { $ref: '#/components/schemas/ResponsiveImage' },
-        ],
-      },
+      mainImage: { type: 'string', format: 'uri' },
       images: {
         type: 'array',
-        items: {
-          oneOf: [
-            { type: 'string', format: 'uri' },
-            { $ref: '#/components/schemas/ResponsiveImage' },
-          ],
-        },
+        items: { type: 'string', format: 'uri' },
       },
       plans: {
         type: 'array',
-        items: {
-          oneOf: [
-            { type: 'string', format: 'uri' },
-            { $ref: '#/components/schemas/ResponsiveImage' },
-          ],
-        },
+        items: { type: 'string', format: 'uri' },
       },
       videos: {
         type: 'array',
@@ -121,15 +106,36 @@ export const projectSchemas = {
   },
   UploadImagesRequest: {
     type: 'object',
+    description:
+      'Multipart form: files (binary array), id (CUID string), metadata (JSON string). metadata must be a JSON array with the same length as files.',
     properties: {
       id: { type: 'string', format: 'cuid' },
-      images: {
+      files: {
         type: 'array',
-        items: { $ref: '#/components/schemas/ImageInput' },
-        minItems: 1,
+        items: { type: 'string', format: 'binary' },
+      },
+      metadata: {
+        type: 'string',
+        description:
+          'JSON array of {type, order?} — one entry per file, same order as files',
       },
     },
-    required: ['id', 'images'],
+    required: ['id', 'files', 'metadata'],
+  },
+  ReorderImagesRequest: {
+    type: 'object',
+    description:
+      'imageIds must list every image on the project exactly once (full permutation). IDs must be unique.',
+    properties: {
+      id: { type: 'string', format: 'cuid' },
+      imageIds: {
+        type: 'array',
+        items: { type: 'string', format: 'cuid' },
+        minItems: 1,
+        uniqueItems: true,
+      },
+    },
+    required: ['id', 'imageIds'],
   },
   DeleteProjectRequest: {
     type: 'object',

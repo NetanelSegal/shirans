@@ -9,7 +9,7 @@ This rule applies to all frontend code in `client/src/`. It prioritizes performa
 
 ## 1. Design System & Styling
 - **Theme**: Premium architectural aesthetic. Use the "Assistant" font family.
-- **Components**: Use ONLY `client/src/components/ui/` for primitive elements. Avoid raw HTML tags for styled elements.
+- **Components**: Use ONLY `client/src/components/ui/` for primitive elements. **Never use raw `<button>` or `<img>` tags** — always use the `Button` and `Image` components from `client/src/components/ui/`.
 - **Tailwind 3**: Use utility classes for all styling. Refer to `client/tailwind.config.js` for custom colors and spacing.
 - **RTL Support**: Default to Hebrew layout (`dir="rtl"`). Ensure text alignment (`text-right`), margins (`ml` instead of `mr`), and padding are handled correctly for RTL.
 - **Responsive Design**: Mobile-first approach. Verify all layouts on mobile (mobile-vid-hero) and desktop.

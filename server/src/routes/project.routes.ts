@@ -9,40 +9,29 @@ import {
   deleteProject,
   deleteMainImage,
   deleteProjectImages,
+  reorderProjectImages,
 } from '../controllers/project.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { requireAdmin } from '../middleware/authorize.middleware';
 import { adminMutationLimiter } from '../middleware/rateLimiter';
+import { uploadImages } from '../middleware/upload';
 
 const router = Router();
 
 // Public routes (no authentication required)
-// GET /api/projects - Get all projects with optional filters
 router.get('/', getAllProjects);
-
-// GET /api/projects/favourites - Get all favourite projects
 router.get('/favourites', getFavouriteProjects);
-
-// GET /api/projects/single - Get single project by ID (query param: ?id=xxx)
 router.get('/single', getProjectById);
 
 // Protected admin routes (require authentication and ADMIN role)
-// POST /api/projects - Create a new project
 router.post('/', adminMutationLimiter, authenticate, requireAdmin, createProject);
-
-// PUT /api/projects - Update project (body contains id)
 router.put('/', adminMutationLimiter, authenticate, requireAdmin, updateProject);
-
-// DELETE /api/projects - Delete a project (body contains id)
 router.delete('/', adminMutationLimiter, authenticate, requireAdmin, deleteProject);
 
-// POST /api/projects/uploadImgs - Upload images to project
-router.post('/uploadImgs', adminMutationLimiter, authenticate, requireAdmin, uploadProjectImages);
-
-// DELETE /api/projects/deleteMainImage - Delete main image from project
+// Image management (admin only)
+router.post('/uploadImgs', adminMutationLimiter, authenticate, requireAdmin, uploadImages, uploadProjectImages);
 router.delete('/deleteMainImage', adminMutationLimiter, authenticate, requireAdmin, deleteMainImage);
-
-// DELETE /api/projects/deleteImages - Delete specific images from project
 router.delete('/deleteImages', adminMutationLimiter, authenticate, requireAdmin, deleteProjectImages);
+router.patch('/reorderImages', adminMutationLimiter, authenticate, requireAdmin, reorderProjectImages);
 
 export default router;

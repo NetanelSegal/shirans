@@ -9,8 +9,8 @@ import { Fragment } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import { Helmet } from 'react-helmet-async';
-import type { ResponsiveImage } from '@shirans/shared';
 import { BASE_URL } from '@/constants/urls';
+import { resolveImageUrl } from '@/utils/imageUrl';
 import { LoadingState, ErrorState } from '@/components/DataState';
 import { fetchProject } from '@/services/projects.service';
 import { transformError } from '@/utils/errorHandler';
@@ -68,15 +68,7 @@ export default function Project() {
 
   if (!project) return <Navigate to='/projects' />;
 
-  // Get image URL for metadata
-  const getImageUrl = (img: string | ResponsiveImage): string => {
-    if (typeof img === 'string') {
-      return img.startsWith('http') ? img : `${BASE_URL}/assets/${img}`;
-    }
-    return img.desktop.startsWith('http') ? img.desktop : `${BASE_URL}/assets/${img.desktop}`;
-  };
-
-  const ogImage = getImageUrl(project.mainImage);
+  const ogImage = resolveImageUrl(project.mainImage);
   const ogUrl = `${BASE_URL}/projects/${project.id}`;
   const description = project.description.split('\n')[0].substring(0, 160) + '...';
   const title = `${project.title} - שירן גלעד אדריכלות ועיצוב פנים`;

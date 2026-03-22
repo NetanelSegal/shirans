@@ -42,21 +42,8 @@ describe('Swagger Schema Definitions', () => {
       expect(commonSchemas.CategoryUrlCode.pattern).toBeDefined();
     });
 
-    it('should define ResponsiveImage with desktop as required', () => {
-      expect(commonSchemas.ResponsiveImage).toBeDefined();
-      expect(commonSchemas.ResponsiveImage.required).toContain('desktop');
-      expect(commonSchemas.ResponsiveImage.properties).toHaveProperty(
-        'mobile',
-      );
-      expect(commonSchemas.ResponsiveImage.properties).toHaveProperty(
-        'tablet',
-      );
-      expect(commonSchemas.ResponsiveImage.properties).toHaveProperty(
-        'desktop',
-      );
-      expect(commonSchemas.ResponsiveImage.properties).toHaveProperty(
-        'fallback',
-      );
+    it('should not define ResponsiveImage (removed in favour of plain string URLs)', () => {
+      expect((commonSchemas as Record<string, unknown>).ResponsiveImage).toBeUndefined();
     });
   });
 
@@ -151,9 +138,14 @@ describe('Swagger Schema Definitions', () => {
       ]);
     });
 
-    it('should define UploadImagesRequest with id and images required', () => {
+    it('should define UploadImagesRequest for multipart (id, files, metadata)', () => {
       const schema = projectSchemas.UploadImagesRequest;
-      expect(schema.required).toEqual(['id', 'images']);
+      expect(schema.required).toEqual(['id', 'files', 'metadata']);
+    });
+
+    it('should define ReorderImagesRequest with id and imageIds required', () => {
+      const schema = projectSchemas.ReorderImagesRequest;
+      expect(schema.required).toEqual(['id', 'imageIds']);
     });
 
     it('should define DeleteProjectRequest with id required', () => {
@@ -371,6 +363,13 @@ describe('Swagger Path Definitions', () => {
       expect(path.responses['200']).toBeDefined();
     });
 
+    it('should define PATCH /api/projects/reorderImages with admin auth', () => {
+      const path = projectsPaths['/api/projects/reorderImages'].patch;
+      expect(path.security).toEqual([{ bearerAuth: [] }]);
+      expect(path.requestBody).toBeDefined();
+      expect(path.responses['200']).toBeDefined();
+    });
+
     it('should define DELETE /api/projects/deleteMainImage with admin auth', () => {
       const path = projectsPaths['/api/projects/deleteMainImage'].delete;
       expect(path.security).toEqual([{ bearerAuth: [] }]);
@@ -548,8 +547,8 @@ describe('Swagger Spec Completeness', () => {
         }
       }
     }
-    // health(1) + auth(5) + projects(9) + categories(5) + contact(7) + testimonials(9) = 36
-    expect(operationCount).toBe(36);
+    // health(1) + auth(5) + projects(10) + categories(5) + contact(7) + testimonials(9) = 37
+    expect(operationCount).toBe(37);
   });
 
   it('should have all expected path groups', () => {
@@ -564,6 +563,7 @@ describe('Swagger Spec Completeness', () => {
     expect(pathKeys).toContain('/api/projects/favourites');
     expect(pathKeys).toContain('/api/projects/single');
     expect(pathKeys).toContain('/api/projects/uploadImgs');
+    expect(pathKeys).toContain('/api/projects/reorderImages');
     expect(pathKeys).toContain('/api/projects/deleteMainImage');
     expect(pathKeys).toContain('/api/projects/deleteImages');
     expect(pathKeys).toContain('/api/categories');
@@ -587,7 +587,6 @@ describe('Swagger Spec Completeness', () => {
       'MessageResponse',
       'UserRole',
       'CategoryUrlCode',
-      'ResponsiveImage',
       'RegisterRequest',
       'LoginRequest',
       'UserResponse',
@@ -598,6 +597,7 @@ describe('Swagger Spec Completeness', () => {
       'UpdateProjectRequest',
       'ImageInput',
       'UploadImagesRequest',
+      'ReorderImagesRequest',
       'DeleteProjectRequest',
       'DeleteMainImageRequest',
       'DeleteImagesRequest',

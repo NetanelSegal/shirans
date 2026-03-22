@@ -1,17 +1,19 @@
 import type { Request, Response } from 'express';
 import { projectService } from '../services/project.service';
+import { projectImageService } from '../services/projectImage.service';
 import type { ProjectFilters } from '../repositories/project.repository';
 import {
   createProjectSchema,
   updateProjectSchema,
   projectQuerySchema,
   singleProjectQuerySchema,
-  uploadImagesSchema,
   deleteProjectSchema,
   deleteMainImageSchema,
   deleteImagesSchema,
+  reorderImagesSchema,
 } from '@shirans/shared';
 import { validateRequest } from '../utils/validation';
+import { parseProjectImageUploadRequest } from '../utils/parseProjectImageUploadRequest';
 
 /**
  * Create a new project
@@ -94,18 +96,18 @@ export async function updateProject(
 }
 
 /**
- * Upload images to a project
- * POST /api/projects/uploadImgs
- * Body: UploadImagesInput
+ * Upload images to a project via multipart/form-data.
+ * Fields: files (binary), id (string), metadata (JSON array of {type, order?}).
  */
 export async function uploadProjectImages(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const validatedData = validateRequest(uploadImagesSchema, req.body);
-  const updatedProject = await projectService.uploadProjectImages(
-    validatedData.id,
-    validatedData.images
+  const { id, files, metadata } = parseProjectImageUploadRequest(req);
+  const updatedProject = await projectImageService.uploadProjectImages(
+    id,
+    files,
+    metadata,
   );
   return res.status(200).json(updatedProject);
 }
@@ -134,7 +136,7 @@ export async function deleteMainImage(
   res: Response
 ): Promise<Response> {
   const { id } = validateRequest(deleteMainImageSchema, req.body);
-  await projectService.deleteMainImage(id);
+  await projectImageService.deleteMainImage(id);
   return res.status(200).json({ message: 'Main image deleted successfully' });
 }
 
@@ -148,6 +150,20 @@ export async function deleteProjectImages(
   res: Response
 ): Promise<Response> {
   const { id, imageIds } = validateRequest(deleteImagesSchema, req.body);
-  await projectService.deleteProjectImages(id, imageIds);
+  await projectImageService.deleteProjectImages(id, imageIds);
   return res.status(200).json({ message: 'Images deleted successfully' });
+}
+
+/**
+ * Reorder images within a project.
+ * PATCH /api/projects/reorderImages
+ * Body: { id, imageIds } — imageIds in desired order.
+ */
+export async function reorderProjectImages(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  const { id, imageIds } = validateRequest(reorderImagesSchema, req.body);
+  const updatedProject = await projectImageService.reorderImages(id, imageIds);
+  return res.status(200).json(updatedProject);
 }

@@ -8,6 +8,8 @@ import { DataTable } from '@/components/Admin/DataTable';
 import { FormModal } from '@/components/Admin/FormModal';
 import { ConfirmDialog } from '@/components/Admin/ConfirmDialog';
 import { DataStateGuard } from '@/components/DataState';
+import { ProjectImagesManager } from '@/components/Admin/ProjectImagesManager';
+import Button from '@/components/ui/Button';
 import type {
   ProjectResponse,
   CreateProjectInput,
@@ -32,6 +34,7 @@ export default function ProjectsManagement() {
     null
   );
   const [deleteTarget, setDeleteTarget] = useState<ProjectResponse | null>(null);
+  const [imagesTarget, setImagesTarget] = useState<ProjectResponse | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -430,22 +433,33 @@ export default function ProjectsManagement() {
               getRowId={(row) => row.id}
               actions={(row) => (
                 <div className="flex gap-2">
-                  <button
+                  <Button
                     type="button"
+                    variant="info"
+                    onClick={() => setImagesTarget(row)}
+                    className="!rounded-lg !px-3 !py-1.5 text-sm font-medium"
+                    ariaLabel={`תמונות ${row.title}`}
+                  >
+                    תמונות
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="primary"
                     onClick={() => handleOpenEdit(row)}
-                    className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary/90"
-                    aria-label={`ערוך ${row.title}`}
+                    className="!rounded-lg !px-3 !py-1.5 text-sm font-medium"
+                    ariaLabel={`ערוך ${row.title}`}
                   >
                     עריכה
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
+                    variant="danger"
                     onClick={() => setDeleteTarget(row)}
-                    className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
-                    aria-label={`מחק ${row.title}`}
+                    className="!rounded-lg !px-3 !py-1.5 text-sm font-medium"
+                    ariaLabel={`מחק ${row.title}`}
                   >
                     מחיקה
-                  </button>
+                  </Button>
                 </div>
               )}
             />
@@ -465,6 +479,10 @@ export default function ProjectsManagement() {
         }
         confirmLabel="מחק"
         isLoading={isDeleting}
+      />
+      <ProjectImagesManager
+        project={imagesTarget}
+        onClose={() => setImagesTarget(null)}
       />
     </div>
   );

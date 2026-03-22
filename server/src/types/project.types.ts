@@ -1,8 +1,7 @@
 import type { Prisma } from '@prisma/client';
-import type { CategoryUrlCode, ResponsiveImage, ProjectResponse } from '@shirans/shared';
+import type { CategoryUrlCode, ProjectResponse } from '@shirans/shared';
 
-// Re-export shared types for convenience
-export type { ResponsiveImage, ProjectResponse } from '@shirans/shared';
+export type { ProjectResponse } from '@shirans/shared';
 
 /**
  * Project with relations from Prisma
@@ -37,6 +36,7 @@ export interface UpdateProjectInput {
  */
 export interface ImageInput {
   url: string;
+  publicId?: string;
   type: 'MAIN' | 'IMAGE' | 'PLAN' | 'VIDEO';
   order?: number;
 }
@@ -50,21 +50,12 @@ export interface ProjectQueryParams {
   isCompleted?: string;
 }
 
-/**
- * Transform Prisma project model to frontend IProject format
- * @param project - Project with relations from Prisma
- * @returns ProjectResponse matching frontend IProject interface
- */
 export function transformProjectToResponse(
   project: ProjectWithRelations
 ): ProjectResponse {
-  // Extract main image (type MAIN)
   const mainImageObj = project.images.find((img) => img.type === 'MAIN');
-  const mainImage: string | ResponsiveImage = mainImageObj
-    ? mainImageObj.url
-    : '';
+  const mainImage = mainImageObj ? mainImageObj.url : '';
 
-  // Separate images by type
   const regularImages = project.images
     .filter((img) => img.type === 'IMAGE')
     .map((img) => img.url);
@@ -77,7 +68,6 @@ export function transformProjectToResponse(
     .filter((img) => img.type === 'VIDEO')
     .map((img) => img.url);
 
-  // Extract category URL codes
   const categories: CategoryUrlCode[] = project.categories.map(
     (cat) => cat.urlCode
   );
@@ -101,11 +91,6 @@ export function transformProjectToResponse(
   };
 }
 
-/**
- * Transform array of Prisma projects to frontend format
- * @param projects - Array of projects with relations from Prisma
- * @returns Array of ProjectResponse
- */
 export function transformProjectsToResponse(
   projects: ProjectWithRelations[]
 ): ProjectResponse[] {

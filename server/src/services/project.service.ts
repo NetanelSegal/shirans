@@ -5,7 +5,6 @@ import {
 import {
   type ProjectResponse,
   type UpdateProjectInput,
-  type ImageInput,
   transformProjectToResponse,
   transformProjectsToResponse,
 } from '../types/project.types';
@@ -15,6 +14,7 @@ import { getServerErrorMessage } from '@/constants/errorMessages';
 import { Prisma } from '@prisma/client';
 import { ProjectImageType } from '@prisma/client';
 import logger from '../middleware/logger';
+import * as cloudinaryService from './cloudinary.service';
 
 /**
  * Project Service
@@ -198,11 +198,17 @@ export const projectService = {
       return transformProjectToResponse(updatedProject);
     } catch (error) {
       if (error && typeof error === 'object' && 'code' in error) {
-        const prismaError = error as { code: string; meta?: Record<string, unknown> };
+        const prismaError = error as {
+          code: string;
+          meta?: Record<string, unknown>;
+        };
         if (prismaError.code === 'P2025') {
           // Differentiate between project not found and category not found
           const cause = prismaError.meta?.cause;
-          if (typeof cause === 'string' && cause.toLowerCase().includes('category')) {
+          if (
+            typeof cause === 'string' &&
+            cause.toLowerCase().includes('category')
+          ) {
             throw new HttpError(
               HTTP_STATUS.NOT_FOUND,
               getServerErrorMessage('NOT_FOUND.CATEGORY_NOT_FOUND'),
@@ -223,103 +229,27 @@ export const projectService = {
   },
 
   /**
-   * Upload images to a project
-   * @param id - Project ID
-   * @param images - Array of image inputs
-   * @returns Updated project in frontend format
-   * @throws HttpError 404 if project not found
-   */
-  async uploadProjectImages(
-    id: string,
-    images: ImageInput[],
-  ): Promise<ProjectResponse> {
-    try {
-      // Verify project exists
-      const project = await projectRepository.findById(id);
-      if (!project) {
-        throw new HttpError(
-          HTTP_STATUS.NOT_FOUND,
-          getServerErrorMessage('NOT_FOUND.PROJECT_NOT_FOUND'),
-        );
-      }
-
-      // Create image records
-      await projectRepository.addImages(id, images.map((img) => ({
-        url: img.url,
-        type: img.type as ProjectImageType,
-        order: img.order ?? 0,
-      })));
-
-      // Fetch updated project
-      const updatedProject = await projectRepository.findById(id);
-      if (!updatedProject) {
-        throw new HttpError(
-          HTTP_STATUS.NOT_FOUND,
-          getServerErrorMessage('NOT_FOUND.PROJECT_NOT_FOUND'),
-        );
-      }
-
-      return transformProjectToResponse(updatedProject);
-    } catch (error) {
-      if (error instanceof HttpError) {
-        throw error;
-      }
-      logger.error('Error uploading project images', { error, id, images });
-      throw new HttpError(
-        HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        getServerErrorMessage('SERVER.PROJECT.UPLOAD_IMAGES_FAILED'),
-      );
-    }
-  },
-
-  /**
-   * Delete the main image from a project
-   * @param id - Project ID
-   * @throws HttpError 404 if project or main image not found
-   */
-  async deleteMainImage(id: string): Promise<void> {
-    try {
-      // Verify project exists
-      const project = await projectRepository.findById(id);
-      if (!project) {
-        throw new HttpError(
-          HTTP_STATUS.NOT_FOUND,
-          getServerErrorMessage('NOT_FOUND.PROJECT_NOT_FOUND'),
-        );
-      }
-
-      // Find main image
-      const mainImage = project.images.find((img) => img.type === 'MAIN');
-      if (!mainImage) {
-        throw new HttpError(
-          HTTP_STATUS.NOT_FOUND,
-          getServerErrorMessage('NOT_FOUND.MAIN_IMAGE_NOT_FOUND'),
-        );
-      }
-
-      // Delete main image
-      await projectRepository.deleteImage(mainImage.id);
-    } catch (error) {
-      if (error instanceof HttpError) {
-        throw error;
-      }
-      logger.error('Error deleting main image', { error, id });
-      throw new HttpError(
-        HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        getServerErrorMessage('SERVER.PROJECT.DELETE_MAIN_IMAGE_FAILED'),
-      );
-    }
-  },
-
-  /**
    * Delete a project
    * @param id - Project ID
    * @throws HttpError 404 if project not found
    */
   async deleteProject(id: string): Promise<void> {
     try {
+      const project = await projectRepository.findById(id);
+      if (project) {
+        const publicIds = project.images
+          .filter((img) => img.publicId)
+          .map((img) => img.publicId!);
+        if (publicIds.length > 0) {
+          await cloudinaryService.deleteImages(publicIds);
+        }
+      }
+
       await projectRepository.delete(id);
     } catch (error) {
+      if (error instanceof HttpError) {
+        throw error;
+      }
       if (error && typeof error === 'object' && 'code' in error) {
         const prismaError = error as { code: string };
         if (prismaError.code === 'P2025') {
@@ -334,49 +264,6 @@ export const projectService = {
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
         getServerErrorMessage('SERVER.PROJECT.DELETE_FAILED'),
-      );
-    }
-  },
-
-  /**
-   * Delete specific images from a project
-   * @param id - Project ID
-   * @param imageIds - Array of image IDs to delete
-   * @throws HttpError 404 if project not found
-   */
-  async deleteProjectImages(id: string, imageIds: string[]): Promise<void> {
-    try {
-      // Verify project exists
-      const project = await projectRepository.findById(id);
-      if (!project) {
-        throw new HttpError(
-          HTTP_STATUS.NOT_FOUND,
-          getServerErrorMessage('NOT_FOUND.PROJECT_NOT_FOUND'),
-        );
-      }
-
-      // Verify all images belong to this project
-      const projectImageIds = project.images.map((img) => img.id);
-      const invalidIds = imageIds.filter(
-        (imgId) => !projectImageIds.includes(imgId),
-      );
-      if (invalidIds.length > 0) {
-        throw new HttpError(
-          HTTP_STATUS.BAD_REQUEST,
-          getServerErrorMessage('VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT'),
-        );
-      }
-
-      // Delete images
-      await projectRepository.deleteImages(id, imageIds);
-    } catch (error) {
-      if (error instanceof HttpError) {
-        throw error;
-      }
-      logger.error('Error deleting project images', { error, id, imageIds });
-      throw new HttpError(
-        HTTP_STATUS.INTERNAL_SERVER_ERROR,
-        getServerErrorMessage('SERVER.PROJECT.DELETE_PROJECT_IMAGES_FAILED'),
       );
     }
   },

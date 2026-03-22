@@ -1,4 +1,3 @@
-import path from 'path';
 import express, { Express } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -21,9 +20,6 @@ function createApp(): Express {
 
   // CORS middleware
   app.use(cors(corsOptions));
-
-  // Static file serving (uploads, images, etc.)
-  app.use(express.static(path.join(__dirname, '..', 'public')));
 
   // Request logging middleware
   app.use(requestLogger);

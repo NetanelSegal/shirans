@@ -29,7 +29,7 @@
 - [x] E2E Testing — Playwright tests for core flows (admin, auth, projects, calculator, data state, react-query-smoke).
 - [x] Unit/Integration Testing — Vitest for server logic.
 - [x] Client-side caching — TanStack Query for projects, categories, testimonials, calculator config, admin data.
-- [ ] **⚠️ Image Optimization** — Processing large project images (found scripts).
+- [x] **Image pipeline (admin uploads)** — Server-side sharp + Cloudinary; tests and optional E2E upload (`E2E_CLOUDINARY_UPLOAD=1`). Legacy script-based conversion remains separate if needed.
 - [ ] **⚠️ Production Deploy** — Finalize Render (Server) and Netlify (Client) settings.
 - [ ] **⚠️ SEO & Meta** — Refining metadata for search engines.
 

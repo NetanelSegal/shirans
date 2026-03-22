@@ -5,25 +5,14 @@ import EnterAnimation from '@/components/animations/EnterAnimation';
 import { Helmet } from 'react-helmet-async';
 import { BASE_URL } from '@/constants/urls';
 import { DataStateGuard } from '@/components/DataState';
+import { resolveImageUrl } from '@/utils/imageUrl';
 
 export default function Projects() {
   const { projects, isLoading, error, retry } = useProjects();
 
-  // Get first project's main image for OG
-  const getFirstProjectImage = (): string => {
-    if (projects.length === 0) {
-      return `${BASE_URL}/assets/shiranImage-28AXxNS6.jpeg`;
-    }
-    const mainImage = projects[0].mainImage;
-    if (typeof mainImage === 'string') {
-      return mainImage.startsWith('http') ? mainImage : `${BASE_URL}/assets/${mainImage}`;
-    }
-    return mainImage.desktop.startsWith('http')
-      ? mainImage.desktop
-      : `${BASE_URL}/assets/${mainImage.desktop}`;
-  };
-
-  const ogImage = getFirstProjectImage();
+  const ogImage = projects.length > 0
+    ? resolveImageUrl(projects[0].mainImage)
+    : `${BASE_URL}/assets/shiranImage-28AXxNS6.jpeg`;
 
   return (
     <>

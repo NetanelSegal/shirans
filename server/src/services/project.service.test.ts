@@ -5,7 +5,6 @@ import { HttpError } from '../middleware/errorHandler';
 import type { ProjectFilters } from '../repositories/project.repository';
 import type { CategoryUrlCode } from '@shirans/shared';
 import { Prisma } from '@prisma/client';
-
 // Mock dependencies
 vi.mock('../repositories/project.repository', () => ({
   projectRepository: {
@@ -14,9 +13,6 @@ vi.mock('../repositories/project.repository', () => ({
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
-    addImages: vi.fn(),
-    deleteImage: vi.fn(),
-    deleteImages: vi.fn(),
   },
 }));
 vi.mock('../middleware/logger', () => ({
@@ -524,148 +520,6 @@ describe('projectService', () => {
     });
   });
 
-  describe('uploadProjectImages', () => {
-    it('should upload images and return updated project', async () => {
-      const mockProject = {
-        id: '1',
-        title: 'Test Project',
-        description: 'Test Description',
-        location: 'Test Location',
-        client: 'Test Client',
-        isCompleted: true,
-        constructionArea: 100,
-        favourite: false,
-        createdAt: new Date('2024-01-01'),
-        updatedAt: new Date('2024-01-02'),
-        categories: [],
-        images: [],
-      };
-
-      vi.mocked(projectRepository.findById)
-        .mockResolvedValueOnce(mockProject as never)
-        .mockResolvedValueOnce({
-          ...mockProject,
-          images: [
-            {
-              id: 'img1',
-              url: 'https://example.com/new.jpg',
-              type: 'IMAGE',
-              order: 0,
-              projectId: '1',
-              createdAt: new Date(),
-            },
-          ],
-        } as never);
-
-      vi.mocked(projectRepository.addImages).mockResolvedValue(undefined);
-
-      const images = [
-        {
-          url: 'https://example.com/new.jpg',
-          type: 'IMAGE' as const,
-          order: 0,
-        },
-      ];
-
-      const result = await projectService.uploadProjectImages('1', images);
-
-      expect(projectRepository.addImages).toHaveBeenCalledWith(
-        '1',
-        expect.arrayContaining([
-          expect.objectContaining({
-            url: 'https://example.com/new.jpg',
-            type: 'IMAGE',
-            order: 0,
-          }),
-        ])
-      );
-      expect(result).toBeDefined();
-    });
-
-    it('should throw HttpError 404 when project not found', async () => {
-      vi.mocked(projectRepository.findById).mockResolvedValue(null);
-
-      await expect(
-        projectService.uploadProjectImages('999', [
-          { url: 'https://example.com/img.jpg', type: 'IMAGE' },
-        ])
-      ).rejects.toThrow(HttpError);
-    });
-  });
-
-  describe('deleteMainImage', () => {
-    it('should delete main image when found', async () => {
-      const mockProject = {
-        id: '1',
-        title: 'Test Project',
-        description: 'Test Description',
-        location: 'Test Location',
-        client: 'Test Client',
-        isCompleted: true,
-        constructionArea: 100,
-        favourite: false,
-        createdAt: new Date('2024-01-01'),
-        updatedAt: new Date('2024-01-02'),
-        categories: [],
-        images: [
-          {
-            id: 'img1',
-            url: 'https://example.com/main.jpg',
-            type: 'MAIN',
-            order: 0,
-            projectId: '1',
-            createdAt: new Date(),
-          },
-        ],
-      };
-
-      vi.mocked(projectRepository.findById).mockResolvedValue(
-        mockProject as never
-      );
-      vi.mocked(projectRepository.deleteImage).mockResolvedValue(undefined);
-
-      await projectService.deleteMainImage('1');
-
-      expect(projectRepository.deleteImage).toHaveBeenCalledWith('img1');
-    });
-
-    it('should throw HttpError 404 when project not found', async () => {
-      vi.mocked(projectRepository.findById).mockResolvedValue(null);
-
-      await expect(projectService.deleteMainImage('999')).rejects.toThrow(
-        HttpError
-      );
-    });
-
-    it('should throw HttpError 404 when main image not found', async () => {
-      const mockProject = {
-        id: '1',
-        title: 'Test Project',
-        description: 'Test Description',
-        location: 'Test Location',
-        client: 'Test Client',
-        isCompleted: true,
-        constructionArea: 100,
-        favourite: false,
-        createdAt: new Date('2024-01-01'),
-        updatedAt: new Date('2024-01-02'),
-        categories: [],
-        images: [],
-      };
-
-      vi.mocked(projectRepository.findById).mockResolvedValue(
-        mockProject as never
-      );
-
-      await expect(projectService.deleteMainImage('1')).rejects.toThrow(
-        HttpError
-      );
-      await expect(projectService.deleteMainImage('1')).rejects.toThrow(
-        'Main image not found'
-      );
-    });
-  });
-
   describe('deleteProject', () => {
     it('should delete project successfully', async () => {
       const mockProject = {
@@ -692,6 +546,57 @@ describe('projectService', () => {
       expect(projectRepository.delete).toHaveBeenCalledWith('1');
     });
 
+    it('should delete all Cloudinary assets before DB delete when publicIds exist', async () => {
+      const mockProject = {
+        id: '1',
+        title: 'Test Project',
+        description: 'Test Description',
+        location: 'Test Location',
+        client: 'Test Client',
+        isCompleted: true,
+        constructionArea: 100,
+        favourite: false,
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-02'),
+        categories: [],
+        images: [
+          {
+            id: 'i1',
+            url: 'https://res.cloudinary.com/x/1.webp',
+            publicId: 'a/1',
+            type: 'MAIN',
+            order: 0,
+            projectId: '1',
+            createdAt: new Date(),
+          },
+          {
+            id: 'i2',
+            url: 'https://example.com/legacy.jpg',
+            publicId: null,
+            type: 'IMAGE',
+            order: 1,
+            projectId: '1',
+            createdAt: new Date(),
+          },
+        ],
+      };
+
+      vi.mocked(projectRepository.findById).mockResolvedValue(
+        mockProject as never,
+      );
+      vi.mocked(projectRepository.delete).mockResolvedValue(mockProject as never);
+
+      const cloudinaryService = await import('./cloudinary.service');
+      const bulkSpy = vi
+        .spyOn(cloudinaryService, 'deleteImages')
+        .mockResolvedValue(undefined);
+
+      await projectService.deleteProject('1');
+
+      expect(bulkSpy).toHaveBeenCalledWith(['a/1']);
+      expect(projectRepository.delete).toHaveBeenCalledWith('1');
+    });
+
     it('should throw HttpError 404 when project not found', async () => {
       const prismaError = {
         code: 'P2025',
@@ -715,99 +620,6 @@ describe('projectService', () => {
       await expect(projectService.deleteProject('1')).rejects.toThrow(
         HttpError
       );
-    });
-  });
-
-  describe('deleteProjectImages', () => {
-    it('should delete specified images', async () => {
-      const mockProject = {
-        id: '1',
-        title: 'Test Project',
-        description: 'Test Description',
-        location: 'Test Location',
-        client: 'Test Client',
-        isCompleted: true,
-        constructionArea: 100,
-        favourite: false,
-        createdAt: new Date('2024-01-01'),
-        updatedAt: new Date('2024-01-02'),
-        categories: [],
-        images: [
-          {
-            id: 'img1',
-            url: 'https://example.com/img1.jpg',
-            type: 'IMAGE',
-            order: 0,
-            projectId: '1',
-            createdAt: new Date(),
-          },
-          {
-            id: 'img2',
-            url: 'https://example.com/img2.jpg',
-            type: 'IMAGE',
-            order: 1,
-            projectId: '1',
-            createdAt: new Date(),
-          },
-        ],
-      };
-
-      vi.mocked(projectRepository.findById).mockResolvedValue(
-        mockProject as never
-      );
-      vi.mocked(projectRepository.deleteImages).mockResolvedValue(undefined);
-
-      await projectService.deleteProjectImages('1', ['img1', 'img2']);
-
-      expect(projectRepository.deleteImages).toHaveBeenCalledWith('1', [
-        'img1',
-        'img2',
-      ]);
-    });
-
-    it('should throw HttpError 404 when project not found', async () => {
-      vi.mocked(projectRepository.findById).mockResolvedValue(null);
-
-      await expect(
-        projectService.deleteProjectImages('999', ['img1'])
-      ).rejects.toThrow(HttpError);
-    });
-
-    it('should throw HttpError 400 when imageIds do not belong to project', async () => {
-      const mockProject = {
-        id: '1',
-        title: 'Test Project',
-        description: 'Test Description',
-        location: 'Test Location',
-        client: 'Test Client',
-        isCompleted: true,
-        constructionArea: 100,
-        favourite: false,
-        createdAt: new Date('2024-01-01'),
-        updatedAt: new Date('2024-01-02'),
-        categories: [],
-        images: [
-          {
-            id: 'img1',
-            url: 'https://example.com/img1.jpg',
-            type: 'IMAGE',
-            order: 0,
-            projectId: '1',
-            createdAt: new Date(),
-          },
-        ],
-      };
-
-      vi.mocked(projectRepository.findById).mockResolvedValue(
-        mockProject as never
-      );
-
-      await expect(
-        projectService.deleteProjectImages('1', ['img1', 'invalid-id'])
-      ).rejects.toThrow(HttpError);
-      await expect(
-        projectService.deleteProjectImages('1', ['img1', 'invalid-id'])
-      ).rejects.toThrow('do not belong to project');
     });
   });
 });

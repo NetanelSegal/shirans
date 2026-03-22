@@ -24,6 +24,16 @@ export const errorMessagesMap = {
   'VALIDATION.PASSWORD_WEAK': 'Password weak',
   'VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT': `Images do not belong to project`,
   'VALIDATION.BUILT_AREA_OUT_OF_RANGE': 'Built area is out of configured range',
+  'VALIDATION.INVALID_FILE_TYPE':
+    'File type not allowed. Accepted: JPEG, PNG, WebP, HEIC, HEIF',
+  'VALIDATION.FILE_TOO_LARGE': 'File exceeds the maximum allowed size (50 MB)',
+  'VALIDATION.TOO_MANY_FILES': 'Too many files. Maximum 20 files per request',
+  'VALIDATION.REORDER_IMAGE_IDS_INVALID':
+    'imageIds must list every project image exactly once',
+  'VALIDATION.UPLOAD_METADATA_FILE_COUNT_MISMATCH':
+    'metadata array length must match the number of uploaded files',
+  'VALIDATION.MAIN_IMAGE_ALREADY_EXISTS':
+    'A main image already exists; remove it before uploading a new one',
 
   'NOT_FOUND.USER_NOT_FOUND': 'User not found',
   'NOT_FOUND.PROJECT_NOT_FOUND': 'Project not found',
@@ -76,6 +86,11 @@ export const errorMessagesMap = {
   'SERVER.PROJECT.DELETE_PROJECT_IMAGES_FAILED':
     'Failed to delete project images',
   'SERVER.PROJECT.DELETE_MAIN_IMAGE_FAILED': 'Failed to delete main image',
+  'SERVER.PROJECT.REORDER_IMAGES_FAILED': 'Failed to reorder project images',
+  'SERVER.PROJECT.CLOUDINARY_UPLOAD_FAILED':
+    'Failed to upload image to cloud storage',
+  'SERVER.PROJECT.CLOUDINARY_DELETE_FAILED':
+    'Failed to delete image from cloud storage',
 
   'SERVER.TESTIMONIAL.CREATE_FAILED': 'Failed to create testimonial',
   'SERVER.TESTIMONIAL.DELETE_FAILED': 'Failed to delete testimonial',

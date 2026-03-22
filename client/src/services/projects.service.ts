@@ -1,29 +1,9 @@
 import apiClient from '../utils/apiClient';
 import { urls } from '../constants/urls';
 import { USE_FILE_DATA } from '../constants/dataSource';
-import { resolveImageUrl } from '../utils/imageUrl';
+import { resolveProjectImages } from '../utils/imageUrl';
 import { fetchWithFallback } from '../utils/fetchWithFallback';
 import type { ProjectResponse } from '@shirans/shared';
-
-/**
- * Resolves all image URLs in a project response from relative server paths
- * to full absolute URLs.
- */
-function resolveProjectImages(project: ProjectResponse): ProjectResponse {
-  return {
-    ...project,
-    mainImage: typeof project.mainImage === 'string'
-      ? resolveImageUrl(project.mainImage)
-      : project.mainImage,
-    images: project.images.map((img) =>
-      typeof img === 'string' ? resolveImageUrl(img) : img,
-    ),
-    plans: project.plans?.map((plan) =>
-      typeof plan === 'string' ? resolveImageUrl(plan) : plan,
-    ),
-    // Videos are already absolute YouTube URLs, no resolution needed
-  };
-}
 
 async function getFileProjects(): Promise<ProjectResponse[]> {
   const { projects } = await import('../data/shiran.projects');

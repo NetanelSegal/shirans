@@ -16,7 +16,8 @@ export async function fetchWithFallback<T>(
   try {
     const data = await apiFn();
     return { data, source: 'api' };
-  } catch {
+  } catch (err) {
+    console.warn('[fetchWithFallback] API call failed, using static fallback data.', err);
     return { data: fallbackData, source: 'fallback' };
   }
 }

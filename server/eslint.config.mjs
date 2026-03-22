@@ -48,5 +48,5 @@ export default tseslint.config(
       'test/',
       'prisma/seed.ts',
     ],
-  }
+  },
 );

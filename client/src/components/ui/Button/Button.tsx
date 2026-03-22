@@ -7,6 +7,8 @@ interface ButtonProps {
   className?: string
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
+  /** For icon-only or short controls (accessibility). */
+  ariaLabel?: string
 }
 
 const variantClasses = {
@@ -20,13 +22,14 @@ const variantClasses = {
   dark: 'bg-gray-800 text-white hover-capable:hover:bg-gray-700',
 };
 
-function Button({ children, onClick, variant = 'secondary', className, disabled, type = 'button' }: ButtonProps) {
+function Button({ children, onClick, variant = 'secondary', className, disabled, type = 'button', ariaLabel }: ButtonProps) {
   return (
     <button
       className={`rounded-xl px-4 py-2 transition-all duration-200 ${variantClasses[variant]} ${className ?? ''}`}
       disabled={disabled}
       type={type}
       onClick={onClick}
+      aria-label={ariaLabel}
     >
       {children}
     </button>

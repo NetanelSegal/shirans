@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as adminProjectsService from '../../services/admin/projects.service';
+import type { UploadProjectImagesInput } from '../../services/admin/projects.service';
 import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { queryKeys } from '@/constants/queryKeys';
@@ -9,9 +10,9 @@ import { invalidateAfterAdminProjectsChange } from '@/lib/queryInvalidation';
 import type {
   CreateProjectInput,
   UpdateProjectInput,
-  UploadImagesInput,
   DeleteMainImageInput,
   DeleteImagesInput,
+  ReorderImagesInput,
 } from '@shirans/shared';
 
 export function useAdminProjects() {
@@ -66,6 +67,11 @@ export function useAdminProjects() {
     onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
   });
 
+  const reorderImagesMutation = useMutation({
+    mutationFn: adminProjectsService.reorderImages,
+    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
+  });
+
   return {
     projects,
     isLoading,
@@ -74,11 +80,13 @@ export function useAdminProjects() {
     create: (input: CreateProjectInput) => createMutation.mutateAsync(input),
     update: (input: UpdateProjectInput) => updateMutation.mutateAsync(input),
     delete: (id: string) => deleteMutation.mutateAsync(id),
-    uploadImages: (input: UploadImagesInput) =>
+    uploadImages: (input: UploadProjectImagesInput) =>
       uploadImagesMutation.mutateAsync(input),
     deleteMainImage: (input: DeleteMainImageInput) =>
       deleteMainImageMutation.mutateAsync(input),
     deleteProjectImages: (input: DeleteImagesInput) =>
       deleteProjectImagesMutation.mutateAsync(input),
+    reorderImages: (input: ReorderImagesInput) =>
+      reorderImagesMutation.mutateAsync(input),
   };
 }

@@ -28,6 +28,7 @@ Before any code modification:
 ## 4. Verification & Quality Assurance
 Before marking a task [Complete]:
 - **Validation Suite**: Run `npm run type-check` at the root and relevant workspace lints.
+- **CI parity (mandatory before push)**: Match `.github/workflows/node.yaml` — from repo root run **`npm run lint:client`** and **`npm run lint:server`** (same as CI’s Lint Client / Lint Server steps). Fix any ESLint **errors**; do not rely only on `type-check`.
 - **Visual Audit**: For UI tasks, describe the final visual outcome and RTL alignment.
 - **Log Updates**: Update `docs/00-Context/progress.md` and move the task to "Completed" in `docs/00-Context/tasks.md`.
 
@@ -37,7 +38,7 @@ Before marking a task [Complete]:
 - **Branch Naming**: `feature/short-description` or `fix/short-description` (e.g. `feature/calculator-landing`).
 - **Workflow**: `git checkout -b feature/your-feature` → implement → `npm run build` / `npm run type-check` → commit → push.
 - **Conventional Commits**: Use `feat:`, `fix:`, `chore:`, `refactor:` focusing on the "Why." Example: `feat(calculator): add public landing page for lead capture`.
-- **Pre-Push**: Run build and tests before pushing. Fix any failures.
+- **Pre-Push**: Run **`npm run lint:client`**, **`npm run lint:server`**, **`npm run build`** (and **`npm run test:run`** when server logic changed) before pushing. Fix any failures so GitHub Actions matches your local run.
 - **Merge**: Merge to `main` via PR only after review.
 
 ## 6. Testing & Validation (MANDATORY)
