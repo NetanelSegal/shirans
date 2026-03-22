@@ -1,6 +1,7 @@
 import { Controller } from 'react-hook-form';
 import type { UseFormReturn } from 'react-hook-form';
 import type { CategoryResponse, CreateProjectInput } from '@shirans/shared';
+import { Checkbox } from '@/components/ui/Checkbox';
 import { Input } from '@/components/ui/Input';
 
 export interface ProjectFormFieldsProps {
@@ -9,9 +10,6 @@ export interface ProjectFormFieldsProps {
   categories: CategoryResponse[];
   formError: string | null;
 }
-
-const checkboxClass =
-  'h-4 w-4 rounded border border-gray-200 text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0';
 
 export function ProjectFormFields({
   form,
@@ -64,31 +62,19 @@ export function ProjectFormFields({
         error={errors.constructionArea}
       />
       <div className="flex flex-wrap items-center gap-6">
-        <div className="flex items-center gap-2">
-          <input
-            id="project-form-is-completed"
-            type="checkbox"
-            {...register('isCompleted')}
-            className={checkboxClass}
-          />
-          <label htmlFor="project-form-is-completed" className="text-sm font-medium">
-            הושלם
-          </label>
-        </div>
-        <div className="flex items-center gap-2">
-          <input
-            id="project-form-favourite"
-            type="checkbox"
-            {...register('favourite')}
-            className={checkboxClass}
-          />
-          <label htmlFor="project-form-favourite" className="text-sm font-medium">
-            מועדף
-          </label>
-        </div>
+        <Checkbox
+          id="project-form-is-completed"
+          label="הושלם"
+          {...register('isCompleted')}
+        />
+        <Checkbox
+          id="project-form-favourite"
+          label="מועדף"
+          {...register('favourite')}
+        />
       </div>
-      <div>
-        <span className="mb-2 block text-sm font-medium text-dark">קטגוריות</span>
+      <fieldset className="min-w-0 border-0 p-0">
+        <legend className="mb-2 block text-sm font-bold text-dark">קטגוריות</legend>
         <Controller
           control={control}
           name="categoryIds"
@@ -97,27 +83,24 @@ export function ProjectFormFields({
             return (
               <div className="flex flex-wrap gap-4">
                 {categories.map((cat) => (
-                  <div key={cat.id} className="flex items-center gap-2">
-                    <input
-                      id={`project-form-cat-${cat.id}`}
-                      type="checkbox"
-                      checked={value.includes(cat.id)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          field.onChange([...value, cat.id]);
-                        } else {
-                          field.onChange(value.filter((id) => id !== cat.id));
-                        }
-                      }}
-                      className={checkboxClass}
-                      aria-describedby={
-                        errors.categoryIds ? 'categoryIds-error' : undefined
+                  <Checkbox
+                    key={cat.id}
+                    id={`project-form-cat-${cat.id}`}
+                    label={cat.title}
+                    name={field.name}
+                    checked={value.includes(cat.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        field.onChange([...value, cat.id]);
+                      } else {
+                        field.onChange(value.filter((id) => id !== cat.id));
                       }
-                    />
-                    <label htmlFor={`project-form-cat-${cat.id}`} className="text-sm">
-                      {cat.title}
-                    </label>
-                  </div>
+                    }}
+                    onBlur={field.onBlur}
+                    aria-describedby={
+                      errors.categoryIds ? 'categoryIds-error' : undefined
+                    }
+                  />
                 ))}
               </div>
             );
@@ -128,7 +111,7 @@ export function ProjectFormFields({
             {errors.categoryIds.message}
           </p>
         )}
-      </div>
+      </fieldset>
       {formError && (
         <p className="text-sm text-red-500" role="alert">
           {formError}
