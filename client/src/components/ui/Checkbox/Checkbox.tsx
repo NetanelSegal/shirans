@@ -6,8 +6,8 @@ export type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> 
 };
 
 /**
- * Checkbox aligned with {@link Input}: `border-gray-200`, primary focus ring,
- * red error state, and matching label typography (`text-dark`, `font-bold`).
+ * Toggle styled like {@link Button} / {@link Input}: `rounded-xl`, border,
+ * primary fill when checked. Native checkbox is visually hidden for a11y and RHF.
  */
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ label, error, id, className, ...props }, ref) => {
@@ -19,37 +19,44 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       [error?.message ? errorId : null, ariaDescribedBy].filter(Boolean).join(' ') ||
       undefined;
 
-    const inputClassName = [
-      'h-4 w-4 shrink-0 cursor-pointer rounded-md [-webkit-tap-highlight-color:transparent]',
-      'accent-primary focus:outline-none focus:ring-2 focus:ring-offset-0',
-      'disabled:cursor-not-allowed disabled:opacity-50',
+    const labelClassName = [
+      'inline-flex min-h-[2.5rem] cursor-pointer select-none items-center justify-center',
+      'rounded-xl border px-4 py-2 text-sm font-bold transition-all duration-200',
+      '[-webkit-tap-highlight-color:transparent]',
+      'peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-offset-0',
       error
-        ? 'border border-red-500 focus:border-red-500 focus:ring-red-500'
-        : 'border border-gray-200 focus:border-primary focus:ring-primary',
+        ? [
+            'border-red-500 bg-red-50/80 text-dark',
+            'peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary',
+            'peer-focus-visible:ring-red-500 peer-checked:peer-focus-visible:ring-primary',
+          ].join(' ')
+        : [
+            'border-gray-200 bg-gray-100 text-dark',
+            'hover-capable:hover:bg-gray-200',
+            'peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary',
+            'hover-capable:peer-checked:hover:bg-primary/90',
+            'peer-focus-visible:ring-primary',
+          ].join(' '),
+      'peer-disabled:cursor-not-allowed peer-disabled:opacity-50',
       className,
     ]
       .filter(Boolean)
       .join(' ');
 
     return (
-      <div className="relative">
-        <div className="flex items-center gap-2">
-          <input
-            ref={ref}
-            id={inputId}
-            type="checkbox"
-            className={inputClassName}
-            aria-invalid={!!error}
-            aria-describedby={describedBy}
-            {...rest}
-          />
-          <label
-            htmlFor={inputId}
-            className="cursor-pointer select-none text-sm font-bold text-dark"
-          >
-            {label}
-          </label>
-        </div>
+      <div className="relative inline-flex flex-col">
+        <input
+          ref={ref}
+          id={inputId}
+          type="checkbox"
+          className="peer sr-only"
+          aria-invalid={!!error}
+          aria-describedby={describedBy}
+          {...rest}
+        />
+        <label htmlFor={inputId} className={labelClassName}>
+          {label}
+        </label>
         {error?.message && (
           <span id={errorId} className="mt-1 block text-sm text-red-500">
             {error.message}
