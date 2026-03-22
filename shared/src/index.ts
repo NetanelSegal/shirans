@@ -1,4 +1,5 @@
 export * from './constants/httpStatus';
+export * from './constants/projectImage';
 export * from './errors/errorKeys';
 export * from './types/error.types';
 export * from './types/common.types';

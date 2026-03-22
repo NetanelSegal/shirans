@@ -3,6 +3,7 @@ import { z } from 'zod';
 import {
   singleProjectQuerySchema,
   uploadImageMetadataSchema,
+  type UploadImageMetadata,
 } from '@shirans/shared';
 import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
@@ -12,7 +13,7 @@ import { validateRequest } from './validation';
 export interface ParsedProjectImageUpload {
   id: string;
   files: Express.Multer.File[];
-  metadata: Array<{ type: string; order?: number }>;
+  metadata: UploadImageMetadata[];
 }
 
 /**
@@ -34,7 +35,7 @@ export function parseProjectImageUploadRequest(
     id: req.body.id,
   });
 
-  let metadata: Array<{ type: string; order?: number }> = [];
+  let metadata: UploadImageMetadata[] = [];
   try {
     const raw = JSON.parse(
       typeof req.body.metadata === 'string' ? req.body.metadata : '[]',

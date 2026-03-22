@@ -1,6 +1,5 @@
 export type UserRole = 'ADMIN' | 'USER';
 export type CategoryUrlCode = string;
-export type ProjectImageType = 'MAIN' | 'IMAGE' | 'PLAN' | 'VIDEO';
 
 /** File upload constraints shared between server (multer) and client (validation). */
 export const IMAGE_UPLOAD = {

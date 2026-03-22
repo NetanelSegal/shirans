@@ -1,3 +1,4 @@
+import type { UploadImageMetadata } from '@shirans/shared';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { projectImageService } from './projectImage.service';
 import { projectRepository } from '../repositories/project.repository';
@@ -66,7 +67,7 @@ describe('projectImageService', () => {
         { buffer: Buffer.from('fake'), originalname: 'new.jpg', mimetype: 'image/jpeg' },
       ] as Express.Multer.File[];
 
-      const metadata = [{ type: 'IMAGE', order: 0 }];
+      const metadata = [{ type: 'IMAGE', order: 0 }] satisfies UploadImageMetadata[];
 
       const cloudinaryService = await import('./cloudinary.service');
       vi.spyOn(cloudinaryService, 'uploadImage').mockResolvedValue({
@@ -138,10 +139,14 @@ describe('projectImageService', () => {
           publicId: 'p2',
         });
 
-      await projectImageService.uploadProjectImages('1', mockFiles, [
-        { type: 'IMAGE', order: 0 },
-        { type: 'PLAN', order: 1 },
-      ]);
+      await projectImageService.uploadProjectImages(
+        '1',
+        mockFiles,
+        [
+          { type: 'IMAGE', order: 0 },
+          { type: 'PLAN', order: 1 },
+        ] satisfies UploadImageMetadata[],
+      );
 
       expect(compressImageBuffer).toHaveBeenCalledTimes(2);
       expect(compressImageBuffer).toHaveBeenNthCalledWith(1, bufA);
@@ -184,10 +189,11 @@ describe('projectImageService', () => {
         .mockRejectedValueOnce(new Error('Cloudinary down'));
 
       await expect(
-        projectImageService.uploadProjectImages('1', mockFiles, [
-          { type: 'IMAGE' },
-          { type: 'IMAGE' },
-        ]),
+        projectImageService.uploadProjectImages(
+          '1',
+          mockFiles,
+          [{ type: 'IMAGE' }, { type: 'IMAGE' }] satisfies UploadImageMetadata[],
+        ),
       ).rejects.toThrow(HttpError);
 
       expect(deleteSpy).toHaveBeenCalledWith(['uploaded-ok']);
@@ -229,7 +235,11 @@ describe('projectImageService', () => {
         .mockResolvedValue(undefined);
 
       await expect(
-        projectImageService.uploadProjectImages('1', mockFiles, [{ type: 'IMAGE' }]),
+        projectImageService.uploadProjectImages(
+          '1',
+          mockFiles,
+          [{ type: 'IMAGE' }] satisfies UploadImageMetadata[],
+        ),
       ).rejects.toThrow(HttpError);
 
       expect(deleteSpy).toHaveBeenCalledWith(['pid-after-db-fail']);
@@ -243,7 +253,11 @@ describe('projectImageService', () => {
       ] as Express.Multer.File[];
 
       await expect(
-        projectImageService.uploadProjectImages('999', mockFiles, [{ type: 'IMAGE' }]),
+        projectImageService.uploadProjectImages(
+          '999',
+          mockFiles,
+          [{ type: 'IMAGE' }] satisfies UploadImageMetadata[],
+        ),
       ).rejects.toThrow(HttpError);
     });
   });

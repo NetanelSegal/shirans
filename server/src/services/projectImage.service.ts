@@ -1,3 +1,4 @@
+import type { UploadImageMetadata } from '@shirans/shared';
 import { projectRepository } from '../repositories/project.repository';
 import {
   type ProjectResponse,
@@ -19,7 +20,7 @@ export const projectImageService = {
   async uploadProjectImages(
     id: string,
     files: Express.Multer.File[],
-    metadata: Array<{ type: string; order?: number }>,
+    metadata: UploadImageMetadata[],
   ): Promise<ProjectResponse> {
     try {
       const project = await projectRepository.findById(id);

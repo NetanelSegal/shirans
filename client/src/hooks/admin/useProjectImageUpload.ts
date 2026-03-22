@@ -3,16 +3,14 @@ import { ERROR_KEYS, IMAGE_UPLOAD, type ErrorKey, type ProjectResponse } from '@
 import type { UploadProjectImagesInput } from '@/services/admin/projects.service';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { transformError } from '@/utils/errorHandler';
-import {
-  filterAdminImageUploadFiles,
-  type AdminUploadableProjectImageType,
-} from '@/utils/adminProjectImageUpload';
+import { filterAdminImageUploadFiles } from '@/utils/adminProjectImageUpload';
+import type { ProjectImageMultipartUploadType } from '@shirans/shared';
 
 export function useProjectImageUpload(
   fileInputRef: RefObject<HTMLInputElement | null>,
   options: {
     project: ProjectResponse | null;
-    selectedType: AdminUploadableProjectImageType;
+    selectedType: ProjectImageMultipartUploadType;
     uploadImages: (input: UploadProjectImagesInput) => Promise<unknown>;
     setError: (message: string | null) => void;
   },

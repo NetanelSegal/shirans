@@ -39,6 +39,17 @@ describe('parseProjectImageUploadRequest', () => {
     expect(() => parseProjectImageUploadRequest(req)).toThrow(HttpError);
   });
 
+  it('throws HttpError 400 when metadata type is VIDEO (not allowed for file upload)', () => {
+    const req = makeReq({
+      files: [{ buffer: Buffer.from('a') }] as Express.Multer.File[],
+      body: {
+        id: 'clx123abc456def789',
+        metadata: JSON.stringify([{ type: 'VIDEO', order: 0 }]),
+      },
+    });
+    expect(() => parseProjectImageUploadRequest(req)).toThrow(HttpError);
+  });
+
   it('throws HttpError 400 when metadata length mismatches files', () => {
     const req = makeReq({
       files: [

@@ -4,35 +4,29 @@ import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import { useAdminProjects } from '@/hooks/admin/useAdminProjects';
 import { useProjectImageUpload } from '@/hooks/admin/useProjectImageUpload';
-import {
-  ADMIN_IMAGE_UPLOAD_MIME_TYPES,
-  ADMIN_UPLOADABLE_PROJECT_IMAGE_TYPES,
-  type AdminUploadableProjectImageType,
-} from '@/utils/adminProjectImageUpload';
+import { ADMIN_IMAGE_UPLOAD_MIME_TYPES } from '@/utils/adminProjectImageUpload';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { transformError } from '@/utils/errorHandler';
-import type { ErrorKey, ProjectResponse, ProjectImageType } from '@shirans/shared';
+import {
+  PROJECT_IMAGE_TYPE_LABELS_HE,
+  PROJECT_IMAGE_TYPES_UPLOADABLE,
+  type ErrorKey,
+  type ProjectImageMultipartUploadType,
+  type ProjectImageType,
+  type ProjectResponse,
+} from '@shirans/shared';
 
 interface ProjectImagesManagerProps {
   project: ProjectResponse | null;
   onClose: () => void;
 }
 
-const IMAGE_TYPE_LABELS: Record<ProjectImageType, string> = {
-  MAIN: 'ראשית',
-  IMAGE: 'תמונה',
-  PLAN: 'תוכנית',
-  VIDEO: 'סרטון',
-};
-
-type GalleryImageType = 'MAIN' | 'IMAGE' | 'PLAN' | 'VIDEO';
-
 export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerProps) {
   const { uploadImages, deleteMainImage } = useAdminProjects();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [selectedType, setSelectedType] =
-    useState<AdminUploadableProjectImageType>('IMAGE');
+    useState<ProjectImageMultipartUploadType>('IMAGE');
   const [error, setError] = useState<string | null>(null);
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
 
@@ -81,7 +75,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
 
   if (!project) return null;
 
-  const allImages: Array<{ url: string; type: GalleryImageType }> = [
+  const allImages: Array<{ url: string; type: ProjectImageType }> = [
     ...(project.mainImage ? [{ url: project.mainImage, type: 'MAIN' as const }] : []),
     ...project.images.map((url) => ({ url, type: 'IMAGE' as const })),
     ...(project.plans ?? []).map((url) => ({ url, type: 'PLAN' as const })),
@@ -131,14 +125,14 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
               id="project-image-upload-type"
               value={selectedType}
               onChange={(e) =>
-                setSelectedType(e.target.value as AdminUploadableProjectImageType)
+                setSelectedType(e.target.value as ProjectImageMultipartUploadType)
               }
               className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm"
               disabled={isBusy}
             >
-              {ADMIN_UPLOADABLE_PROJECT_IMAGE_TYPES.map((value) => (
+              {PROJECT_IMAGE_TYPES_UPLOADABLE.map((value) => (
                 <option key={value} value={value}>
-                  {IMAGE_TYPE_LABELS[value]}
+                  {PROJECT_IMAGE_TYPE_LABELS_HE[value]}
                 </option>
               ))}
             </select>
@@ -191,12 +185,12 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
                 ) : (
                   <Image
                     src={img.url}
-                    alt={`${project.title} — ${IMAGE_TYPE_LABELS[img.type]}`}
+                    alt={`${project.title} — ${PROJECT_IMAGE_TYPE_LABELS_HE[img.type]}`}
                     className="aspect-video w-full object-cover"
                   />
                 )}
                 <span className="absolute top-1 right-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-white">
-                  {IMAGE_TYPE_LABELS[img.type]}
+                  {PROJECT_IMAGE_TYPE_LABELS_HE[img.type]}
                 </span>
                 {img.type === 'MAIN' && (
                   <Button

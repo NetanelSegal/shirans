@@ -1,17 +1,17 @@
-import { IMAGE_UPLOAD } from '@shirans/shared';
+import {
+  IMAGE_UPLOAD,
+  PROJECT_IMAGE_TYPES_UPLOADABLE,
+  type ProjectImageMultipartUploadType,
+} from '@shirans/shared';
 
 export const ADMIN_IMAGE_UPLOAD_MIME_TYPES =
   IMAGE_UPLOAD.ALLOWED_MIME_TYPES as readonly string[];
 
-/** Types allowed for multipart image upload (matches server MIME allowlist). */
-export const ADMIN_UPLOADABLE_PROJECT_IMAGE_TYPES = [
-  'MAIN',
-  'IMAGE',
-  'PLAN',
-] as const;
+/** @deprecated Prefer `PROJECT_IMAGE_TYPES_UPLOADABLE` from `@shirans/shared`. */
+export const ADMIN_UPLOADABLE_PROJECT_IMAGE_TYPES = PROJECT_IMAGE_TYPES_UPLOADABLE;
 
-export type AdminUploadableProjectImageType =
-  (typeof ADMIN_UPLOADABLE_PROJECT_IMAGE_TYPES)[number];
+/** @deprecated Prefer `ProjectImageMultipartUploadType` from `@shirans/shared`. */
+export type AdminUploadableProjectImageType = ProjectImageMultipartUploadType;
 
 export function filterAdminImageUploadFiles(files: File[]): {
   valid: File[];

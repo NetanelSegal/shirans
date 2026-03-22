@@ -1,13 +1,23 @@
 import { z } from 'zod';
+import {
+  PROJECT_IMAGE_TYPE_VALUES,
+  PROJECT_IMAGE_TYPES_UPLOADABLE,
+} from '../constants/projectImage';
+
+const projectImageTypeSchema = z.enum(PROJECT_IMAGE_TYPE_VALUES, {
+  message: 'Image type must be one of: MAIN, IMAGE, PLAN, VIDEO',
+});
+
+const multipartProjectImageTypeSchema = z.enum(PROJECT_IMAGE_TYPES_UPLOADABLE, {
+  message: 'Multipart upload type must be one of: MAIN, IMAGE, PLAN',
+});
 
 /**
  * Zod schema for project image input
  */
 export const imageInputSchema = z.object({
   url: z.url('Image URL must be a valid URL').min(1, 'Image URL is required'),
-  type: z.enum(['MAIN', 'IMAGE', 'PLAN', 'VIDEO'], {
-    message: 'Image type must be one of: MAIN, IMAGE, PLAN, VIDEO',
-  }),
+  type: projectImageTypeSchema,
   order: z.number().int().nonnegative().optional(),
 });
 
@@ -122,11 +132,10 @@ export const reorderImagesSchema = z
 
 /**
  * Zod schema for multipart upload metadata (parsed from the JSON metadata field).
+ * VIDEO is only for external URLs via create/update project payloads, not file upload.
  */
 export const uploadImageMetadataSchema = z.object({
-  type: z.enum(['MAIN', 'IMAGE', 'PLAN', 'VIDEO'], {
-    message: 'Image type must be one of: MAIN, IMAGE, PLAN, VIDEO',
-  }),
+  type: multipartProjectImageTypeSchema,
   order: z.number().int().nonnegative().optional(),
 });
 

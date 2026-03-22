@@ -8,7 +8,7 @@ import type {
   DeleteMainImageInput,
   DeleteImagesInput,
   ReorderImagesInput,
-  ProjectImageType,
+  UploadImageMetadata,
 } from '@shirans/shared';
 
 export async function fetchAllProjects(): Promise<ProjectResponse[]> {
@@ -40,7 +40,7 @@ export async function deleteProject(id: string): Promise<void> {
 export interface UploadProjectImagesInput {
   projectId: string;
   files: File[];
-  metadata: Array<{ type: ProjectImageType; order?: number }>;
+  metadata: UploadImageMetadata[];
 }
 
 export async function uploadProjectImages(
