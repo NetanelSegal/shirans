@@ -19,6 +19,7 @@
 - **Admin ProjectsManagement refactor (Mar 2026):** Split [`ProjectsManagement`](client/src/pages/Admin/ProjectsManagement.tsx) into `ProjectFormFields`, smart `ProjectFormModal` (internal hooks), and `getProjectColumns` for readability.
 - **CLS / initial load (Mar 2026):** Public [`Layout`](client/src/components/Layout/Layout.tsx) is imported eagerly in [`App.tsx`](client/src/App.tsx) so the navbar mounts with the router instead of after a `Suspense` fallback (`Loader` only). Route-level code-splitting remains for pages.
 - **Project images (Mar 2026):** Admin uploads go through **sharp** (resize/WebP) on the server, then **Cloudinary**; multipart API; partial-upload cleanup; `ProjectImage.publicId` for deletes. Vitest coverage for service, integration, and `imageProcessing`; Playwright `e2e/admin-projects.spec.ts` (CRUD; full upload when `E2E_CLOUDINARY_UPLOAD=1`).
+- **Project create API (Mar 2026):** JSON `POST /api/projects` no longer accepts `images`; image rows are created only via multipart upload flows. Shared `updateProjectSchema` is derived from `createProjectSchema` (with `id` + optional `categoryIds` override for PATCH).
 - **Optimization:** Image conversion and optimization (found `scripts/convert-project2-images.js`).
 - **Deployment:** Render (Server) and Netlify (Client) configuration.
 - **Content:** Finalizing project data and testimonials.

@@ -378,7 +378,6 @@ describe('Auth Routes Integration Tests', () => {
           client: 'Test',
           constructionArea: 100,
           categoryIds: ['cat123'],
-          images: [],
         });
 
       expect(response.status).toBe(401);
@@ -401,7 +400,6 @@ describe('Auth Routes Integration Tests', () => {
           client: 'Test',
           constructionArea: 100,
           categoryIds: ['cat123'],
-          images: [],
         });
 
       expect(response.status).toBe(403);
@@ -444,7 +442,6 @@ describe('Auth Routes Integration Tests', () => {
           client: 'Test',
           constructionArea: 100,
           categoryIds: ['cat123'],
-          images: [],
         });
 
       // Should not be 401 or 403 (might be 400/500 if other validations fail, but auth passed)

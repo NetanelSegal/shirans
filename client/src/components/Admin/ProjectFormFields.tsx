@@ -5,7 +5,6 @@ import { Checkbox } from '@/components/ui/Checkbox';
 import { Input } from '@/components/ui/Input';
 
 export interface ProjectFormFieldsProps {
-  /** Create form instance; for update flows cast from `UseFormReturn<UpdateProjectInput>` (same field UI). */
   form: UseFormReturn<CreateProjectInput>;
   categories: CategoryResponse[];
   formError: string | null;

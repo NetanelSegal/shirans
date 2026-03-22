@@ -71,11 +71,6 @@ export const projectSchemas = {
         items: { type: 'string', format: 'cuid' },
         minItems: 1,
       },
-      images: {
-        type: 'array',
-        items: { $ref: '#/components/schemas/ImageInput' },
-        default: [],
-      },
     },
     required: [
       'title',

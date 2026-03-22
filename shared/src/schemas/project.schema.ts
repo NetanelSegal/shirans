@@ -47,23 +47,18 @@ export const createProjectSchema = z.object({
   categoryIds: z
     .array(z.cuid('Category ID must be a valid CUID'))
     .min(1, 'At least one category is required'),
-  images: z.array(imageInputSchema).optional().default([]),
 });
 
 /**
- * Zod schema for updating a project
+ * Zod schema for updating a project (PATCH). Derived from create; all fields optional except id.
+ * `categoryIds` allows an empty array to clear categories (create requires min 1).
  */
-export const updateProjectSchema = z.object({
-  id: z.cuid('Project ID must be a valid CUID'),
-  title: z.string().min(1).max(500).optional(),
-  description: z.string().min(1).optional(),
-  location: z.string().min(1).max(200).optional(),
-  client: z.string().min(1).max(200).optional(),
-  isCompleted: z.boolean().optional(),
-  constructionArea: z.number().int().positive().optional(),
-  favourite: z.boolean().optional(),
-  categoryIds: z.array(z.cuid()).optional(),
-});
+export const updateProjectSchema = createProjectSchema
+  .partial()
+  .extend({
+    id: z.cuid('Project ID must be a valid CUID'),
+    categoryIds: z.array(z.cuid('Category ID must be a valid CUID')).optional(),
+  });
 
 /**
  * Zod schema for project query parameters
@@ -132,7 +127,7 @@ export const reorderImagesSchema = z
 
 /**
  * Zod schema for multipart upload metadata (parsed from the JSON metadata field).
- * VIDEO is only for external URLs via create/update project payloads, not file upload.
+ * File uploads support MAIN, IMAGE, PLAN only (see PROJECT_IMAGE_TYPES_UPLOADABLE).
  */
 export const uploadImageMetadataSchema = z.object({
   type: multipartProjectImageTypeSchema,

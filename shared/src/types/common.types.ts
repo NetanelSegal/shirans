@@ -11,5 +11,5 @@ export const IMAGE_UPLOAD = {
     'image/heic',
     'image/heif',
   ] as const,
-  MAX_FILES_PER_REQUEST: 20,
+  MAX_FILES_PER_REQUEST: 5,
 } as const;

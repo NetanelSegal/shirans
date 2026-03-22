@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import type { UseFormReturn } from 'react-hook-form';
+import type { Resolver, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createProjectSchema, updateProjectSchema } from '@shirans/shared';
 import type {
@@ -28,7 +28,7 @@ export function ProjectFormModal({ open, project, onClose }: ProjectFormModalPro
   const isEditing = project !== null;
 
   const createForm = useForm<CreateProjectInput>({
-    resolver: zodResolver(createProjectSchema) as never,
+    resolver: zodResolver(createProjectSchema) as Resolver<CreateProjectInput>,
     defaultValues: {
       title: '',
       description: '',
@@ -38,7 +38,6 @@ export function ProjectFormModal({ open, project, onClose }: ProjectFormModalPro
       isCompleted: false,
       favourite: false,
       categoryIds: [],
-      images: [],
     },
   });
 
@@ -73,7 +72,6 @@ export function ProjectFormModal({ open, project, onClose }: ProjectFormModalPro
         isCompleted: false,
         favourite: false,
         categoryIds: categories.length > 0 ? [categories[0].id] : [],
-        images: [],
       });
     } else {
       const categoryIds = (project.categories ?? [])

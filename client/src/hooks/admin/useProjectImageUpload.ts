@@ -1,5 +1,10 @@
 import { useState, useCallback, type RefObject } from 'react';
-import { ERROR_KEYS, IMAGE_UPLOAD, type ErrorKey, type ProjectResponse } from '@shirans/shared';
+import {
+  ERROR_KEYS,
+  IMAGE_UPLOAD,
+  type ErrorKey,
+  type ProjectResponse,
+} from '@shirans/shared';
 import type { UploadProjectImagesInput } from '@/services/admin/projects.service';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { transformError } from '@/utils/errorHandler';
@@ -23,9 +28,13 @@ export function useProjectImageUpload(
       if (!files || files.length === 0 || !project) return;
       setError(null);
 
-      const { valid, rejected } = filterAdminImageUploadFiles(Array.from(files));
+      const { valid, rejected } = filterAdminImageUploadFiles(
+        Array.from(files),
+      );
       if (valid.length === 0) {
-        setError(getClientErrorMessage(ERROR_KEYS.VALIDATION.INVALID_FILE_TYPE));
+        setError(
+          getClientErrorMessage(ERROR_KEYS.VALIDATION.INVALID_FILE_TYPE),
+        );
         return;
       }
 
@@ -36,7 +45,9 @@ export function useProjectImageUpload(
 
       if (selectedType === 'MAIN' && project.mainImage) {
         setError(
-          getClientErrorMessage(ERROR_KEYS.VALIDATION.MAIN_IMAGE_ALREADY_EXISTS),
+          getClientErrorMessage(
+            ERROR_KEYS.VALIDATION.MAIN_IMAGE_ALREADY_EXISTS,
+          ),
         );
         return;
       }

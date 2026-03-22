@@ -141,7 +141,6 @@ describe('Project Routes Integration Tests', () => {
           client: 'New Client',
           constructionArea: 100,
           categoryIds: ['clx789xyz123abc456'],
-          images: [],
         });
 
       expect(response.status).toBe(201);
@@ -213,28 +212,6 @@ describe('Project Routes Integration Tests', () => {
       expect(response.body.message).toBe('Invalid input data');
     });
 
-    it('should validate image URLs', async () => {
-      const response = await request(app)
-        .post('/api/projects')
-        .set('Authorization', 'Bearer admin-token')
-        .send({
-          title: 'New Project',
-          description: 'Description',
-          location: 'Location',
-          client: 'Client',
-          constructionArea: 100,
-          categoryIds: ['clx789xyz123abc456'],
-          images: [
-            {
-              url: 'not-a-valid-url',
-              type: 'IMAGE',
-            },
-          ],
-        });
-
-      expect(response.status).toBe(400);
-      expect(response.body.message).toBe('Invalid input data');
-    });
   });
 
   describe('GET /api/projects', () => {
