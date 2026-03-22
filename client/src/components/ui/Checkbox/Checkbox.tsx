@@ -5,10 +5,7 @@ export type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> 
   error?: { message?: string };
 };
 
-/**
- * Toggle styled like {@link Button} / {@link Input}: `rounded-xl`, border,
- * primary fill when checked. Native checkbox is visually hidden for a11y and RHF.
- */
+/** Custom checkbox: small bordered tile + checkmark when checked (not native glyph, not a pill button). */
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ label, error, id, className, ...props }, ref) => {
     const { 'aria-describedby': ariaDescribedBy, ...rest } = props;
@@ -19,43 +16,55 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       [error?.message ? errorId : null, ariaDescribedBy].filter(Boolean).join(' ') ||
       undefined;
 
-    const labelClassName = [
-      'inline-flex min-h-[2.5rem] cursor-pointer select-none items-center justify-center',
-      'rounded-xl border px-4 py-2 text-sm font-bold transition-all duration-200',
+    const boxClassName = [
+      'flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors',
       '[-webkit-tap-highlight-color:transparent]',
-      'peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-offset-0',
+      'bg-white peer-checked:border-primary peer-checked:bg-primary',
+      'hover-capable:border-gray-300 peer-checked:hover-capable:border-primary',
       error
-        ? [
-            'border-red-500 bg-red-50/80 text-dark',
-            'peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary',
-            'peer-focus-visible:ring-red-500 peer-checked:peer-focus-visible:ring-primary',
-          ].join(' ')
-        : [
-            'border-gray-200 bg-gray-100 text-dark',
-            'hover-capable:hover:bg-gray-200',
-            'peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary',
-            'hover-capable:peer-checked:hover:bg-primary/90',
-            'peer-focus-visible:ring-primary',
-          ].join(' '),
-      'peer-disabled:cursor-not-allowed peer-disabled:opacity-50',
-      className,
-    ]
-      .filter(Boolean)
-      .join(' ');
+        ? 'border-red-500 peer-focus-visible:ring-2 peer-focus-visible:ring-red-500 peer-focus-visible:ring-offset-0'
+        : 'border-gray-200 peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-0',
+      'peer-disabled:opacity-50',
+      'peer-checked:[&>svg]:opacity-100',
+    ].join(' ');
 
     return (
       <div className="relative inline-flex flex-col">
-        <input
-          ref={ref}
-          id={inputId}
-          type="checkbox"
-          className="peer sr-only"
-          aria-invalid={!!error}
-          aria-describedby={describedBy}
-          {...rest}
-        />
-        <label htmlFor={inputId} className={labelClassName}>
-          {label}
+        <label
+          className={[
+            'flex cursor-pointer select-none items-center gap-2',
+            'has-[:disabled]:cursor-not-allowed',
+            className,
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          <input
+            ref={ref}
+            id={inputId}
+            type="checkbox"
+            className="peer sr-only"
+            aria-invalid={!!error}
+            aria-describedby={describedBy}
+            {...rest}
+          />
+          <span className={boxClassName} aria-hidden>
+            <svg
+              viewBox="0 0 12 12"
+              fill="none"
+              className="h-3 w-3 opacity-0 transition-opacity"
+              aria-hidden
+            >
+              <path
+                d="M2.5 6l2.5 2.5L9.5 3"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <span className="text-sm font-bold text-dark">{label}</span>
         </label>
         {error?.message && (
           <span id={errorId} className="mt-1 block text-sm text-red-500">
