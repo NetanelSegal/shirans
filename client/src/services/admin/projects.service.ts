@@ -1,6 +1,5 @@
 import apiClient from '../../utils/apiClient';
 import { urls } from '../../constants/urls';
-import { resolveProjectImages } from '../../utils/imageUrl';
 import type {
   ProjectResponse,
   CreateProjectInput,
@@ -13,24 +12,24 @@ import type {
 
 export async function fetchAllProjects(): Promise<ProjectResponse[]> {
   const { data } = await apiClient.get<ProjectResponse[]>(urls.projects);
-  return data.map(resolveProjectImages);
+  return data;
 }
 
 export async function createProject(
-  input: CreateProjectInput
+  input: CreateProjectInput,
 ): Promise<ProjectResponse> {
   const { data } = await apiClient.post<ProjectResponse>(urls.projects, input);
-  return resolveProjectImages(data);
+  return data;
 }
 
 export async function updateProject(
-  input: UpdateProjectInput
+  input: UpdateProjectInput,
 ): Promise<ProjectResponse> {
   const { data } = await apiClient.put<ProjectResponse>(
     urls.updateProject,
-    input
+    input,
   );
-  return resolveProjectImages(data);
+  return data;
 }
 
 export async function deleteProject(id: string): Promise<void> {
@@ -44,7 +43,7 @@ export interface UploadProjectImagesInput {
 }
 
 export async function uploadProjectImages(
-  input: UploadProjectImagesInput
+  input: UploadProjectImagesInput,
 ): Promise<ProjectResponse> {
   const formData = new FormData();
   formData.append('id', input.projectId);
@@ -56,27 +55,27 @@ export async function uploadProjectImages(
     formData,
     { timeout: 120_000 },
   );
-  return resolveProjectImages(data);
+  return data;
 }
 
 export async function deleteMainImage(
-  input: DeleteMainImageInput
+  input: DeleteMainImageInput,
 ): Promise<void> {
   await apiClient.delete(urls.deleteMainImage, { data: input });
 }
 
 export async function deleteProjectImages(
-  input: DeleteImagesInput
+  input: DeleteImagesInput,
 ): Promise<void> {
   await apiClient.delete(urls.deleteProjectImages, { data: input });
 }
 
 export async function reorderImages(
-  input: ReorderImagesInput
+  input: ReorderImagesInput,
 ): Promise<ProjectResponse> {
   const { data } = await apiClient.patch<ProjectResponse>(
     urls.reorderImages,
     input,
   );
-  return resolveProjectImages(data);
+  return data;
 }

@@ -246,7 +246,6 @@ test.describe('Authentication Flow', () => {
           client: 'Test',
           constructionArea: 100,
           categoryIds: [],
-          images: [],
         },
       });
 
@@ -273,7 +272,6 @@ test.describe('Authentication Flow', () => {
           client: 'Test',
           constructionArea: 100,
           categoryIds: [],
-          images: [],
         },
       });
 

@@ -1,11 +1,8 @@
 import { useScreenContext } from '@/contexts/ScreenProvider';
-import { fetchPublishedTestimonials } from '@/services/testimonials.service';
 import { motion, useMotionValue, animate, MotionValue } from 'motion/react';
 import { MutableRefObject, RefObject, useEffect, useMemo, useRef, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { LoadingState, EmptyState } from '@/components/DataState';
-import { queryKeys } from '@/constants/queryKeys';
-import { QUERY_GC_TIME_MS, QUERY_STALE_TIME_MS } from '@/lib/queryClient';
+import { useTestimonials } from '@/hooks/useTestimonials';
 import type { TestimonialResponse } from '@shirans/shared';
 
 export default function Testimonials() {
@@ -15,12 +12,7 @@ export default function Testimonials() {
   const x = useMotionValue(0);
   const animationRef = useRef<ReturnType<typeof animate> | null>(null);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: queryKeys.testimonials,
-    queryFn: fetchPublishedTestimonials,
-    staleTime: QUERY_STALE_TIME_MS,
-    gcTime: QUERY_GC_TIME_MS,
-  });
+  const { data, isLoading, isError } = useTestimonials();
 
   const testimonials = useMemo(
     () => (data ?? []).map(({ name, message }) => ({ name, message })),

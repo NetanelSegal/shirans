@@ -12,11 +12,14 @@ interface SelectProps<T = string> {
   error?: { message?: string } | undefined;
   value: T;
   onChange: (value: T) => void;
-  onBlur: () => void;
-  name: string;
+  onBlur?: () => void;
+  name?: string;
   id?: string;
   placeholder?: string;
+  disabled?: boolean;
 }
+
+const noop = () => {};
 
 export function Select<T extends string>({
   label,
@@ -24,12 +27,13 @@ export function Select<T extends string>({
   error,
   value,
   onChange,
-  onBlur,
+  onBlur = noop,
   name,
   id,
   placeholder = 'בחר...',
+  disabled = false,
 }: SelectProps<T>) {
-  const selectId = id ?? name;
+  const selectId = id ?? name ?? label;
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -90,7 +94,8 @@ export function Select<T extends string>({
         aria-invalid={!!error}
         aria-describedby={error ? `${selectId}-error` : undefined}
         aria-label={label}
-        className={`flex min-h-[42px] w-full items-center justify-between gap-2 hover:scale-100 ${baseInputClasses} ${borderClasses}`}
+        disabled={disabled}
+        className={`flex min-h-[42px] w-full items-center justify-between gap-2 hover:scale-100 ${baseInputClasses} ${borderClasses} ${disabled ? 'pointer-events-none opacity-50' : ''}`}
         onClick={() => setIsOpen((o) => !o)}
         onKeyDown={handleKeyDown}
       >

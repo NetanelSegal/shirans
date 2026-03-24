@@ -69,11 +69,20 @@ export function useAdminTestimonials() {
     onSuccess: () => invalidateAfterAdminTestimonialsChange(queryClient),
   });
 
+  const isMutationPending =
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    deleteMutation.isPending ||
+    updateOrderMutation.isPending ||
+    updateBulkMutation.isPending ||
+    deleteBulkMutation.isPending;
+
   return {
     testimonials,
     isLoading,
     error: errorMessage,
     refresh,
+    isMutationPending,
     create: (input: CreateTestimonialInput) =>
       createMutation.mutateAsync(input),
     update: (id: string, input: Partial<CreateTestimonialInput>) =>

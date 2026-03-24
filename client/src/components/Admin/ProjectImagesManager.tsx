@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
+import { Select, type SelectOption } from '@/components/ui/Select';
 import { useAdminProjects } from '@/hooks/admin/useAdminProjects';
 import { useProjectImageUpload } from '@/hooks/admin/useProjectImageUpload';
 import { getClientErrorMessage } from '@/constants/errorMessages';
@@ -15,6 +16,121 @@ import {
   type ProjectImageType,
   type ProjectResponse,
 } from '@shirans/shared';
+
+/* ------------------------------------------------------------------ */
+/*  ImageUploadZone                                                   */
+/* ------------------------------------------------------------------ */
+
+const UPLOAD_TYPE_OPTIONS: SelectOption<ProjectImageMultipartUploadType>[] =
+  PROJECT_IMAGE_TYPES_UPLOADABLE.map((value) => ({
+    value,
+    label: PROJECT_IMAGE_TYPE_LABELS_HE[value],
+  }));
+
+const ACCEPTED_MIME_TYPES = IMAGE_UPLOAD.ALLOWED_MIME_TYPES.join(',');
+
+interface ImageUploadZoneProps {
+  selectedType: ProjectImageMultipartUploadType;
+  onTypeChange: (type: ProjectImageMultipartUploadType) => void;
+  uploading: boolean;
+  disabled: boolean;
+  onDrop: (e: React.DragEvent) => void;
+  onBrowseClick: () => void;
+}
+
+function ImageUploadZone({
+  selectedType,
+  onTypeChange,
+  uploading,
+  disabled,
+  onDrop,
+  onBrowseClick,
+}: ImageUploadZoneProps) {
+  return (
+    <div className="mb-6">
+      <div className="mb-3 max-w-[200px]">
+        <Select
+          id="project-image-upload-type"
+          label="סוג"
+          options={UPLOAD_TYPE_OPTIONS}
+          value={selectedType}
+          onChange={onTypeChange}
+          disabled={disabled}
+        />
+      </div>
+
+      <div
+        onDrop={onDrop}
+        onDragOver={(e) => e.preventDefault()}
+        role="region"
+        aria-label="אזור גרירת קבצים להעלאה"
+        className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors ${disabled ? 'border-gray-200 bg-gray-100' : 'border-gray-300 bg-gray-50'}`}
+      >
+        <i className="fa-solid fa-cloud-arrow-up mb-2 text-3xl text-gray-400" aria-hidden />
+        <p className="text-sm text-gray-600">
+          {uploading ? 'מעלה ומעבד תמונות...' : 'גרור קבצים לכאן'}
+        </p>
+        <p className="mt-1 mb-3 text-xs text-gray-400">
+          JPEG, PNG, WebP, HEIC · עד 20 קבצים
+        </p>
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={disabled}
+          className="text-sm"
+          onClick={onBrowseClick}
+        >
+          בחר קבצים
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  ImageThumbnail                                                    */
+/* ------------------------------------------------------------------ */
+
+interface ImageThumbnailProps {
+  url: string;
+  type: ProjectImageType;
+  projectTitle: string;
+  isDeleting: boolean;
+  onDelete?: () => void;
+}
+
+function ImageThumbnail({ url, type, projectTitle, isDeleting, onDelete }: ImageThumbnailProps) {
+  return (
+    <div className="relative overflow-hidden rounded-lg">
+      {type === 'VIDEO' ? (
+        <div className="flex aspect-video items-center justify-center bg-gray-100">
+          <i className="fa-solid fa-video text-2xl text-gray-400" aria-hidden />
+        </div>
+      ) : (
+        <Image
+          src={url}
+          alt={`${projectTitle} — ${PROJECT_IMAGE_TYPE_LABELS_HE[type]}`}
+          className="aspect-video w-full object-cover"
+        />
+      )}
+      <span className="absolute top-1 right-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-white">
+        {PROJECT_IMAGE_TYPE_LABELS_HE[type]}
+      </span>
+      {onDelete && (
+        <Button
+          type="button"
+          variant="danger"
+          ariaLabel="מחק תמונה ראשית"
+          onClick={onDelete}
+          disabled={isDeleting}
+          className="absolute top-1 left-1 !min-h-0 !min-w-0 !px-2 !py-1.5"
+        >
+          <i className="fa-solid fa-trash text-xs" aria-hidden />
+        </Button>
+      )}
+    </div>
+  );
+}
 
 interface ProjectImagesManagerProps {
   project: ProjectResponse | null;
@@ -82,8 +198,6 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
     ...(project.videos ?? []).map((url) => ({ url, type: 'VIDEO' as const })),
   ];
 
-  const acceptedTypes = IMAGE_UPLOAD.ALLOWED_MIME_TYPES.join(',');
-
   return (
     <Modal
       open
@@ -113,98 +227,36 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
           </div>
         )}
 
-        <div className="mb-6">
-          <div className="mb-3 flex items-center gap-3">
-            <label
-              htmlFor="project-image-upload-type"
-              className="text-sm font-medium"
-            >
-              סוג:
-            </label>
-            <select
-              id="project-image-upload-type"
-              value={selectedType}
-              onChange={(e) =>
-                setSelectedType(e.target.value as ProjectImageMultipartUploadType)
-              }
-              className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm"
-              disabled={isBusy}
-            >
-              {PROJECT_IMAGE_TYPES_UPLOADABLE.map((value) => (
-                <option key={value} value={value}>
-                  {PROJECT_IMAGE_TYPE_LABELS_HE[value]}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-            role="region"
-            aria-label="אזור גרירת קבצים להעלאה"
-            className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors ${isBusy ? 'border-gray-200 bg-gray-100' : 'border-gray-300 bg-gray-50'}`}
-          >
-            <i className="fa-solid fa-cloud-arrow-up mb-2 text-3xl text-gray-400" aria-hidden />
-            <p className="text-sm text-gray-600">
-              {uploading ? 'מעלה ומעבד תמונות...' : 'גרור קבצים לכאן'}
-            </p>
-            <p className="mt-1 mb-3 text-xs text-gray-400">
-              JPEG, PNG, WebP, HEIC · עד 20 קבצים
-            </p>
-            <Button
-              type="button"
-              variant="secondary"
-              disabled={isBusy}
-              className="text-sm"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              בחר קבצים
-            </Button>
-          </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
-            accept={acceptedTypes}
-            onChange={(e) => handleFilesSelected(e.target.files)}
-            className="hidden"
-          />
-        </div>
+        <ImageUploadZone
+          selectedType={selectedType}
+          onTypeChange={setSelectedType}
+          uploading={uploading}
+          disabled={isBusy}
+          onDrop={handleDrop}
+          onBrowseClick={() => fileInputRef.current?.click()}
+        />
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          accept={ACCEPTED_MIME_TYPES}
+          onChange={(e) => handleFilesSelected(e.target.files)}
+          className="hidden"
+        />
 
         {allImages.length === 0 ? (
           <p className="text-center text-sm text-gray-500 py-8">אין תמונות</p>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
             {allImages.map((img) => (
-              <div key={img.url} className="relative overflow-hidden rounded-lg">
-                {img.type === 'VIDEO' ? (
-                  <div className="flex aspect-video items-center justify-center bg-gray-100">
-                    <i className="fa-solid fa-video text-2xl text-gray-400" aria-hidden />
-                  </div>
-                ) : (
-                  <Image
-                    src={img.url}
-                    alt={`${project.title} — ${PROJECT_IMAGE_TYPE_LABELS_HE[img.type]}`}
-                    className="aspect-video w-full object-cover"
-                  />
-                )}
-                <span className="absolute top-1 right-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-white">
-                  {PROJECT_IMAGE_TYPE_LABELS_HE[img.type]}
-                </span>
-                {img.type === 'MAIN' && (
-                  <Button
-                    type="button"
-                    variant="danger"
-                    ariaLabel="מחק תמונה ראשית"
-                    onClick={() => handleDeleteMainImage(img.url)}
-                    disabled={deletingIds.has(img.url)}
-                    className="absolute top-1 left-1 !min-h-0 !min-w-0 !px-2 !py-1.5"
-                  >
-                    <i className="fa-solid fa-trash text-xs" aria-hidden />
-                  </Button>
-                )}
-              </div>
+              <ImageThumbnail
+                key={img.url}
+                url={img.url}
+                type={img.type}
+                projectTitle={project.title}
+                isDeleting={deletingIds.has(img.url)}
+                onDelete={img.type === 'MAIN' ? () => handleDeleteMainImage(img.url) : undefined}
+              />
             ))}
           </div>
         )}

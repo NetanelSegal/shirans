@@ -183,7 +183,6 @@ describe('projectService', () => {
         constructionArea: 100,
         favourite: false,
         categoryIds: ['cat1'],
-        images: [],
       };
 
       const result = await projectService.createProject(createData);
@@ -193,70 +192,8 @@ describe('projectService', () => {
         title: 'New Project',
       });
       expect(projectRepository.create).toHaveBeenCalled();
-    });
-
-    it('should create project with images', async () => {
-      const mockCreatedProject = {
-        id: '1',
-        title: 'New Project',
-        description: 'New Description',
-        location: 'New Location',
-        client: 'New Client',
-        isCompleted: false,
-        constructionArea: 100,
-        favourite: false,
-        createdAt: new Date('2024-01-01'),
-        updatedAt: new Date('2024-01-01'),
-        categories: [],
-        images: [
-          {
-            id: 'img1',
-            url: 'https://example.com/image.jpg',
-            type: 'IMAGE',
-            order: 0,
-            projectId: '1',
-            createdAt: new Date(),
-          },
-        ],
-      };
-
-      vi.mocked(projectRepository.create).mockResolvedValue(
-        mockCreatedProject as never
-      );
-
-      const createData = {
-        title: 'New Project',
-        description: 'New Description',
-        location: 'New Location',
-        client: 'New Client',
-        isCompleted: false,
-        constructionArea: 100,
-        favourite: false,
-        categoryIds: ['cat1'],
-        images: [
-          {
-            url: 'https://example.com/image.jpg',
-            type: 'IMAGE',
-            order: 0,
-          },
-        ],
-      };
-
-      await projectService.createProject(createData);
-
-      expect(projectRepository.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          images: {
-            create: [
-              {
-                url: 'https://example.com/image.jpg',
-                type: 'IMAGE',
-                order: 0,
-              },
-            ],
-          },
-        })
-      );
+      const createArg = vi.mocked(projectRepository.create).mock.calls[0][0];
+      expect(createArg).not.toHaveProperty('images');
     });
 
     it('should throw HttpError 409 on duplicate title', async () => {
@@ -276,7 +213,6 @@ describe('projectService', () => {
           constructionArea: 100,
           favourite: false,
           categoryIds: ['clx789xyz123abc456'],
-          images: [],
         })
       ).rejects.toThrow(HttpError);
       await expect(
@@ -289,7 +225,6 @@ describe('projectService', () => {
           constructionArea: 100,
           favourite: false,
           categoryIds: ['clx789xyz123abc456'],
-          images: [],
         })
       ).rejects.toThrow('already exists');
     });
@@ -311,7 +246,6 @@ describe('projectService', () => {
           constructionArea: 100,
           favourite: false,
           categoryIds: ['clx999invalid999999'],
-          images: [],
         })
       ).rejects.toThrow(HttpError);
       await expect(
@@ -324,7 +258,6 @@ describe('projectService', () => {
           constructionArea: 100,
           favourite: false,
           categoryIds: ['clx999invalid999999'],
-          images: [],
         })
       ).rejects.toThrow('categories not found');
     });
@@ -344,7 +277,6 @@ describe('projectService', () => {
           constructionArea: 100,
           favourite: false,
           categoryIds: ['cat1'],
-          images: [],
         })
       ).rejects.toThrow(HttpError);
     });

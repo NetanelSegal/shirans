@@ -2,6 +2,7 @@ import {
   projectRepository,
   type ProjectFilters,
 } from '../repositories/project.repository';
+import type { CreateProjectInput } from '@shirans/shared';
 import {
   type ProjectResponse,
   type UpdateProjectInput,
@@ -12,7 +13,6 @@ import { HttpError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../constants/httpStatus';
 import { getServerErrorMessage } from '@/constants/errorMessages';
 import { Prisma } from '@prisma/client';
-import { ProjectImageType } from '@prisma/client';
 import logger from '../middleware/logger';
 import * as cloudinaryService from './cloudinary.service';
 
@@ -61,19 +61,9 @@ export const projectService = {
    * @param data - Project creation data
    * @returns Created project in frontend format
    */
-  async createProject(data: {
-    title: string;
-    description: string;
-    location: string;
-    client: string;
-    isCompleted: boolean;
-    constructionArea: number;
-    favourite: boolean;
-    categoryIds: string[];
-    images: Array<{ url: string; type: string; order?: number }>;
-  }): Promise<ProjectResponse> {
+  async createProject(data: CreateProjectInput): Promise<ProjectResponse> {
     try {
-      // Build Prisma create input
+      // Build Prisma create input (images are added via multipart upload, not JSON create)
       const createData: Prisma.ProjectCreateInput = {
         title: data.title,
         description: data.description,
@@ -84,13 +74,6 @@ export const projectService = {
         favourite: data.favourite,
         categories: {
           connect: data.categoryIds.map((categoryId) => ({ id: categoryId })),
-        },
-        images: {
-          create: data.images.map((img) => ({
-            url: img.url,
-            type: img.type as ProjectImageType,
-            order: img.order ?? 0,
-          })),
         },
       };
 

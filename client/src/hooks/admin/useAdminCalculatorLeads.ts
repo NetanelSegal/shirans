@@ -81,6 +81,12 @@ export function useAdminCalculatorLeads() {
     onError: handleActionError,
   });
 
+  const isMutationPending =
+    updateReadStatusMutation.isPending ||
+    deleteMutation.isPending ||
+    updateReadStatusBulkMutation.isPending ||
+    deleteBulkMutation.isPending;
+
   return {
     leads,
     isLoading,
@@ -88,6 +94,7 @@ export function useAdminCalculatorLeads() {
     actionError,
     clearActionError: useCallback(() => setActionError(null), []),
     refresh,
+    isMutationPending,
     updateReadStatus: (id: string, isRead: boolean) =>
       updateReadStatusMutation.mutateAsync({ id, isRead }),
     delete: (id: string) => deleteMutation.mutateAsync(id),

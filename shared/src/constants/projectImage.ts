@@ -13,14 +13,18 @@ export const PROJECT_IMAGE_TYPE_VALUES = [
 export type ProjectImageType = (typeof PROJECT_IMAGE_TYPE_VALUES)[number];
 
 /** Allowed `type` values for multipart file upload (Cloudinary pipeline — not VIDEO URLs). */
-export const PROJECT_IMAGE_TYPES_UPLOADABLE = ['MAIN', 'IMAGE', 'PLAN'] as const;
+export const PROJECT_IMAGE_TYPES_UPLOADABLE = [
+  'MAIN',
+  'IMAGE',
+  'PLAN',
+] as const;
 
 export type ProjectImageMultipartUploadType =
   (typeof PROJECT_IMAGE_TYPES_UPLOADABLE)[number];
 
 /** Hebrew labels for admin UI (RTL site). */
 export const PROJECT_IMAGE_TYPE_LABELS_HE: Record<ProjectImageType, string> = {
-  MAIN: 'ראשית',
+  MAIN: 'תמונה ראשית',
   IMAGE: 'תמונה',
   PLAN: 'תוכנית',
   VIDEO: 'סרטון',

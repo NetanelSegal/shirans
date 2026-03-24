@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import DataCarousel from '../DataCarousel';
 import Image from '../ui/Image';
-import { useProjects } from '@/contexts/ProjectsContext';
+import { useProjects } from '@/hooks/useProjects';
 import type { ProjectResponse } from '@shirans/shared';
 
 export default function FavoriteProjects() {
