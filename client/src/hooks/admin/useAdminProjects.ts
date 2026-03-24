@@ -72,11 +72,21 @@ export function useAdminProjects() {
     onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
   });
 
+  const isMutationPending =
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    deleteMutation.isPending ||
+    uploadImagesMutation.isPending ||
+    deleteMainImageMutation.isPending ||
+    deleteProjectImagesMutation.isPending ||
+    reorderImagesMutation.isPending;
+
   return {
     projects,
     isLoading,
     error: errorMessage,
     refresh,
+    isMutationPending,
     create: (input: CreateProjectInput) => createMutation.mutateAsync(input),
     update: (input: UpdateProjectInput) => updateMutation.mutateAsync(input),
     delete: (id: string) => deleteMutation.mutateAsync(id),

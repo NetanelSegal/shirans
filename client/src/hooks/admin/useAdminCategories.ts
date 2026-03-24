@@ -52,11 +52,17 @@ export function useAdminCategories() {
     onSuccess: () => invalidateAfterAdminCategoriesChange(queryClient),
   });
 
+  const isMutationPending =
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    deleteMutation.isPending;
+
   return {
     categories,
     isLoading,
     error: errorMessage,
     refresh,
+    isMutationPending,
     create: (input: CreateCategoryInput) => createMutation.mutateAsync(input),
     update: (id: string, input: UpdateCategoryInput) =>
       updateMutation.mutateAsync({ id, input }),

@@ -1,17 +1,16 @@
-import { useProjects } from '@/contexts/ProjectsContext';
+import { useProjects } from '@/hooks/useProjects';
 import type { ProjectResponse } from '@shirans/shared';
 import Project from './components/Project';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import { Helmet } from 'react-helmet-async';
 import { BASE_URL } from '@/constants/urls';
 import { DataStateGuard } from '@/components/DataState';
-import { resolveImageUrl } from '@/utils/imageUrl';
 
 export default function Projects() {
   const { projects, isLoading, error, retry } = useProjects();
 
   const ogImage = projects.length > 0
-    ? resolveImageUrl(projects[0].mainImage)
+    ? projects[0].mainImage
     : `${BASE_URL}/assets/shiranImage-28AXxNS6.jpeg`;
 
   return (

@@ -2,8 +2,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense, useEffect } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import ScreenProvider from './contexts/ScreenProvider';
-import { ProjectsProvider } from './contexts/ProjectsContext';
-import { CategoriesProvider } from './contexts/CategoriesContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { queryClient } from './lib/queryClient';
@@ -59,13 +57,9 @@ function App() {
     <HelmetProvider>
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
-          <ProjectsProvider>
-            <CategoriesProvider>
-              <ScreenProvider>
-                <AppRoutes />
-              </ScreenProvider>
-            </CategoriesProvider>
-          </ProjectsProvider>
+          <ScreenProvider>
+            <AppRoutes />
+          </ScreenProvider>
         </QueryClientProvider>
       </AuthProvider>
     </HelmetProvider>

@@ -67,11 +67,18 @@ export function useAdminContacts() {
     },
   });
 
+  const isMutationPending =
+    updateReadStatusMutation.isPending ||
+    deleteMutation.isPending ||
+    updateReadStatusBulkMutation.isPending ||
+    deleteBulkMutation.isPending;
+
   return {
     contacts,
     isLoading,
     error: errorMessage,
     refresh,
+    isMutationPending,
     updateReadStatus: (id: string, isRead: boolean) =>
       updateReadStatusMutation.mutateAsync({ id, isRead }),
     delete: (id: string) => deleteMutation.mutateAsync(id),

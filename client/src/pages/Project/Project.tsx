@@ -1,52 +1,27 @@
 import { CategoryLabel } from '@/components/CategoryLabel';
 import FavoriteProjects from '@/components/FavoriteProjects';
 import ImageScaleHover from '@/components/ui/ImageScaleHover';
-import { useCategories } from '@/contexts/CategoriesContext';
 import { Navigate, useParams, useNavigate } from 'react-router-dom';
 import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
-import { useProjects } from '@/contexts/ProjectsContext';
 import { Fragment } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import { Helmet } from 'react-helmet-async';
 import { BASE_URL } from '@/constants/urls';
-import { resolveImageUrl } from '@/utils/imageUrl';
 import { LoadingState, ErrorState } from '@/components/DataState';
-import { fetchProject } from '@/services/projects.service';
-import { transformError } from '@/utils/errorHandler';
-import { getClientErrorMessage } from '@/constants/errorMessages';
-import { queryKeys } from '@/constants/queryKeys';
-import { QUERY_GC_TIME_MS, QUERY_STALE_TIME_MS } from '@/lib/queryClient';
+import { useCategoriesMap } from '@/hooks/useCategories';
+import { useProject } from '@/hooks/useProject';
 
 export default function Project() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { projects, isLoading: projectsLoading } = useProjects();
-  const { categoriesMap } = useCategories();
-
-  const projectFromList = projects.find((p) => p.id === id);
-
-  const detailFetchEnabled =
-    Boolean(id) && !projectFromList && !projectsLoading;
-
+  const { categoriesMap } = useCategoriesMap();
   const {
-    data: directProject,
-    isLoading: directLoading,
-    error: directError,
-  } = useQuery({
-    queryKey: id
-      ? queryKeys.project(id)
-      : queryKeys.projectDetailDisabled,
-    queryFn: () => fetchProject(id!),
-    enabled: detailFetchEnabled,
-    staleTime: QUERY_STALE_TIME_MS,
-    gcTime: QUERY_GC_TIME_MS,
-  });
-
-  const project = projectFromList ?? directProject ?? null;
-  const directErrorMessage = directError
-    ? getClientErrorMessage(transformError(directError).errorKey)
-    : null;
+    project,
+    projectFromList,
+    projectsLoading,
+    directLoading,
+    directErrorMessage,
+  } = useProject(id);
 
   if (projectsLoading && !projectFromList) {
     return <LoadingState minHeight="40rem" />;
@@ -68,7 +43,7 @@ export default function Project() {
 
   if (!project) return <Navigate to='/projects' />;
 
-  const ogImage = resolveImageUrl(project.mainImage);
+  const ogImage = project.mainImage;
   const ogUrl = `${BASE_URL}/projects/${project.id}`;
   const description = project.description.split('\n')[0].substring(0, 160) + '...';
   const title = `${project.title} - שירן גלעד אדריכלות ועיצוב פנים`;

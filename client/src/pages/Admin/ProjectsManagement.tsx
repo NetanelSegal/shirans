@@ -23,24 +23,38 @@ export default function ProjectsManagement() {
   const { categories } = useAdminCategories();
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [formProject, setFormProject] = useState<ProjectResponse | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<ProjectResponse | null>(null);
-  const [imagesTarget, setImagesTarget] = useState<ProjectResponse | null>(null);
+  /** `null` while modal open = create mode; id = edit that project */
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [imagesTargetId, setImagesTargetId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const formProject =
+    modalOpen && editingProjectId
+      ? (projects.find((p) => p.id === editingProjectId) ?? null)
+      : null;
+
+  const deleteTarget = deleteTargetId
+    ? (projects.find((p) => p.id === deleteTargetId) ?? null)
+    : null;
+
+  const imagesTarget = imagesTargetId
+    ? (projects.find((p) => p.id === imagesTargetId) ?? null)
+    : null;
+
   const handleOpenCreate = () => {
-    setFormProject(null);
+    setEditingProjectId(null);
     setModalOpen(true);
   };
 
   const handleOpenEdit = (p: ProjectResponse) => {
-    setFormProject(p);
+    setEditingProjectId(p.id);
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
-    setFormProject(null);
+    setEditingProjectId(null);
   };
 
   const handleDelete = async () => {
@@ -48,7 +62,7 @@ export default function ProjectsManagement() {
     setIsDeleting(true);
     try {
       await deleteProject(deleteTarget.id);
-      setDeleteTarget(null);
+      setDeleteTargetId(null);
     } finally {
       setIsDeleting(false);
     }
@@ -80,6 +94,7 @@ export default function ProjectsManagement() {
     [categories, handleToggleFavourite, handleToggleCompleted],
   );
 
+
   return (
     <div dir="rtl">
       <DataStateGuard
@@ -108,7 +123,7 @@ export default function ProjectsManagement() {
                   <Button
                     type="button"
                     variant="info"
-                    onClick={() => setImagesTarget(row)}
+                    onClick={() => setImagesTargetId(row.id)}
                     className="!rounded-lg !px-3 !py-1.5 text-sm font-medium"
                     ariaLabel={`תמונות ${row.title}`}
                   >
@@ -126,7 +141,7 @@ export default function ProjectsManagement() {
                   <Button
                     type="button"
                     variant="danger"
-                    onClick={() => setDeleteTarget(row)}
+                    onClick={() => setDeleteTargetId(row.id)}
                     className="!rounded-lg !px-3 !py-1.5 text-sm font-medium"
                     ariaLabel={`מחק ${row.title}`}
                   >
@@ -145,7 +160,7 @@ export default function ProjectsManagement() {
       />
       <ConfirmDialog
         open={!!deleteTarget}
-        onClose={() => setDeleteTarget(null)}
+        onClose={() => setDeleteTargetId(null)}
         onConfirm={handleDelete}
         title="מחיקת פרויקט"
         message={
@@ -158,7 +173,7 @@ export default function ProjectsManagement() {
       />
       <ProjectImagesManager
         project={imagesTarget}
-        onClose={() => setImagesTarget(null)}
+        onClose={() => setImagesTargetId(null)}
       />
     </div>
   );
