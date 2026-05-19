@@ -15,7 +15,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@shirans/shared": "*",
     "@tanstack/react-query": "^5.91.2",
-    "axios": "^1.13.4",
+    "axios": "^1.16.1",
     "caniuse-lite": "^1.0.30001766",
     "classnames": "^2.5.1",
     "lucide-react": "^0.577.0",
