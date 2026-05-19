@@ -35,13 +35,6 @@ export const envConfig = {
   },
 } as const;
 
-/** Whether hero videos are served from Cloudinary (required for production deploy). */
-export const isHeroVideosCloudinaryConfigured = (): boolean =>
-  !!(
-    import.meta.env.VITE_HERO_VIDEO_DESKTOP_URL &&
-    import.meta.env.VITE_HERO_VIDEO_MOBILE_URL
-  );
-
 /** Whether EmailJS is configured for contact form */
 export const isEmailJsContactConfigured = (): boolean =>
   !!(
