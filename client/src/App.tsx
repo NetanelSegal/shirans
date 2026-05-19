@@ -40,7 +40,6 @@ const CalculatorConfigManagement = lazy(
 const pingHealth = async () => {
   try {
     const response = await apiClient.get(urls.health);
-    console.log(response.data);
   } catch (error) {
     console.log(error);
   }
