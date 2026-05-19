@@ -23,6 +23,16 @@ export const envConfig = {
     calculatorTemplateId: env.VITE_EMAILJS_CALCULATOR_TEMPLATE_ID ?? '',
     publicKey: env.VITE_EMAILJS_PUBLIC_KEY ?? '',
   },
+
+  /**
+   * Home hero background videos (Cloudinary delivery URLs in production).
+   * Falls back to local public assets when unset (local dev only).
+   */
+  heroVideos: {
+    desktop:
+      env.VITE_HERO_VIDEO_DESKTOP_URL ?? '/assets/hero-vid-desktop.mov',
+    mobile: env.VITE_HERO_VIDEO_MOBILE_URL ?? '/assets/hero-vid-mobile.mov',
+  },
 } as const;
 
 /** Whether EmailJS is configured for contact form */

@@ -1,11 +1,11 @@
 import { useScreenContext } from '@/contexts/ScreenProvider';
-
-const videoSrcMobile = '/assets/hero-vid-mobile.mov';
-const videoSrcDesktop = '/assets/hero-vid-desktop.mov';
+import { envConfig } from '@/config/env';
 
 export default function HeroVideo() {
     const { isSmallScreen } = useScreenContext();
-    const videoSrc = isSmallScreen ? videoSrcMobile : videoSrcDesktop;
+    const videoSrc = isSmallScreen
+        ? envConfig.heroVideos.mobile
+        : envConfig.heroVideos.desktop;
     return (
         <div className='size-full overflow-hidden'>
             <video
