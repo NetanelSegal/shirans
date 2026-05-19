@@ -5,4 +5,5 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NPM_FLAGS = "--scope=shirans --scope=@shirans/shared"
+  # Ensure Rollup platform binaries install on Linux (npm optional-deps bug #4828)
+  NPM_FLAGS = "--include=optional"
