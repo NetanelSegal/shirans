@@ -39,6 +39,12 @@ dist/
 not_optimized_images
 .cursorignore
 
+# Hero videos — hosted on Cloudinary (see client/.env.example)
+client/public/assets/hero-vid-desktop.mov
+client/public/assets/hero-vid-mobile.mov
+client/public/assets/hero-vid-desktop.MOV
+client/public/assets/hero-vid-mobile.MOV
+
 # Transient Task Context
 .claude/active-task/
 

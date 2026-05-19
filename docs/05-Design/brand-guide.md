@@ -76,7 +76,7 @@ Shiran Gilad provides premium architecture and interior design services. The bra
 - **Optimization:** All images must be optimized (WebP) for fast loading without losing detail.
 
 ## Video
-- **Hero:** Silent, looping architectural videos for mobile and desktop (`hero-vid-desktop.mov`).
+- **Hero:** Silent, looping architectural videos for mobile and desktop (Cloudinary via `VITE_HERO_VIDEO_*_URL`; local `.mov` in `client/public/assets/` for dev only).
 
 ---
 
