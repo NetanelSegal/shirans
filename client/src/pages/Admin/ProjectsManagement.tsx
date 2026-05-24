@@ -28,6 +28,8 @@ export default function ProjectsManagement() {
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [imagesTargetId, setImagesTargetId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [pendingFavouriteId, setPendingFavouriteId] = useState<string | null>(null);
+  const [pendingCompletedId, setPendingCompletedId] = useState<string | null>(null);
 
   const formProject =
     modalOpen && editingProjectId
@@ -70,28 +72,47 @@ export default function ProjectsManagement() {
 
   const handleToggleFavourite = useCallback(
     async (p: ProjectResponse) => {
-      await update({
-        id: p.id,
-        favourite: !p.favourite,
-      });
+      setPendingFavouriteId(p.id);
+      try {
+        await update({
+          id: p.id,
+          favourite: !p.favourite,
+        });
+      } finally {
+        setPendingFavouriteId(null);
+      }
     },
     [update],
   );
 
   const handleToggleCompleted = useCallback(
     async (p: ProjectResponse) => {
-      await update({
-        id: p.id,
-        isCompleted: !p.isCompleted,
-      });
+      setPendingCompletedId(p.id);
+      try {
+        await update({
+          id: p.id,
+          isCompleted: !p.isCompleted,
+        });
+      } finally {
+        setPendingCompletedId(null);
+      }
     },
     [update],
   );
 
   const columns = useMemo(
     () =>
-      getProjectColumns(categories, handleToggleFavourite, handleToggleCompleted),
-    [categories, handleToggleFavourite, handleToggleCompleted],
+      getProjectColumns(categories, handleToggleFavourite, handleToggleCompleted, {
+        favouriteId: pendingFavouriteId,
+        completedId: pendingCompletedId,
+      }),
+    [
+      categories,
+      handleToggleFavourite,
+      handleToggleCompleted,
+      pendingFavouriteId,
+      pendingCompletedId,
+    ],
   );
 
 

@@ -53,21 +53,6 @@ export interface ProjectQueryParams {
 export function transformProjectToResponse(
   project: ProjectWithRelations
 ): ProjectResponse {
-  const mainImageObj = project.images.find((img) => img.type === 'MAIN');
-  const mainImage = mainImageObj ? mainImageObj.url : '';
-
-  const regularImages = project.images
-    .filter((img) => img.type === 'IMAGE')
-    .map((img) => img.url);
-
-  const planImages = project.images
-    .filter((img) => img.type === 'PLAN')
-    .map((img) => img.url);
-
-  const videoUrls = project.images
-    .filter((img) => img.type === 'VIDEO')
-    .map((img) => img.url);
-
   const categories: CategoryUrlCode[] = project.categories.map(
     (cat) => cat.urlCode
   );
@@ -77,10 +62,12 @@ export function transformProjectToResponse(
     title: project.title,
     categories,
     description: project.description,
-    mainImage,
-    images: regularImages,
-    plans: planImages.length > 0 ? planImages : undefined,
-    videos: videoUrls.length > 0 ? videoUrls : undefined,
+    media: project.images.map((img) => ({
+      id: img.id,
+      url: img.url,
+      type: img.type,
+      order: img.order,
+    })),
     location: project.location,
     client: project.client,
     isCompleted: project.isCompleted,

@@ -1,4 +1,5 @@
 import type { UserRole, CategoryUrlCode } from './common.types';
+import type { ProjectImageType } from '../constants/projectImage';
 
 export interface UserResponse {
   id: string;
@@ -9,15 +10,19 @@ export interface UserResponse {
   updatedAt: string;
 }
 
+export interface ProjectMediaItem {
+  id: string;
+  url: string;
+  type: ProjectImageType;
+  order: number;
+}
+
 export interface ProjectResponse {
   id: string;
   title: string;
   categories: CategoryUrlCode[];
   description: string;
-  mainImage: string;
-  images: string[];
-  plans?: string[];
-  videos?: string[];
+  media: ProjectMediaItem[];
   location: string;
   client: string;
   isCompleted: boolean;

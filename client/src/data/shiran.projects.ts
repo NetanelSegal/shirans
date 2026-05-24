@@ -1,4 +1,4 @@
-import type { ProjectResponse } from '@shirans/shared';
+import type { ProjectMediaItem, ProjectResponse } from '@shirans/shared';
 
 // ========== PROJECT 1 ==========
 import p1_img1 from './project1/images/1_desktop.webp';
@@ -83,6 +83,57 @@ import p6_img2 from './project6/images/2_desktop.webp';
 import p6_img3 from './project6/images/3_desktop.webp';
 import p6_imgMain from './project6/images/main_desktop.webp';
 
+function buildMedia(
+  projectKey: string,
+  parts: {
+    main?: string;
+    images?: string[];
+    plans?: string[];
+    videos?: string[];
+  },
+): ProjectMediaItem[] {
+  const media: ProjectMediaItem[] = [];
+  let order = 0;
+
+  if (parts.main) {
+    media.push({
+      id: `static-${projectKey}-main`,
+      url: parts.main,
+      type: 'MAIN',
+      order: order++,
+    });
+  }
+
+  for (const [index, url] of (parts.images ?? []).entries()) {
+    media.push({
+      id: `static-${projectKey}-img-${index}`,
+      url,
+      type: 'IMAGE',
+      order: order++,
+    });
+  }
+
+  for (const [index, url] of (parts.plans ?? []).entries()) {
+    media.push({
+      id: `static-${projectKey}-plan-${index}`,
+      url,
+      type: 'PLAN',
+      order: order++,
+    });
+  }
+
+  for (const [index, url] of (parts.videos ?? []).entries()) {
+    media.push({
+      id: `static-${projectKey}-video-${index}`,
+      url,
+      type: 'VIDEO',
+      order: order++,
+    });
+  }
+
+  return media;
+}
+
 // ========== EXPORTS ==========
 export const projects: ProjectResponse[] = [
   {
@@ -93,9 +144,11 @@ export const projects: ProjectResponse[] = [
 אחרי שנים של חיסכון ועבודה קשה, הם חלמו לבנות את ביתם במושב ילדותם. זכיתי לקחת חלק במסע הזה ולעזור להם להפוך את החלום למציאות.
 התמודדנו עם אתגרים לא פשוטים: שטחי בנייה מוגבלים מול רצונות רבים, מציאת קבלן בחודשי המלחמה הראשונים, עליית מחירים מתמדת, ודרישות מורכבות שהביאו עמן חששות.
 בעזרת תכנון מדויק, חשיבה יצירתית ושיתוף פעולה מלא, הצלחתי לפתור את כל הבעיות שלא קיבלו מענה לפני כן. בסופו של דבר, בנינו עבורם בית שמגלם את כל מה שחלמו עליו - מקום חמים, פונקציונלי ומיוחד, שמשקף את האישיות והחלומות שלהם`,
-    mainImage: p1_imgMain,
-    images: [p1_img1, p1_img2, p1_img3, p1_img4, p1_img5, p1_img6],
-    plans: [p1_plan1],
+    media: buildMedia('p1', {
+      main: p1_imgMain,
+      images: [p1_img1, p1_img2, p1_img3, p1_img4, p1_img5, p1_img6],
+      plans: [p1_plan1],
+    }),
     location: 'שכניה',
     client: 'זוג + 1',
     isCompleted: true,
@@ -110,40 +163,42 @@ export const projects: ProjectResponse[] = [
 המטרה הייתה לשלב בין חיבור משפחתי לבין יצירת פרטיות ונפרדות לכל משפחה, תוך שמירה על זרימה טבעית ונעימה בין שני הבתים.
 בעבודה משותפת ובהבנה מעמיקה של הצרכים, תכננתי בית שמהווה המשך ישיר לבית אמא - אך בו זמנית עומד בפני עצמו כמרחב נעים, פונקציונלי ומודרני.
 התוצאה: בית שמחבר בין דורות, שומר על המשפחתיות ומעניק לכל אחד את המקום האישי שלו - מקום שהוא לא רק בית, אלא סיפור של חיבור, עיצוב, ושורשים. בית במלוא מובן המילה.`,
-    mainImage: p2_imgMain,
-    images: [
-      p2_img1,
-      p2_img2,
-      p2_img3,
-      p2_img4,
-      p2_img5,
-      p2_img6,
-      p2_img7,
-      p2_img8,
-      p2_img9,
-      p2_img10,
-      p2_img11,
-      p2_img12,
-      p2_img14,
-      p2_img15,
-      p2_img16,
-      p2_img17,
-      p2_img18,
-      p2_img19,
-      p2_img20,
-      p2_img21,
-      p2_img22,
-      p2_img23,
-      p2_img24,
-      p2_img25,
-      p2_img26,
-      p2_img27,
-      p2_img28,
-      p2_img29,
-      p2_img30,
-      p2_img31,
-    ],
-    plans: [p2_plan1],
+    media: buildMedia('p2', {
+      main: p2_imgMain,
+      images: [
+        p2_img1,
+        p2_img2,
+        p2_img3,
+        p2_img4,
+        p2_img5,
+        p2_img6,
+        p2_img7,
+        p2_img8,
+        p2_img9,
+        p2_img10,
+        p2_img11,
+        p2_img12,
+        p2_img14,
+        p2_img15,
+        p2_img16,
+        p2_img17,
+        p2_img18,
+        p2_img19,
+        p2_img20,
+        p2_img21,
+        p2_img22,
+        p2_img23,
+        p2_img24,
+        p2_img25,
+        p2_img26,
+        p2_img27,
+        p2_img28,
+        p2_img29,
+        p2_img30,
+        p2_img31,
+      ],
+      plans: [p2_plan1],
+    }),
     location: 'גן שורק',
     client: 'זוג + 1',
     isCompleted: true,
@@ -159,19 +214,21 @@ export const projects: ProjectResponse[] = [
 בית רחב ידיים, עם חדר לכל ילד, מרחב אישי לצד אזורים משפחתיים מחבקים, וחיבור טבעי בין הפנים לחוץ. התכנון שם דגש על אור, אוויר, זרימה טבעית ונוחות מקסימלית - בית שמרגיש חם, פונקציונלי ומלא השראה.
 בעקבות המצב הביטחוני בארץ, הפרויקט טרם הסתיים, אך התכנון כבר מוכן ומחכה לרגע שבו המשפחה תוכל סוף סוף לראות את החלום שלהם קורם עור וגידים
 זהו בית של אהבה, שורשים, התחלה חדשה - ומקום שבו כל דלת שנפתחת תספר על העתיד שנבנה כאן, ביום הנכון.`,
-    mainImage: p3_imgMain,
-    images: [
-      p3_img1,
-      p3_img2,
-      p3_img3,
-      p3_img4,
-      p3_img5,
-      p3_img6,
-      p3_img7,
-      p3_img8,
-      p3_img9,
-    ],
-    plans: [p3_plan1, p3_plan2],
+    media: buildMedia('p3', {
+      main: p3_imgMain,
+      images: [
+        p3_img1,
+        p3_img2,
+        p3_img3,
+        p3_img4,
+        p3_img5,
+        p3_img6,
+        p3_img7,
+        p3_img8,
+        p3_img9,
+      ],
+      plans: [p3_plan1, p3_plan2],
+    }),
     location: 'פרדס חנה',
     client: 'זוג + 4',
     isCompleted: false,
@@ -191,22 +248,24 @@ export const projects: ProjectResponse[] = [
 החלום שלהם היה ברור - להפיח חיים חדשים בבית הזה, לשמר את הנשמה שבו, אבל להפוך אותו לבית מרווח, מואר ופונקציונלי שיתאים לשגרת החיים שלהם. תכננתי עבורם בית שעונה בדיוק על הצרכים שלהם: לכל ילד חדר משלו, משרד ביתי שישתלב בנוחות בחלל, מרפסת רחבה שפונה אל הנוף המרהיב של גן שורק, ושילוב חכם בין ישן לחדש - בין זיכרונות העבר לאורח החיים העכשווי.
 זהו פרויקט שמביא איתו לא רק תכנון ועיצוב, אלא גם רגש עמוק וכבוד לשורשים המשפחתיים. בית חדש שקם מתוך הישן, עם כל מה שחשוב באמת: מרחב, אור, אוויר - והרבה אהבה.
 `,
-    plans: [p4_plan1],
-    images: [
-      p4_img1,
-      p4_img2,
-      p4_img3,
-      p4_img4,
-      p4_img5,
-      p4_img6,
-      p4_img7,
-      p4_img8,
-    ],
-    videos: [
-      'https://www.youtube.com/embed/XPgwUDZXKkk',
-      'https://www.youtube.com/embed/Kn7jyqiiHck',
-    ],
-    mainImage: p4_imgMain,
+    media: buildMedia('p4', {
+      main: p4_imgMain,
+      images: [
+        p4_img1,
+        p4_img2,
+        p4_img3,
+        p4_img4,
+        p4_img5,
+        p4_img6,
+        p4_img7,
+        p4_img8,
+      ],
+      plans: [p4_plan1],
+      videos: [
+        'https://www.youtube.com/embed/XPgwUDZXKkk',
+        'https://www.youtube.com/embed/Kn7jyqiiHck',
+      ],
+    }),
   },
   {
     id: '5',
@@ -220,8 +279,10 @@ export const projects: ProjectResponse[] = [
     description: `בכל בית יש זיכרונות, אבל בבית של סבא - יש שורשים.
 הבית הישן בבנימינה, שעמד במשך עשרות שנים עם כל ההיסטוריה והקסם שבו, עבר חידוש מדויק שהתמקד בלב הפועם של כל בית: המטבח והמקלחת.
 `,
-    images: [p5_img1, p5_img2, p5_img3, p5_img4],
-    mainImage: p5_imgMain,
+    media: buildMedia('p5', {
+      main: p5_imgMain,
+      images: [p5_img1, p5_img2, p5_img3, p5_img4],
+    }),
   },
   {
     id: '6',
@@ -233,7 +294,9 @@ export const projects: ProjectResponse[] = [
     location: 'תל אביב',
     title: 'דירת שותפים ישנה בלב תל אביב - מהפך צעיר, פרקטי ומרשים',
     description: `דירה תל אביבית ישנה, בקומה ראשונה בלי מעלית, עם מטבח מתקלף, קירות סדוקים ומרווחים צפופים - הפכה תוך זמן קצר לדירת שותפים עדכנית, מרווחת ונעימה שכולם רוצים לגור בה.`,
-    images: [p6_img1, p6_img2, p6_img3],
-    mainImage: p6_imgMain,
+    media: buildMedia('p6', {
+      main: p6_imgMain,
+      images: [p6_img1, p6_img2, p6_img3],
+    }),
   },
 ];

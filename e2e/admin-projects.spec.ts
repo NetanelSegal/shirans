@@ -154,6 +154,30 @@ test.describe('Admin — projects CRUD and media uploads', () => {
     });
   });
 
+  test('toggle favourite updates row optimistically', async ({ page }) => {
+    await page.goto('/admin/projects', { waitUntil: 'domcontentloaded' });
+
+    const row = page.locator('tr').filter({ hasText: editedTitle });
+    await expect(row).toBeVisible({ timeout: 15_000 });
+
+    const favouriteButton = row.getByRole('button', {
+      name: /הוסף למועדפים|הסר ממועדפים/,
+    });
+    const labelBefore = await favouriteButton.getAttribute('aria-label');
+
+    const updatePromise = page.waitForResponse(
+      (res) =>
+        res.url().includes('/api/projects') &&
+        res.request().method() === 'PUT' &&
+        res.ok(),
+    );
+
+    await favouriteButton.click();
+    await updatePromise;
+
+    await expect(favouriteButton).not.toHaveAttribute('aria-label', labelBefore ?? '');
+  });
+
   test('delete project', async ({ page }) => {
     await page.goto('/admin/projects', { waitUntil: 'domcontentloaded' });
 

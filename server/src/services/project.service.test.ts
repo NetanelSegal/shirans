@@ -91,8 +91,20 @@ describe('projectService', () => {
         id: '1',
         title: 'Test Project',
         categories: ['privateHouses'],
-        mainImage: 'https://example.com/main.jpg',
-        images: ['https://example.com/image.jpg'],
+        media: [
+          {
+            id: 'img1',
+            url: 'https://example.com/main.jpg',
+            type: 'MAIN',
+            order: 0,
+          },
+          {
+            id: 'img2',
+            url: 'https://example.com/image.jpg',
+            type: 'IMAGE',
+            order: 1,
+          },
+        ],
       });
       expect(projectRepository.findAll).toHaveBeenCalledWith(undefined);
     });

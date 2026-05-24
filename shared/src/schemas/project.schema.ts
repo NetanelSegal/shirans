@@ -52,11 +52,15 @@ export const createProjectSchema = z.object({
 /**
  * Zod schema for updating a project (PATCH). Derived from create; all fields optional except id.
  * `categoryIds` allows an empty array to clear categories (create requires min 1).
+ * Boolean fields are re-declared without defaults so partial updates do not reset the other flag.
  */
 export const updateProjectSchema = createProjectSchema
+  .omit({ isCompleted: true, favourite: true })
   .partial()
   .extend({
     id: z.cuid('Project ID must be a valid CUID'),
+    isCompleted: z.boolean().optional(),
+    favourite: z.boolean().optional(),
     categoryIds: z.array(z.cuid('Category ID must be a valid CUID')).optional(),
   });
 

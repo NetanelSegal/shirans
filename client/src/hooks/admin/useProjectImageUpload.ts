@@ -2,6 +2,7 @@ import { useState, useCallback, type RefObject } from 'react';
 import {
   ERROR_KEYS,
   IMAGE_UPLOAD,
+  getMainImageUrl,
   type ErrorKey,
   type ProjectResponse,
 } from '@shirans/shared';
@@ -43,7 +44,7 @@ export function useProjectImageUpload(
         return;
       }
 
-      if (selectedType === 'MAIN' && project.mainImage) {
+      if (selectedType === 'MAIN' && getMainImageUrl(project.media)) {
         setError(
           getClientErrorMessage(
             ERROR_KEYS.VALIDATION.MAIN_IMAGE_ALREADY_EXISTS,

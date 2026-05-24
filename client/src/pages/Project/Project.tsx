@@ -10,6 +10,7 @@ import { BASE_URL } from '@/constants/urls';
 import { LoadingState, ErrorState } from '@/components/DataState';
 import { useCategoriesMap } from '@/hooks/useCategories';
 import { useProject } from '@/hooks/useProject';
+import { getMainImageUrl, getMediaUrlsByType } from '@shirans/shared';
 
 export default function Project() {
   const { id } = useParams<{ id: string }>();
@@ -43,7 +44,12 @@ export default function Project() {
 
   if (!project) return <Navigate to='/projects' />;
 
-  const ogImage = project.mainImage;
+  const mainImageUrl = getMainImageUrl(project.media);
+  const planUrls = getMediaUrlsByType(project.media, 'PLAN');
+  const videoUrls = getMediaUrlsByType(project.media, 'VIDEO');
+  const galleryUrls = getMediaUrlsByType(project.media, 'IMAGE');
+
+  const ogImage = mainImageUrl;
   const ogUrl = `${BASE_URL}/projects/${project.id}`;
   const description = project.description.split('\n')[0].substring(0, 160) + '...';
   const title = `${project.title} - שירן גלעד אדריכלות ועיצוב פנים`;
@@ -71,7 +77,7 @@ export default function Project() {
           </h3>
           <ImageScaleHover
             containerClassName='w-full h-[75vh] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
-            src={project.mainImage}
+            src={mainImageUrl}
           />
         </div>
       </EnterAnimation>
@@ -130,26 +136,26 @@ export default function Project() {
       </EnterAnimation>
 
       {/* תוכניות */}
-      {project.plans && (
+      {planUrls.length > 0 && (
         <EnterAnimation delay={0.1}>
           <div className='py-10'>
             <h3 className='subheading mb-5'>תוכניות</h3>
             <ProjectImagePlanShowcase
               imageClassname='shrink-0 overflow-hidden sm:basis-[calc(50%-4px)]'
               containerClassname='flex w-full flex-wrap justify-start gap-2 md:flex-row md:overflow-x-auto justify-between'
-              arr={project.plans}
+              arr={planUrls}
             />
           </div>
         </EnterAnimation>
       )}
 
       {/* סרטונים */}
-      {project.videos && (
+      {videoUrls.length > 0 && (
         <EnterAnimation delay={0.1}>
           <div className='py-10'>
             <h3 className='subheading mb-5'>סרטונים</h3>
             <div className='flex w-full flex-wrap justify-center gap-2 sm:flex-row'>
-              {project.videos.map((src, i) => (
+              {videoUrls.map((src, i) => (
                 <EnterAnimation key={src} delay={i * 0.1} translateY={false}>
                   <iframe
                     src={`${src}?autoplay=1&mute=1&controls=0&loop=1`}
@@ -170,7 +176,7 @@ export default function Project() {
           <ProjectImagePlanShowcase
             imageClassname='shrink-0 overflow-hidden sm:basis-[calc(50%-4px)]'
             containerClassname='flex w-full flex-wrap justify-start gap-2 md:flex-row md:overflow-x-auto justify-between'
-            arr={project.images}
+            arr={galleryUrls}
           />
         </div>
       </EnterAnimation>
