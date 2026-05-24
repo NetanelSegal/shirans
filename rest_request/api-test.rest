@@ -44,10 +44,9 @@ Content-Type: application/json
 ###     "title": "Project Title",
 ###     "categories": ["privateHouses"],
 ###     "description": "Project description...",
-###     "mainImage": "https://example.com/main.jpg",
-###     "images": ["https://example.com/img1.jpg"],
-###     "plans": ["https://example.com/plan1.jpg"],
-###     "videos": ["https://example.com/video1.mp4"],
+###     "media": [
+###       { "id": "...", "url": "https://example.com/main.jpg", "type": "MAIN", "order": 0 }
+###     ],
 ###     "location": "Location",
 ###     "client": "Client Name",
 ###     "isCompleted": true,

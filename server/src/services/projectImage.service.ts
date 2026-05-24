@@ -117,7 +117,7 @@ export const projectImageService = {
     }
   },
 
-  async deleteMainImage(id: string): Promise<void> {
+  async deleteMainImage(id: string): Promise<ProjectResponse> {
     try {
       const project = await projectRepository.findById(id);
       if (!project) {
@@ -139,6 +139,16 @@ export const projectImageService = {
         await cloudinaryService.deleteImage(mainImage.publicId);
       }
       await projectRepository.deleteImage(mainImage.id);
+
+      const updatedProject = await projectRepository.findById(id);
+      if (!updatedProject) {
+        throw new HttpError(
+          HTTP_STATUS.NOT_FOUND,
+          getServerErrorMessage('NOT_FOUND.PROJECT_NOT_FOUND'),
+        );
+      }
+
+      return transformProjectToResponse(updatedProject);
     } catch (error) {
       if (error instanceof HttpError) {
         throw error;
@@ -151,7 +161,10 @@ export const projectImageService = {
     }
   },
 
-  async deleteProjectImages(id: string, imageIds: string[]): Promise<void> {
+  async deleteProjectImages(
+    id: string,
+    imageIds: string[],
+  ): Promise<ProjectResponse> {
     try {
       const project = await projectRepository.findById(id);
       if (!project) {
@@ -180,6 +193,16 @@ export const projectImageService = {
         await cloudinaryService.deleteImages(publicIds);
       }
       await projectRepository.deleteImages(id, imageIds);
+
+      const updatedProject = await projectRepository.findById(id);
+      if (!updatedProject) {
+        throw new HttpError(
+          HTTP_STATUS.NOT_FOUND,
+          getServerErrorMessage('NOT_FOUND.PROJECT_NOT_FOUND'),
+        );
+      }
+
+      return transformProjectToResponse(updatedProject);
     } catch (error) {
       if (error instanceof HttpError) {
         throw error;

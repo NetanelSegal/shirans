@@ -136,8 +136,8 @@ export async function deleteMainImage(
   res: Response
 ): Promise<Response> {
   const { id } = validateRequest(deleteMainImageSchema, req.body);
-  await projectImageService.deleteMainImage(id);
-  return res.status(200).json({ message: 'Main image deleted successfully' });
+  const updatedProject = await projectImageService.deleteMainImage(id);
+  return res.status(200).json(updatedProject);
 }
 
 /**
@@ -150,8 +150,11 @@ export async function deleteProjectImages(
   res: Response
 ): Promise<Response> {
   const { id, imageIds } = validateRequest(deleteImagesSchema, req.body);
-  await projectImageService.deleteProjectImages(id, imageIds);
-  return res.status(200).json({ message: 'Images deleted successfully' });
+  const updatedProject = await projectImageService.deleteProjectImages(
+    id,
+    imageIds,
+  );
+  return res.status(200).json(updatedProject);
 }
 
 /**

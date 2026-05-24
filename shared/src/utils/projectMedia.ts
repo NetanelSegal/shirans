@@ -96,6 +96,47 @@ export function getMediaIdOrder(media: ProjectMediaItem[]): string[] {
   return sortProjectMedia(media).map((item) => item.id);
 }
 
+/** Stable key for comparing media membership/order without reference equality. */
+export function getMediaOrderKey(media: ProjectMediaItem[]): string {
+  return getMediaIdOrder(media).join('|');
+}
+
+/** Assign sequential order values after existing media (for uploads). */
+export function getNextMediaOrders(
+  media: ProjectMediaItem[],
+  count: number,
+): number[] {
+  if (count <= 0) return [];
+  const maxOrder = sortProjectMedia(media).reduce(
+    (max, item) => Math.max(max, item.order),
+    -1,
+  );
+  return Array.from({ length: count }, (_, index) => maxOrder + 1 + index);
+}
+
+/**
+ * When the server adds/removes media while a bulk reorder draft is dirty,
+ * preserve draft order for surviving IDs and append new server items.
+ */
+export function mergeServerMediaIntoDraft(
+  draft: ProjectMediaItem[],
+  server: ProjectMediaItem[],
+): ProjectMediaItem[] {
+  const serverSorted = sortProjectMedia(server);
+  if (isSameMediaOrder(draft, serverSorted)) {
+    return serverSorted;
+  }
+
+  const serverById = new Map(serverSorted.map((item) => [item.id, item]));
+  const draftIds = getMediaIdOrder(draft).filter((id) => serverById.has(id));
+  const draftIdSet = new Set(draftIds);
+  const appendedIds = serverSorted
+    .filter((item) => !draftIdSet.has(item.id))
+    .map((item) => item.id);
+
+  return applyMediaIdOrder(serverSorted, [...draftIds, ...appendedIds]);
+}
+
 /** Apply a full ID order list to existing media items (local draft UI). */
 export function applyMediaIdOrder(
   media: ProjectMediaItem[],

@@ -9,6 +9,8 @@ import { ProjectImagesManager } from '@/components/Admin/ProjectImagesManager';
 import { ProjectFormModal } from '@/components/Admin/ProjectFormModal';
 import { getProjectColumns } from '@/components/Admin/ProjectColumns';
 import Button from '@/components/ui/Button';
+import { getClientErrorMessage } from '@/constants/errorMessages';
+import { transformError } from '@/utils/errorHandler';
 import type { ProjectResponse } from '@shirans/shared';
 
 export default function ProjectsManagement() {
@@ -30,6 +32,7 @@ export default function ProjectsManagement() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [pendingFavouriteId, setPendingFavouriteId] = useState<string | null>(null);
   const [pendingCompletedId, setPendingCompletedId] = useState<string | null>(null);
+  const [rowActionError, setRowActionError] = useState<string | null>(null);
 
   const formProject =
     modalOpen && editingProjectId
@@ -72,12 +75,15 @@ export default function ProjectsManagement() {
 
   const handleToggleFavourite = useCallback(
     async (p: ProjectResponse) => {
+      setRowActionError(null);
       setPendingFavouriteId(p.id);
       try {
         await update({
           id: p.id,
           favourite: !p.favourite,
         });
+      } catch (err) {
+        setRowActionError(getClientErrorMessage(transformError(err).errorKey));
       } finally {
         setPendingFavouriteId(null);
       }
@@ -87,12 +93,15 @@ export default function ProjectsManagement() {
 
   const handleToggleCompleted = useCallback(
     async (p: ProjectResponse) => {
+      setRowActionError(null);
       setPendingCompletedId(p.id);
       try {
         await update({
           id: p.id,
           isCompleted: !p.isCompleted,
         });
+      } catch (err) {
+        setRowActionError(getClientErrorMessage(transformError(err).errorKey));
       } finally {
         setPendingCompletedId(null);
       }
@@ -133,6 +142,14 @@ export default function ProjectsManagement() {
               actionLabel="הוסף פרויקט"
               onAction={handleOpenCreate}
             />
+            {rowActionError && (
+              <div
+                className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700"
+                role="alert"
+              >
+                {rowActionError}
+              </div>
+            )}
             <DataTable
               columns={columns}
               data={data}

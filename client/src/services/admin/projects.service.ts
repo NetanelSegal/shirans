@@ -60,14 +60,22 @@ export async function uploadProjectImages(
 
 export async function deleteMainImage(
   input: DeleteMainImageInput,
-): Promise<void> {
-  await apiClient.delete(urls.deleteMainImage, { data: input });
+): Promise<ProjectResponse> {
+  const { data } = await apiClient.delete<ProjectResponse>(
+    urls.deleteMainImage,
+    { data: input },
+  );
+  return data;
 }
 
 export async function deleteProjectImages(
   input: DeleteImagesInput,
-): Promise<void> {
-  await apiClient.delete(urls.deleteProjectImages, { data: input });
+): Promise<ProjectResponse> {
+  const { data } = await apiClient.delete<ProjectResponse>(
+    urls.deleteProjectImages,
+    { data: input },
+  );
+  return data;
 }
 
 export async function reorderImages(

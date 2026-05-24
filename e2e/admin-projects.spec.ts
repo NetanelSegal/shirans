@@ -156,7 +156,7 @@ test.describe('Admin — projects CRUD and media uploads', () => {
     });
   });
 
-  test('toggle favourite updates row optimistically', async ({ page }) => {
+  test('toggle favourite updates row after save', async ({ page }) => {
     await page.goto('/admin/projects', { waitUntil: 'domcontentloaded' });
 
     const row = page.locator('tr').filter({ hasText: editedTitle });

@@ -39,7 +39,7 @@ export function addAdminProjectToCache(
 ): void {
   queryClient.setQueryData<ProjectResponse[]>(
     queryKeys.admin.projects,
-    (old) => (old ? [project, ...old] : [project]),
+    (old) => (old ? [...old, project] : [project]),
   );
 }
 

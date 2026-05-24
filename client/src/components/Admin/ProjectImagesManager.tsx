@@ -16,7 +16,9 @@ import {
   buildFullReorderIdsFromMove,
   getMediaByType,
   getMediaIdOrder,
+  getMediaOrderKey,
   isSameMediaOrder,
+  mergeServerMediaIntoDraft,
   sortProjectMedia,
   type ErrorKey,
   type ProjectImageMultipartUploadType,
@@ -117,6 +119,10 @@ interface ImageThumbnailProps {
   onDragOver: () => void;
   onDrop: () => void;
   onDragEnd: () => void;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  canMoveUp?: boolean;
+  canMoveDown?: boolean;
 }
 
 function ImageThumbnail({
@@ -133,6 +139,10 @@ function ImageThumbnail({
   onDragOver,
   onDrop,
   onDragEnd,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp = false,
+  canMoveDown = false,
 }: ImageThumbnailProps) {
   const typeLabel = PROJECT_IMAGE_TYPE_LABELS_HE[item.type];
 
@@ -153,6 +163,11 @@ function ImageThumbnail({
         onDrop();
       }}
       onDragEnd={onDragEnd}
+      aria-label={
+        showDragHandle
+          ? `${typeLabel} — מיקום ${indexInType + 1}, ניתן לגרור או להזיז עם החצים`
+          : undefined
+      }
       className={`relative overflow-hidden rounded-lg border bg-white transition-all ${
         isDragging ? 'scale-[0.98] opacity-40' : ''
       } ${isDropTarget ? 'border-primary ring-2 ring-primary/30' : 'border-gray-200'}`}
@@ -193,10 +208,33 @@ function ImageThumbnail({
       </Button>
       {showDragHandle && (
         <div
-          className="absolute bottom-1 left-1 flex cursor-grab items-center rounded bg-white/90 px-2 py-1 text-gray-600 shadow-sm active:cursor-grabbing"
-          aria-hidden
+          className="absolute bottom-1 left-1 flex cursor-grab items-center gap-1 rounded bg-white/90 px-1 py-1 text-gray-600 shadow-sm active:cursor-grabbing"
         >
-          <i className="fa-solid fa-grip-lines text-sm" />
+          <i className="fa-solid fa-grip-lines px-1 text-sm" aria-hidden />
+          {(onMoveUp || onMoveDown) && (
+            <div className="flex flex-col">
+              <Button
+                type="button"
+                variant="light"
+                ariaLabel={`הזז ${typeLabel} למעלה`}
+                disabled={!canMoveUp}
+                onClick={onMoveUp}
+                className="!min-h-0 !min-w-0 !px-1 !py-0.5 text-[10px] leading-none"
+              >
+                ↑
+              </Button>
+              <Button
+                type="button"
+                variant="light"
+                ariaLabel={`הזז ${typeLabel} למטה`}
+                disabled={!canMoveDown}
+                onClick={onMoveDown}
+                className="!min-h-0 !min-w-0 !px-1 !py-0.5 text-[10px] leading-none"
+              >
+                ↓
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -218,6 +256,7 @@ interface MediaSectionProps {
   onDragOver: (index: number) => void;
   onDrop: (type: ReorderableType, toIndex: number) => void;
   onDragEnd: () => void;
+  onReorderMove: (type: ReorderableType, fromIndex: number, toIndex: number) => void;
 }
 
 function MediaSection({
@@ -235,6 +274,7 @@ function MediaSection({
   onDragOver,
   onDrop,
   onDragEnd,
+  onReorderMove,
 }: MediaSectionProps) {
   if (items.length === 0) return null;
 
@@ -276,6 +316,28 @@ function MediaSection({
               if (canDrag) onDrop(type as ReorderableType, indexInType);
             }}
             onDragEnd={onDragEnd}
+            onMoveUp={
+              canDrag && indexInType > 0
+                ? () =>
+                    onReorderMove(
+                      type as ReorderableType,
+                      indexInType,
+                      indexInType - 1,
+                    )
+                : undefined
+            }
+            onMoveDown={
+              canDrag && indexInType < items.length - 1
+                ? () =>
+                    onReorderMove(
+                      type as ReorderableType,
+                      indexInType,
+                      indexInType + 1,
+                    )
+                : undefined
+            }
+            canMoveUp={canDrag && indexInType > 0}
+            canMoveDown={canDrag && indexInType < items.length - 1}
           />
         ))}
       </div>
@@ -306,25 +368,40 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
   const [reorderMode, setReorderMode] = useState<ReorderMode>('bulk');
   const [draftMedia, setDraftMedia] = useState<ProjectMediaItem[]>([]);
 
+  const projectId = project?.id;
+  const projectMedia = project?.media ?? [];
+  const serverMediaKey = getMediaOrderKey(projectMedia);
+
   useEffect(() => {
-    if (project) {
-      setDraftMedia(sortProjectMedia(project.media));
-    }
-  }, [project?.id, project?.media]);
+    if (!projectId) return;
+    setDraftMedia(sortProjectMedia(projectMedia));
+    setError(null);
+    // Reset draft only when opening a different project.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- projectMedia intentionally omitted
+  }, [projectId]);
+
+  useEffect(() => {
+    if (!projectId) return;
+    setDraftMedia((draft) =>
+      mergeServerMediaIntoDraft(draft, projectMedia),
+    );
+  }, [projectId, serverMediaKey, projectMedia]);
+
+  const hasPendingBulkReorder =
+    reorderMode === 'bulk' &&
+    project !== null &&
+    !isSameMediaOrder(draftMedia, project.media);
 
   const { uploading, handleFilesSelected } = useProjectImageUpload(fileInputRef, {
     project,
     selectedType,
     uploadImages,
     setError,
+    disabled: isReordering || hasPendingBulkReorder,
   });
 
   const uploadBlocked = uploading || isReordering;
-
-  const hasPendingBulkReorder =
-    reorderMode === 'bulk' &&
-    project !== null &&
-    !isSameMediaOrder(draftMedia, project.media);
+  const mediaActionBlocked = uploadBlocked || hasPendingBulkReorder;
 
   const displayMedia =
     reorderMode === 'bulk' ? draftMedia : sortProjectMedia(project?.media ?? []);
@@ -386,14 +463,22 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
+      if (hasPendingBulkReorder) {
+        setError('שמור או בטל שינויי סדר לפני העלאת קבצים');
+        return;
+      }
       if (!uploadBlocked) handleFilesSelected(e.dataTransfer.files);
     },
-    [handleFilesSelected, uploadBlocked],
+    [handleFilesSelected, hasPendingBulkReorder, uploadBlocked],
   );
 
   const handleDelete = useCallback(
     async (item: ProjectMediaItem) => {
       if (!project) return;
+      if (hasPendingBulkReorder) {
+        setError('שמור או בטל שינויי סדר לפני מחיקה');
+        return;
+      }
       setError(null);
       setDeletingIds((prev) => new Set(prev).add(item.id));
 
@@ -414,7 +499,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
         });
       }
     },
-    [project, deleteMainImage, deleteProjectImages],
+    [project, deleteMainImage, deleteProjectImages, hasPendingBulkReorder],
   );
 
   const handleReorderMove = useCallback(
@@ -484,7 +569,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
             onClick={safeClose}
             disabled={uploadBlocked}
             className="!px-2 !py-1 text-lg leading-none"
-            ariaLabel="סגור"
+            ariaLabel="סגור חלון"
           >
             ×
           </Button>
@@ -500,7 +585,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
           selectedType={selectedType}
           onTypeChange={setSelectedType}
           uploading={uploading}
-          disabled={uploadBlocked}
+          disabled={mediaActionBlocked}
           onDrop={handleDrop}
           onBrowseClick={() => fileInputRef.current?.click()}
         />
@@ -571,6 +656,9 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
                   handleDragEnd();
                 }}
                 onDragEnd={handleDragEnd}
+                onReorderMove={(sectionType, fromIndex, toIndex) => {
+                  void handleReorderMove(sectionType, fromIndex, toIndex);
+                }}
               />
             ))}
             </div>

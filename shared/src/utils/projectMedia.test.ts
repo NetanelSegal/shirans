@@ -6,6 +6,9 @@ import {
   getMainImageUrl,
   isSameMediaOrder,
   getMediaIdOrder,
+  getMediaOrderKey,
+  getNextMediaOrders,
+  mergeServerMediaIntoDraft,
   applyMediaIdOrder,
   getMediaUrlsByType,
   sortProjectMedia,
@@ -97,5 +100,39 @@ describe('projectMedia helpers', () => {
       { id: 'img-a', url: 'a.jpg', type: 'IMAGE', order: 1 },
     ];
     expect(buildFullReorderIds(singleImage, 'IMAGE', 0, 'down')).toBeNull();
+  });
+
+  it('getNextMediaOrders appends after the highest existing order', () => {
+    expect(getNextMediaOrders(sampleMedia, 2)).toEqual([6, 7]);
+    expect(getNextMediaOrders([], 3)).toEqual([0, 1, 2]);
+  });
+
+  it('getMediaOrderKey is stable for the same media order', () => {
+    expect(getMediaOrderKey(sampleMedia)).toBe(getMediaIdOrder(sampleMedia).join('|'));
+  });
+
+  it('mergeServerMediaIntoDraft preserves draft order and appends new items', () => {
+    const draft = applyMediaIdOrder(sampleMedia, [
+      'main',
+      'img-b',
+      'img-a',
+      'plan-a',
+      'plan-b',
+      'video',
+    ]);
+    const server = [
+      ...sampleMedia,
+      { id: 'img-c', url: 'c.jpg', type: 'IMAGE' as const, order: 6 },
+    ];
+    const merged = mergeServerMediaIntoDraft(draft, server);
+    expect(getMediaIdOrder(merged)).toEqual([
+      'main',
+      'img-b',
+      'img-a',
+      'plan-a',
+      'plan-b',
+      'video',
+      'img-c',
+    ]);
   });
 });

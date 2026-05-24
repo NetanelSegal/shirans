@@ -1,4 +1,3 @@
-import type { QueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as adminProjectsService from '../../services/admin/projects.service';
@@ -10,7 +9,6 @@ import { QUERY_STALE_TIME_ADMIN_MS } from '@/lib/queryClient';
 import {
   addAdminProjectToCache,
   patchAdminProjectInCache,
-  patchAdminProjectMediaInCache,
   removeAdminProjectFromCache,
   invalidatePublicProjectsCache,
 } from '@/lib/adminProjectsCache';
@@ -20,14 +18,7 @@ import type {
   DeleteMainImageInput,
   DeleteImagesInput,
   ReorderImagesInput,
-  ProjectResponse,
 } from '@shirans/shared';
-
-function getAdminProjectsSnapshot(
-  queryClient: QueryClient,
-): ProjectResponse[] | undefined {
-  return queryClient.getQueryData<ProjectResponse[]>(queryKeys.admin.projects);
-}
 
 export function useAdminProjects() {
   const queryClient = useQueryClient();
@@ -85,36 +76,17 @@ export function useAdminProjects() {
 
   const deleteMainImageMutation = useMutation({
     mutationFn: adminProjectsService.deleteMainImage,
-    onSuccess: (_data, input) => {
-      const project = getAdminProjectsSnapshot(queryClient)?.find(
-        (entry) => entry.id === input.id,
-      );
-      if (project) {
-        patchAdminProjectMediaInCache(
-          queryClient,
-          input.id,
-          project.media.filter((item) => item.type !== 'MAIN'),
-        );
-      }
-      invalidatePublicProjectsCache(queryClient, input.id);
+    onSuccess: (updated) => {
+      patchAdminProjectInCache(queryClient, updated);
+      invalidatePublicProjectsCache(queryClient, updated.id);
     },
   });
 
   const deleteProjectImagesMutation = useMutation({
     mutationFn: adminProjectsService.deleteProjectImages,
-    onSuccess: (_data, input) => {
-      const remove = new Set(input.imageIds);
-      const project = getAdminProjectsSnapshot(queryClient)?.find(
-        (entry) => entry.id === input.id,
-      );
-      if (project) {
-        patchAdminProjectMediaInCache(
-          queryClient,
-          input.id,
-          project.media.filter((item) => !remove.has(item.id)),
-        );
-      }
-      invalidatePublicProjectsCache(queryClient, input.id);
+    onSuccess: (updated) => {
+      patchAdminProjectInCache(queryClient, updated);
+      invalidatePublicProjectsCache(queryClient, updated.id);
     },
   });
 
