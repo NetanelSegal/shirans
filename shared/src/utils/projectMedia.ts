@@ -79,7 +79,24 @@ export function buildFullReorderIdsFromMove(
   });
 }
 
-/** Apply a full ID order list to existing media items (optimistic UI). */
+/** Compare full media order by ID sequence. */
+export function isSameMediaOrder(
+  a: ProjectMediaItem[],
+  b: ProjectMediaItem[],
+): boolean {
+  const idsA = sortProjectMedia(a).map((item) => item.id);
+  const idsB = sortProjectMedia(b).map((item) => item.id);
+  return (
+    idsA.length === idsB.length && idsA.every((id, index) => id === idsB[index])
+  );
+}
+
+/** Full media ID list for PATCH /api/projects/reorderImages. */
+export function getMediaIdOrder(media: ProjectMediaItem[]): string[] {
+  return sortProjectMedia(media).map((item) => item.id);
+}
+
+/** Apply a full ID order list to existing media items (local draft UI). */
 export function applyMediaIdOrder(
   media: ProjectMediaItem[],
   orderedIds: string[],

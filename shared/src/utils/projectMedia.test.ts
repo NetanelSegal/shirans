@@ -4,6 +4,9 @@ import {
   buildFullReorderIds,
   buildFullReorderIdsFromMove,
   getMainImageUrl,
+  isSameMediaOrder,
+  getMediaIdOrder,
+  applyMediaIdOrder,
   getMediaUrlsByType,
   sortProjectMedia,
 } from './projectMedia';
@@ -37,6 +40,30 @@ describe('projectMedia helpers', () => {
     expect(getMediaUrlsByType(sampleMedia, 'PLAN')).toEqual([
       'plan-a.jpg',
       'plan-b.jpg',
+    ]);
+  });
+
+  it('isSameMediaOrder detects reorder vs unchanged lists', () => {
+    expect(isSameMediaOrder(sampleMedia, sampleMedia)).toBe(true);
+    const swapped = applyMediaIdOrder(sampleMedia, [
+      'main',
+      'img-b',
+      'img-a',
+      'plan-a',
+      'plan-b',
+      'video',
+    ]);
+    expect(isSameMediaOrder(sampleMedia, swapped)).toBe(false);
+  });
+
+  it('getMediaIdOrder returns sorted ids', () => {
+    expect(getMediaIdOrder(sampleMedia)).toEqual([
+      'main',
+      'img-a',
+      'img-b',
+      'plan-a',
+      'plan-b',
+      'video',
     ]);
   });
 

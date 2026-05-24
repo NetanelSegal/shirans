@@ -1,8 +1,9 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import Image from '@/components/ui/Image';
 import { Select, type SelectOption } from '@/components/ui/Select';
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useAdminProjects } from '@/hooks/admin/useAdminProjects';
 import { useProjectImageUpload } from '@/hooks/admin/useProjectImageUpload';
 import { getClientErrorMessage } from '@/constants/errorMessages';
@@ -11,8 +12,11 @@ import {
   IMAGE_UPLOAD,
   PROJECT_IMAGE_TYPE_LABELS_HE,
   PROJECT_IMAGE_TYPES_UPLOADABLE,
+  applyMediaIdOrder,
   buildFullReorderIdsFromMove,
   getMediaByType,
+  getMediaIdOrder,
+  isSameMediaOrder,
   sortProjectMedia,
   type ErrorKey,
   type ProjectImageMultipartUploadType,
@@ -20,7 +24,6 @@ import {
   type ProjectMediaItem,
   type ProjectResponse,
 } from '@shirans/shared';
-
 const UPLOAD_TYPE_OPTIONS: SelectOption<ProjectImageMultipartUploadType>[] =
   PROJECT_IMAGE_TYPES_UPLOADABLE.map((value) => ({
     value,
@@ -30,6 +33,7 @@ const UPLOAD_TYPE_OPTIONS: SelectOption<ProjectImageMultipartUploadType>[] =
 const ACCEPTED_MIME_TYPES = IMAGE_UPLOAD.ALLOWED_MIME_TYPES.join(',');
 
 type ReorderableType = 'IMAGE' | 'PLAN';
+type ReorderMode = 'immediate' | 'bulk';
 
 const MEDIA_SECTIONS: Array<{
   type: ProjectImageType;
@@ -208,6 +212,7 @@ interface MediaSectionProps {
   deletingIds: Set<string>;
   dragState: { type: ReorderableType; fromIndex: number } | null;
   dropTargetIndex: number | null;
+  reorderMode: ReorderMode;
   onDelete: (item: ProjectMediaItem) => void;
   onDragStart: (type: ReorderableType, index: number) => void;
   onDragOver: (index: number) => void;
@@ -224,6 +229,7 @@ function MediaSection({
   deletingIds,
   dragState,
   dropTargetIndex,
+  reorderMode,
   onDelete,
   onDragStart,
   onDragOver,
@@ -240,7 +246,11 @@ function MediaSection({
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
         {canDrag && (
-          <p className="text-xs text-gray-500">גרור כדי לשנות סדר</p>
+          <p className="text-xs text-gray-500">
+            {reorderMode === 'bulk'
+              ? 'גרור — השינויים יישמרו בלחיצה על "שמור סדר"'
+              : 'גרור כדי לשנות סדר'}
+          </p>
         )}
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
@@ -293,6 +303,14 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
   } | null>(null);
   const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
   const [isReordering, setIsReordering] = useState(false);
+  const [reorderMode, setReorderMode] = useState<ReorderMode>('bulk');
+  const [draftMedia, setDraftMedia] = useState<ProjectMediaItem[]>([]);
+
+  useEffect(() => {
+    if (project) {
+      setDraftMedia(sortProjectMedia(project.media));
+    }
+  }, [project?.id, project?.media]);
 
   const { uploading, handleFilesSelected } = useProjectImageUpload(fileInputRef, {
     project,
@@ -301,7 +319,69 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
     setError,
   });
 
-  const uploadBlocked = uploading;
+  const uploadBlocked = uploading || isReordering;
+
+  const hasPendingBulkReorder =
+    reorderMode === 'bulk' &&
+    project !== null &&
+    !isSameMediaOrder(draftMedia, project.media);
+
+  const displayMedia =
+    reorderMode === 'bulk' ? draftMedia : sortProjectMedia(project?.media ?? []);
+
+  const applyLocalReorderMove = useCallback(
+    (media: ProjectMediaItem[], type: ReorderableType, fromIndex: number, toIndex: number) => {
+      const imageIds = buildFullReorderIdsFromMove(media, type, fromIndex, toIndex);
+      if (!imageIds) return media;
+      return applyMediaIdOrder(media, imageIds);
+    },
+    [],
+  );
+
+  const handleReorderModeChange = useCallback(
+    (useBulk: boolean) => {
+      const nextMode: ReorderMode = useBulk ? 'bulk' : 'immediate';
+      if (nextMode === reorderMode) return;
+
+      if (
+        reorderMode === 'bulk' &&
+        project &&
+        !isSameMediaOrder(draftMedia, project.media)
+      ) {
+        setError('שמור או בטל שינויי סדר לפני החלפת מצב שמירה');
+        return;
+      }
+
+      setError(null);
+      setReorderMode(nextMode);
+    },
+    [draftMedia, project, reorderMode],
+  );
+
+  const handleDiscardBulkReorder = useCallback(() => {
+    if (!project) return;
+    setDraftMedia(sortProjectMedia(project.media));
+    setError(null);
+  }, [project]);
+
+  const handleSaveBulkReorder = useCallback(async () => {
+    if (!project || !hasPendingBulkReorder) return;
+
+    setError(null);
+    setIsReordering(true);
+
+    try {
+      await reorderImages({
+        id: project.id,
+        imageIds: getMediaIdOrder(draftMedia),
+      });
+    } catch (err) {
+      const app = transformError(err);
+      setError(getClientErrorMessage(app.errorKey as ErrorKey));
+    } finally {
+      setIsReordering(false);
+    }
+  }, [draftMedia, hasPendingBulkReorder, project, reorderImages]);
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -341,6 +421,11 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
     async (type: ReorderableType, fromIndex: number, toIndex: number) => {
       if (!project || fromIndex === toIndex) return;
 
+      if (reorderMode === 'bulk') {
+        setDraftMedia((current) => applyLocalReorderMove(current, type, fromIndex, toIndex));
+        return;
+      }
+
       const imageIds = buildFullReorderIdsFromMove(
         project.media,
         type,
@@ -361,7 +446,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
         setIsReordering(false);
       }
     },
-    [project, reorderImages],
+    [applyLocalReorderMove, project, reorderImages, reorderMode],
   );
 
   const handleDragEnd = useCallback(() => {
@@ -370,12 +455,17 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
   }, []);
 
   const safeClose = useCallback(() => {
-    if (!uploadBlocked) onClose();
-  }, [uploadBlocked, onClose]);
+    if (uploadBlocked) return;
+    if (hasPendingBulkReorder) {
+      setError('יש שינויי סדר שלא נשמרו. שמור, בטל, או המשך לערוך.');
+      return;
+    }
+    onClose();
+  }, [hasPendingBulkReorder, onClose, uploadBlocked]);
 
   if (!project) return null;
 
-  const hasMedia = sortProjectMedia(project.media).length > 0;
+  const hasMedia = displayMedia.length > 0;
 
   return (
     <Modal
@@ -426,7 +516,22 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
         {!hasMedia ? (
           <p className="py-8 text-center text-sm text-gray-500">אין תמונות</p>
         ) : (
-          <div className="relative space-y-6">
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+              <Checkbox
+                id="project-images-bulk-reorder"
+                label="שמירת סדר מרוכזת (גרור מספר פעמים, שמור פעם אחת)"
+                checked={reorderMode === 'bulk'}
+                onChange={(e) => handleReorderModeChange(e.target.checked)}
+                disabled={uploadBlocked}
+              />
+              {hasPendingBulkReorder && (
+                <span className="text-xs font-medium text-amber-700">
+                  יש שינויי סדר שלא נשמרו
+                </span>
+              )}
+            </div>
+            <div className="relative space-y-6">
             {isReordering && (
               <div
                 className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/60"
@@ -444,11 +549,12 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
                 type={type}
                 title={title}
                 reorderable={reorderable}
-                items={getMediaByType(project.media, type)}
+                items={getMediaByType(displayMedia, type)}
                 project={project}
                 deletingIds={deletingIds}
                 dragState={dragState}
                 dropTargetIndex={dropTargetIndex}
+                reorderMode={reorderMode}
                 onDelete={(item) => void handleDelete(item)}
                 onDragStart={(sectionType, index) => {
                   setDragState({ type: sectionType, fromIndex: index });
@@ -467,10 +573,29 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
                 onDragEnd={handleDragEnd}
               />
             ))}
+            </div>
           </div>
         )}
 
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex flex-wrap justify-end gap-2">
+          {hasPendingBulkReorder && (
+            <>
+              <Button
+                variant="light"
+                onClick={handleDiscardBulkReorder}
+                disabled={uploadBlocked}
+              >
+                בטל שינויים
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => void handleSaveBulkReorder()}
+                disabled={uploadBlocked}
+              >
+                שמור סדר
+              </Button>
+            </>
+          )}
           <Button variant="secondary" onClick={safeClose} disabled={uploadBlocked}>
             סגור
           </Button>
