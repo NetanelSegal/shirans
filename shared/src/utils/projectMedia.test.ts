@@ -9,6 +9,8 @@ import {
   getMediaOrderKey,
   getNextMediaOrders,
   mergeServerMediaIntoDraft,
+  normalizeProjectMedia,
+  normalizeProjectResponse,
   applyMediaIdOrder,
   getMediaUrlsByType,
   sortProjectMedia,
@@ -36,6 +38,7 @@ describe('projectMedia helpers', () => {
   it('getMainImageUrl returns MAIN url or empty string', () => {
     expect(getMainImageUrl(sampleMedia)).toBe('main.jpg');
     expect(getMainImageUrl([])).toBe('');
+    expect(getMainImageUrl(undefined)).toBe('');
   });
 
   it('getMediaUrlsByType filters and preserves order', () => {
@@ -109,6 +112,48 @@ describe('projectMedia helpers', () => {
 
   it('getMediaOrderKey is stable for the same media order', () => {
     expect(getMediaOrderKey(sampleMedia)).toBe(getMediaIdOrder(sampleMedia).join('|'));
+  });
+
+  it('normalizeProjectMedia maps legacy API fields to media[]', () => {
+    const media = normalizeProjectMedia({
+      id: 'p1',
+      title: 'Legacy',
+      categories: ['privateHouses'],
+      description: 'desc',
+      location: 'loc',
+      client: 'client',
+      isCompleted: true,
+      constructionArea: 100,
+      favourite: true,
+      mainImage: 'main.jpg',
+      images: ['a.jpg', 'b.jpg'],
+      plans: ['plan.jpg'],
+      videos: ['video.mp4'],
+    });
+
+    expect(getMainImageUrl(media)).toBe('main.jpg');
+    expect(getMediaUrlsByType(media, 'IMAGE')).toEqual(['a.jpg', 'b.jpg']);
+    expect(getMediaUrlsByType(media, 'PLAN')).toEqual(['plan.jpg']);
+    expect(getMediaUrlsByType(media, 'VIDEO')).toEqual(['video.mp4']);
+  });
+
+  it('normalizeProjectResponse returns ProjectResponse with media[] only', () => {
+    const normalized = normalizeProjectResponse({
+      id: 'p1',
+      title: 'Legacy',
+      categories: ['privateHouses'],
+      description: 'desc',
+      location: 'loc',
+      client: 'client',
+      isCompleted: true,
+      constructionArea: 100,
+      favourite: true,
+      mainImage: 'main.jpg',
+      images: ['a.jpg'],
+    });
+
+    expect(normalized.media).toHaveLength(2);
+    expect(normalized).not.toHaveProperty('mainImage');
   });
 
   it('mergeServerMediaIntoDraft preserves draft order and appends new items', () => {

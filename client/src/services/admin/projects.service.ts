@@ -1,35 +1,41 @@
 import apiClient from '../../utils/apiClient';
 import { urls } from '../../constants/urls';
-import type {
-  ProjectResponse,
-  CreateProjectInput,
-  UpdateProjectInput,
-  DeleteMainImageInput,
-  DeleteImagesInput,
-  ReorderImagesInput,
-  UploadImageMetadata,
+import {
+  normalizeProjectResponse,
+  type LegacyProjectPayload,
+  type ProjectResponse,
+  type CreateProjectInput,
+  type UpdateProjectInput,
+  type DeleteMainImageInput,
+  type DeleteImagesInput,
+  type ReorderImagesInput,
+  type UploadImageMetadata,
 } from '@shirans/shared';
 
+function normalizeProject(data: LegacyProjectPayload): ProjectResponse {
+  return normalizeProjectResponse(data);
+}
+
 export async function fetchAllProjects(): Promise<ProjectResponse[]> {
-  const { data } = await apiClient.get<ProjectResponse[]>(urls.projects);
-  return data;
+  const { data } = await apiClient.get<LegacyProjectPayload[]>(urls.projects);
+  return data.map(normalizeProject);
 }
 
 export async function createProject(
   input: CreateProjectInput,
 ): Promise<ProjectResponse> {
-  const { data } = await apiClient.post<ProjectResponse>(urls.projects, input);
-  return data;
+  const { data } = await apiClient.post<LegacyProjectPayload>(urls.projects, input);
+  return normalizeProject(data);
 }
 
 export async function updateProject(
   input: UpdateProjectInput,
 ): Promise<ProjectResponse> {
-  const { data } = await apiClient.put<ProjectResponse>(
+  const { data } = await apiClient.put<LegacyProjectPayload>(
     urls.updateProject,
     input,
   );
-  return data;
+  return normalizeProject(data);
 }
 
 export async function deleteProject(id: string): Promise<void> {
@@ -50,40 +56,40 @@ export async function uploadProjectImages(
   input.files.forEach((f) => formData.append('files', f));
   formData.append('metadata', JSON.stringify(input.metadata));
 
-  const { data } = await apiClient.post<ProjectResponse>(
+  const { data } = await apiClient.post<LegacyProjectPayload>(
     urls.uploadImgs,
     formData,
     { timeout: 120_000 },
   );
-  return data;
+  return normalizeProject(data);
 }
 
 export async function deleteMainImage(
   input: DeleteMainImageInput,
 ): Promise<ProjectResponse> {
-  const { data } = await apiClient.delete<ProjectResponse>(
+  const { data } = await apiClient.delete<LegacyProjectPayload>(
     urls.deleteMainImage,
     { data: input },
   );
-  return data;
+  return normalizeProject(data);
 }
 
 export async function deleteProjectImages(
   input: DeleteImagesInput,
 ): Promise<ProjectResponse> {
-  const { data } = await apiClient.delete<ProjectResponse>(
+  const { data } = await apiClient.delete<LegacyProjectPayload>(
     urls.deleteProjectImages,
     { data: input },
   );
-  return data;
+  return normalizeProject(data);
 }
 
 export async function reorderImages(
   input: ReorderImagesInput,
 ): Promise<ProjectResponse> {
-  const { data } = await apiClient.patch<ProjectResponse>(
+  const { data } = await apiClient.patch<LegacyProjectPayload>(
     urls.reorderImages,
     input,
   );
-  return data;
+  return normalizeProject(data);
 }

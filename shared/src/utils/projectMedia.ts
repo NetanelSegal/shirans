@@ -1,17 +1,87 @@
 import type { ProjectImageType } from '../constants/projectImage';
-import type { ProjectMediaItem } from '../types/responses.types';
+import type { ProjectMediaItem, ProjectResponse } from '../types/responses.types';
 
 export type ReorderDirection = 'up' | 'down';
 
-export function sortProjectMedia(media: ProjectMediaItem[]): ProjectMediaItem[] {
+/** API payloads that predate the unified `media[]` field. */
+export type LegacyProjectPayload = Omit<ProjectResponse, 'media'> & {
+  media?: ProjectMediaItem[] | null;
+  mainImage?: string;
+  images?: string[];
+  plans?: string[];
+  videos?: string[];
+};
+
+export function sortProjectMedia(
+  media: ProjectMediaItem[] | null | undefined,
+): ProjectMediaItem[] {
+  if (!media?.length) return [];
   return [...media].sort(
     (a, b) => a.order - b.order || a.id.localeCompare(b.id),
   );
 }
 
-export function getMainImageUrl(media: ProjectMediaItem[]): string {
+export function getMainImageUrl(
+  media: ProjectMediaItem[] | null | undefined,
+): string {
   const main = sortProjectMedia(media).find((item) => item.type === 'MAIN');
   return main?.url ?? '';
+}
+
+/** Build unified `media[]` from modern or legacy API payloads. */
+export function normalizeProjectMedia(
+  project: LegacyProjectPayload,
+): ProjectMediaItem[] {
+  if (Array.isArray(project.media)) {
+    return sortProjectMedia(project.media);
+  }
+
+  const items: ProjectMediaItem[] = [];
+  let order = 0;
+  const projectId = project.id;
+
+  const push = (url: string, type: ProjectImageType, suffix: string) => {
+    items.push({
+      id: `${projectId}-${suffix}`,
+      url,
+      type,
+      order: order++,
+    });
+  };
+
+  if (project.mainImage) {
+    push(project.mainImage, 'MAIN', 'legacy-main');
+  }
+  project.images?.forEach((url, index) => {
+    push(url, 'IMAGE', `legacy-image-${index}`);
+  });
+  project.plans?.forEach((url, index) => {
+    push(url, 'PLAN', `legacy-plan-${index}`);
+  });
+  project.videos?.forEach((url, index) => {
+    push(url, 'VIDEO', `legacy-video-${index}`);
+  });
+
+  return items;
+}
+
+/** Normalize a project record from the API into the `media[]` shape. */
+export function normalizeProjectResponse(
+  project: LegacyProjectPayload,
+): ProjectResponse {
+  const {
+    mainImage: _mainImage,
+    images: _images,
+    plans: _plans,
+    videos: _videos,
+    media: _media,
+    ...rest
+  } = project;
+
+  return {
+    ...rest,
+    media: normalizeProjectMedia(project),
+  };
 }
 
 export function getMediaByType(

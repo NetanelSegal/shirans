@@ -6,6 +6,22 @@
  */
 const env = import.meta.env;
 
+function resolveEnvUrl(value: string | undefined, fallback: string): string {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : fallback;
+}
+
+/** Prefer browser-friendly Cloudinary delivery for hero background videos. */
+export function normalizeHeroVideoUrl(url: string): string {
+  if (!url.includes('res.cloudinary.com') || !url.includes('/video/upload/')) {
+    return url;
+  }
+  if (url.includes('/video/upload/f_auto') || url.includes('/video/upload/q_auto')) {
+    return url;
+  }
+  return url.replace('/video/upload/', '/video/upload/f_auto,q_auto/');
+}
+
 export const envConfig = {
   /** API base URL (e.g. http://localhost:3000) */
   apiUrl: env.VITE_API_URL ?? '',
@@ -29,9 +45,18 @@ export const envConfig = {
    * Falls back to local public assets when unset (local dev only).
    */
   heroVideos: {
-    desktop:
-      env.VITE_HERO_VIDEO_DESKTOP_URL ?? '/assets/hero-vid-desktop.mov',
-    mobile: env.VITE_HERO_VIDEO_MOBILE_URL ?? '/assets/hero-vid-mobile.mov',
+    desktop: normalizeHeroVideoUrl(
+      resolveEnvUrl(
+        env.VITE_HERO_VIDEO_DESKTOP_URL,
+        '/assets/hero-vid-desktop.mov',
+      ),
+    ),
+    mobile: normalizeHeroVideoUrl(
+      resolveEnvUrl(
+        env.VITE_HERO_VIDEO_MOBILE_URL,
+        '/assets/hero-vid-mobile.mov',
+      ),
+    ),
   },
 } as const;
 
