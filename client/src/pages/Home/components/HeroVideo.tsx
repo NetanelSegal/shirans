@@ -1,16 +1,16 @@
 import { useScreenContext } from '@/contexts/ScreenProvider';
-import { heroPosters } from '@/assets/heroPosters';
 import { envConfig } from '@/config/env';
 import { useCallback, useEffect, useState } from 'react';
-
+import heroMobilePoster from '@/assets/mobile-video-0-frame.jpg';
+import heroDesktopPoster from '@/assets/desktop-video-0-frame.jpg';
 export default function HeroVideo() {
     const { isSmallScreen } = useScreenContext();
     const videoSrc = isSmallScreen
         ? envConfig.heroVideos.mobile
         : envConfig.heroVideos.desktop;
     const posterSrc = isSmallScreen
-        ? heroPosters.mobile
-        : heroPosters.desktop;
+        ? heroMobilePoster
+        : heroDesktopPoster;
     const [videoReady, setVideoReady] = useState(false);
 
     useEffect(() => {
@@ -30,9 +30,8 @@ export default function HeroVideo() {
                 fetchPriority='high'
                 loading='eager'
                 decoding='async'
-                className={`absolute inset-0 size-full object-cover transition-opacity duration-500 ${
-                    videoReady ? 'pointer-events-none opacity-0' : 'opacity-100'
-                }`}
+                className={`absolute inset-0 size-full object-cover transition-opacity duration-500 ${videoReady ? 'pointer-events-none opacity-0' : 'opacity-100'
+                    }`}
             />
             <video
                 autoPlay
@@ -42,9 +41,8 @@ export default function HeroVideo() {
                 preload='auto'
                 poster={posterSrc}
                 onCanPlay={handleVideoReady}
-                className={`size-full object-cover transition-opacity duration-500 ${
-                    videoReady ? 'opacity-100' : 'opacity-0'
-                }`}
+                className={`size-full object-cover transition-opacity duration-500 ${videoReady ? 'opacity-100' : 'opacity-0'
+                    }`}
             >
                 <source src={videoSrc} />
             </video>
