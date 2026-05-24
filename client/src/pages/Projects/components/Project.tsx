@@ -3,8 +3,35 @@ import type { ProjectResponse } from '@shirans/shared';
 import ImageScaleHover from '@/components/ui/ImageScaleHover';
 import { CategoryLabel } from '@/components/CategoryLabel';
 import { useCategoriesMap } from '@/hooks/useCategories';
-import { Fragment } from 'react/jsx-runtime';
 import EnterAnimation from '@/components/animations/EnterAnimation';
+
+/** Words shown on the projects list; full text is on `/projects/:id`. */
+const DESCRIPTION_PREVIEW_MAX_WORDS = 25;
+
+/** Single paragraph for list preview (multi-line source becomes one block). */
+function projectDescriptionPreviewText(description: string): string {
+  return description
+    .trim()
+    .split(/\s*\n+\s*/)
+    .filter(Boolean)
+    .join(' ')
+    .replace(/\s+/g, ' ');
+}
+
+function truncateWords(
+  text: string,
+  maxWords: number
+): { preview: string; truncated: boolean } {
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  if (words.length <= maxWords) {
+    return { preview: text.trim(), truncated: false };
+  }
+  return {
+    preview: `${words.slice(0, maxWords).join(' ')}…`,
+    truncated: true,
+  };
+}
+
 interface IProjectProps {
   project: ProjectResponse;
   i: number;
@@ -12,6 +39,10 @@ interface IProjectProps {
 
 const Project = ({ project, i }: IProjectProps) => {
   const { categoriesMap } = useCategoriesMap();
+  const descriptionNormalized = projectDescriptionPreviewText(project.description);
+  const { preview: descriptionListPreview, truncated: descriptionTruncated } =
+    truncateWords(descriptionNormalized, DESCRIPTION_PREVIEW_MAX_WORDS);
+
   return (
     <div
       className={`flex flex-col gap-5 lg:flex-row ${i % 2 === 0 ? '' : 'lg:flex-row-reverse'}`}
@@ -46,19 +77,16 @@ const Project = ({ project, i }: IProjectProps) => {
           </p>
           <p className='break-words'>
             <strong>תיאור הפרוייקט: </strong>
-            <br />
-            {project.description
-              .trim()
-              .split('\n')
-              .map((line) => (
-                <Fragment key={line}>
-                  {line}
-                  <br />
-                </Fragment>
-              ))}
+            <span
+              className='mt-1 block text-pretty'
+              title={descriptionTruncated ? descriptionNormalized : undefined}
+            >
+              {descriptionListPreview}
+            </span>
             <Link
               to={`/projects/${project.id}`}
-              className='font-semibold underline'
+              state={{ project, other: 'other' }}
+              className='mt-2 inline-block font-semibold underline'
             >
               עוד על הפרויקט
             </Link>
