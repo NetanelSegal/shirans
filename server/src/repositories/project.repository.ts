@@ -188,19 +188,30 @@ export const projectRepository = {
 
   /**
    * Set the order of images based on the position of each ID in the array.
-   * Runs inside a transaction so all updates succeed or none do.
+   * Only rows whose order changed are updated.
    */
   async reorderImages(
-    _projectId: string,
+    projectId: string,
     imageIds: string[],
   ): Promise<void> {
-    await prisma.$transaction(
-      imageIds.map((id, index) =>
-        prisma.projectImage.update({
-          where: { id },
-          data: { order: index },
-        }),
-      ),
-    );
+    await prisma.$transaction(async (tx) => {
+      const current = await tx.projectImage.findMany({
+        where: { projectId },
+        select: { id: true, order: true },
+      });
+      const orderById = new Map(current.map((row) => [row.id, row.order]));
+      const updates = imageIds
+        .map((id, index) => ({ id, order: index }))
+        .filter(({ id, order }) => orderById.get(id) !== order);
+
+      await Promise.all(
+        updates.map(({ id, order }) =>
+          tx.projectImage.update({
+            where: { id },
+            data: { order },
+          }),
+        ),
+      );
+    });
   },
 };

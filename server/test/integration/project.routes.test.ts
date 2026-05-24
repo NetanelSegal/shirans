@@ -597,9 +597,12 @@ describe('Project Routes Integration Tests', () => {
         ],
       };
 
-      vi.mocked(projectRepository.findById).mockResolvedValue(
-        mockProject as never
-      );
+      vi.mocked(projectRepository.findById)
+        .mockResolvedValueOnce(mockProject as never)
+        .mockResolvedValueOnce({
+          ...mockProject,
+          images: [],
+        } as never);
       vi.mocked(projectRepository.deleteImage).mockResolvedValue(undefined);
 
       const response = await request(app)
@@ -610,7 +613,8 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message');
+      expect(response.body).toHaveProperty('media');
+      expect(response.body.media).toEqual([]);
     });
 
     it('should return 400 when id is missing', async () => {
@@ -658,9 +662,12 @@ describe('Project Routes Integration Tests', () => {
         ],
       };
 
-      vi.mocked(projectRepository.findById).mockResolvedValue(
-        mockProject as never
-      );
+      vi.mocked(projectRepository.findById)
+        .mockResolvedValueOnce(mockProject as never)
+        .mockResolvedValueOnce({
+          ...mockProject,
+          images: [],
+        } as never);
       vi.mocked(projectRepository.deleteImages).mockResolvedValue(undefined);
 
       const response = await request(app)
@@ -672,7 +679,8 @@ describe('Project Routes Integration Tests', () => {
         });
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message');
+      expect(response.body).toHaveProperty('media');
+      expect(response.body.media).toEqual([]);
     });
 
     it('should return 400 when id is missing', async () => {

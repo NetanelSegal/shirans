@@ -390,7 +390,7 @@ export const projectsPaths = {
           description: 'Main image deleted successfully',
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/MessageResponse' },
+              schema: { $ref: '#/components/schemas/ProjectResponse' },
             },
           },
         },
@@ -440,7 +440,7 @@ export const projectsPaths = {
           description: 'Images deleted successfully',
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/MessageResponse' },
+              schema: { $ref: '#/components/schemas/ProjectResponse' },
             },
           },
         },

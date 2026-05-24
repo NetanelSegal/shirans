@@ -3,6 +3,7 @@ import DataCarousel from '../DataCarousel';
 import Image from '../ui/Image';
 import { useProjects } from '@/hooks/useProjects';
 import type { ProjectResponse } from '@shirans/shared';
+import { getMainImageUrl } from '@shirans/shared';
 
 export default function FavoriteProjects() {
   const nav = useNavigate();
@@ -20,14 +21,14 @@ export default function FavoriteProjects() {
         keyProperty='id'
         dataArray={data}
         containerClassname='max-w-[900px] mx-auto'
-        singleItem={({ mainImage, id }, index) => (
+        singleItem={(project, index) => (
           <div className='relative mb-2 aspect-video size-full overflow-hidden rounded-xl'>
-            <Link to={`/projects/${id}`} state={{ project: data[index] }}>
+            <Link to={`/projects/${project.id}`} state={{ project: data[index] }}>
               <Image
-                key={id}
+                key={project.id}
                 draggable='false'
                 className='size-full object-cover object-center transition-all duration-300 ease-in-out hover:scale-105'
-                src={mainImage}
+                src={getMainImageUrl(project.media)}
                 alt=''
               />
             </Link>

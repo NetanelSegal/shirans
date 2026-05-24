@@ -1,5 +1,6 @@
 import { useProjects } from '@/hooks/useProjects';
 import type { ProjectResponse } from '@shirans/shared';
+import { getMainImageUrl } from '@shirans/shared';
 import Project from './components/Project';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import { Helmet } from 'react-helmet-async';
@@ -10,7 +11,7 @@ export default function Projects() {
   const { projects, isLoading, error, retry } = useProjects();
 
   const ogImage = projects.length > 0
-    ? projects[0].mainImage
+    ? getMainImageUrl(projects[0]!.media)
     : `${BASE_URL}/assets/shiranImage-28AXxNS6.jpeg`;
 
   return (

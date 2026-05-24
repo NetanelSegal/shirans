@@ -288,14 +288,18 @@ describe('projectImageService', () => {
         ],
       };
 
-      vi.mocked(projectRepository.findById).mockResolvedValue(
-        mockProject as never,
-      );
+      vi.mocked(projectRepository.findById)
+        .mockResolvedValueOnce(mockProject as never)
+        .mockResolvedValueOnce({
+          ...mockProject,
+          images: [],
+        } as never);
       vi.mocked(projectRepository.deleteImage).mockResolvedValue(undefined);
 
-      await projectImageService.deleteMainImage('1');
+      const result = await projectImageService.deleteMainImage('1');
 
       expect(projectRepository.deleteImage).toHaveBeenCalledWith('img1');
+      expect(result.media).toEqual([]);
     });
 
     it('should delete from Cloudinary when main image has publicId', async () => {
@@ -324,9 +328,12 @@ describe('projectImageService', () => {
         ],
       };
 
-      vi.mocked(projectRepository.findById).mockResolvedValue(
-        mockProject as never,
-      );
+      vi.mocked(projectRepository.findById)
+        .mockResolvedValueOnce(mockProject as never)
+        .mockResolvedValueOnce({
+          ...mockProject,
+          images: [],
+        } as never);
       vi.mocked(projectRepository.deleteImage).mockResolvedValue(undefined);
 
       const cloudinaryService = await import('./cloudinary.service');
@@ -334,10 +341,11 @@ describe('projectImageService', () => {
         .spyOn(cloudinaryService, 'deleteImage')
         .mockResolvedValue(undefined);
 
-      await projectImageService.deleteMainImage('1');
+      const result = await projectImageService.deleteMainImage('1');
 
       expect(destroySpy).toHaveBeenCalledWith('folder/main');
       expect(projectRepository.deleteImage).toHaveBeenCalledWith('img1');
+      expect(result.media).toEqual([]);
     });
 
     it('should throw HttpError 404 when project not found', async () => {
@@ -411,17 +419,24 @@ describe('projectImageService', () => {
         ],
       };
 
-      vi.mocked(projectRepository.findById).mockResolvedValue(
-        mockProject as never,
-      );
+      vi.mocked(projectRepository.findById)
+        .mockResolvedValueOnce(mockProject as never)
+        .mockResolvedValueOnce({
+          ...mockProject,
+          images: [],
+        } as never);
       vi.mocked(projectRepository.deleteImages).mockResolvedValue(undefined);
 
-      await projectImageService.deleteProjectImages('1', ['img1', 'img2']);
+      const result = await projectImageService.deleteProjectImages('1', [
+        'img1',
+        'img2',
+      ]);
 
       expect(projectRepository.deleteImages).toHaveBeenCalledWith('1', [
         'img1',
         'img2',
       ]);
+      expect(result.media).toEqual([]);
     });
 
     it('should throw HttpError 404 when project not found', async () => {
@@ -495,9 +510,12 @@ describe('projectImageService', () => {
         ],
       };
 
-      vi.mocked(projectRepository.findById).mockResolvedValue(
-        mockProject as never,
-      );
+      vi.mocked(projectRepository.findById)
+        .mockResolvedValueOnce(mockProject as never)
+        .mockResolvedValueOnce({
+          ...mockProject,
+          images: [],
+        } as never);
       vi.mocked(projectRepository.deleteImages).mockResolvedValue(undefined);
 
       const cloudinaryService = await import('./cloudinary.service');
@@ -505,10 +523,11 @@ describe('projectImageService', () => {
         .spyOn(cloudinaryService, 'deleteImages')
         .mockResolvedValue(undefined);
 
-      await projectImageService.deleteProjectImages('1', ['img1']);
+      const result = await projectImageService.deleteProjectImages('1', ['img1']);
 
       expect(deleteSpy).toHaveBeenCalledWith(['folder/img1']);
       expect(projectRepository.deleteImages).toHaveBeenCalledWith('1', ['img1']);
+      expect(result.media).toEqual([]);
     });
   });
 

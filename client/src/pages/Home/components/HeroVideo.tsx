@@ -1,22 +1,53 @@
 import { useScreenContext } from '@/contexts/ScreenProvider';
+import { heroPosters } from '@/assets/heroPosters';
 import { envConfig } from '@/config/env';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function HeroVideo() {
     const { isSmallScreen } = useScreenContext();
     const videoSrc = isSmallScreen
         ? envConfig.heroVideos.mobile
         : envConfig.heroVideos.desktop;
+    const posterSrc = isSmallScreen
+        ? heroPosters.mobile
+        : heroPosters.desktop;
+    const [videoReady, setVideoReady] = useState(false);
+
+    useEffect(() => {
+        setVideoReady(false);
+    }, [videoSrc]);
+
+    const handleVideoReady = useCallback(() => {
+        setVideoReady(true);
+    }, []);
+
     return (
-        <div className='size-full overflow-hidden'>
+        <div className='relative size-full overflow-hidden'>
+            <img
+                src={posterSrc}
+                alt=''
+                aria-hidden
+                fetchPriority='high'
+                loading='eager'
+                decoding='async'
+                className={`absolute inset-0 size-full object-cover transition-opacity duration-500 ${
+                    videoReady ? 'pointer-events-none opacity-0' : 'opacity-100'
+                }`}
+            />
             <video
                 autoPlay
                 muted
                 loop
                 playsInline
-                className='size-full object-cover'
+                preload='auto'
+                poster={posterSrc}
+                onCanPlay={handleVideoReady}
+                className={`size-full object-cover transition-opacity duration-500 ${
+                    videoReady ? 'opacity-100' : 'opacity-0'
+                }`}
             >
                 <source src={videoSrc} />
             </video>
         </div>
-    )
+    );
 }

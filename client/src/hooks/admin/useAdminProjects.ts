@@ -6,7 +6,12 @@ import { transformError } from '@/utils/errorHandler';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { queryKeys } from '@/constants/queryKeys';
 import { QUERY_STALE_TIME_ADMIN_MS } from '@/lib/queryClient';
-import { invalidateAfterAdminProjectsChange } from '@/lib/queryInvalidation';
+import {
+  addAdminProjectToCache,
+  patchAdminProjectInCache,
+  removeAdminProjectFromCache,
+  invalidatePublicProjectsCache,
+} from '@/lib/adminProjectsCache';
 import type {
   CreateProjectInput,
   UpdateProjectInput,
@@ -39,37 +44,58 @@ export function useAdminProjects() {
 
   const createMutation = useMutation({
     mutationFn: adminProjectsService.createProject,
-    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
+    onSuccess: (created) => {
+      addAdminProjectToCache(queryClient, created);
+      invalidatePublicProjectsCache(queryClient);
+    },
   });
 
   const updateMutation = useMutation({
     mutationFn: adminProjectsService.updateProject,
-    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
+    onSuccess: (updated) => {
+      patchAdminProjectInCache(queryClient, updated);
+      invalidatePublicProjectsCache(queryClient, updated.id);
+    },
   });
 
   const deleteMutation = useMutation({
     mutationFn: adminProjectsService.deleteProject,
-    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
+    onSuccess: (_data, id) => {
+      removeAdminProjectFromCache(queryClient, id);
+      invalidatePublicProjectsCache(queryClient, id);
+    },
   });
 
   const uploadImagesMutation = useMutation({
     mutationFn: adminProjectsService.uploadProjectImages,
-    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
+    onSuccess: (updated) => {
+      patchAdminProjectInCache(queryClient, updated);
+      invalidatePublicProjectsCache(queryClient, updated.id);
+    },
   });
 
   const deleteMainImageMutation = useMutation({
     mutationFn: adminProjectsService.deleteMainImage,
-    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
+    onSuccess: (updated) => {
+      patchAdminProjectInCache(queryClient, updated);
+      invalidatePublicProjectsCache(queryClient, updated.id);
+    },
   });
 
   const deleteProjectImagesMutation = useMutation({
     mutationFn: adminProjectsService.deleteProjectImages,
-    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
+    onSuccess: (updated) => {
+      patchAdminProjectInCache(queryClient, updated);
+      invalidatePublicProjectsCache(queryClient, updated.id);
+    },
   });
 
   const reorderImagesMutation = useMutation({
     mutationFn: adminProjectsService.reorderImages,
-    onSuccess: () => invalidateAfterAdminProjectsChange(queryClient),
+    onSuccess: (updated) => {
+      patchAdminProjectInCache(queryClient, updated);
+      invalidatePublicProjectsCache(queryClient, updated.id);
+    },
   });
 
   const isMutationPending =

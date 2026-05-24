@@ -56,14 +56,16 @@ test.describe('Admin — projects CRUD and media uploads', () => {
 
     await expect(page.getByRole('heading', { name: 'הוספת פרויקט' })).toBeVisible();
 
-    const categoryCheckbox = page.locator('input[id^="cat-"]').first();
+    const categoryCheckbox = page.getByRole('checkbox', {
+      name: 'תכנון ועיצוב בתים',
+    });
     await expect(categoryCheckbox).toBeVisible({ timeout: 15_000 });
 
-    await page.locator('#title').fill(projectTitle);
-    await page.locator('#description').fill('תיאור בדיקות E2E');
-    await page.locator('#location').fill('תל אביב');
-    await page.locator('#client').fill('לקוח בדיקות');
-    await page.locator('#constructionArea').fill('100');
+    await page.getByRole('textbox', { name: 'כותרת' }).fill(projectTitle);
+    await page.getByRole('textbox', { name: 'תיאור' }).fill('תיאור בדיקות E2E');
+    await page.getByRole('textbox', { name: 'מיקום' }).fill('תל אביב');
+    await page.getByRole('textbox', { name: 'לקוח' }).fill('לקוח בדיקות');
+    await page.getByRole('spinbutton', { name: 'שטח בנייה (מ"ר)' }).fill('100');
 
     const checked = await categoryCheckbox.isChecked();
     if (!checked) {
@@ -142,7 +144,7 @@ test.describe('Admin — projects CRUD and media uploads', () => {
 
     await expect(page.getByRole('heading', { name: 'עריכת פרויקט' })).toBeVisible();
 
-    await page.locator('#title').fill(editedTitle);
+    await page.getByRole('textbox', { name: 'כותרת' }).fill(editedTitle);
     await page.getByRole('button', { name: 'שמור' }).click();
 
     await expect(page.getByRole('heading', { name: 'עריכת פרויקט' })).not.toBeVisible({
@@ -152,6 +154,30 @@ test.describe('Admin — projects CRUD and media uploads', () => {
     await expect(page.locator('tr').filter({ hasText: editedTitle })).toBeVisible({
       timeout: 15_000,
     });
+  });
+
+  test('toggle favourite updates row after save', async ({ page }) => {
+    await page.goto('/admin/projects', { waitUntil: 'domcontentloaded' });
+
+    const row = page.locator('tr').filter({ hasText: editedTitle });
+    await expect(row).toBeVisible({ timeout: 15_000 });
+
+    const favouriteButton = row.getByRole('button', {
+      name: /הוסף למועדפים|הסר ממועדפים/,
+    });
+    const labelBefore = await favouriteButton.getAttribute('aria-label');
+
+    const updatePromise = page.waitForResponse(
+      (res) =>
+        res.url().includes('/api/projects') &&
+        res.request().method() === 'PUT' &&
+        res.ok(),
+    );
+
+    await favouriteButton.click();
+    await updatePromise;
+
+    await expect(favouriteButton).not.toHaveAttribute('aria-label', labelBefore ?? '');
   });
 
   test('delete project', async ({ page }) => {

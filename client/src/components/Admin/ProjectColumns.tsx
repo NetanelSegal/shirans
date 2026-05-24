@@ -16,10 +16,16 @@ function getCategoryTitles(
   );
 }
 
+export interface ProjectColumnPendingState {
+  favouriteId: string | null;
+  completedId: string | null;
+}
+
 export function getProjectColumns(
   categories: CategoryResponse[],
   onToggleFavourite: (p: ProjectResponse) => void | Promise<void>,
   onToggleCompleted: (p: ProjectResponse) => void | Promise<void>,
+  pending: ProjectColumnPendingState = { favouriteId: null, completedId: null },
 ): ColumnConfig<ProjectResponse>[] {
   return [
     {
@@ -40,32 +46,48 @@ export function getProjectColumns(
     {
       key: 'favourite',
       header: 'מועדף',
-      render: (row: ProjectResponse) => (
-        <Button
-          type="button"
-          variant={row.favourite ? 'warning' : 'light'}
-          onClick={() => void onToggleFavourite(row)}
-          className={`${tableControlClass} ${row.favourite ? '' : '!text-gray-600'}`}
-          ariaLabel={row.favourite ? 'הסר ממועדפים' : 'הוסף למועדפים'}
-        >
-          <i className="fa-solid fa-star" aria-hidden />
-        </Button>
-      ),
+      render: (row: ProjectResponse) => {
+        const isPending = pending.favouriteId === row.id;
+        return (
+          <Button
+            type="button"
+            variant={row.favourite ? 'warning' : 'light'}
+            onClick={() => void onToggleFavourite(row)}
+            disabled={isPending}
+            className={`${tableControlClass} ${row.favourite ? '' : '!text-gray-600'}`}
+            ariaLabel={row.favourite ? 'הסר ממועדפים' : 'הוסף למועדפים'}
+          >
+            {isPending ? (
+              <i className="fa-solid fa-spinner fa-spin" aria-hidden />
+            ) : (
+              <i className="fa-solid fa-star" aria-hidden />
+            )}
+          </Button>
+        );
+      },
     },
     {
       key: 'isCompleted',
       header: 'הושלם',
-      render: (row: ProjectResponse) => (
-        <Button
-          type="button"
-          variant={row.isCompleted ? 'success' : 'light'}
-          onClick={() => void onToggleCompleted(row)}
-          className={`${tableControlClass} ${row.isCompleted ? '' : '!text-gray-700'}`}
-          ariaLabel={row.isCompleted ? 'סמן כלא הושלם' : 'סמן כהושלם'}
-        >
-          {row.isCompleted ? 'כן' : 'לא'}
-        </Button>
-      ),
+      render: (row: ProjectResponse) => {
+        const isPending = pending.completedId === row.id;
+        return (
+          <Button
+            type="button"
+            variant={row.isCompleted ? 'success' : 'light'}
+            onClick={() => void onToggleCompleted(row)}
+            disabled={isPending}
+            className={`${tableControlClass} ${row.isCompleted ? '' : '!text-gray-700'}`}
+            ariaLabel={row.isCompleted ? 'סמן כלא הושלם' : 'סמן כהושלם'}
+          >
+            {isPending ? (
+              <i className="fa-solid fa-spinner fa-spin" aria-hidden />
+            ) : (
+              (row.isCompleted ? 'כן' : 'לא')
+            )}
+          </Button>
+        );
+      },
     },
   ];
 }

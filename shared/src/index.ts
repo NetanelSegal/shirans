@@ -12,3 +12,4 @@ export * from './schemas/footer.schema';
 export * from './schemas/testimonial.schema';
 export * from './schemas/calculator.schema';
 export * from './utils/calculator';
+export * from './utils/projectMedia';

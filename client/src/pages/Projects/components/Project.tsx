@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { ProjectResponse } from '@shirans/shared';
+import { getMainImageUrl } from '@shirans/shared';
 import ImageScaleHover from '@/components/ui/ImageScaleHover';
 import { CategoryLabel } from '@/components/CategoryLabel';
 import { useCategoriesMap } from '@/hooks/useCategories';
@@ -55,7 +56,7 @@ const Project = ({ project, i }: IProjectProps) => {
           >
             <ImageScaleHover
               containerClassName='rounded-xl shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
-              src={project.mainImage}
+              src={getMainImageUrl(project.media)}
             />
           </Link>
         </EnterAnimation>

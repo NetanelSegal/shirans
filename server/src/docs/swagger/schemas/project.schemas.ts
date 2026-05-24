@@ -21,18 +21,21 @@ export const projectSchemas = {
         items: { $ref: '#/components/schemas/CategoryUrlCode' },
       },
       description: { type: 'string' },
-      mainImage: { type: 'string', format: 'uri' },
-      images: {
+      media: {
         type: 'array',
-        items: { type: 'string', format: 'uri' },
-      },
-      plans: {
-        type: 'array',
-        items: { type: 'string', format: 'uri' },
-      },
-      videos: {
-        type: 'array',
-        items: { type: 'string', format: 'uri' },
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'cuid' },
+            url: { type: 'string', format: 'uri' },
+            type: {
+              type: 'string',
+              enum: ['MAIN', 'IMAGE', 'PLAN', 'VIDEO'],
+            },
+            order: { type: 'integer', minimum: 0 },
+          },
+          required: ['id', 'url', 'type', 'order'],
+        },
       },
       location: { type: 'string' },
       client: { type: 'string' },
@@ -47,8 +50,7 @@ export const projectSchemas = {
       'title',
       'categories',
       'description',
-      'mainImage',
-      'images',
+      'media',
       'location',
       'client',
       'isCompleted',

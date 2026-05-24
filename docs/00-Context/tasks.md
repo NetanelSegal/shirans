@@ -30,6 +30,7 @@
 - [x] Unit/Integration Testing — Vitest for server logic.
 - [x] Client-side caching — TanStack Query for projects, categories, testimonials, calculator config, admin data.
 - [x] **Image pipeline (admin uploads)** — Server-side sharp + Cloudinary; tests and optional E2E upload (`E2E_CLOUDINARY_UPLOAD=1`). Legacy script-based conversion remains separate if needed.
+- [x] **Project media admin UX** — Global `media[]` response shape; admin delete/reorder for images/plans; row loading on favourite/completed toggles.
 - [ ] **⚠️ Production Deploy** — Finalize Render (Server) and Netlify (Client) settings.
 - [ ] **⚠️ SEO & Meta** — Refining metadata for search engines.
 

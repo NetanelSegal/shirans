@@ -2,6 +2,8 @@ import { useState, useCallback, type RefObject } from 'react';
 import {
   ERROR_KEYS,
   IMAGE_UPLOAD,
+  getMainImageUrl,
+  getNextMediaOrders,
   type ErrorKey,
   type ProjectResponse,
 } from '@shirans/shared';
@@ -18,14 +20,16 @@ export function useProjectImageUpload(
     selectedType: ProjectImageMultipartUploadType;
     uploadImages: (input: UploadProjectImagesInput) => Promise<unknown>;
     setError: (message: string | null) => void;
+    disabled?: boolean;
   },
 ) {
-  const { project, selectedType, uploadImages, setError } = options;
+  const { project, selectedType, uploadImages, setError, disabled = false } =
+    options;
   const [uploading, setUploading] = useState(false);
 
   const handleFilesSelected = useCallback(
     async (files: FileList | null) => {
-      if (!files || files.length === 0 || !project) return;
+      if (!files || files.length === 0 || !project || disabled) return;
       setError(null);
 
       const { valid, rejected } = filterAdminImageUploadFiles(
@@ -43,7 +47,7 @@ export function useProjectImageUpload(
         return;
       }
 
-      if (selectedType === 'MAIN' && project.mainImage) {
+      if (selectedType === 'MAIN' && getMainImageUrl(project.media)) {
         setError(
           getClientErrorMessage(
             ERROR_KEYS.VALIDATION.MAIN_IMAGE_ALREADY_EXISTS,
@@ -54,9 +58,10 @@ export function useProjectImageUpload(
 
       try {
         setUploading(true);
-        const metadata = valid.map((_, i) => ({
+        const orders = getNextMediaOrders(project.media, valid.length);
+        const metadata = valid.map((_, index) => ({
           type: selectedType,
-          order: i,
+          order: orders[index]!,
         }));
 
         await uploadImages({
@@ -78,7 +83,7 @@ export function useProjectImageUpload(
         if (fileInputRef.current) fileInputRef.current.value = '';
       }
     },
-    [project, selectedType, uploadImages, setError, fileInputRef],
+    [project, selectedType, uploadImages, setError, fileInputRef, disabled],
   );
 
   return { uploading, handleFilesSelected };
