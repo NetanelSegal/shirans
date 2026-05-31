@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema, RegisterInput } from '@shirans/shared';
 import { useAuth } from '../../hooks/useAuth';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { ErrorDisplay } from '../../components/ErrorDisplay';
-import { BASE_URL } from '../../constants/urls';
+import PageSeo from '@/components/Seo/PageSeo';
 import { Input } from '../../components/ui/Input';
 import { ErrorMessage, getClientErrorMessage } from '../../constants/errorMessages';
 
@@ -47,11 +46,12 @@ export default function Register() {
 
   return (
     <>
-      <Helmet>
-        <title>הרשמה - שירן גלעד</title>
-        <meta name="description" content="הרשמה לחשבון חדש" />
-        <link rel="canonical" href={`${BASE_URL}/register`} />
-      </Helmet>
+      <PageSeo
+        title="הרשמה - שירן גלעד"
+        description="הרשמה לחשבון חדש"
+        path="/register"
+        noIndex
+      />
 
       <div className="flex items-center justify-center py-section-all" dir="rtl">
         <div className="w-full max-w-md">

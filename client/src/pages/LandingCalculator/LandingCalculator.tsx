@@ -1,6 +1,5 @@
 import type { CalculatorFormInput } from '@shirans/shared';
-import { Helmet } from 'react-helmet-async';
-import { BASE_URL } from '@/constants/urls';
+import PageSeo from '@/components/Seo/PageSeo';
 import { CalculatorForm } from '@/components/Calculator';
 import { calculatorService } from '@/services/calculator.service';
 import { useCalculatorConfig } from '@/hooks/useCalculatorConfig';
@@ -20,6 +19,10 @@ const BENEFITS = [
     description: 'גלו את טווח העלות לפני שמתקשרים.',
   },
 ];
+
+const CALCULATOR_TITLE = 'מחשבון אומדן עלות - שירן גלעד אדריכלות ועיצוב פנים';
+const CALCULATOR_DESCRIPTION =
+  'חשבו אומדן עלות לבנייה פרטית. הזינו פרטים וקבלו טווח מחירים משוער.';
 
 export default function LandingCalculator() {
   const { config, isLoading: configLoading } = useCalculatorConfig();
@@ -42,15 +45,11 @@ export default function LandingCalculator() {
       className="min-h-screen"
       aria-label="מחשבון אומדן עלות לבנייה פרטית"
     >
-      <Helmet>
-        <title>מחשבון אומדן עלות - שירן גלעד אדריכלות ועיצוב פנים</title>
-        <meta
-          name="description"
-          content="חשבו אומדן עלות לבנייה פרטית. הזינו פרטים וקבלו טווח מחירים משוער."
-        />
-        <meta property="og:title" content="מחשבון אומדן עלות - שירן גלעד" />
-        <meta property="og:url" content={`${BASE_URL}/calculator`} />
-      </Helmet>
+      <PageSeo
+        title={CALCULATOR_TITLE}
+        description={CALCULATOR_DESCRIPTION}
+        path="/calculator"
+      />
 
       {/* Hero section */}
       <section className="breakout-x-padding bg-primary px-page-all py-16 text-white md:py-20 lg:py-24">
