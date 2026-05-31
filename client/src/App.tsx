@@ -30,6 +30,7 @@ const ContactsManagement = lazy(() => import('./pages/Admin/ContactsManagement')
 const UsersManagement = lazy(() => import('./pages/Admin/UsersManagement'));
 const Calculator = lazy(() => import('./pages/Calculator'));
 const LandingCalculator = lazy(() => import('./pages/LandingCalculator'));
+const About = lazy(() => import('./pages/About'));
 const CalculatorLeadsManagement = lazy(
   () => import('./pages/Admin/CalculatorLeadsManagement')
 );
@@ -80,6 +81,11 @@ export const appRoutes = [
     path: 'projects',
     title: 'פרויקטים',
     element: <Projects />,
+  },
+  {
+    path: 'about',
+    title: 'אודות',
+    element: <About />,
   },
   {
     path: 'projects/:id',
