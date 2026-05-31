@@ -4,7 +4,7 @@ import Footer from '../Footer';
 import { Suspense } from 'react';
 import Loader from '@/components/Loader';
 
-const HIDE_FOOTER_PATHS = ['/login', '/register', '/calculator'];
+const HIDE_FOOTER_PATHS = ['/login', '/register', '/calculator', '/contact'];
 
 export default function Layout() {
   const { pathname } = useLocation();

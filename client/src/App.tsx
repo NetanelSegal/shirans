@@ -31,6 +31,7 @@ const UsersManagement = lazy(() => import('./pages/Admin/UsersManagement'));
 const Calculator = lazy(() => import('./pages/Calculator'));
 const LandingCalculator = lazy(() => import('./pages/LandingCalculator'));
 const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
 const CalculatorLeadsManagement = lazy(
   () => import('./pages/Admin/CalculatorLeadsManagement')
 );
@@ -95,7 +96,7 @@ export const appRoutes = [
   {
     path: 'contact',
     title: 'צור קשר',
-    element: <div></div>,
+    element: <Contact />,
   },
   {
     path: '*',

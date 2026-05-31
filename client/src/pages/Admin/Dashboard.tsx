@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
-import { Helmet } from 'react-helmet-async';
+import PageSeo from '@/components/Seo/PageSeo';
 import Loader from '../../components/Loader/Loader';
 
 const AdminLayout = lazy(() => import('../../components/Admin/AdminLayout'));
@@ -8,9 +8,12 @@ const AdminLayout = lazy(() => import('../../components/Admin/AdminLayout'));
 export default function Dashboard() {
   return (
     <>
-      <Helmet>
-        <title>ניהול מערכת - שירן גלעד</title>
-      </Helmet>
+      <PageSeo
+        title="ניהול מערכת - שירן גלעד"
+        description="אזור ניהול מערכת"
+        path="/admin"
+        noIndex
+      />
       <div className="min-h-screen bg-gray-50" dir="rtl">
         <Suspense fallback={<Loader />}>
           <AdminLayout>

@@ -3,32 +3,30 @@ import type { ProjectResponse } from '@shirans/shared';
 import { getMainImageUrl } from '@shirans/shared';
 import Project from './components/Project';
 import EnterAnimation from '@/components/animations/EnterAnimation';
-import { Helmet } from 'react-helmet-async';
-import { BASE_URL } from '@/constants/urls';
+import PageSeo from '@/components/Seo/PageSeo';
+import { DEFAULT_OG_IMAGE } from '@/constants/seo';
 import { DataStateGuard } from '@/components/DataState';
+
+const PROJECTS_TITLE = 'פרויקטים - שירן גלעד אדריכלות ועיצוב פנים';
+const PROJECTS_DESCRIPTION =
+  'גלריית פרויקטים מרשימה של בתים פרטיים, דירות יוקרה, ופנטהאוזים. כל פרויקט מתוכנן בקפידה בהתאמה אישית ללקוח.';
 
 export default function Projects() {
   const { projects, isLoading, error, retry } = useProjects();
 
-  const ogImage = projects.length > 0
-    ? getMainImageUrl(projects[0]!.media)
-    : `${BASE_URL}/assets/shiranImage-28AXxNS6.jpeg`;
+  const ogImage =
+    projects.length > 0
+      ? getMainImageUrl(projects[0]!.media)
+      : DEFAULT_OG_IMAGE;
 
   return (
     <>
-      <Helmet>
-        <title>פרויקטים - שירן גלעד אדריכלות ועיצוב פנים</title>
-        <meta name="description" content="גלריית פרויקטים מרשימה של בתים פרטיים, דירות יוקרה,נטהאוזים. כל פרויקט מתוכנן בקפידה בהתאמה אישית ללקוח." />
-        <meta property="og:title" content="פרויקטים - שירן גלעד אדריכלות ועיצוב פנים" />
-        <meta property="og:description" content="גלריית פרויקטים מרשימה של בתים פרטיים, דירות יוקרה,נטהאוזים. כל פרויקט מתוכנן בקפידה בהתאמה אישית ללקוח." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${BASE_URL}/projects`} />
-        <meta property="og:image" content={ogImage} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="פרויקטים - שירן גלעד אדריכלות ועיצוב פנים" />
-        <meta name="twitter:description" content="גלריית פרויקטים מרשימה של בתים פרטיים, דירות יוקרה,נטהאוזים. כל פרויקט מתוכנן בקפידה בהתאמה אישית ללקוח." />
-        <meta name="twitter:image" content={ogImage} />
-      </Helmet>
+      <PageSeo
+        title={PROJECTS_TITLE}
+        description={PROJECTS_DESCRIPTION}
+        path="/projects"
+        image={ogImage}
+      />
       <div className='py-10 text-center'>
         <h1 className='heading mb-4 font-bold'>פרוייקטים</h1>
         <p className='paragraph px-[10vw] font-semibold'>

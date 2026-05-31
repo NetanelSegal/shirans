@@ -5,8 +5,7 @@ import { Navigate, useParams, useNavigate } from 'react-router-dom';
 import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
 import { Fragment } from 'react';
 import EnterAnimation from '@/components/animations/EnterAnimation';
-import { Helmet } from 'react-helmet-async';
-import { BASE_URL } from '@/constants/urls';
+import PageSeo from '@/components/Seo/PageSeo';
 import { LoadingState, ErrorState } from '@/components/DataState';
 import { useCategoriesMap } from '@/hooks/useCategories';
 import { useProject } from '@/hooks/useProject';
@@ -50,31 +49,23 @@ export default function Project() {
   const galleryUrls = getMediaUrlsByType(project.media, 'IMAGE');
 
   const ogImage = mainImageUrl;
-  const ogUrl = `${BASE_URL}/projects/${project.id}`;
   const description = project.description.split('\n')[0].substring(0, 160) + '...';
   const title = `${project.title} - שירן גלעד אדריכלות ועיצוב פנים`;
 
   return (
     <>
-      <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={ogUrl} />
-        <meta property="og:image" content={ogImage} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={ogImage} />
-      </Helmet>
+      <PageSeo
+        title={title}
+        description={description}
+        path={`/projects/${project.id}`}
+        image={ogImage}
+      />
       {/* main image */}
       <EnterAnimation translateY={false} duration={0.8}>
         <div className='breakout-x-padding relative mb-10'>
-          <h3 className='px-page-all heading absolute bottom-5 z-20 font-semibold text-white drop-shadow-[0_0_8px_rgba(0,0,0,0.8)]'>
+          <h1 className='px-page-all heading absolute bottom-5 z-20 font-semibold text-white drop-shadow-[0_0_8px_rgba(0,0,0,0.8)]'>
             {project.title}
-          </h3>
+          </h1>
           <ImageScaleHover
             containerClassName='w-full h-[75vh] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
             src={mainImageUrl}
