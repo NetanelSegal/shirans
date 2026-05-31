@@ -1,0 +1,7 @@
+# Railway server deploy (Nixpacks). Ensures sharp's linux-x64 native binaries install.
+# Same issue as Netlify Rollup — npm may skip optional @img/* packages without this flag.
+[variables]
+NPM_FLAGS = "--include=optional"
+
+[phases.install]
+cmds = ["npm ci", "npm rebuild sharp --workspace=server"]
