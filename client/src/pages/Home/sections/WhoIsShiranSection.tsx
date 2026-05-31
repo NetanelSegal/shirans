@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import WhoIsShiranImage from '../components/B_WhoIsShiranImage';
 import EnterAnimation from '@/components/animations/EnterAnimation';
+import Button from '@/components/ui/Button';
 
 export default function WhoIsShiranSection() {
   const nav = useNavigate();
@@ -27,13 +28,13 @@ export default function WhoIsShiranSection() {
             עבורכם את הבית שתמיד חלמתם עליו, עם דגש על הפרטים הקטנים ביותר, שילוב
             בין חללים מדוייקים המתאימים לצרכים שלכם עם אסטטיקה עיצובית ופרקטיקה.
           </p>
-          <div className='flex gap-2'>
-            <button
-              className='bg-secondary text-black'
-              onClick={() => nav('/projects')}
-            >
+          <div className='mt-2 flex flex-wrap gap-2'>
+            <Button variant='primary' onClick={() => nav('/projects')}>
               פרוייקטים
-            </button>
+            </Button>
+            <Button variant='secondary' onClick={() => nav('/about')}>
+              אודות
+            </Button>
           </div>
         </EnterAnimation>
       </div>
