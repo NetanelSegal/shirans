@@ -66,7 +66,7 @@ export default function HeroVideo() {
   };
 
   return (
-    <div className="relative size-full overflow-hidden">
+    <div className="relative size-full min-h-full overflow-hidden">
       <Helmet>
         <link rel="preload" as="image" href={posterSrc} fetchPriority="high" />
       </Helmet>
