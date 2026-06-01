@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { ProjectResponse } from '@shirans/shared';
-import { getMainImageUrl } from '@shirans/shared';
+import { getMainImageUrl, optimizeCloudinaryImageUrl } from '@shirans/shared';
 import ImageScaleHover from '@/components/ui/ImageScaleHover';
 import { CategoryLabel } from '@/components/CategoryLabel';
 import { useCategoriesMap } from '@/hooks/useCategories';
@@ -56,14 +56,23 @@ const Project = ({ project, i }: IProjectProps) => {
           >
             <ImageScaleHover
               containerClassName='rounded-xl shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
-              src={getMainImageUrl(project.media)}
+              src={optimizeCloudinaryImageUrl(
+                getMainImageUrl(project.media),
+                800,
+              )}
+              alt={`${project.title} — תמונת פרויקט`}
+              width={1600}
+              height={900}
+              fadeIn={false}
+              fetchPriority={i === 0 ? 'high' : undefined}
+              loading={i === 0 ? 'eager' : 'lazy'}
             />
           </Link>
         </EnterAnimation>
       </div>
       <div className='my-1 px-2 lg:w-1/3'>
         <EnterAnimation delay={i * 0.1 + 0.1}>
-          <h4 className='subheading font-semibold'>{project.title}</h4>
+          <h2 className='subheading font-semibold'>{project.title}</h2>
           <div className='my-1 flex flex-wrap gap-1'>
             {project.categories?.map((catCode) => (
               <CategoryLabel

@@ -3,12 +3,21 @@ import DataCarousel from '../DataCarousel';
 import Image from '../ui/Image';
 import { useProjects } from '@/hooks/useProjects';
 import type { ProjectResponse } from '@shirans/shared';
-import { getMainImageUrl } from '@shirans/shared';
+import {
+  getMainImageUrl,
+  optimizeCloudinaryImageUrl,
+} from '@shirans/shared';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { FavoriteProjectsCarouselSkeleton } from '@/components/skeletons';
 
 export default function FavoriteProjects() {
   const nav = useNavigate();
-  const { projects } = useProjects();
+  const { projects, isLoading } = useProjects();
   const data: ProjectResponse[] = projects.filter((p) => p.favourite);
+
+  if (isLoading) {
+    return <FavoriteProjectsCarouselSkeleton />;
+  }
 
   if (data.length === 0) return null;
 
@@ -28,8 +37,13 @@ export default function FavoriteProjects() {
                 key={project.id}
                 draggable='false'
                 className='size-full object-cover object-center transition-all duration-300 ease-in-out hover:scale-105'
-                src={getMainImageUrl(project.media)}
-                alt=''
+                src={optimizeCloudinaryImageUrl(
+                  getMainImageUrl(project.media),
+                  900,
+                )}
+                alt={project.title}
+                width={1600}
+                height={900}
               />
             </Link>
           </div>
@@ -40,11 +54,21 @@ export default function FavoriteProjects() {
               <span className='paragraph'>{title}</span>
             </div>
             <div className='mx-auto flex w-fit items-center gap-2'>
-              <button className='bg-primary' onClick={decrementIndex}>
-                <i className='fa-solid fa-arrow-right'></i>
+              <button
+                type="button"
+                className='bg-primary'
+                aria-label='פרויקט קודם'
+                onClick={decrementIndex}
+              >
+                <ChevronRight className='size-5' aria-hidden />
               </button>
-              <button className='bg-primary' onClick={incrementIndex}>
-                <i className='fa-solid fa-arrow-left'></i>
+              <button
+                type="button"
+                className='bg-primary'
+                aria-label='פרויקט הבא'
+                onClick={incrementIndex}
+              >
+                <ChevronLeft className='size-5' aria-hidden />
               </button>
               <button
                 className='w-fit shrink text-nowrap bg-secondary text-black'

@@ -10,6 +10,8 @@ interface DataStateGuardProps<T> {
   emptyMessage: string;
   onRetry?: () => void;
   children: (data: T[]) => ReactNode;
+  /** Custom loading UI (e.g. layout skeleton). Defaults to centered spinner. */
+  loadingFallback?: ReactNode;
   loadingMinHeight?: string | number;
 }
 
@@ -20,9 +22,13 @@ export function DataStateGuard<T>({
   emptyMessage,
   onRetry,
   children,
+  loadingFallback,
   loadingMinHeight,
 }: DataStateGuardProps<T>) {
   if (isLoading) {
+    if (loadingFallback) {
+      return <>{loadingFallback}</>;
+    }
     return <LoadingState minHeight={loadingMinHeight} />;
   }
 

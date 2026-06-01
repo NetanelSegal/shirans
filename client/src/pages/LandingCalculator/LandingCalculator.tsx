@@ -78,14 +78,17 @@ export default function LandingCalculator() {
         </EnterAnimation>
         <ul className="container mx-auto grid max-w-4xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {BENEFITS.map((item, i) => (
-            <EnterAnimation key={item.title} delay={0.1 * (i + 1)}>
-              <li className="rounded-xl border border-primary/10 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+            <li
+              key={item.title}
+              className="rounded-xl border border-primary/10 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+            >
+              <EnterAnimation delay={0.1 * (i + 1)}>
                 <h3 className="mb-2 font-semibold text-primary">
                   {item.title}
                 </h3>
                 <p className="text-slate-600">{item.description}</p>
-              </li>
-            </EnterAnimation>
+              </EnterAnimation>
+            </li>
           ))}
         </ul>
       </section>

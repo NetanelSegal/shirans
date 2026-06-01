@@ -1,7 +1,8 @@
 import { useScreenContext } from '@/contexts/ScreenProvider';
 import { motion, useMotionValue, animate, MotionValue } from 'motion/react';
 import { MutableRefObject, RefObject, useEffect, useMemo, useRef, useState } from 'react';
-import { LoadingState, EmptyState } from '@/components/DataState';
+import { EmptyState } from '@/components/DataState';
+import { TestimonialsStripSkeleton } from '@/components/skeletons';
 import { useTestimonials } from '@/hooks/useTestimonials';
 import type { TestimonialResponse } from '@shirans/shared';
 
@@ -93,7 +94,7 @@ export default function Testimonials() {
   };
 
   if (isLoading) {
-    return <LoadingState minHeight="8rem" className="my-8" />;
+    return <TestimonialsStripSkeleton />;
   }
 
   if (isError || testimonials.length === 0) {

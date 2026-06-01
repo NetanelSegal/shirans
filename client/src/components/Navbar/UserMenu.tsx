@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { LogOut, User } from 'lucide-react';
 
 export default function UserMenu() {
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -31,10 +32,14 @@ export default function UserMenu() {
   return (
     <div className="relative" ref={userMenuRef} dir="rtl">
       <button
+        type="button"
+        aria-label='תפריט משתמש'
+        aria-expanded={showUserMenu}
+        aria-haspopup="true"
         onClick={() => setShowUserMenu((prev) => !prev)}
         className='flex items-center gap-2 rounded-xl bg-secondary p-2 text-black hover:bg-secondary/80 transition-all duration-200'
       >
-        <i className="fa-solid fa-user"></i>
+        <User className="size-5" aria-hidden />
       </button>
 
       {showUserMenu && (
@@ -67,7 +72,7 @@ export default function UserMenu() {
                 disabled={isLoading}
               >
                 <span>{isLoading ? 'מתנתק...' : 'התנתק'}</span>
-                <i className="fa-solid fa-right-from-bracket"></i>
+                <LogOut className="size-4 shrink-0" aria-hidden />
               </button>
             </>
           ) : (

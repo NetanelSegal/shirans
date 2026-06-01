@@ -16,10 +16,12 @@ export function normalizeHeroVideoUrl(url: string): string {
   if (!url.includes('res.cloudinary.com') || !url.includes('/video/upload/')) {
     return url;
   }
-  if (url.includes('/video/upload/f_auto') || url.includes('/video/upload/q_auto')) {
+  const afterUpload = url.slice(url.indexOf('/video/upload/') + '/video/upload/'.length);
+  const firstSegment = afterUpload.split('/')[0] ?? '';
+  if (firstSegment && !/^v\d+$/.test(firstSegment)) {
     return url;
   }
-  return url.replace('/video/upload/', '/video/upload/f_auto,q_auto/');
+  return url.replace('/video/upload/', '/video/upload/f_auto,q_auto,w_1280/');
 }
 
 export const envConfig = {

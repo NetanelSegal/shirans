@@ -41,7 +41,9 @@ export default function Contact() {
             <h2 className="heading mb-4 mt-10 font-semibold">
               להשארת פרטים לחזרה
             </h2>
-            <FooterForm />
+            <div className="rounded-xl bg-white p-4 text-dark shadow-md md:p-6">
+              <FooterForm />
+            </div>
           </EnterAnimation>
         </section>
       </main>

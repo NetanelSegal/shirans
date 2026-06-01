@@ -6,10 +6,15 @@ import ProjectImagePlanShowcase from './components/ProjectImagePlanShowcase';
 import { Fragment } from 'react';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import PageSeo from '@/components/Seo/PageSeo';
-import { LoadingState, ErrorState } from '@/components/DataState';
+import { ErrorState } from '@/components/DataState';
+import { ProjectDetailSkeleton } from '@/components/skeletons';
 import { useCategoriesMap } from '@/hooks/useCategories';
 import { useProject } from '@/hooks/useProject';
-import { getMainImageUrl, getMediaUrlsByType } from '@shirans/shared';
+import {
+  getMainImageUrl,
+  getMediaUrlsByType,
+  optimizeCloudinaryImageUrl,
+} from '@shirans/shared';
 
 export default function Project() {
   const { id } = useParams<{ id: string }>();
@@ -24,11 +29,11 @@ export default function Project() {
   } = useProject(id);
 
   if (projectsLoading && !projectFromList) {
-    return <LoadingState minHeight="40rem" />;
+    return <ProjectDetailSkeleton />;
   }
 
   if (directLoading) {
-    return <LoadingState minHeight="40rem" />;
+    return <ProjectDetailSkeleton />;
   }
 
   if (directErrorMessage) {
@@ -43,7 +48,10 @@ export default function Project() {
 
   if (!project) return <Navigate to='/projects' />;
 
-  const mainImageUrl = getMainImageUrl(project.media);
+  const mainImageUrl = optimizeCloudinaryImageUrl(
+    getMainImageUrl(project.media),
+    1200,
+  );
   const planUrls = getMediaUrlsByType(project.media, 'PLAN');
   const videoUrls = getMediaUrlsByType(project.media, 'VIDEO');
   const galleryUrls = getMediaUrlsByType(project.media, 'IMAGE');
@@ -69,6 +77,9 @@ export default function Project() {
           <ImageScaleHover
             containerClassName='w-full h-[75vh] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
             src={mainImageUrl}
+            alt={project.title}
+            width={1600}
+            height={900}
           />
         </div>
       </EnterAnimation>

@@ -1,9 +1,16 @@
-import { forwardRef, InputHTMLAttributes, Ref, TextareaHTMLAttributes } from 'react';
+import {
+  forwardRef,
+  InputHTMLAttributes,
+  Ref,
+  TextareaHTMLAttributes,
+  useId,
+} from 'react';
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   error?: { message?: string };
   borderColor?: string;
+  labelClassName?: string;
   as?: 'input';
 };
 
@@ -11,19 +18,33 @@ type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   label: string;
   error?: { message?: string };
   borderColor?: string;
+  labelClassName?: string;
   as: 'textarea';
 };
 
 type Props = InputProps | TextareaProps;
 
 export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
-  ({ label, error, borderColor, as = 'input', ...props }, ref) => {
+  ({ label, error, borderColor, labelClassName, as = 'input', ...props }, ref) => {
+    const fallbackId = useId();
+    const inputId =
+      typeof props.id === 'string'
+        ? props.id
+        : typeof props.name === 'string'
+          ? props.name
+          : fallbackId;
+
     const commonProps = {
       ...props,
+      id: inputId,
       placeholder: ' ',
       className: `peer w-full rounded-xl p-2 [-webkit-tap-highlight-color:transparent] focus:outline-none focus:ring-2 focus:ring-offset-0 ${as === 'textarea' ? 'resize-none' : ''} ${error ? 'border border-red-500 focus:border-red-500 focus:ring-red-500' : borderColor ? `border ${borderColor} focus:border-primary focus:ring-primary` : 'border border-gray-200 focus:border-primary focus:ring-primary'
         }`,
     };
+
+    const labelClasses =
+      labelClassName ??
+      'absolute start-2 z-10 top-2 rounded-md px-2 font-bold shadow-md transition-all duration-150 ease-in-out peer-focus:-translate-y-3/4 peer-focus:top-2 peer-[:not(:placeholder-shown)]:-translate-y-3/4 peer-[:not(:placeholder-shown)]:top-2 text-dark bg-secondary';
 
     return (
       <div className="relative">
@@ -39,8 +60,8 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
           />
         )}
         <label
-          htmlFor={props.id ?? props.name}
-          className='absolute start-2 z-10 top-2 rounded-md px-2 font-bold shadow-md transition-all duration-150 ease-in-out peer-focus:-translate-y-3/4 peer-focus:top-2 peer-[:not(:placeholder-shown)]:-translate-y-3/4 peer-[:not(:placeholder-shown)]:top-2 text-dark bg-secondary'
+          htmlFor={inputId}
+          className={labelClasses}
         >
           {label}
         </label>

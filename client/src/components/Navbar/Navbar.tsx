@@ -5,6 +5,7 @@ import { useScreenContext } from '../../contexts/ScreenProvider';
 import { useEffect, useRef, useState } from 'react';
 import UserMenu from './UserMenu';
 import Button from '../ui/Button';
+import { Menu } from 'lucide-react';
 
 export default function Navbar() {
   const { isSmallScreen } = useScreenContext();
@@ -44,16 +45,21 @@ export default function Navbar() {
       <div className='absolute inset-0 -z-10 bg-primary'></div>
 
       {/* content */}
-      <Link to={'/'}>
-        <img className='h-10' src={srcShiranLogo} alt='shiran logo icon' />
+      <Link to={'/'} aria-label='שירן גלעד — דף הבית'>
+        <img className='h-10' src={srcShiranLogo} alt='' aria-hidden />
       </Link>
       <div ref={navRef} className="flex items-center md:gap-5 gap-2"> {/* Container for mobile toggle and UserMenu */}
         {isSmallScreen && (
           <button
+            type="button"
             className='bg-none p-0'
+            aria-label='תפריט'
+            aria-expanded={toggle}
             onClick={() => setToggle((prev) => !prev)}
           >
-            <i className='fa-solid fa-bars flex size-8 items-center justify-center rounded-xl bg-secondary text-black' />
+            <span className='flex size-8 items-center justify-center rounded-xl bg-secondary text-black'>
+              <Menu className='size-5' aria-hidden />
+            </span>
           </button>
         )}
         <ul
