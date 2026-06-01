@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@fontsource/assistant": "^5.2.8",
     "@headlessui/react": "^2.2.9",
     "@hookform/resolvers": "^5.2.2",
     "@shirans/shared": "*",

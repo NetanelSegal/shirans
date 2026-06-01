@@ -1,8 +1,16 @@
 import { useScreenContext } from '@/contexts/ScreenProvider';
 import { envConfig } from '@/config/env';
-import { useCallback, useEffect, useState, type ImgHTMLAttributes } from 'react';
-import heroMobilePoster from '@/assets/mobile-video-0-frame.jpg';
-import heroDesktopPoster from '@/assets/desktop-video-0-frame.jpg';
+import {
+  useCallback,
+  useEffect,
+  useState,
+  type ImgHTMLAttributes,
+} from 'react';
+import { Helmet } from 'react-helmet-async';
+import heroMobilePoster from '@/assets/mobile-video-0-frame.webp';
+import heroDesktopPoster from '@/assets/desktop-video-0-frame.webp';
+
+const IDLE_VIDEO_TIMEOUT_MS = 2000;
 
 export default function HeroVideo() {
   const { isSmallScreen } = useScreenContext();
@@ -10,12 +18,26 @@ export default function HeroVideo() {
     ? envConfig.heroVideos.mobile
     : envConfig.heroVideos.desktop;
   const posterSrc = isSmallScreen ? heroMobilePoster : heroDesktopPoster;
+  const [showVideo, setShowVideo] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
 
   useEffect(() => {
+    setShowVideo(false);
     setVideoReady(false);
     setVideoFailed(false);
+  }, [videoSrc]);
+
+  useEffect(() => {
+    if (typeof requestIdleCallback === 'undefined') {
+      const timeoutId = window.setTimeout(() => setShowVideo(true), 500);
+      return () => window.clearTimeout(timeoutId);
+    }
+
+    const idleId = requestIdleCallback(() => setShowVideo(true), {
+      timeout: IDLE_VIDEO_TIMEOUT_MS,
+    });
+    return () => cancelIdleCallback(idleId);
   }, [videoSrc]);
 
   const handleVideoReady = useCallback(() => {
@@ -28,32 +50,50 @@ export default function HeroVideo() {
   }, []);
 
   const showPoster = !videoReady || videoFailed;
-  const canPlayVideo = Boolean(videoSrc) && !videoFailed;
+  const canPlayVideo = showVideo && Boolean(videoSrc) && !videoFailed;
+
+  const posterImgProps = {
+    alt: '',
+    'aria-hidden': true as const,
+    width: 1920,
+    height: 1080,
+    loading: 'eager' as const,
+    decoding: 'async' as const,
+    ...({ fetchpriority: 'high' } as ImgHTMLAttributes<HTMLImageElement>),
+    className: `absolute inset-0 size-full object-cover transition-opacity duration-500 ${
+      showPoster ? 'opacity-100' : 'pointer-events-none opacity-0'
+    }`,
+  };
 
   return (
     <div className="relative size-full overflow-hidden">
-      <img
-        src={posterSrc}
-        alt=""
-        aria-hidden
-        {...({ fetchpriority: 'high' } as ImgHTMLAttributes<HTMLImageElement>)}
-        loading="eager"
-        decoding="async"
-        className={`absolute inset-0 size-full object-cover transition-opacity duration-500 ${
-          showPoster ? 'opacity-100' : 'pointer-events-none opacity-0'
-        }`}
-      />
+      <Helmet>
+        <link rel="preload" as="image" href={posterSrc} fetchPriority="high" />
+      </Helmet>
+      <picture className="absolute inset-0 size-full">
+        <source
+          media="(max-width: 767px)"
+          srcSet={heroMobilePoster}
+          type="image/webp"
+        />
+        <source
+          media="(min-width: 768px)"
+          srcSet={heroDesktopPoster}
+          type="image/webp"
+        />
+        <img src={posterSrc} {...posterImgProps} />
+      </picture>
       {canPlayVideo && (
         <video
           autoPlay
           muted
           loop
           playsInline
-          preload="auto"
+          preload="none"
           poster={posterSrc}
           onCanPlay={handleVideoReady}
           onError={handleVideoError}
-          className={`size-full object-cover transition-opacity duration-500 ${
+          className={`absolute inset-0 size-full object-cover transition-opacity duration-500 ${
             videoReady ? 'opacity-100' : 'opacity-0'
           }`}
         >

@@ -1,11 +1,12 @@
 import { useProjects } from '@/hooks/useProjects';
 import type { ProjectResponse } from '@shirans/shared';
-import { getMainImageUrl } from '@shirans/shared';
+import { getMainImageUrl, optimizeCloudinaryImageUrl } from '@shirans/shared';
 import Project from './components/Project';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import PageSeo from '@/components/Seo/PageSeo';
 import { DEFAULT_OG_IMAGE } from '@/constants/seo';
 import { DataStateGuard } from '@/components/DataState';
+import { ProjectListSkeleton } from '@/components/skeletons';
 
 const PROJECTS_TITLE = 'פרויקטים - שירן גלעד אדריכלות ועיצוב פנים';
 const PROJECTS_DESCRIPTION =
@@ -16,7 +17,10 @@ export default function Projects() {
 
   const ogImage =
     projects.length > 0
-      ? getMainImageUrl(projects[0]!.media)
+      ? optimizeCloudinaryImageUrl(
+          getMainImageUrl(projects[0]!.media),
+          1200,
+        )
       : DEFAULT_OG_IMAGE;
 
   return (
@@ -40,7 +44,7 @@ export default function Projects() {
         error={error}
         emptyMessage="אין פרויקטים להצגה"
         onRetry={retry}
-        loadingMinHeight="20rem"
+        loadingFallback={<ProjectListSkeleton count={3} />}
       >
         {(data) =>
           data.map((e: ProjectResponse, i) => (

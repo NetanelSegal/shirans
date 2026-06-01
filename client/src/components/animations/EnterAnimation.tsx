@@ -42,11 +42,11 @@ export default function EnterAnimation({
   const animationVariants = {
     initial: {
       opacity: opacity ? 0 : undefined,
-      y: translateY ? 200 : undefined,
+      translateY: translateY ? 200 : undefined,
     },
     animate: {
       opacity: opacity ? 1 : undefined,
-      y: translateY ? 0 : undefined,
+      translateY: translateY ? 0 : undefined,
     },
   };
 
@@ -54,7 +54,7 @@ export default function EnterAnimation({
     <motion.div
       variants={animationVariants}
       initial='initial'
-      style={{ width: '100%' }}
+      style={{ width: '100%', willChange: 'transform, opacity' }}
       {...(dontAnimateWhileInView
         ? { animate: runAnimation ? 'animate' : 'initial' }
         : { whileInView: 'animate', viewport: { once } })}

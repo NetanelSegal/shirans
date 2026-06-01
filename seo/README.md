@@ -1,8 +1,10 @@
 # SEO Improvement Workstream
 
-**Branch:** `feature/seo-improvements`  
-**Current score:** 80 / 100 (Plan 02 complete)
+**Branch:** `feature/plan-03-perf-a11y`  
+**Current score:** 80 / 100 (SEO rubric). **Lighthouse (local Plan 05):** Perf **84** avg | Projects CLS **0**.
 
 See [`scores/score-log.md`](./scores/score-log.md) for history.
 
-**Next:** Plan 03 — [`plans/03-medium-structured-data-crawlability.md`](./plans/03-medium-structured-data-crawlability.md)
+**Plan 05:** [`plans/05-skeleton-loaders.md`](./plans/05-skeleton-loaders.md) — layout-matched skeleton loaders (CLS fix).
+
+**Later:** JSON-LD, breadcrumbs, alt text, SPA prerender.

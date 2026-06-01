@@ -22,7 +22,7 @@ export default function SectionContent({
         className={`relative flex w-full flex-col gap-1 rounded-2xl p-5 shadow-lg backdrop-blur-sm md:w-2/3 xl:w-1/2 ${i % 2 === 0 ? 'ml-auto' : 'mr-auto'}`}
       >
         <div className='absolute inset-0 -z-10 rounded-2xl bg-secondary opacity-50'></div>
-        <h3 className='subheading font-semibold'>{heading}</h3>
+        <h2 className='subheading font-semibold'>{heading}</h2>
         <p className='paragraph'>{createParagraphWithBold(paragraph)}</p>
       </div>
 

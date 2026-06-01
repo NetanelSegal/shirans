@@ -188,9 +188,9 @@ export default function ProjectImagePlanShowcase({
                 sm:left-4 sm:bg-primary/90
                 md:left-6
               `}
-              aria-label='Next image'
+              aria-label='תמונה הבאה'
             >
-              <img className='h-6 w-6 rotate-180 sm:h-8 sm:w-8 pointer-events-none' src={arrowIconSrc} alt='Next' />
+              <img className='h-6 w-6 rotate-180 sm:h-8 sm:w-8 pointer-events-none' src={arrowIconSrc} alt='' aria-hidden />
             </button>
 
             <button
@@ -203,9 +203,9 @@ export default function ProjectImagePlanShowcase({
                 sm:right-4 sm:bg-primary/90
                 md:right-6
               `}
-              aria-label='Previous image'
+              aria-label='תמונה קודמת'
             >
-              <img className='h-6 w-6 sm:h-8 sm:w-8 pointer-events-none' src={arrowIconSrc} alt='Previous' />
+              <img className='h-6 w-6 sm:h-8 sm:w-8 pointer-events-none' src={arrowIconSrc} alt='' aria-hidden />
             </button>
 
             {/* Zoom/Pan wrapper */}
