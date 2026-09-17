@@ -32,20 +32,27 @@ export function getProjectColumns(
       key: 'title',
       header: 'כותרת',
       render: (row: ProjectResponse) => row.title,
+      sortValue: (row: ProjectResponse) => row.title,
+      searchValue: (row: ProjectResponse) => row.title,
     },
     {
       key: 'location',
       header: 'מיקום',
       render: (row: ProjectResponse) => row.location,
+      sortValue: (row: ProjectResponse) => row.location,
+      searchValue: (row: ProjectResponse) => row.location,
     },
     {
       key: 'categories',
       header: 'קטגוריות',
       render: (row: ProjectResponse) => getCategoryTitles(row, categories),
+      sortValue: (row: ProjectResponse) => getCategoryTitles(row, categories),
+      searchValue: (row: ProjectResponse) => getCategoryTitles(row, categories),
     },
     {
       key: 'favourite',
       header: 'מועדף',
+      sortValue: (row: ProjectResponse) => (row.favourite ? 1 : 0),
       render: (row: ProjectResponse) => {
         const isPending = pending.favouriteId === row.id;
         return (
@@ -69,6 +76,7 @@ export function getProjectColumns(
     {
       key: 'isCompleted',
       header: 'הושלם',
+      sortValue: (row: ProjectResponse) => (row.isCompleted ? 1 : 0),
       render: (row: ProjectResponse) => {
         const isPending = pending.completedId === row.id;
         return (
