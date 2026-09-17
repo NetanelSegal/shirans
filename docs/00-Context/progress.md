@@ -16,13 +16,14 @@
 - **Client-Side Caching:** Complete — TanStack Query for projects, categories, testimonials, calculator config, and admin data. Defaults: 5 min stale time; admin queries: 1 min stale time with invalidation on mutations.
 
 ## Current Focus
+- **🔴 Production backend down (Sep 2026):** Railway server unreachable (platform 404, no active deployment) — likely free/trial plan exhausted, needs confirming in the Railway dashboard. Public site stays visually up because [`fetchWithFallback`](client/src/utils/fetchWithFallback.ts) silently serves a stale bundled snapshot for projects/testimonials; contact form, calculator lead submission, and admin login are actually broken with no fallback. Full findings: [production-incident-2026-09-17.md](production-incident-2026-09-17.md).
 - **Admin ProjectsManagement refactor (Mar 2026):** Split [`ProjectsManagement`](client/src/pages/Admin/ProjectsManagement.tsx) into `ProjectFormFields`, smart `ProjectFormModal` (internal hooks), and `getProjectColumns` for readability.
 - **CLS / initial load (Mar 2026):** Public [`Layout`](client/src/components/Layout/Layout.tsx) is imported eagerly in [`App.tsx`](client/src/App.tsx) so the navbar mounts with the router instead of after a `Suspense` fallback (`Loader` only). Route-level code-splitting remains for pages.
 - **Project images (Mar 2026):** Admin uploads go through **sharp** (resize/WebP) on the server, then **Cloudinary**; multipart API; partial-upload cleanup; `ProjectImage.publicId` for deletes. Vitest coverage for service, integration, and `imageProcessing`; Playwright `e2e/admin-projects.spec.ts` (CRUD; full upload when `E2E_CLOUDINARY_UPLOAD=1`).
 - **Project media model (May 2026):** `ProjectResponse.media[]` replaces flattened `mainImage` / `images` / `plans` / `videos` globally (admin + public). Shared helpers in `@shirans/shared` (`getMainImageUrl`, `getMediaUrlsByType`, `buildFullReorderIds`). Admin media modal: delete all types, reorder IMAGE/PLAN, per-row loading on favourite/completed toggles.
 - **Project create API (Mar 2026):** JSON `POST /api/projects` no longer accepts `images`; image rows are created only via multipart upload flows. Shared `updateProjectSchema` is derived from `createProjectSchema` (with `id` + optional `categoryIds` override for PATCH).
 - **Optimization:** Image conversion and optimization (found `scripts/convert-project2-images.js`).
-- **Deployment:** Render (Server) and Netlify (Client) configuration.
+- **Deployment:** Railway (Server) and Netlify (Client) configuration — currently down, see Current Focus above.
 - **Content:** Finalizing project data and testimonials.
 
 ## Tech Stack

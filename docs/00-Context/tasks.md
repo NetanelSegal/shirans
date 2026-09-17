@@ -31,7 +31,7 @@
 - [x] Client-side caching — TanStack Query for projects, categories, testimonials, calculator config, admin data.
 - [x] **Image pipeline (admin uploads)** — Server-side sharp + Cloudinary; tests and optional E2E upload (`E2E_CLOUDINARY_UPLOAD=1`). Legacy script-based conversion remains separate if needed.
 - [x] **Project media admin UX** — Global `media[]` response shape; admin delete/reorder for images/plans; row loading on favourite/completed toggles.
-- [ ] **⚠️ Production Deploy** — Finalize Render (Server) and Netlify (Client) settings.
+- [ ] **🟡 Production Deploy — Railway fixed, Supabase DB still paused (2026-09-17)** — Railway server was down since 2026-07-08 (found and redeployed same day). Backend now serves `/api/health` but `/api/projects` etc. 500 because the Supabase-hosted database auto-paused from inactivity — needs manual resume in the Supabase dashboard. See [production-incident-2026-09-17.md](production-incident-2026-09-17.md) for full findings. Netlify (Client) is up; Server is on **Railway**, not Render — this line previously said Render, which was stale.
 - [ ] **⚠️ SEO & Meta** — Refining metadata for search engines.
 
 ## Phase 5: Polish & Launch
