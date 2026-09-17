@@ -40,8 +40,8 @@ export const ERROR_MESSAGES = {
 
   'NOT_FOUND.USER_NOT_FOUND': 'משתמש לא נמצא',
   'NOT_FOUND.PROJECT_NOT_FOUND': 'פרוייקט לא נמצא',
-  'NOT_FOUND.CATEGORY_NOT_FOUND': 'קטגוריה לא נמצא',
-  'NOT_FOUND.MAIN_IMAGE_NOT_FOUND': 'תמונת מוצא לא נמצאת',
+  'NOT_FOUND.CATEGORY_NOT_FOUND': 'קטגוריה אחת או יותר לא נמצאה',
+  'NOT_FOUND.MAIN_IMAGE_NOT_FOUND': 'תמונה ראשית לא נמצאה עבור הפרוייקט',
   'NOT_FOUND.PAGE_NOT_FOUND': 'דף לא נמצא',
   'NOT_FOUND.RESOURCE_NOT_FOUND': 'משאב לא נמצא',
   'NOT_FOUND.TESTIMONIAL_NOT_FOUND': 'צפייה במשוב לא נמצאה',
@@ -51,9 +51,9 @@ export const ERROR_MESSAGES = {
   'CONFLICT.TOKEN_ALREADY_EXISTS': 'טוקן כבר קיים - נסה שנית',
   'CONFLICT.CATEGORY_URL_CODE_EXISTS': 'קוד קטגוריה כבר קיים',
   'CONFLICT.CATEGORY_HAS_ASSOCIATED_PROJECTS':
-    'קטגוריה ישנה עם פרוייקטים מקושרים',
+    'לקטגוריה זו יש פרוייקטים מקושרים',
 
-  'SERVER.USER.LOGIN_FAILED': 'כניסה לא נכשלה',
+  'SERVER.USER.LOGIN_FAILED': 'ההתחברות נכשלה',
   'SERVER.USER.FETCH_USER_FAILED': 'טעינת המשתמש נכשלה',
   'SERVER.USER.FETCH_USERS_FAILED': 'טעינת המשתמשים נכשלה',
   'SERVER.USER.REFRESH_TOKEN_FAILED': 'רענון טוקן נכשל',
