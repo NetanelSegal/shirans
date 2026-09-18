@@ -8,6 +8,7 @@ import { DataStateGuard } from '@/components/DataState';
 import { ProjectImagesManager } from '@/components/Admin/ProjectImagesManager';
 import { ProjectFormModal } from '@/components/Admin/ProjectFormModal';
 import { getProjectColumns } from '@/components/Admin/ProjectColumns';
+import { AdminTableSkeleton } from '@/components/skeletons';
 import Button from '@/components/ui/Button';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { transformError } from '@/utils/errorHandler';
@@ -133,7 +134,7 @@ export default function ProjectsManagement() {
         error={error}
         emptyMessage="אין פרויקטים"
         onRetry={refresh}
-        loadingMinHeight="20rem"
+        loadingFallback={<AdminTableSkeleton searchable />}
       >
         {(data) => (
           <>
