@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import Loader from '../Loader/Loader';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -11,8 +12,8 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen" dir="rtl">
-        <div>טוען...</div>
+      <div className="flex min-h-screen items-center justify-center" dir="rtl">
+        <Loader />
       </div>
     );
   }
