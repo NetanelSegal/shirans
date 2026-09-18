@@ -1,3 +1,4 @@
+import type { RowData } from '@tanstack/table-core';
 import Loader from '@/components/Loader/Loader';
 import { useScreenContext } from '@/contexts/ScreenProvider';
 import { DesktopTable } from './DesktopTable';
@@ -7,7 +8,7 @@ import { TableStatusMessage } from './TableStatusMessage';
 import { useDataTableInstance } from './useDataTableInstance';
 import type { DataTableProps } from './types';
 
-export function DataTable<T>({
+export function DataTable<T extends RowData>({
   columns,
   data,
   isLoading = false,

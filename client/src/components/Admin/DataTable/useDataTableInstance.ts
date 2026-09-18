@@ -9,6 +9,7 @@ import {
   globalFilteringFeature,
   rowSortingFeature,
   tableFeatures,
+  type RowData,
 } from '@tanstack/table-core';
 import type { ColumnConfig, SortState } from './types';
 
@@ -25,14 +26,17 @@ const features = tableFeatures({
  * Wraps TanStack Table v9 (`useTable`) with the shape `DataTable` needs:
  * plain rows (already sorted/filtered), plus per-column sort state for headers.
  */
-export function useDataTableInstance<T>(columns: ColumnConfig<T>[], data: T[]) {
+export function useDataTableInstance<T extends RowData>(
+  columns: ColumnConfig<T>[],
+  data: T[],
+) {
   const columnHelper = useMemo(() => createColumnHelper<typeof features, T>(), []);
 
   const tableColumns = useMemo(
     () =>
       columns.map((col) =>
         columnHelper.accessor(
-          (row) => col.sortValue?.(row) ?? col.searchValue?.(row) ?? '',
+          (row: T): unknown => col.sortValue?.(row) ?? col.searchValue?.(row) ?? '',
           {
             id: col.key,
             header: col.header,
