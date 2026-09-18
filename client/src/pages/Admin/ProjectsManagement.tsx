@@ -155,6 +155,7 @@ export default function ProjectsManagement() {
               data={data}
               isLoading={false}
               emptyMessage="אין פרויקטים"
+              searchPlaceholder="חיפוש לפי כותרת, מיקום או קטגוריה"
               getRowId={(row) => row.id}
               actions={(row) => (
                 <div className="flex gap-2">
