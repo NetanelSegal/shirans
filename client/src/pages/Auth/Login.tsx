@@ -21,9 +21,15 @@ export default function Login() {
     resolver: zodResolver(loginSchema),
   });
 
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const { handleError } = useErrorHandler();
   const navigate = useNavigate();
+
+  // Auth state isn't known on first paint (App no longer blocks on it) —
+  // wait for it before deciding whether to redirect an already-logged-in user.
+  if (isAuthLoading) {
+    return null;
+  }
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;

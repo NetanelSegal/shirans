@@ -5,7 +5,6 @@ import ScreenProvider from './contexts/ScreenProvider';
 import { AuthProvider } from './contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
 import { queryClient } from './lib/queryClient';
-import { useAuth } from './hooks/useAuth';
 import { ProtectedRoute } from './components/Auth/ProtectedRoute'; // Import ProtectedRoute
 import Layout from './components/Layout';
 import Loader from './components/Loader/Loader'; // Import Loader for Suspense fallback
@@ -220,16 +219,6 @@ const router = createBrowserRouter([
 ]);
 
 const AppRoutes = () => {
-  const { isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center" dir="rtl">
-        <Loader />
-      </div>
-    );
-  }
-
   return <RouterProvider router={router} />;
 };
 
