@@ -100,24 +100,6 @@ export const costCalculatorContactSchema = z.object({
 
 export type CostCalculatorContact = z.infer<typeof costCalculatorContactSchema>;
 
-/** What the client POSTs when the wizard is completed. */
-export const submitCostCalculatorLeadSchema = costCalculatorAnswersSchema
-  .extend(costCalculatorContactSchema.shape)
-  .extend({
-    estimateMin: z.number().int().nonnegative(),
-    estimateMax: z.number().int().nonnegative(),
-  });
-
-export type SubmitCostCalculatorLeadInput = z.infer<
-  typeof submitCostCalculatorLeadSchema
->;
-
-export interface CostCalculatorLeadResponse extends SubmitCostCalculatorLeadInput {
-  id: string;
-  isRead: boolean;
-  createdAt: string;
-}
-
 const multiplier = z.number().positive();
 const shekels = z.number().nonnegative();
 

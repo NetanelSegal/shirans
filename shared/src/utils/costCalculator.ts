@@ -94,8 +94,3 @@ export function calculateCostRange(
 export function formatShekels(value: number): string {
   return new Intl.NumberFormat('he-IL').format(value);
 }
-
-/** e.g. "3,200,000 ₪ – 3,800,000 ₪" (the result page's headline figure). */
-export function formatCostRange(range: CostRange): string {
-  return `${formatShekels(range.min)} ₪ – ${formatShekels(range.max)} ₪`;
-}
