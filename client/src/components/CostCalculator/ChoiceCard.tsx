@@ -37,7 +37,17 @@ export function ChoiceCard({
       aria-pressed={selected}
       className={`${BUTTON_RESET} ${cardMotion} group overflow-hidden rounded-xl border bg-white text-right ${
         selected ? selectedRing : idleRing
-      } ${variant === 'row' ? 'flex w-full items-center gap-4 p-4' : ''} ${
+      } ${
+        variant === 'row'
+          ? 'flex w-full items-center gap-4 p-4 md:flex-col md:items-stretch md:gap-3'
+          : ''
+      } ${
+        // Laid out as a column so the image stays pinned to the top. Browsers
+        // vertically centre a button's content, so a card without a sublabel —
+        // stretched to match taller siblings in the grid — floated its image away
+        // from the top edge.
+        variant === 'image' ? 'flex flex-col' : ''
+      } ${
         variant === 'icon' ? 'flex flex-col items-center gap-3 p-6 text-center' : ''
       }`}
     >
@@ -52,7 +62,9 @@ export function ChoiceCard({
       )}
 
       {variant === 'row' && option.image && (
-        <div className="size-20 shrink-0 overflow-hidden rounded-lg">
+        // `contain`, not `cover` — these are line drawings, and cropping them
+        // cuts off the very storeys the option is describing.
+        <div className="size-20 shrink-0 overflow-hidden rounded-lg md:h-28 md:w-full">
           <Image src={option.image} alt="" className="size-full object-contain" />
         </div>
       )}
