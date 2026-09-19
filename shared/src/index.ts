@@ -11,6 +11,8 @@ export * from './schemas/contact.schema';
 export * from './schemas/footer.schema';
 export * from './schemas/testimonial.schema';
 export * from './schemas/calculator.schema';
+export * from './schemas/costCalculator.schema';
 export * from './utils/calculator';
+export * from './utils/costCalculator';
 export * from './utils/projectMedia';
 export * from './utils/cloudinaryImage';

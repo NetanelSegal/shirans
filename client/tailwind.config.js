@@ -15,6 +15,13 @@ export default {
         // 'secondary': '#F0EDE4', light color option
         secondary: '#F2EDE9',
       },
+      transitionTimingFunction: {
+        // The built-in easings are too soft to read as intentional. These are the
+        // stronger variants: `out` for anything entering or responding to input,
+        // `in-out` for things moving across the screen.
+        out: 'cubic-bezier(0.23, 1, 0.32, 1)',
+        'in-out': 'cubic-bezier(0.77, 0, 0.175, 1)',
+      },
     },
   },
   plugins: [

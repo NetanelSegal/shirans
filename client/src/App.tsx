@@ -29,6 +29,7 @@ const ContactsManagement = lazy(() => import('./pages/Admin/ContactsManagement')
 const UsersManagement = lazy(() => import('./pages/Admin/UsersManagement'));
 const Calculator = lazy(() => import('./pages/Calculator'));
 const LandingCalculator = lazy(() => import('./pages/LandingCalculator'));
+const CalculatorResult = lazy(() => import('./pages/CalculatorResult'));
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
 const CalculatorLeadsManagement = lazy(
@@ -120,6 +121,12 @@ export const appRoutes = [
     title: 'מחשבון אומדן',
     element: <LandingCalculator />,
     showInNavbar: SITE_CONFIG.calculator.showInNavbar,
+  },
+  {
+    path: 'calculator/result',
+    title: 'תוצאת המחשבון',
+    element: <CalculatorResult />,
+    notNavigateable: true,
   },
 ];
 

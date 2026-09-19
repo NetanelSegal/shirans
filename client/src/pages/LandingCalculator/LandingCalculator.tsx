@@ -1,9 +1,8 @@
-import type { CalculatorFormInput } from '@shirans/shared';
+import { useNavigate } from 'react-router-dom';
 import PageSeo from '@/components/Seo/PageSeo';
-import { CalculatorForm } from '@/components/Calculator';
-import { calculatorService } from '@/services/calculator.service';
-import { useCalculatorConfig } from '@/hooks/useCalculatorConfig';
 import EnterAnimation from '@/components/animations/EnterAnimation';
+import { CostCalculator, type CostCalculatorResult } from '@/components/CostCalculator';
+import { storeResult } from '@/pages/CalculatorResult/resultStorage';
 
 const BENEFITS = [
   {
@@ -22,22 +21,15 @@ const BENEFITS = [
 
 const CALCULATOR_TITLE = 'מחשבון אומדן עלות - שירן גלעד אדריכלות ועיצוב פנים';
 const CALCULATOR_DESCRIPTION =
-  'חשבו אומדן עלות לבנייה פרטית. הזינו פרטים וקבלו טווח מחירים משוער.';
+  'חשבו אומדן עלות לבנייה פרטית. ענו על כמה שאלות קצרות וקבלו טווח מחירים משוער.';
 
 export default function LandingCalculator() {
-  const { config, isLoading: configLoading } = useCalculatorConfig();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (data: CalculatorFormInput, estimate: number) => {
-    await calculatorService.submitLeadFromForm(data, estimate);
+  const handleComplete = ({ answers, estimate }: CostCalculatorResult) => {
+    storeResult({ answers, estimate });
+    navigate('/calculator/result');
   };
-
-  if (configLoading) {
-    return (
-      <div className="flex min-h-[200px] items-center justify-center" dir="rtl">
-        <span>טוען מחשבון...</span>
-      </div>
-    );
-  }
 
   return (
     <main
@@ -83,9 +75,7 @@ export default function LandingCalculator() {
               className="rounded-xl border border-primary/10 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
             >
               <EnterAnimation delay={0.1 * (i + 1)}>
-                <h3 className="mb-2 font-semibold text-primary">
-                  {item.title}
-                </h3>
+                <h3 className="mb-2 font-semibold text-primary">{item.title}</h3>
                 <p className="text-slate-600">{item.description}</p>
               </EnterAnimation>
             </li>
@@ -93,22 +83,12 @@ export default function LandingCalculator() {
         </ul>
       </section>
 
-      {/* Form section */}
-      <section
-        className="py-12 md:py-16"
-        aria-labelledby="form-heading"
-      >
-        <EnterAnimation>
-          <h2
-            id="form-heading"
-            className="subheading mb-8 text-center font-semibold text-primary"
-          >
-            הצגת אומדן תקציב
-          </h2>
-          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-md md:p-8">
-            {config && <CalculatorForm config={config} onSubmit={handleSubmit} />}
-          </div>
-        </EnterAnimation>
+      {/* The wizard itself. `showIntro` is off because this page's hero already
+          does that job — a landing page without its own hero can leave it on. */}
+      <section className="py-12 md:py-16" aria-label="מחשבון עלות הבית">
+        <div className="mx-auto max-w-3xl">
+          <CostCalculator showIntro={false} onComplete={handleComplete} />
+        </div>
       </section>
     </main>
   );

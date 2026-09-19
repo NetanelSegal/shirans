@@ -1,0 +1,72 @@
+import Image from '@/components/ui/Image';
+import { BUTTON_RESET } from './buttonReset';
+import type { ChoiceOption } from './types';
+
+interface ChoiceCardProps {
+  option: ChoiceOption;
+  selected: boolean;
+  onSelect: () => void;
+  variant: 'icon' | 'image' | 'row';
+}
+
+const selectedRing = 'border-primary ring-2 ring-primary';
+const idleRing =
+  'border-primary/15 hover-capable:hover:border-primary/40 hover-capable:hover:shadow-md hover-capable:hover:-translate-y-0.5';
+
+/**
+ * Named properties rather than `all`, so the hover lift and the selection ring
+ * don't drag unrelated properties along with them. `active:scale` is the bit that
+ * makes the card feel like it heard the tap — without it a large card registers
+ * as inert on press.
+ */
+const cardMotion =
+  'transition-[transform,border-color,box-shadow] duration-200 ease-out active:scale-[0.98] active:duration-100 motion-reduce:transition-none motion-reduce:hover-capable:hover:translate-y-0 motion-reduce:active:scale-100';
+
+export function ChoiceCard({
+  option,
+  selected,
+  onSelect,
+  variant,
+}: ChoiceCardProps) {
+  const Icon = option.icon;
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-pressed={selected}
+      className={`${BUTTON_RESET} ${cardMotion} group overflow-hidden rounded-xl border bg-white text-right ${
+        selected ? selectedRing : idleRing
+      } ${variant === 'row' ? 'flex w-full items-center gap-4 p-4' : ''} ${
+        variant === 'icon' ? 'flex flex-col items-center gap-3 p-6 text-center' : ''
+      }`}
+    >
+      {variant === 'image' && option.image && (
+        <div className="aspect-[4/3] w-full overflow-hidden">
+          <Image
+            src={option.image}
+            alt=""
+            className="size-full object-cover transition-transform duration-500 ease-out hover-capable:group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:hover-capable:group-hover:scale-100"
+          />
+        </div>
+      )}
+
+      {variant === 'row' && option.image && (
+        <div className="size-20 shrink-0 overflow-hidden rounded-lg">
+          <Image src={option.image} alt="" className="size-full object-contain" />
+        </div>
+      )}
+
+      {Icon && <Icon className="size-7 text-primary" aria-hidden />}
+
+      <div className={variant === 'image' ? 'p-3' : ''}>
+        <span className="block font-bold text-primary">{option.label}</span>
+        {option.sublabel && (
+          <span className="mt-0.5 block text-sm text-primary/60">
+            {option.sublabel}
+          </span>
+        )}
+      </div>
+    </button>
+  );
+}
