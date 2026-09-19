@@ -6,6 +6,14 @@
   font-family: 'Assistant', sans-serif;
 }
 
+/* Every page assumes a white canvas but nothing ever set one, so the page
+   inherited whatever the browser defaults to — which renders dark in a
+   dark-themed browser or webview, turning any section without its own
+   background black. */
+body {
+  @apply bg-white;
+}
+
 /* Fix blurry images when scaled/transformed */
 img {
   image-rendering: auto; /* Smooth rendering for photos */
