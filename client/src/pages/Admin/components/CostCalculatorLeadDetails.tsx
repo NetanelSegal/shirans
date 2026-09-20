@@ -1,7 +1,7 @@
 import { X } from 'lucide-react';
 import Modal from '@/components/ui/Modal';
-import { formatShekels } from '@shirans/shared';
 import type { CostCalculatorLeadResponse } from '@shirans/shared';
+import { ShekelRange } from '@/components/ui/ShekelRange';
 import { summarizeAnswers } from '@/utils/costCalculatorLeadSummary';
 
 interface CostCalculatorLeadDetailsProps {
@@ -52,13 +52,11 @@ export function CostCalculatorLeadDetails({
             </a>
           </div>
 
-          {/* Split into elements rather than one formatted string: in an RTL
-              context bidi reorders "X ₪ – Y ₪" and strands the dash. */}
-          <p className="mt-5 flex flex-wrap items-center justify-center gap-x-3 rounded-xl bg-secondary px-4 py-4 text-xl font-bold text-primary">
-            <span className="whitespace-nowrap">{formatShekels(lead.estimateMin)} ₪</span>
-            <span aria-hidden>–</span>
-            <span className="whitespace-nowrap">{formatShekels(lead.estimateMax)} ₪</span>
-          </p>
+          <ShekelRange
+            min={lead.estimateMin}
+            max={lead.estimateMax}
+            className="mt-5 rounded-xl bg-secondary px-4 py-4 text-xl font-bold text-primary"
+          />
 
           <dl className="mt-5 divide-y divide-primary/10">
             {summarizeAnswers(lead).map(({ label, value }) => (

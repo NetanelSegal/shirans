@@ -5,6 +5,12 @@ const RESULT_KEY = 'costCalculator:result';
 export interface StoredResult {
   answers: CostCalculatorAnswers;
   estimate: CostRange;
+  /**
+   * The saved lead's id, so a message sent from this page can point Shiran
+   * straight at the record. Absent on a result stored before this existed, and
+   * the page has to work without it.
+   */
+  leadId?: string;
 }
 
 /**

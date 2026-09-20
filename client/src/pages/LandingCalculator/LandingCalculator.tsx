@@ -5,6 +5,7 @@ import Image from '@/components/ui/Image';
 import heroImage from '@/assets/calculator/intro-hero.webp';
 import { CostCalculator, type CostCalculatorResult } from '@/components/CostCalculator';
 import { useCalculatorConfig } from '@/hooks/useCalculatorConfig';
+import { ErrorState, LoadingState } from '@/components/DataState';
 import { submitCalculatorLead } from './submitCalculatorLead';
 
 const BENEFITS = [
@@ -28,10 +29,19 @@ const CALCULATOR_DESCRIPTION =
 
 export default function LandingCalculator() {
   const navigate = useNavigate();
-  // Shiran's rates from the admin screen. Until they arrive — or if the request
-  // fails — the wizard prices with the shared defaults rather than showing
-  // nothing.
-  const { config } = useCalculatorConfig();
+  // Shiran's rates from the admin screen.
+  //
+  // The wizard waits for them rather than starting on the shipped defaults. It
+  // isn't only that the estimate would be wrong: the area step takes its bounds
+  // from the same config, so a visitor seeded against the wrong range answers
+  // nine questions and is then rejected by the server's bounds check with a
+  // generic error that retrying can never clear.
+  const {
+    config,
+    isLoading: isConfigLoading,
+    error: configError,
+    refresh: refreshConfig,
+  } = useCalculatorConfig();
 
   // Throwing here is deliberate: the wizard catches it and keeps the visitor on
   // the contact step with a retry, rather than sending them to a result page
@@ -106,11 +116,17 @@ export default function LandingCalculator() {
           does that job — a landing page without its own hero can leave it on. */}
       <section className="py-12 md:py-16" aria-label="מחשבון עלות הבית">
         <div className="mx-auto max-w-3xl">
-          <CostCalculator
-            config={config ?? undefined}
-            showIntro={false}
-            onComplete={handleComplete}
-          />
+          {configError ? (
+            <ErrorState message={configError} onRetry={refreshConfig} />
+          ) : isConfigLoading || !config ? (
+            <LoadingState minHeight="28rem" />
+          ) : (
+            <CostCalculator
+              config={config}
+              showIntro={false}
+              onComplete={handleComplete}
+            />
+          )}
         </div>
       </section>
     </main>

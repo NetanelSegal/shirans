@@ -112,10 +112,10 @@ export const COST_CALCULATOR_CONFIG_GROUPS: ConfigGroup[] = [
   {
     title: 'הצגת התוצאה',
     description:
-      'רוחב הטווח מיושם פעם אחת בסוף. 0.08 = ±8% סביב התוצאה. המע״מ נשמר לעיון — האומדן שמוצג הוא לפני מע״מ.',
-    fields: [
-      { path: 'rangeSpread', label: 'רוחב הטווח', step: 0.01 },
-      multiplier('vatMultiplier', 'מכפיל מע״מ'),
-    ],
+      'רוחב הטווח מיושם פעם אחת בסוף. 0.08 = ±8% סביב התוצאה. האומדן שמוצג הוא לפני מע״מ.',
+    // No field for `vatMultiplier`: it is stored for reference and read by
+    // nothing, and an editable control invites changing a number that has no
+    // effect on any estimate.
+    fields: [{ path: 'rangeSpread', label: 'רוחב הטווח', step: 0.01 }],
   },
 ];

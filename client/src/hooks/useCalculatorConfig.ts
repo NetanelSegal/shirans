@@ -6,7 +6,7 @@ import { getClientErrorMessage } from '@/constants/errorMessages';
 import { queryKeys } from '@/constants/queryKeys';
 
 export function useCalculatorConfig() {
-  const { data: config, isLoading, error } = useQuery({
+  const { data: config, isLoading, error, refetch } = useQuery({
     queryKey: queryKeys.calculatorConfig,
     queryFn: () => calculatorService.getConfig(),
   });
@@ -19,5 +19,6 @@ export function useCalculatorConfig() {
     config: config ?? null,
     isLoading,
     error: errorMessage,
+    refresh: () => refetch(),
   };
 }

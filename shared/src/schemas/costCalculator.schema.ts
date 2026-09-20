@@ -112,7 +112,16 @@ const shekels = z.number().nonnegative();
  * factors turns ±10% into ±60%) and produces a range too wide to be useful.
  */
 export const costCalculatorConfigSchema = z.object({
-  builtAreaSqmRange: z.object({ min: z.number().int(), max: z.number().int() }),
+  /**
+   * Refined rather than left to the two fields: a min above the max saves
+   * cleanly, then clamps every entered area to the wrong end and makes the
+   * server reject every submission with nothing in the admin explaining why.
+   */
+  builtAreaSqmRange: z
+    .object({ min: z.number().int().min(1), max: z.number().int().min(1) })
+    .refine((range) => range.min <= range.max, {
+      message: 'שטח מינימלי חייב להיות קטן או שווה לשטח המקסימלי',
+    }),
   baseRatePerSqm: shekels,
   regionMultipliers: z.object({
     north: multiplier,

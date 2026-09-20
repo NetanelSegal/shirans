@@ -11,6 +11,8 @@ import { StickyContactBar } from './sections/StickyContactBar';
 import { WhatNowSection } from './sections/WhatNowSection';
 import { readResult, type StoredResult } from './resultStorage';
 import { useHideWhenReached } from './useHideWhenReached';
+import { buildWhatsAppHref } from './contactLinks';
+import { buildLeadWhatsAppMessage } from './whatsappMessage';
 
 export default function CalculatorResult() {
   // Read before the first paint rather than in an effect: reading it afterwards
@@ -20,8 +22,14 @@ export default function CalculatorResult() {
   const closingCtaRef = useRef<HTMLElement>(null);
   const showStickyBar = useHideWhenReached(closingCtaRef);
 
+
   // Nothing stored means there is no estimate to show — send them to the wizard.
   if (result === null) return <Navigate to="/calculator" replace />;
+
+  // One message for both controls: the answers, the estimate, and a link to the
+  // lead this page came from. Built after the guard, so it never has to account
+  // for a result that isn't there.
+  const whatsappHref = buildWhatsAppHref(buildLeadWhatsAppMessage(result));
 
   return (
     // Full-bleed background, the same idiom the rest of the site uses — no page
@@ -56,10 +64,11 @@ export default function CalculatorResult() {
         <ContactCtaSection
           title="מוכנים להתחיל את הצעד הבא?"
           subtitle="בואו לדבר על הבית שלכם."
+          whatsappHref={whatsappHref}
         />
       </ImagePanelSection>
 
-      <StickyContactBar visible={showStickyBar} />
+      <StickyContactBar visible={showStickyBar} whatsappHref={whatsappHref} />
     </main>
   );
 }

@@ -1,17 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import type { CostCalculatorLeadResponse } from '@shirans/shared';
 import { useAdminCalculatorLeads } from '@/hooks/admin/useAdminCalculatorLeads';
 import { AdminPageHeader } from '@/components/Admin/AdminPageHeader';
-import { DataTable } from '@/components/Admin/DataTable';
-import { ConfirmDialog } from '@/components/Admin/ConfirmDialog';
 import { BulkActionBar } from '@/components/Admin/BulkActionBar';
-import { StatusBadge } from '@/components/Admin/StatusBadge';
-import { DataStateGuard } from '@/components/DataState';
-import Button from '@/components/ui/Button';
-import type { CostCalculatorLeadResponse } from '@shirans/shared';
-import { REGION_LABELS, formatShekels } from '@shirans/shared';
+import { ConfirmDialog } from '@/components/Admin/ConfirmDialog';
+import { DataTable } from '@/components/Admin/DataTable';
+import { ReadFilterTabs } from '@/components/Admin/ReadFilterTabs';
+import { filterByRead, type ReadFilter } from '@/components/Admin/readFilter';
+import { ErrorState, LoadingState } from '@/components/DataState';
 import { CostCalculatorLeadDetails } from './components/CostCalculatorLeadDetails';
+import { costCalculatorLeadColumns } from './components/costCalculatorLeadColumns';
+import { LEAD_QUERY_PARAM } from '@/utils/adminLeadUrl';
 
-type FilterTab = 'all' | 'unread' | 'read';
+const NO_LEADS_AT_ALL = 'עדיין לא התקבלו לידים מהמחשבון.';
+
+const NO_MATCHES: Record<ReadFilter, string> = {
+  all: NO_LEADS_AT_ALL,
+  unread: 'כל הלידים סומנו כנקראו.',
+  read: 'אף ליד עדיין לא סומן כנקרא.',
+};
+
+/** "All leads are read" is a lie when there are no leads to read. */
+function emptyMessage(filter: ReadFilter, totalLeads: number): string {
+  return totalLeads === 0 ? NO_LEADS_AT_ALL : NO_MATCHES[filter];
+}
 
 export default function CalculatorLeadsManagement() {
   const {
@@ -25,305 +38,218 @@ export default function CalculatorLeadsManagement() {
     updateReadStatusBulk,
     deleteBulk,
     refresh,
+    isMutationPending,
   } = useAdminCalculatorLeads();
 
-  const [filter, setFilter] = useState<FilterTab>('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [filter, setFilter] = useState<ReadFilter>('all');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [deleteTarget, setDeleteTarget] = useState<CostCalculatorLeadResponse | null>(
-    null
-  );
-  const [bulkDeleteIds, setBulkDeleteIds] = useState<string[] | null>(null);
   const [detailsTarget, setDetailsTarget] =
     useState<CostCalculatorLeadResponse | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isBulkBusy, setIsBulkBusy] = useState(false);
+  const [deleteTarget, setDeleteTarget] =
+    useState<CostCalculatorLeadResponse | null>(null);
+  const [bulkDeleteIds, setBulkDeleteIds] = useState<string[] | null>(null);
+  const [isBusy, setIsBusy] = useState(false);
 
-  const handleDelete = async () => {
-    if (!deleteTarget) return;
-    setIsDeleting(true);
+  /**
+   * A message sent from the result page links straight here with `?lead=<id>`.
+   * The lead can only be opened once the list has arrived, and the parameter is
+   * dropped as soon as it has been used so a refresh doesn't reopen the dialog
+   * the reader just closed.
+   */
+  const requestedLeadId = searchParams.get(LEAD_QUERY_PARAM);
+  useEffect(() => {
+    if (!requestedLeadId) return;
+    const match = leads.find((lead) => lead.id === requestedLeadId);
+    if (!match) return;
+
+    setDetailsTarget(match);
+    setSearchParams(
+      (params) => {
+        params.delete(LEAD_QUERY_PARAM);
+        return params;
+      },
+      { replace: true },
+    );
+  }, [requestedLeadId, leads, setSearchParams]);
+
+  /** Every action here is optimistic about nothing: it clears its own dialog either way. */
+  const run = async (action: () => Promise<unknown>, done: () => void) => {
+    setIsBusy(true);
     try {
-      await deleteLead(deleteTarget.id);
-      setDeleteTarget(null);
+      await action();
     } catch {
-      setDeleteTarget(null);
+      // Surfaced through actionError by the hook.
     } finally {
-      setIsDeleting(false);
+      done();
+      setIsBusy(false);
     }
   };
 
-  const handleBulkDelete = async () => {
-    if (!bulkDeleteIds?.length) return;
-    setIsBulkBusy(true);
-    try {
-      await deleteBulk(bulkDeleteIds);
-      setBulkDeleteIds(null);
-      setSelectedIds([]);
-    } catch {
-      setBulkDeleteIds(null);
-      setSelectedIds([]);
-    } finally {
-      setIsBulkBusy(false);
-    }
-  };
+  const visible = filterByRead(leads, filter);
 
-  const handleBulkMarkRead = async () => {
-    if (!selectedIds.length) return;
-    setIsBulkBusy(true);
-    try {
-      await updateReadStatusBulk(selectedIds, true);
-      setSelectedIds([]);
-    } catch {
-      setSelectedIds([]);
-    } finally {
-      setIsBulkBusy(false);
-    }
-  };
+  /**
+   * Only ever act on rows that are on screen. The selection used to survive a
+   * tab change and a search, so six ticked rows could scroll out of sight and
+   * still be deleted by a bar that was counting them.
+   */
+  const visibleIds = new Set(visible.map((lead) => lead.id));
+  const actionableIds = selectedIds.filter((id) => visibleIds.has(id));
 
-  const handleBulkMarkUnread = async () => {
-    if (!selectedIds.length) return;
-    setIsBulkBusy(true);
-    try {
-      await updateReadStatusBulk(selectedIds, false);
-      setSelectedIds([]);
-    } catch {
-      setSelectedIds([]);
-    } finally {
-      setIsBulkBusy(false);
-    }
+  const changeFilter = (next: ReadFilter) => {
+    setFilter(next);
+    setSelectedIds([]);
   };
-
-  const formatDate = (dateStr: string) => {
-    try {
-      return new Date(dateStr).toLocaleDateString('he-IL', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      });
-    } catch {
-      return dateStr;
-    }
+  const counts = {
+    all: leads.length,
+    unread: leads.filter((lead) => !lead.isRead).length,
+    read: leads.filter((lead) => lead.isRead).length,
   };
-
-  const columns = [
-    {
-      key: 'name',
-      header: 'שם',
-      render: (row: CostCalculatorLeadResponse) => row.name,
-      sortValue: (row: CostCalculatorLeadResponse) => row.name,
-      searchValue: (row: CostCalculatorLeadResponse) => row.name,
-    },
-    {
-      key: 'email',
-      header: 'אימייל',
-      render: (row: CostCalculatorLeadResponse) => (
-        <a
-          href={`mailto:${row.email}`}
-          className="text-primary underline hover-capable:hover:text-primary/80"
-          aria-label={`שלח מייל ל${row.email}`}
-        >
-          {row.email}
-        </a>
-      ),
-      searchValue: (row: CostCalculatorLeadResponse) => row.email,
-    },
-    {
-      key: 'phoneNumber',
-      header: 'טלפון',
-      render: (row: CostCalculatorLeadResponse) => (
-        <a
-          href={`tel:${row.phoneNumber}`}
-          className="text-primary underline hover-capable:hover:text-primary/80"
-          aria-label={`התקשר ל${row.phoneNumber}`}
-        >
-          {row.phoneNumber}
-        </a>
-      ),
-      searchValue: (row: CostCalculatorLeadResponse) => row.phoneNumber,
-    },
-    {
-      key: 'region',
-      header: 'אזור',
-      render: (row: CostCalculatorLeadResponse) => REGION_LABELS[row.region],
-      sortValue: (row: CostCalculatorLeadResponse) => REGION_LABELS[row.region],
-    },
-    {
-      key: 'builtAreaSqm',
-      header: 'שטח',
-      render: (row: CostCalculatorLeadResponse) => `${row.builtAreaSqm} מ״ר`,
-      sortValue: (row: CostCalculatorLeadResponse) => row.builtAreaSqm,
-    },
-    {
-      key: 'estimate',
-      header: 'אומדן',
-      // Each amount is its own element so bidi can't move the dash to the wrong
-      // end of an RTL cell.
-      render: (row: CostCalculatorLeadResponse) => (
-        <span className="flex flex-wrap items-center gap-x-1.5 whitespace-nowrap">
-          <span>{formatShekels(row.estimateMin)} ₪</span>
-          <span aria-hidden>–</span>
-          <span>{formatShekels(row.estimateMax)} ₪</span>
-        </span>
-      ),
-      sortValue: (row: CostCalculatorLeadResponse) => row.estimateMin,
-    },
-    {
-      key: 'isRead',
-      header: 'סטטוס',
-      render: (row: CostCalculatorLeadResponse) => (
-        <StatusBadge
-          label={row.isRead ? 'נקרא' : 'לא נקרא'}
-          variant={row.isRead ? 'read' : 'unread'}
-        />
-      ),
-      sortValue: (row: CostCalculatorLeadResponse) => (row.isRead ? 1 : 0),
-    },
-    {
-      key: 'createdAt',
-      header: 'תאריך',
-      render: (row: CostCalculatorLeadResponse) => formatDate(row.createdAt),
-      sortValue: (row: CostCalculatorLeadResponse) => new Date(row.createdAt),
-    },
-  ];
 
   return (
     <div dir="rtl">
+      {/* The header and the tabs render whatever the data does. Wrapping them in
+          a data guard meant that with no leads the whole screen collapsed to a
+          single centred "אין לידים" — no title, no filters, nothing to say the
+          page had loaded at all. */}
+      <AdminPageHeader title="לידים מהמחשבון" />
+
       {actionError && (
         <div
-          className="mb-4 flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800"
+          className="mb-4 flex items-center justify-between gap-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900"
           role="alert"
         >
           <span>{actionError}</span>
           <button
             type="button"
             onClick={clearActionError}
-            className="rounded px-2 py-1 text-sm font-medium hover:bg-amber-100"
-            aria-label="סגור"
+            className="rounded bg-transparent px-2 py-1 text-sm font-medium text-amber-900 hover-capable:hover:scale-100 hover-capable:hover:bg-amber-100"
+            aria-label="סגירת ההודעה"
           >
             ✕
           </button>
         </div>
       )}
-      <DataStateGuard
-        data={leads}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="אין לידים"
-        onRetry={refresh}
-        loadingMinHeight="20rem"
-      >
-        {(data) => {
-          const filtered =
-            filter === 'all'
-              ? data
-              : filter === 'unread'
-                ? data.filter((l) => !l.isRead)
-                : data.filter((l) => l.isRead);
-          return (
-            <>
-              <AdminPageHeader title="לידים ממחשבון אומדן" />
-              <BulkActionBar
-                selectedCount={selectedIds.length}
-                onMarkRead={handleBulkMarkRead}
-                onMarkUnread={handleBulkMarkUnread}
-                onDelete={() => setBulkDeleteIds(selectedIds)}
-                onClearSelection={() => setSelectedIds([])}
-                mode="leads"
-                isBusy={isBulkBusy}
-              />
-              <div className="mb-4 flex gap-2">
-                <Button
-                  variant={filter === 'all' ? 'primary' : 'light'}
-                  onClick={() => setFilter('all')}
-                >
-                  הכל
-                </Button>
-                <Button
-                  variant={filter === 'unread' ? 'primary' : 'light'}
-                  onClick={() => setFilter('unread')}
-                >
-                  שלא נקראו
-                </Button>
-                <Button
-                  variant={filter === 'read' ? 'primary' : 'light'}
-                  onClick={() => setFilter('read')}
-                >
-                  נקראו
-                </Button>
-              </div>
-              <DataTable
-                columns={columns}
-                data={filtered}
-                isLoading={false}
-                emptyMessage="אין לידים"
-                getRowId={(row) => row.id}
-                searchPlaceholder="חיפוש לפי שם, אימייל או טלפון"
-                selectable
-                selectedIds={selectedIds}
-                onSelectionChange={setSelectedIds}
-                actions={(row) => (
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setDetailsTarget(row)}
-                      className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover-capable:hover:bg-primary/90"
-                      aria-label={`צפייה בתשובות של ${row.name}`}
-                    >
-                      פרטים
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        updateReadStatus(row.id, !row.isRead).catch(() => {})
-                      }
-                      className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover-capable:hover:bg-secondary/80"
-                      aria-label={row.isRead ? 'סמן כלא נקרא' : 'סמן כנקרא'}
-                    >
-                      {row.isRead ? 'לא נקרא' : 'נקרא'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setDeleteTarget(row)}
-                      className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover-capable:hover:bg-red-600"
-                      aria-label={`מחק ליד מ${row.name}`}
-                    >
-                      מחיקה
-                    </button>
-                  </div>
-                )}
-              />
-            </>
-          );
-        }}
-      </DataStateGuard>
+
+      <BulkActionBar
+        selectedCount={actionableIds.length}
+        onMarkRead={() =>
+          run(() => updateReadStatusBulk(actionableIds, true), () => setSelectedIds([]))
+        }
+        onMarkUnread={() =>
+          run(() => updateReadStatusBulk(actionableIds, false), () => setSelectedIds([]))
+        }
+        onDelete={() => setBulkDeleteIds(actionableIds)}
+        onClearSelection={() => setSelectedIds([])}
+        mode="leads"
+        isBusy={isBusy}
+      />
+
+      <ReadFilterTabs value={filter} onChange={changeFilter} counts={counts} />
+
+      {/* A link that named a lead the list doesn't contain — deleted, or a bad
+          id — says so rather than silently doing nothing. */}
+      {requestedLeadId &&
+        !isLoading &&
+        !leads.some((lead) => lead.id === requestedLeadId) && (
+          <p
+            className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900"
+            role="status"
+          >
+            הפנייה שהקישור הוביל אליה לא נמצאה — ייתכן שהיא נמחקה.
+          </p>
+        )}
+
+      {error ? (
+        <ErrorState message={error} onRetry={refresh} />
+      ) : isLoading ? (
+        <LoadingState minHeight="20rem" />
+      ) : (
+        <DataTable
+          columns={costCalculatorLeadColumns}
+          data={visible}
+          emptyMessage={emptyMessage(filter, leads.length)}
+          getRowId={(row) => row.id}
+          searchPlaceholder="חיפוש לפי שם, אימייל או טלפון"
+          selectable
+          selectedIds={selectedIds}
+          onSelectionChange={setSelectedIds}
+          actions={(row) => (
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => setDetailsTarget(row)}
+                className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover-capable:hover:scale-100 hover-capable:hover:bg-primary/90"
+                aria-label={`צפייה בתשובות של ${row.name}`}
+              >
+                פרטים
+              </button>
+              <button
+                type="button"
+                disabled={isMutationPending}
+                onClick={() => {
+                  void updateReadStatus(row.id, !row.isRead).catch(() => {});
+                }}
+                className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover-capable:hover:scale-100 hover-capable:hover:bg-secondary/80 disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label={row.isRead ? 'סימון כלא נקרא' : 'סימון כנקרא'}
+              >
+                {row.isRead ? 'לא נקרא' : 'נקרא'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(row)}
+                className="rounded-lg bg-red-700 px-3 py-1.5 text-sm font-medium text-white transition-colors hover-capable:hover:scale-100 hover-capable:hover:bg-red-800"
+                aria-label={`מחיקת הליד של ${row.name}`}
+              >
+                מחיקה
+              </button>
+            </div>
+          )}
+        />
+      )}
+
       <CostCalculatorLeadDetails
         lead={detailsTarget}
         onClose={() => setDetailsTarget(null)}
       />
+
       <ConfirmDialog
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
-        onConfirm={handleDelete}
+        onConfirm={() => {
+          if (deleteTarget) {
+            void run(() => deleteLead(deleteTarget.id), () => setDeleteTarget(null));
+          }
+        }}
         title="מחיקת ליד"
         message={
           deleteTarget
-            ? `האם אתה בטוח שברצונך למחוק את הליד מ"${deleteTarget.name}"?`
+            ? `למחוק את הליד של "${deleteTarget.name}"? הפעולה אינה הפיכה.`
             : ''
         }
-        confirmLabel="מחק"
-        isLoading={isDeleting}
+        confirmLabel="מחיקה"
+        isLoading={isBusy}
       />
+
       <ConfirmDialog
         open={!!bulkDeleteIds?.length}
         onClose={() => setBulkDeleteIds(null)}
-        onConfirm={handleBulkDelete}
+        onConfirm={() => {
+          if (bulkDeleteIds) {
+            void run(() => deleteBulk(bulkDeleteIds), () => {
+              setBulkDeleteIds(null);
+              setSelectedIds([]);
+            });
+          }
+        }}
         title="מחיקת לידים"
         message={
           bulkDeleteIds?.length
-            ? `האם אתה בטוח שברצונך למחוק ${bulkDeleteIds.length} לידים?`
+            ? `למחוק ${bulkDeleteIds.length} לידים? הפעולה אינה הפיכה.`
             : ''
         }
-        confirmLabel="מחק"
-        isLoading={isBulkBusy}
+        confirmLabel="מחיקה"
+        isLoading={isBusy}
       />
     </div>
   );

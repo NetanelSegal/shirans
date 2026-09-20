@@ -93,11 +93,11 @@ function furthestAllowedIndex(answers: CostCalculatorDraft): number {
 
 export function useCostCalculator(showIntro: boolean) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [answers, setAnswers] = useState<CostCalculatorDraft>(
-    () => readDraft() ?? {},
-  );
+  // One read, two pieces of state: reading storage twice let them disagree.
+  const [restoredDraft] = useState(() => readDraft() ?? {});
+  const [answers, setAnswers] = useState<CostCalculatorDraft>(restoredDraft);
   const [wasRestored, setWasRestored] = useState(
-    () => Object.keys(readDraft() ?? {}).length > 0,
+    () => Object.keys(restoredDraft).length > 0,
   );
 
   useEffect(() => {

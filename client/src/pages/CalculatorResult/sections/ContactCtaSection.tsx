@@ -1,9 +1,9 @@
 import { CalendarDays, Clock, MessageCircle, MonitorSmartphone, ShieldCheck } from 'lucide-react';
 import Button from '@/components/ui/Button';
-import { PHONE_HREF, WHATSAPP_HREF } from '../contactLinks';
+import { PHONE_HREF } from '../contactLinks';
 
 const ASSURANCES = [
-  { icon: Clock, label: '15–20 דקות של תשובות מדויקות' },
+  { icon: Clock, label: '15-20 דקות של תשובות מדויקות' },
   { icon: MonitorSmartphone, label: 'בזום או במשרד' },
   { icon: ShieldCheck, label: 'ללא התחייבות — רק שיחה מקצועית' },
 ];
@@ -11,9 +11,15 @@ const ASSURANCES = [
 interface ContactCtaSectionProps {
   title: string;
   subtitle: string;
+  /** Carries the visitor's answers and a link to their lead — see whatsappMessage. */
+  whatsappHref: string;
 }
 
-export function ContactCtaSection({ title, subtitle }: ContactCtaSectionProps) {
+export function ContactCtaSection({
+  title,
+  subtitle,
+  whatsappHref,
+}: ContactCtaSectionProps) {
   return (
     <div>
       <h2 className="subheading font-bold text-primary">{title}</h2>
@@ -21,7 +27,7 @@ export function ContactCtaSection({ title, subtitle }: ContactCtaSectionProps) {
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <a
-          href={WHATSAPP_HREF}
+          href={whatsappHref}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full sm:w-auto"
