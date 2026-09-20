@@ -119,42 +119,6 @@ model ContactSubmission {
   @@map("contact_submissions")
 }
 
-/// Retired. The single-page calculator these belong to has been replaced by the
-/// multi-step cost calculator below. They are kept so the schema still
-/// describes the database truthfully; dropping the tables is a separate,
-/// deliberate migration.
-model CalculatorLead {
-  id                 String   @id @default(cuid())
-  name               String
-  email              String
-  phoneNumber        String
-  builtAreaSqm       Int
-  constructionFinish String
-  pool               String
-  outdoorAreaSqm     Int
-  outdoorFinish      String
-  kitchen            String
-  carpentry          String
-  furniture          String
-  equipment          String
-  priceDisplay       String
-  estimateMin        Int
-  estimateMax        Int
-  isRead             Boolean  @default(false)
-  createdAt          DateTime @default(now())
-
-  @@map("calculator_leads")
-}
-
-/// Retired alongside CalculatorLead.
-model CalculatorConfig {
-  id        String   @id @default(cuid())
-  config    Json
-  updatedAt DateTime @updatedAt
-
-  @@map("calculator_config")
-}
-
 model CostCalculatorLead {
   id          String @id @default(cuid())
   name        String
