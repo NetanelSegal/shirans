@@ -3,13 +3,27 @@ import { Home, Lightbulb } from 'lucide-react';
 
 interface AreaStepProps {
   value: number | undefined;
+  /** The visitor moved the slider or typed a number. */
   onChange: (value: number) => void;
+  /**
+   * The step filling itself in — the pre-filled default, or a restored answer
+   * pulled back into range. Kept apart from `onChange` so that arriving here
+   * doesn't read as the visitor having answered something.
+   */
+  onSeed: (value: number) => void;
   min: number;
   max: number;
   hint?: string;
 }
 
-export function AreaStep({ value, onChange, min, max, hint }: AreaStepProps) {
+export function AreaStep({
+  value,
+  onChange,
+  onSeed,
+  min,
+  max,
+  hint,
+}: AreaStepProps) {
   const current = value ?? Math.round((min + max) / 2);
 
   /**
@@ -35,14 +49,14 @@ export function AreaStep({ value, onChange, min, max, hint }: AreaStepProps) {
    */
   useEffect(() => {
     if (value === undefined) {
-      onChange(current);
+      onSeed(current);
       return;
     }
     const bounded = clamp(value);
-    if (bounded !== value) onChange(bounded);
+    if (bounded !== value) onSeed(bounded);
     // `clamp` is derived from min/max, which are already dependencies.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, current, min, max, onChange]);
+  }, [value, current, min, max, onSeed]);
 
   const handleType = (raw: string) => {
     setTyped(raw);
