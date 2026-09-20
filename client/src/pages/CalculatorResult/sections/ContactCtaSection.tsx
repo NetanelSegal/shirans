@@ -1,11 +1,6 @@
 import { CalendarDays, Clock, MessageCircle, MonitorSmartphone, ShieldCheck } from 'lucide-react';
 import Button from '@/components/ui/Button';
-
-/** 052-5174443 in the international form WhatsApp expects. */
-const WHATSAPP_URL = 'https://wa.me/972525174443';
-const WHATSAPP_MESSAGE = encodeURIComponent(
-  'היי שירן, קיבלתי הערכה במחשבון עלות הבית ואשמח לדבר על הפרויקט שלי.',
-);
+import { PHONE_HREF, WHATSAPP_HREF } from '../contactLinks';
 
 const ASSURANCES = [
   { icon: Clock, label: '15–20 דקות של תשובות מדויקות' },
@@ -26,7 +21,7 @@ export function ContactCtaSection({ title, subtitle }: ContactCtaSectionProps) {
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <a
-          href={`${WHATSAPP_URL}?text=${WHATSAPP_MESSAGE}`}
+          href={WHATSAPP_HREF}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full sm:w-auto"
@@ -39,7 +34,7 @@ export function ContactCtaSection({ title, subtitle }: ContactCtaSectionProps) {
             שליחת הודעה בוואטסאפ
           </Button>
         </a>
-        <a href="tel:0525174443" className="w-full sm:w-auto">
+        <a href={PHONE_HREF} className="w-full sm:w-auto">
           <Button
             variant="secondary"
             className="flex w-full items-center justify-center gap-2 whitespace-nowrap py-3 sm:px-8"
