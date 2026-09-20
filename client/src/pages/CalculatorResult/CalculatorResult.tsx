@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import PageSeo from '@/components/Seo/PageSeo';
-import Image from '@/components/ui/Image';
 import Testimonials from '@/pages/Home/components/Testimonials';
 import resultCta from '@/assets/calculator/result-cta.webp';
 import { AboutShiranSection } from './sections/AboutShiranSection';
 import { ContactCtaSection } from './sections/ContactCtaSection';
+import { ImagePanelSection } from './sections/ImagePanelSection';
 import { ResultHero } from './sections/ResultHero';
 import { StickyContactBar } from './sections/StickyContactBar';
 import { WhatNowSection } from './sections/WhatNowSection';
@@ -52,20 +52,12 @@ export default function CalculatorResult() {
         <Testimonials />
       </section>
 
-      <section
-        ref={closingCtaRef}
-        className="grid grid-cols-1 overflow-hidden rounded-2xl lg:grid-cols-2"
-      >
-        <div className="min-h-64">
-          <Image src={resultCta} alt="" className="size-full object-cover" />
-        </div>
-        <div className="bg-secondary p-8 md:p-12">
-          <ContactCtaSection
-            title="מוכנים להתחיל את הצעד הבא?"
-            subtitle="בואו לדבר על הבית שלכם."
-          />
-        </div>
-      </section>
+      <ImagePanelSection image={resultCta} sectionRef={closingCtaRef}>
+        <ContactCtaSection
+          title="מוכנים להתחיל את הצעד הבא?"
+          subtitle="בואו לדבר על הבית שלכם."
+        />
+      </ImagePanelSection>
 
       <StickyContactBar visible={showStickyBar} />
     </main>
