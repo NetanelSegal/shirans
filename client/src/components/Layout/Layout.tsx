@@ -2,7 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import { Suspense } from 'react';
-import Loader from '@/components/Loader';
+import PageLoader from '@/components/Loader/PageLoader';
 
 const HIDE_FOOTER_PATHS = ['/login', '/register', '/calculator', '/contact'];
 
@@ -14,13 +14,7 @@ export default function Layout() {
     <>
       <Navbar />
       <div className='px-page-all overflow-hidden'>
-        <Suspense
-          fallback={
-            <div className='flex min-h-screen items-center justify-center'>
-              <Loader />
-            </div>
-          }
-        >
+        <Suspense fallback={<PageLoader />}>
           <Outlet />
         </Suspense>
       </div>

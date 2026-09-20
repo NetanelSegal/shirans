@@ -7,7 +7,9 @@ import { HelmetProvider } from 'react-helmet-async';
 import { queryClient } from './lib/queryClient';
 import { ProtectedRoute } from './components/Auth/ProtectedRoute'; // Import ProtectedRoute
 import Layout from './components/Layout';
-import Loader from './components/Loader/Loader'; // Import Loader for Suspense fallback
+import PageLoader from './components/Loader/PageLoader';
+import { LoadingState } from './components/DataState';
+import { AdminTableSkeleton } from './components/skeletons';
 import apiClient from './utils/apiClient';
 import { urls } from './constants/urls';
 import { USE_FILE_DATA } from './constants/dataSource';
@@ -142,7 +144,7 @@ const router = createBrowserRouter([
     path: '/admin',
     element: (
       <ProtectedRoute requireAdmin={true}>
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={<PageLoader />}>
           <Dashboard />
         </Suspense>
       </ProtectedRoute>
@@ -151,7 +153,7 @@ const router = createBrowserRouter([
       {
         path: '',
         element: (
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={<LoadingState />}>
             <Overview />
           </Suspense>
         ),
@@ -159,7 +161,7 @@ const router = createBrowserRouter([
       {
         path: 'projects',
         element: (
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={<AdminTableSkeleton searchable />}>
             <ProjectsManagement />
           </Suspense>
         ),
@@ -167,7 +169,7 @@ const router = createBrowserRouter([
       {
         path: 'categories',
         element: (
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={<LoadingState />}>
             <CategoriesManagement />
           </Suspense>
         ),
@@ -175,7 +177,7 @@ const router = createBrowserRouter([
       {
         path: 'testimonials',
         element: (
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={<LoadingState />}>
             <TestimonialsManagement />
           </Suspense>
         ),
@@ -183,7 +185,7 @@ const router = createBrowserRouter([
       {
         path: 'contacts',
         element: (
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={<LoadingState />}>
             <ContactsManagement />
           </Suspense>
         ),
@@ -191,7 +193,7 @@ const router = createBrowserRouter([
       {
         path: 'users',
         element: (
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={<LoadingState />}>
             <UsersManagement />
           </Suspense>
         ),
@@ -199,7 +201,7 @@ const router = createBrowserRouter([
       {
         path: 'calculator-leads',
         element: (
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={<LoadingState />}>
             <CalculatorLeadsManagement />
           </Suspense>
         ),
@@ -207,7 +209,7 @@ const router = createBrowserRouter([
       {
         path: 'calculator-config',
         element: (
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={<LoadingState />}>
             <CalculatorConfigManagement />
           </Suspense>
         ),

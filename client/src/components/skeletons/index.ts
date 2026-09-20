@@ -1,3 +1,4 @@
+export { AdminTableSkeleton } from './AdminTableSkeleton';
 export { ProjectRowSkeleton } from './ProjectRowSkeleton';
 export { ProjectListSkeleton } from './ProjectListSkeleton';
 export { ProjectDetailSkeleton } from './ProjectDetailSkeleton';
