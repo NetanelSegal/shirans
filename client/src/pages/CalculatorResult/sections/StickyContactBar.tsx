@@ -1,9 +1,11 @@
 import { CalendarDays, MessageCircle } from 'lucide-react';
-import { PHONE_HREF, WHATSAPP_HREF } from '../contactLinks';
+import { PHONE_HREF } from '../contactLinks';
 
 interface StickyContactBarProps {
   /** Hidden from the moment this element is reached — see useHideWhenReached. */
   visible: boolean;
+  /** Carries the visitor's answers and a link to their lead — see whatsappMessage. */
+  whatsappHref: string;
 }
 
 /**
@@ -12,7 +14,7 @@ interface StickyContactBarProps {
  * answers within reach without making the visitor hunt for the block at the
  * bottom — and gets out of the way once that block arrives.
  */
-export function StickyContactBar({ visible }: StickyContactBarProps) {
+export function StickyContactBar({ visible, whatsappHref }: StickyContactBarProps) {
   return (
     <div
       // `fixed`, not `sticky`: the page is a stack of sections, and a sticky
@@ -32,7 +34,7 @@ export function StickyContactBar({ visible }: StickyContactBarProps) {
 
         <div className="flex w-full items-center gap-2 sm:w-auto">
           <a
-            href={WHATSAPP_HREF}
+            href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-white px-5 py-2.5 font-bold text-primary transition-colors duration-150 ease-out hover-capable:hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary sm:flex-none"

@@ -13,11 +13,18 @@ import { CostCalculatorLeadDetails } from './components/CostCalculatorLeadDetail
 import { costCalculatorLeadColumns } from './components/costCalculatorLeadColumns';
 import { LEAD_QUERY_PARAM } from '@/utils/adminLeadUrl';
 
-const EMPTY_MESSAGE: Record<ReadFilter, string> = {
-  all: 'עדיין לא התקבלו לידים מהמחשבון.',
+const NO_LEADS_AT_ALL = 'עדיין לא התקבלו לידים מהמחשבון.';
+
+const NO_MATCHES: Record<ReadFilter, string> = {
+  all: NO_LEADS_AT_ALL,
   unread: 'כל הלידים סומנו כנקראו.',
   read: 'אף ליד עדיין לא סומן כנקרא.',
 };
+
+/** "All leads are read" is a lie when there are no leads to read. */
+function emptyMessage(filter: ReadFilter, totalLeads: number): string {
+  return totalLeads === 0 ? NO_LEADS_AT_ALL : NO_MATCHES[filter];
+}
 
 export default function CalculatorLeadsManagement() {
   const {
@@ -31,6 +38,7 @@ export default function CalculatorLeadsManagement() {
     updateReadStatusBulk,
     deleteBulk,
     refresh,
+    isMutationPending,
   } = useAdminCalculatorLeads();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -79,6 +87,19 @@ export default function CalculatorLeadsManagement() {
   };
 
   const visible = filterByRead(leads, filter);
+
+  /**
+   * Only ever act on rows that are on screen. The selection used to survive a
+   * tab change and a search, so six ticked rows could scroll out of sight and
+   * still be deleted by a bar that was counting them.
+   */
+  const visibleIds = new Set(visible.map((lead) => lead.id));
+  const actionableIds = selectedIds.filter((id) => visibleIds.has(id));
+
+  const changeFilter = (next: ReadFilter) => {
+    setFilter(next);
+    setSelectedIds([]);
+  };
   const counts = {
     all: leads.length,
     unread: leads.filter((lead) => !lead.isRead).length,
@@ -111,20 +132,20 @@ export default function CalculatorLeadsManagement() {
       )}
 
       <BulkActionBar
-        selectedCount={selectedIds.length}
+        selectedCount={actionableIds.length}
         onMarkRead={() =>
-          run(() => updateReadStatusBulk(selectedIds, true), () => setSelectedIds([]))
+          run(() => updateReadStatusBulk(actionableIds, true), () => setSelectedIds([]))
         }
         onMarkUnread={() =>
-          run(() => updateReadStatusBulk(selectedIds, false), () => setSelectedIds([]))
+          run(() => updateReadStatusBulk(actionableIds, false), () => setSelectedIds([]))
         }
-        onDelete={() => setBulkDeleteIds(selectedIds)}
+        onDelete={() => setBulkDeleteIds(actionableIds)}
         onClearSelection={() => setSelectedIds([])}
         mode="leads"
         isBusy={isBusy}
       />
 
-      <ReadFilterTabs value={filter} onChange={setFilter} counts={counts} />
+      <ReadFilterTabs value={filter} onChange={changeFilter} counts={counts} />
 
       {/* A link that named a lead the list doesn't contain — deleted, or a bad
           id — says so rather than silently doing nothing. */}
@@ -147,7 +168,7 @@ export default function CalculatorLeadsManagement() {
         <DataTable
           columns={costCalculatorLeadColumns}
           data={visible}
-          emptyMessage={EMPTY_MESSAGE[filter]}
+          emptyMessage={emptyMessage(filter, leads.length)}
           getRowId={(row) => row.id}
           searchPlaceholder="חיפוש לפי שם, אימייל או טלפון"
           selectable
@@ -165,10 +186,11 @@ export default function CalculatorLeadsManagement() {
               </button>
               <button
                 type="button"
+                disabled={isMutationPending}
                 onClick={() => {
                   void updateReadStatus(row.id, !row.isRead).catch(() => {});
                 }}
-                className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover-capable:hover:scale-100 hover-capable:hover:bg-secondary/80"
+                className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover-capable:hover:scale-100 hover-capable:hover:bg-secondary/80 disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label={row.isRead ? 'סימון כלא נקרא' : 'סימון כנקרא'}
               >
                 {row.isRead ? 'לא נקרא' : 'נקרא'}

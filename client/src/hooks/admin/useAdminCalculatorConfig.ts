@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DEFAULT_COST_CALCULATOR_CONFIG } from '@shirans/shared';
 import type { CostCalculatorConfig, ErrorKey } from '@shirans/shared';
@@ -12,7 +12,7 @@ export function useAdminCalculatorConfig() {
   const queryClient = useQueryClient();
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, isSuccess, error, refetch } = useQuery({
     queryKey: queryKeys.calculatorConfig,
     queryFn: () => calculatorService.getConfig(),
     staleTime: QUERY_STALE_TIME_ADMIN_MS,
@@ -35,19 +35,21 @@ export function useAdminCalculatorConfig() {
     savedConfig: data ?? DEFAULT_COST_CALCULATOR_CONFIG,
     /**
      * Whether `savedConfig` is the server's answer rather than the placeholder
-     * default. The form seeds itself from this and must not seed early — doing
-     * so pinned the defaults into the draft before the real rates arrived, and
-     * the screen then showed defaults no matter what was stored.
+     * default. The form seeds itself from this and must not seed early.
+     *
+     * Deliberately `isSuccess`, not `!isLoading`: a failed query is also "not
+     * loading", and seeding from it would pin the shipped defaults into the
+     * draft. The form never re-seeds, so a later successful refetch would still
+     * show defaults — and saving would write them over the real rates.
      */
-    isSettled: !isLoading,
-    isLoading,
+    isSettled: isSuccess,
     loadError: error
       ? getClientErrorMessage(transformError(error).errorKey as ErrorKey)
       : null,
     save: saveMutation.mutateAsync,
     isSaving: saveMutation.isPending,
     saveError,
-    clearSaveError: useCallback(() => setSaveError(null), []),
-    savedAt: saveMutation.isSuccess ? saveMutation.submittedAt : null,
+    isLoading,
+    refresh: () => refetch(),
   };
 }

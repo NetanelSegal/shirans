@@ -28,9 +28,14 @@ const answerProperties = {
 
 const answerFields = Object.keys(answerProperties);
 
-const multipliers = (keys: readonly string[]) => ({
+interface NumberMap {
+  type: 'object';
+  properties: Record<string, { type: 'number' }>;
+}
+
+const multipliers = (keys: readonly string[]): NumberMap => ({
   type: 'object',
-  properties: Object.fromEntries(keys.map((k) => [k, { type: 'number' }])),
+  properties: Object.fromEntries(keys.map((k) => [k, { type: 'number' as const }])),
 });
 
 export const calculatorSchemas = {

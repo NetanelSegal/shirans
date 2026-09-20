@@ -6,10 +6,8 @@
 /** 052-5174443 in the international form WhatsApp expects. */
 const WHATSAPP_NUMBER = '972525174443';
 
-const WHATSAPP_MESSAGE = encodeURIComponent(
-  'היי שירן, קיבלתי הערכה במחשבון עלות הבית ואשמח לדבר על הפרויקט שלי.',
-);
-
-export const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`;
-
 export const PHONE_HREF = 'tel:0525174443';
+
+export function buildWhatsAppHref(message: string): string {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}

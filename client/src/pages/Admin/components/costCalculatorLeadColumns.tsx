@@ -1,6 +1,7 @@
-import { REGION_LABELS, formatShekels } from '@shirans/shared';
+import { REGION_LABELS } from '@shirans/shared';
 import type { CostCalculatorLeadResponse } from '@shirans/shared';
 import { StatusBadge } from '@/components/Admin/StatusBadge';
+import { ShekelRange } from '@/components/ui/ShekelRange';
 import type { ColumnConfig } from '@/components/Admin/DataTable/types';
 
 function formatDate(value: string): string {
@@ -65,14 +66,12 @@ export const costCalculatorLeadColumns: ColumnConfig<CostCalculatorLeadResponse>
   {
     key: 'estimate',
     header: 'אומדן',
-    // Each amount is its own element so bidi can't move the dash to the wrong
-    // end of an RTL cell.
     render: (row) => (
-      <span className="flex flex-wrap items-center gap-x-1.5 whitespace-nowrap">
-        <span>{formatShekels(row.estimateMin)} ₪</span>
-        <span aria-hidden>–</span>
-        <span>{formatShekels(row.estimateMax)} ₪</span>
-      </span>
+      <ShekelRange
+        min={row.estimateMin}
+        max={row.estimateMax}
+        className="!justify-start gap-x-1.5"
+      />
     ),
     sortValue: (row) => row.estimateMin,
   },

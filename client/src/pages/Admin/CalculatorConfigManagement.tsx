@@ -14,7 +14,7 @@ import { ConfigEstimatePreview } from './components/ConfigEstimatePreview';
 import { ConfigGroupSection } from './components/ConfigGroupSection';
 
 export default function CalculatorConfigManagement() {
-  const { savedConfig, isSettled, loadError, save, isSaving, saveError } =
+  const { savedConfig, isSettled, loadError, refresh, save, isSaving, saveError } =
     useAdminCalculatorConfig();
 
   const [draft, setDraft] = useState<CostCalculatorConfig | null>(null);
@@ -63,7 +63,7 @@ export default function CalculatorConfigManagement() {
     return (
       <div dir="rtl">
         <AdminPageHeader title="הגדרות המחשבון" />
-        <ErrorState message={loadError} />
+        <ErrorState message={loadError} onRetry={refresh} />
       </div>
     );
   }

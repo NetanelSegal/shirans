@@ -22,16 +22,27 @@ export function AreaStep({ value, onChange, min, max, hint }: AreaStepProps) {
    */
   const [typed, setTyped] = useState<string | null>(null);
 
+  const clamp = (raw: number) => Math.min(Math.max(Math.round(raw), min), max);
+
   /**
    * The design shows this step pre-filled, and a slider has to sit somewhere
    * regardless — so the midpoint becomes a real answer rather than a placeholder
    * the visitor can't continue past.
+   *
+   * Also pulls a restored answer back into range: a draft saved a week ago can
+   * hold an area the configured bounds no longer allow, and leaving it there
+   * means the submit fails on a number the visitor was never shown as invalid.
    */
   useEffect(() => {
-    if (value === undefined) onChange(current);
-  }, [value, current, onChange]);
-
-  const clamp = (raw: number) => Math.min(Math.max(Math.round(raw), min), max);
+    if (value === undefined) {
+      onChange(current);
+      return;
+    }
+    const bounded = clamp(value);
+    if (bounded !== value) onChange(bounded);
+    // `clamp` is derived from min/max, which are already dependencies.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, current, min, max, onChange]);
 
   const handleType = (raw: string) => {
     setTyped(raw);

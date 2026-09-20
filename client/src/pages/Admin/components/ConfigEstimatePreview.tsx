@@ -1,5 +1,6 @@
-import { calculateCostRange, formatShekels } from '@shirans/shared';
+import { calculateCostRange } from '@shirans/shared';
 import type { CostCalculatorAnswers, CostCalculatorConfig } from '@shirans/shared';
+import { ShekelRange } from '@/components/ui/ShekelRange';
 
 /**
  * A fixed, representative house. The numbers above are multipliers and addends;
@@ -33,11 +34,11 @@ export function ConfigEstimatePreview({
     <aside className="rounded-xl bg-secondary p-5" aria-live="polite">
       <h3 className="font-bold text-primary">בית לדוגמה</h3>
       <p className="mt-1 text-sm text-primary/70">{SAMPLE_DESCRIPTION}</p>
-      <p className="mt-3 flex flex-wrap items-center gap-x-2 text-xl font-bold text-primary">
-        <span className="whitespace-nowrap">{formatShekels(estimate.min)} ₪</span>
-        <span aria-hidden>–</span>
-        <span className="whitespace-nowrap">{formatShekels(estimate.max)} ₪</span>
-      </p>
+      <ShekelRange
+        min={estimate.min}
+        max={estimate.max}
+        className="mt-3 !justify-start text-xl font-bold text-primary"
+      />
     </aside>
   );
 }

@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 
 interface ConfigNumberFieldProps {
   label: string;
@@ -9,9 +9,13 @@ interface ConfigNumberFieldProps {
 }
 
 /**
- * Holds what was typed as text, so a half-finished number ("1.", "", "0.0") can
- * exist while it is being typed. Coercing every keystroke to a number fights
- * the person entering a decimal.
+ * Holds what was typed as text while the field has focus.
+ *
+ * A controlled `type="number"` cannot: the moment you type the dot in "1.15"
+ * the element reports an empty value, `Number('')` is 0, and the 0 is written
+ * straight back over the "1." that was there. Decimals — which is what every
+ * multiplier on this screen is — become impossible to enter. Clearing a field
+ * to retype it has the same problem, and silently commits 0.
  */
 export function ConfigNumberField({
   label,
@@ -21,6 +25,18 @@ export function ConfigNumberField({
   onChange,
 }: ConfigNumberFieldProps) {
   const id = useId();
+  const [typed, setTyped] = useState<string | null>(null);
+
+  const handleChange = (raw: string) => {
+    setTyped(raw);
+    const parsed = Number(raw);
+    // An empty or half-finished entry stays on screen without becoming a value.
+    if (raw.trim() === '' || Number.isNaN(parsed)) return;
+    onChange(parsed);
+  };
+
+  /** Leaving the field with nothing usable in it restores the last good value. */
+  const handleBlur = () => setTyped(null);
 
   return (
     <div>
@@ -30,15 +46,14 @@ export function ConfigNumberField({
       <div className="mt-1 flex items-center gap-2 rounded-lg border border-primary/20 bg-white px-3 transition-colors focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/30">
         <input
           id={id}
-          type="number"
+          // `text` with a numeric inputMode rather than `type="number"`: the
+          // number input is what discards the intermediate states above.
+          type="text"
           inputMode="decimal"
           step={step ?? 1}
-          min={0}
-          value={value}
-          onChange={(e) => {
-            const parsed = Number(e.target.value);
-            if (!Number.isNaN(parsed)) onChange(parsed);
-          }}
+          value={typed ?? String(value)}
+          onChange={(e) => handleChange(e.target.value)}
+          onBlur={handleBlur}
           className="w-full bg-transparent py-2 text-primary focus:outline-none"
         />
         {suffix && (

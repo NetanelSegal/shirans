@@ -16,17 +16,19 @@ import { storeResult } from '@/pages/CalculatorResult/resultStorage';
 export async function submitCalculatorLead({
   answers,
   contact,
-  estimate,
 }: CostCalculatorResult): Promise<void> {
-  await calculatorService.submitLead({ ...answers, ...contact });
+  const lead = await calculatorService.submitLead({ ...answers, ...contact });
 
-  void sendCalculatorLeadNotification({
-    ...contact,
-    answers,
-    estimate,
-  }).catch((error: unknown) => {
+  // Built from the saved row, so what Shiran reads matches what is stored.
+  void sendCalculatorLeadNotification(lead).catch((error: unknown) => {
     console.error('Calculator lead notification failed to send', error);
   });
 
-  storeResult({ answers, estimate });
+  // The saved row again, not the wizard's copy: the page shows the number that
+  // was actually recorded, and the id lets a message link straight to it.
+  storeResult({
+    answers,
+    estimate: { min: lead.estimateMin, max: lead.estimateMax },
+    leadId: lead.id,
+  });
 }
