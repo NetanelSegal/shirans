@@ -130,15 +130,35 @@ export function useCostCalculator(showIntro: boolean) {
     [searchParams, setSearchParams],
   );
 
+  /**
+   * A step filling in a value of its own accord — a default it has to show, or
+   * a restored answer pulled back into range.
+   *
+   * Separate from `setAnswer` because of the restore banner. Merely arriving at
+   * a step that pre-fills itself is not the visitor answering anything, and
+   * treating it as such made "we picked up where you left off" vanish before
+   * they had done a thing.
+   */
+  const seedAnswer = useCallback(
+    <K extends keyof CostCalculatorAnswers>(
+      key: K,
+      value: CostCalculatorAnswers[K],
+    ) => {
+      setAnswers((prev) => ({ ...prev, [key]: value }));
+    },
+    [],
+  );
+
+  /** The visitor answered. That retires the restore banner. */
   const setAnswer = useCallback(
     <K extends keyof CostCalculatorAnswers>(
       key: K,
       value: CostCalculatorAnswers[K],
     ) => {
       setWasRestored(false);
-      setAnswers((prev) => ({ ...prev, [key]: value }));
+      seedAnswer(key, value);
     },
-    [],
+    [seedAnswer],
   );
 
   const resetDraft = useCallback(() => {
@@ -154,6 +174,7 @@ export function useCostCalculator(showIntro: boolean) {
     () => ({
       answers,
       setAnswer,
+      seedAnswer,
       step,
       stepIndex,
       totalSteps: TOTAL_STEPS,
@@ -169,6 +190,7 @@ export function useCostCalculator(showIntro: boolean) {
     [
       answers,
       setAnswer,
+      seedAnswer,
       step,
       stepIndex,
       maxAllowedIndex,

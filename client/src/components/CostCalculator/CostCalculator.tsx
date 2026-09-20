@@ -45,6 +45,7 @@ export function CostCalculator({
   const {
     answers,
     setAnswer,
+    seedAnswer,
     step,
     stepIndex,
     totalSteps,
@@ -171,6 +172,7 @@ export function CostCalculator({
           <AreaStep
             value={answers.builtAreaSqm}
             onChange={(value) => setAnswer('builtAreaSqm', value)}
+            onSeed={(value) => seedAnswer('builtAreaSqm', value)}
             min={config.builtAreaSqmRange.min}
             max={config.builtAreaSqmRange.max}
             hint={step.hint}
