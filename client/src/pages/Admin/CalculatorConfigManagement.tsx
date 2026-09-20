@@ -1,258 +1,109 @@
-import { useState, useEffect } from 'react';
-import { calculatorService } from '@/services/calculator.service';
+import { useEffect, useState } from 'react';
 import {
-  type CalculatorConfigInput,
-  DEFAULT_CALCULATOR_CONFIG,
+  DEFAULT_COST_CALCULATOR_CONFIG,
+  costCalculatorConfigSchema,
 } from '@shirans/shared';
+import type { CostCalculatorConfig } from '@shirans/shared';
 import { AdminPageHeader } from '@/components/Admin/AdminPageHeader';
+import { ErrorState, LoadingState } from '@/components/DataState';
 import Button from '@/components/ui/Button';
+import { useAdminCalculatorConfig } from '@/hooks/admin/useAdminCalculatorConfig';
+import { setByPath } from '@/utils/objectPath';
+import { COST_CALCULATOR_CONFIG_GROUPS } from './costCalculatorConfigFields';
+import { ConfigEstimatePreview } from './components/ConfigEstimatePreview';
+import { ConfigGroupSection } from './components/ConfigGroupSection';
 
 export default function CalculatorConfigManagement() {
-  const [config, setConfig] = useState<CalculatorConfigInput | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const { savedConfig, loadError, save, isSaving, saveError } =
+    useAdminCalculatorConfig();
 
+  const [draft, setDraft] = useState<CostCalculatorConfig | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [justSaved, setJustSaved] = useState(false);
+
+  // Seeded from the server's copy, and re-seeded if that copy arrives late or
+  // changes underneath — but never while there are unsaved edits to lose.
   useEffect(() => {
-    calculatorService
-      .getConfig()
-      .then((c) => setConfig(c))
-      .catch(() => setConfig(null))
-      .finally(() => setIsLoading(false));
-  }, []);
+    setDraft((current) => current ?? savedConfig);
+  }, [savedConfig]);
 
-  const updateConfig = (path: string, value: number) => {
-    if (!config) return;
-    const parts = path.split('.');
-    const newConfig = JSON.parse(JSON.stringify(config)) as CalculatorConfigInput;
-    let obj: Record<string, unknown> = newConfig;
-    for (let i = 0; i < parts.length - 1; i++) {
-      const key = parts[i];
-      obj = obj[key] as Record<string, unknown>;
-    }
-    obj[parts[parts.length - 1]] = value;
-    setConfig(newConfig);
+  const handleChange = (path: string, value: number) => {
+    setJustSaved(false);
+    setValidationError(null);
+    setDraft((current) => (current ? setByPath(current, path, value) : current));
   };
 
   const handleSave = async () => {
-    if (!config) return;
-    setIsSaving(true);
-    setError(null);
+    if (!draft) return;
+
+    // Checked here as well as on the server, so a typo comes back as the field
+    // that is wrong rather than as a rejected request.
+    const parsed = costCalculatorConfigSchema.safeParse(draft);
+    if (!parsed.success) {
+      setValidationError(
+        parsed.error.issues
+          .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
+          .join(' · '),
+      );
+      return;
+    }
+
+    setValidationError(null);
     try {
-      await calculatorService.updateConfig(config);
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err) {
-      setError((err as Error)?.message ?? 'שגיאה בשמירה');
-    } finally {
-      setIsSaving(false);
+      await save(parsed.data);
+      setJustSaved(true);
+    } catch {
+      // Surfaced through saveError.
     }
   };
 
-  const handleReset = () => {
-    setConfig(JSON.parse(JSON.stringify(DEFAULT_CALCULATOR_CONFIG)) as CalculatorConfigInput);
-  };
+  const message = validationError ?? saveError;
 
-  if (isLoading || !config) {
-    return (
-      <div className="flex min-h-[200px] items-center justify-center" dir="rtl">
-        <span>טוען...</span>
-      </div>
-    );
-  }
+  if (loadError) return <ErrorState message={loadError} />;
+  if (!draft) return <LoadingState minHeight="20rem" />;
 
   return (
-    <div dir="rtl" className="max-w-4xl">
+    <div dir="rtl">
       <AdminPageHeader title="הגדרות מחשבון אומדן" />
-      {error && (
-        <p className="mb-4 text-red-600" role="alert">
-          {error}
-        </p>
-      )}
-      {success && (
-        <p className="mb-4 text-green-600" role="status">
-          ההגדרות נשמרו בהצלחה
-        </p>
-      )}
 
-      <div className="space-y-6 rounded-xl bg-white p-6 shadow">
-        <section>
-          <h3 className="mb-3 font-semibold">טווח שטח בנוי (מ״ר)</h3>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label htmlFor="built-area-min" className="block text-sm font-medium">
-                מינימום
-              </label>
-              <input
-                id="built-area-min"
-                type="number"
-                value={config.builtAreaSqmRange.min}
-                onChange={(e) =>
-                  updateConfig('builtAreaSqmRange.min', Number(e.target.value))
-                }
-                className="mt-1 w-full rounded-lg border p-2"
-              />
-            </div>
-            <div>
-              <label htmlFor="built-area-max" className="block text-sm font-medium">
-                מקסימום
-              </label>
-              <input
-                id="built-area-max"
-                type="number"
-                value={config.builtAreaSqmRange.max}
-                onChange={(e) =>
-                  updateConfig('builtAreaSqmRange.max', Number(e.target.value))
-                }
-                className="mt-1 w-full rounded-lg border p-2"
-              />
-            </div>
-          </div>
-        </section>
+      <div className="space-y-6">
+        <ConfigEstimatePreview config={draft} />
 
-        <section>
-          <h3 className="mb-3 font-semibold">מחירי בסיס (₪/מ״ר)</h3>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label htmlFor="construction-base-min" className="block text-sm font-medium">
-                בנייה - מינימום
-              </label>
-              <input
-                id="construction-base-min"
-                type="number"
-                value={config.constructionBase.min}
-                onChange={(e) =>
-                  updateConfig('constructionBase.min', Number(e.target.value))
-                }
-                className="mt-1 w-full rounded-lg border p-2"
-              />
-            </div>
-            <div>
-              <label htmlFor="construction-base-max" className="block text-sm font-medium">
-                בנייה - מקסימום
-              </label>
-              <input
-                id="construction-base-max"
-                type="number"
-                value={config.constructionBase.max}
-                onChange={(e) =>
-                  updateConfig('constructionBase.max', Number(e.target.value))
-                }
-                className="mt-1 w-full rounded-lg border p-2"
-              />
-            </div>
-            <div>
-              <label htmlFor="outdoor-base-min" className="block text-sm font-medium">
-                פיתוח חוץ - מינימום
-              </label>
-              <input
-                id="outdoor-base-min"
-                type="number"
-                value={config.outdoorBase.min}
-                onChange={(e) =>
-                  updateConfig('outdoorBase.min', Number(e.target.value))
-                }
-                className="mt-1 w-full rounded-lg border p-2"
-              />
-            </div>
-            <div>
-              <label htmlFor="outdoor-base-max" className="block text-sm font-medium">
-                פיתוח חוץ - מקסימום
-              </label>
-              <input
-                id="outdoor-base-max"
-                type="number"
-                value={config.outdoorBase.max}
-                onChange={(e) =>
-                  updateConfig('outdoorBase.max', Number(e.target.value))
-                }
-                className="mt-1 w-full rounded-lg border p-2"
-              />
-            </div>
-          </div>
-        </section>
+        {COST_CALCULATOR_CONFIG_GROUPS.map((group) => (
+          <ConfigGroupSection
+            key={group.title}
+            group={group}
+            config={draft}
+            onChange={handleChange}
+          />
+        ))}
 
-        <section>
-          <h3 className="mb-3 font-semibold">מכפיל מע״מ</h3>
-          <div className="max-w-xs">
-            <label htmlFor="vat-multiplier" className="block text-sm font-medium">
-              מכפיל
-            </label>
-            <input
-              id="vat-multiplier"
-              type="number"
-              step="0.01"
-              value={config.vatMultiplier}
-              onChange={(e) =>
-                updateConfig('vatMultiplier', Number(e.target.value))
-              }
-              className="mt-1 w-full rounded-lg border p-2"
-            />
-          </div>
-        </section>
+        {message && (
+          <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
+            {message}
+          </p>
+        )}
+        {justSaved && !message && (
+          <p className="text-sm font-bold text-green-700" role="status">
+            ההגדרות נשמרו.
+          </p>
+        )}
 
-        <section>
-          <h3 className="mb-3 font-semibold">תוספות בריכה (₪)</h3>
-          <div className="grid gap-4 md:grid-cols-4">
-            {(['small', 'medium', 'large'] as const).map((size) => (
-              <div key={size} className="space-y-2">
-                <span className="text-sm font-medium">
-                  {size === 'small' ? 'קטנה' : size === 'medium' ? 'בינונית' : 'גדולה'}
-                </span>
-                <div>
-                  <label htmlFor={`pool-${size}-min`} className="sr-only">
-                    {size === 'small' ? 'קטנה' : size === 'medium' ? 'בינונית' : 'גדולה'} מינימום
-                  </label>
-                  <input
-                    id={`pool-${size}-min`}
-                    type="number"
-                    placeholder="מינ"
-                    value={config.poolAddons[size].min}
-                    onChange={(e) =>
-                      updateConfig(
-                        `poolAddons.${size}.min`,
-                        Number(e.target.value)
-                      )
-                    }
-                    className="w-full rounded-lg border p-2"
-                  />
-                </div>
-                <div>
-                  <label htmlFor={`pool-${size}-max`} className="sr-only">
-                    {size === 'small' ? 'קטנה' : size === 'medium' ? 'בינונית' : 'גדולה'} מקסימום
-                  </label>
-                  <input
-                    id={`pool-${size}-max`}
-                    type="number"
-                    placeholder="מקס"
-                    value={config.poolAddons[size].max}
-                    onChange={(e) =>
-                      updateConfig(
-                        `poolAddons.${size}.max`,
-                        Number(e.target.value)
-                      )
-                    }
-                    className="w-full rounded-lg border p-2"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      <div className="mt-6 flex gap-4">
-        <Button
-          variant="primary"
-          onClick={handleSave}
-          disabled={isSaving}
-        >
-          {isSaving ? 'שומר...' : 'שמור הגדרות'}
-        </Button>
-        <Button variant="light" onClick={handleReset}>
-          איפוס לברירת מחדל
-        </Button>
+        <div className="flex flex-wrap gap-3">
+          <Button variant="primary" onClick={handleSave} disabled={isSaving}>
+            {isSaving ? 'שומר...' : 'שמירת הגדרות'}
+          </Button>
+          <Button
+            variant="light"
+            onClick={() => {
+              setJustSaved(false);
+              setValidationError(null);
+              setDraft(DEFAULT_COST_CALCULATOR_CONFIG);
+            }}
+          >
+            איפוס לברירת מחדל
+          </Button>
+        </div>
       </div>
     </div>
   );

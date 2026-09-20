@@ -1,30 +1,54 @@
 import { Prisma } from '@prisma/client';
 import { calculatorRepository } from '../repositories/calculator.repository';
-import type {
-  SubmitCalculatorLeadInput,
-  CalculatorConfigInput,
-  CalculatorLeadResponse,
+import {
+  calculateCostRange,
+  costCalculatorAnswersSchema,
+  HTTP_STATUS,
 } from '@shirans/shared';
-import { HTTP_STATUS } from '@shirans/shared';
+import type {
+  CostCalculatorConfig,
+  CostCalculatorLeadResponse,
+  SubmitCostCalculatorLeadInput,
+} from '@shirans/shared';
 import { HttpError } from '../middleware/errorHandler';
 import { getServerErrorMessage } from '../constants/errorMessages';
 import logger from '../middleware/logger';
 
+/** Maps Prisma's "record not found" onto a 404 instead of a 500. */
+function isMissingRecord(error: unknown): boolean {
+  return (
+    error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025'
+  );
+}
+
 export const calculatorService = {
-  async submitLead(data: SubmitCalculatorLeadInput): Promise<CalculatorLeadResponse> {
+  /**
+   * The estimate is computed here, never accepted from the request. The client
+   * calculates the same number to show it live in the wizard, but what gets
+   * stored has to come from the rates Shiran actually set — otherwise the lead
+   * records whatever the browser felt like sending.
+   */
+  async submitLead(
+    data: SubmitCostCalculatorLeadInput,
+  ): Promise<CostCalculatorLeadResponse> {
     try {
       const config = await calculatorRepository.getConfig();
       const { min, max } = config.builtAreaSqmRange;
+
       if (data.builtAreaSqm < min || data.builtAreaSqm > max) {
         throw new HttpError(
           HTTP_STATUS.BAD_REQUEST,
           getServerErrorMessage('VALIDATION.BUILT_AREA_OUT_OF_RANGE'),
         );
       }
-      return await calculatorRepository.createLead(data);
+
+      const answers = costCalculatorAnswersSchema.parse(data);
+      const estimate = calculateCostRange(answers, config);
+
+      return await calculatorRepository.createLead(data, estimate);
     } catch (error) {
       if (error instanceof HttpError) throw error;
-      logger.error('Error submitting calculator lead', { error });
+      logger.error('Error submitting cost calculator lead', { error });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
         getServerErrorMessage('SERVER.CALCULATOR.SUBMIT_FAILED'),
@@ -50,16 +74,16 @@ export const calculatorService = {
   async updateLeadReadStatus(id: string, isRead: boolean) {
     try {
       await calculatorService.getLeadById(id); // throws if not found
-      return calculatorRepository.updateLeadReadStatus(id, isRead);
+      return await calculatorRepository.updateLeadReadStatus(id, isRead);
     } catch (error) {
       if (error instanceof HttpError) throw error;
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      if (isMissingRecord(error)) {
         throw new HttpError(
           HTTP_STATUS.NOT_FOUND,
           getServerErrorMessage('NOT_FOUND.RESOURCE_NOT_FOUND'),
         );
       }
-      logger.error('Error updating calculator lead read status', { error, id });
+      logger.error('Error updating cost calculator lead read status', { error, id });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
         getServerErrorMessage('SERVER.CALCULATOR.UPDATE_LEAD_FAILED'),
@@ -70,16 +94,16 @@ export const calculatorService = {
   async deleteLead(id: string) {
     try {
       await calculatorService.getLeadById(id); // throws if not found
-      return calculatorRepository.deleteLead(id);
+      return await calculatorRepository.deleteLead(id);
     } catch (error) {
       if (error instanceof HttpError) throw error;
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      if (isMissingRecord(error)) {
         throw new HttpError(
           HTTP_STATUS.NOT_FOUND,
           getServerErrorMessage('NOT_FOUND.RESOURCE_NOT_FOUND'),
         );
       }
-      logger.error('Error deleting calculator lead', { error, id });
+      logger.error('Error deleting cost calculator lead', { error, id });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
         getServerErrorMessage('SERVER.CALCULATOR.DELETE_LEAD_FAILED'),
@@ -87,13 +111,17 @@ export const calculatorService = {
     }
   },
 
-  async updateLeadReadStatusBulk(ids: string[], isRead: boolean): Promise<{ count: number }> {
+  async updateLeadReadStatusBulk(
+    ids: string[],
+    isRead: boolean,
+  ): Promise<{ count: number }> {
     try {
-      const count = await calculatorRepository.updateLeadReadStatusBulk(ids, isRead);
-      return { count };
+      return { count: await calculatorRepository.updateLeadReadStatusBulk(ids, isRead) };
     } catch (error) {
-      if (error instanceof HttpError) throw error;
-      logger.error('Error bulk updating calculator lead read status', { error, ids });
+      logger.error('Error bulk updating cost calculator lead read status', {
+        error,
+        ids,
+      });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
         getServerErrorMessage('SERVER.CALCULATOR.UPDATE_LEAD_FAILED'),
@@ -103,11 +131,9 @@ export const calculatorService = {
 
   async deleteLeadsBulk(ids: string[]): Promise<{ count: number }> {
     try {
-      const count = await calculatorRepository.deleteLeadsBulk(ids);
-      return { count };
+      return { count: await calculatorRepository.deleteLeadsBulk(ids) };
     } catch (error) {
-      if (error instanceof HttpError) throw error;
-      logger.error('Error bulk deleting calculator leads', { error, ids });
+      logger.error('Error bulk deleting cost calculator leads', { error, ids });
       throw new HttpError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
         getServerErrorMessage('SERVER.CALCULATOR.DELETE_LEAD_FAILED'),
@@ -115,11 +141,11 @@ export const calculatorService = {
     }
   },
 
-  async getConfig(): Promise<CalculatorConfigInput> {
+  async getConfig(): Promise<CostCalculatorConfig> {
     return calculatorRepository.getConfig();
   },
 
-  async updateConfig(config: CalculatorConfigInput) {
+  async updateConfig(config: CostCalculatorConfig): Promise<CostCalculatorConfig> {
     return calculatorRepository.upsertConfig(config);
   },
 };

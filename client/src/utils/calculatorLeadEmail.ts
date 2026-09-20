@@ -1,43 +1,57 @@
 import emailjs from '@emailjs/browser';
-import type { CalculatorFormInput } from '@shirans/shared';
-import { formatPrice } from '@shirans/shared';
+import type { CostCalculatorAnswers, CostRange } from '@shirans/shared';
 import { envConfig, isEmailJsCalculatorConfigured } from '@/config/env';
-import { ENUM_LABELS_HE } from '@/constants/calculatorLabels';
+import {
+  formatEstimateRange,
+  summarizeAnswers,
+} from '@/utils/costCalculatorLeadSummary';
 
-function formatEnum(value: string): string {
-  return ENUM_LABELS_HE[value] ?? value;
+interface LeadNotification {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  marketingConsent: boolean;
+  answers: CostCalculatorAnswers;
+  estimate: CostRange;
 }
 
 /**
- * Sends admin notification email when a new calculator lead is submitted.
- * Uses EmailJS client-side (same pattern as contact form).
- * Skips silently if VITE_EMAILJS_CALCULATOR_TEMPLATE_ID is not configured.
+ * Tells Shiran a lead came in, through the same EmailJS setup the contact form
+ * uses.
+ *
+ * This is a notification, not the record: the lead is already in the database
+ * and on the admin screen before this runs. So it stays out of the visitor's
+ * way — if EmailJS isn't configured, or the send fails, nothing about their
+ * submission changes.
  */
-export async function sendCalculatorLeadNotification(
-  data: CalculatorFormInput,
-  estimate: number
-): Promise<void> {
-  if (!isEmailJsCalculatorConfigured()) {
-    return;
-  }
+export async function sendCalculatorLeadNotification({
+  name,
+  email,
+  phoneNumber,
+  marketingConsent,
+  answers,
+  estimate,
+}: LeadNotification): Promise<void> {
+  if (!isEmailJsCalculatorConfigured()) return;
 
   const { serviceId, calculatorTemplateId: templateId, publicKey } = envConfig.emailjs;
-  const templateParams = {
-    lead_name: data.name,
-    lead_email: data.email,
-    lead_phone: data.phoneNumber,
-    estimate: `₪ ${formatPrice(estimate)}`,
-    built_area: `${data.builtAreaSqm} מ״ר`,
-    construction_finish: formatEnum(data.constructionFinish),
-    pool: formatEnum(data.pool),
-    outdoor_area: `${data.outdoorAreaSqm} מ״ר`,
-    outdoor_finish: formatEnum(data.outdoorFinish),
-    kitchen: formatEnum(data.kitchen),
-    carpentry: formatEnum(data.carpentry),
-    furniture: formatEnum(data.furniture),
-    equipment: formatEnum(data.equipment),
-    created_at: new Date().toLocaleDateString('he-IL'),
-  };
 
-  await emailjs.send(serviceId, templateId, templateParams, { publicKey });
+  await emailjs.send(
+    serviceId,
+    templateId,
+    {
+      lead_name: name,
+      lead_email: email,
+      lead_phone: phoneNumber,
+      marketing_consent: marketingConsent ? 'כן' : 'לא',
+      estimate: formatEstimateRange(estimate),
+      // One block rather than a field per question, so adding a question to the
+      // wizard doesn't also mean editing the EmailJS template.
+      answers: summarizeAnswers(answers)
+        .map(({ label, value }) => `${label}: ${value}`)
+        .join('\n'),
+      created_at: new Date().toLocaleString('he-IL'),
+    },
+    { publicKey },
+  );
 }

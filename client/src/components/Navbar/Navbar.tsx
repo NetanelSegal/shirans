@@ -31,10 +31,16 @@ export default function Navbar() {
     };
   }, [isSmallScreen, toggle]);
 
+  /**
+   * Reset on real navigation only. Keyed on `location` this also fired for
+   * query-string changes, so any page that keeps state in the URL — the cost
+   * calculator's step, for one — threw the visitor back to the top of the page
+   * on every interaction.
+   */
   useEffect(() => {
     setToggle(false);
     window.scrollTo(0, 0);
-  }, [location]);
+  }, [location.pathname]);
 
   return (
     <nav

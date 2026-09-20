@@ -1,23 +1,23 @@
 import { Request, Response } from 'express';
 import { calculatorService } from '../services/calculator.service';
 import {
-  submitCalculatorLeadSchema,
-  calculatorConfigSchema,
-  calculatorLeadIdSchema,
-  calculatorLeadsQuerySchema,
-  calculatorUpdateReadSchema,
-  calculatorBulkUpdateReadSchema,
-  calculatorBulkIdsSchema,
+  submitCostCalculatorLeadSchema,
+  costCalculatorConfigSchema,
+  costCalculatorLeadIdSchema,
+  costCalculatorLeadsQuerySchema,
+  costCalculatorUpdateReadSchema,
+  costCalculatorBulkUpdateReadSchema,
+  costCalculatorBulkIdsSchema,
 } from '@shirans/shared';
 import { validateRequest } from '../utils/validation';
 import { HTTP_STATUS } from '../constants/httpStatus';
 
 /**
- * Submit a calculator lead (admin only - calculator is admin-only)
+ * Submit a cost calculator lead (public)
  * POST /api/calculator/leads
  */
 export async function submitLead(req: Request, res: Response): Promise<Response> {
-  const validatedData = validateRequest(submitCalculatorLeadSchema, req.body);
+  const validatedData = validateRequest(submitCostCalculatorLeadSchema, req.body);
   const lead = await calculatorService.submitLead(validatedData);
   return res.status(HTTP_STATUS.CREATED).json(lead);
 }
@@ -27,7 +27,7 @@ export async function submitLead(req: Request, res: Response): Promise<Response>
  * GET /api/calculator/leads?isRead=true
  */
 export async function getAllLeads(req: Request, res: Response): Promise<Response> {
-  const { isRead } = validateRequest(calculatorLeadsQuerySchema, req.query);
+  const { isRead } = validateRequest(costCalculatorLeadsQuerySchema, req.query);
   const leads = await calculatorService.getLeads(isRead !== undefined ? { isRead } : undefined);
   return res.status(HTTP_STATUS.OK).json(leads);
 }
@@ -37,7 +37,7 @@ export async function getAllLeads(req: Request, res: Response): Promise<Response
  * GET /api/calculator/leads/:id
  */
 export async function getLeadById(req: Request, res: Response): Promise<Response> {
-  const { id } = validateRequest(calculatorLeadIdSchema, req.params);
+  const { id } = validateRequest(costCalculatorLeadIdSchema, req.params);
   const lead = await calculatorService.getLeadById(id);
   return res.status(HTTP_STATUS.OK).json(lead);
 }
@@ -50,8 +50,8 @@ export async function updateLeadReadStatus(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const { id } = validateRequest(calculatorLeadIdSchema, req.params);
-  const { isRead } = validateRequest(calculatorUpdateReadSchema, req.body);
+  const { id } = validateRequest(costCalculatorLeadIdSchema, req.params);
+  const { isRead } = validateRequest(costCalculatorUpdateReadSchema, req.body);
   const lead = await calculatorService.updateLeadReadStatus(id, isRead);
   return res.status(HTTP_STATUS.OK).json(lead);
 }
@@ -61,7 +61,7 @@ export async function updateLeadReadStatus(
  * DELETE /api/calculator/leads/:id
  */
 export async function deleteLead(req: Request, res: Response): Promise<Response> {
-  const { id } = validateRequest(calculatorLeadIdSchema, req.params);
+  const { id } = validateRequest(costCalculatorLeadIdSchema, req.params);
   await calculatorService.deleteLead(id);
   return res.status(HTTP_STATUS.OK).json({ message: 'Lead deleted successfully' });
 }
@@ -74,7 +74,7 @@ export async function bulkUpdateLeadReadStatus(
   req: Request,
   res: Response
 ): Promise<Response> {
-  const { ids, isRead } = validateRequest(calculatorBulkUpdateReadSchema, req.body);
+  const { ids, isRead } = validateRequest(costCalculatorBulkUpdateReadSchema, req.body);
   const { count } = await calculatorService.updateLeadReadStatusBulk(ids, isRead);
   return res.status(HTTP_STATUS.OK).json({ count });
 }
@@ -84,13 +84,13 @@ export async function bulkUpdateLeadReadStatus(
  * DELETE /api/calculator/leads/bulk
  */
 export async function bulkDeleteLeads(req: Request, res: Response): Promise<Response> {
-  const { ids } = validateRequest(calculatorBulkIdsSchema, req.body);
+  const { ids } = validateRequest(costCalculatorBulkIdsSchema, req.body);
   const { count } = await calculatorService.deleteLeadsBulk(ids);
   return res.status(HTTP_STATUS.OK).json({ count });
 }
 
 /**
- * Get calculator config (admin only - for editing)
+ * Get the cost calculator config (public: the wizard prices with it)
  * GET /api/calculator/config
  */
 export async function getConfig(_req: Request, res: Response): Promise<Response> {
@@ -103,7 +103,7 @@ export async function getConfig(_req: Request, res: Response): Promise<Response>
  * PUT /api/calculator/config
  */
 export async function updateConfig(req: Request, res: Response): Promise<Response> {
-  const validatedData = validateRequest(calculatorConfigSchema, req.body);
+  const validatedData = validateRequest(costCalculatorConfigSchema, req.body);
   const config = await calculatorService.updateConfig(validatedData);
   return res.status(HTTP_STATUS.OK).json(config);
 }

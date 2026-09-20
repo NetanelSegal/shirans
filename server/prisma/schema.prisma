@@ -119,33 +119,80 @@ model ContactSubmission {
   @@map("contact_submissions")
 }
 
+/// Retired. The single-page calculator these belong to has been replaced by the
+/// multi-step cost calculator below. They are kept so the schema still
+/// describes the database truthfully; dropping the tables is a separate,
+/// deliberate migration.
 model CalculatorLead {
-  id              String   @id @default(cuid())
-  name            String
-  email           String
-  phoneNumber     String
-  builtAreaSqm    Int
+  id                 String   @id @default(cuid())
+  name               String
+  email              String
+  phoneNumber        String
+  builtAreaSqm       Int
   constructionFinish String
-  pool            String
-  outdoorAreaSqm  Int
-  outdoorFinish   String
-  kitchen         String
-  carpentry       String
-  furniture       String
-  equipment       String
-  priceDisplay    String
-  estimateMin     Int
-  estimateMax     Int
-  isRead          Boolean  @default(false)
-  createdAt       DateTime @default(now())
+  pool               String
+  outdoorAreaSqm     Int
+  outdoorFinish      String
+  kitchen            String
+  carpentry          String
+  furniture          String
+  equipment          String
+  priceDisplay       String
+  estimateMin        Int
+  estimateMax        Int
+  isRead             Boolean  @default(false)
+  createdAt          DateTime @default(now())
 
   @@map("calculator_leads")
 }
 
+/// Retired alongside CalculatorLead.
 model CalculatorConfig {
   id        String   @id @default(cuid())
   config    Json
   updatedAt DateTime @updatedAt
 
   @@map("calculator_config")
+}
+
+model CostCalculatorLead {
+  id          String @id @default(cuid())
+  name        String
+  email       String
+  phoneNumber String
+
+  /// Opt-in for marketing, captured explicitly on the contact step.
+  marketingConsent Boolean @default(false)
+
+  /// The wizard's answers. Stored as the enum *values* from the shared schema
+  /// rather than as Prisma enums: the question set is expected to change, and a
+  /// migration per option would make that far more expensive than it should be.
+  projectStage   String
+  region         String
+  builtAreaSqm   Int
+  levels         String
+  components     String[]
+  finishLevel    String
+  carpentry      String
+  interiorDesign String
+  timeline       String
+
+  /// Recomputed server-side from the config at submit time, so the row records
+  /// what was actually quoted even after the rates change.
+  estimateMin Int
+  estimateMax Int
+
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("cost_calculator_leads")
+}
+
+model CostCalculatorConfig {
+  id        String   @id @default(cuid())
+  config    Json
+  updatedAt DateTime @updatedAt
+
+  @@map("cost_calculator_config")
 }

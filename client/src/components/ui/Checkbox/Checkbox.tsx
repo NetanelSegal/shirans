@@ -67,7 +67,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           <span className="text-sm font-bold text-dark">{label}</span>
         </label>
         {error?.message && (
-          <span id={errorId} className="mt-1 block text-sm text-red-500">
+          <span id={errorId} className="mt-1 block text-sm text-red-700">
             {error.message}
           </span>
         )}
