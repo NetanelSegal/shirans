@@ -1,8 +1,10 @@
 import { useState, ReactNode } from 'react';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import srcShiranLogo from '../../assets/shiran_logo.svg';
 import { useScreenContext } from '../../contexts/ScreenProvider';
-import AdminNavbar from './AdminNavbar'; // To be created
+import AdminNavbar from './AdminNavbar';
+import { AdminNavLink } from './AdminNavLink';
+import { ADMIN_NAV_ITEMS } from './adminNavItems';
 import { useEffect } from 'react';
 
 interface AdminLayoutProps {
@@ -49,124 +51,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
         <nav className="mt-5">
           <ul>
-            <li>
-              <NavLink
-                to="/admin"
-                end
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
-                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
-                  }`
-                }
-              >
-                <i className="fa-solid fa-home" aria-hidden />
-                <span>סקירה כללית</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin/projects"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
-                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
-                  }`
-                }
-              >
-                <i className="fa-solid fa-folder" aria-hidden />
-                <span>פרויקטים</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin/categories"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
-                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
-                  }`
-                }
-              >
-                <i className="fa-solid fa-tags" aria-hidden />
-                <span>קטגוריות</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin/testimonials"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
-                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
-                  }`
-                }
-              >
-                <i className="fa-solid fa-star" aria-hidden />
-                <span>המלצות</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin/contacts"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
-                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
-                  }`
-                }
-              >
-                <i className="fa-solid fa-envelope" aria-hidden />
-                <span>פניות צור קשר</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin/users"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
-                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
-                  }`
-                }
-              >
-                <i className="fa-solid fa-users" aria-hidden />
-                <span>משתמשים</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin/calculator"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
-                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
-                  }`
-                }
-              >
-                <i className="fa-solid fa-calculator" aria-hidden />
-                <span>מחשבון אומדן</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin/calculator-leads"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
-                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
-                  }`
-                }
-              >
-                <i className="fa-solid fa-list" aria-hidden />
-                <span>לידים מחשבון</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin/calculator-config"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg mx-2 p-4 hover:bg-primary/80 transition-colors duration-200 ${
-                    isActive ? 'bg-secondary text-primary font-bold' : 'text-white'
-                  }`
-                }
-              >
-                <i className="fa-solid fa-gear" aria-hidden />
-                <span>הגדרות מחשבון</span>
-              </NavLink>
-            </li>
+            {ADMIN_NAV_ITEMS.map((item) => (
+              <AdminNavLink key={item.to} {...item} />
+            ))}
           </ul>
         </nav>
       </aside>

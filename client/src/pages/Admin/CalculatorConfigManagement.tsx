@@ -14,18 +14,18 @@ import { ConfigEstimatePreview } from './components/ConfigEstimatePreview';
 import { ConfigGroupSection } from './components/ConfigGroupSection';
 
 export default function CalculatorConfigManagement() {
-  const { savedConfig, loadError, save, isSaving, saveError } =
+  const { savedConfig, isSettled, loadError, save, isSaving, saveError } =
     useAdminCalculatorConfig();
 
   const [draft, setDraft] = useState<CostCalculatorConfig | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [justSaved, setJustSaved] = useState(false);
 
-  // Seeded from the server's copy, and re-seeded if that copy arrives late or
-  // changes underneath — but never while there are unsaved edits to lose.
+  // Seeded once the server has actually answered, and never again — re-seeding
+  // would throw away edits in progress.
   useEffect(() => {
-    setDraft((current) => current ?? savedConfig);
-  }, [savedConfig]);
+    if (isSettled) setDraft((current) => current ?? savedConfig);
+  }, [isSettled, savedConfig]);
 
   const handleChange = (path: string, value: number) => {
     setJustSaved(false);
@@ -59,52 +59,64 @@ export default function CalculatorConfigManagement() {
 
   const message = validationError ?? saveError;
 
-  if (loadError) return <ErrorState message={loadError} />;
-  if (!draft) return <LoadingState minHeight="20rem" />;
+  if (loadError) {
+    return (
+      <div dir="rtl">
+        <AdminPageHeader title="הגדרות המחשבון" />
+        <ErrorState message={loadError} />
+      </div>
+    );
+  }
 
   return (
     <div dir="rtl">
-      <AdminPageHeader title="הגדרות מחשבון אומדן" />
+      {/* The header renders before the data does, so the screen never looks
+          like it failed to load. */}
+      <AdminPageHeader title="הגדרות המחשבון" />
 
-      <div className="space-y-6">
-        <ConfigEstimatePreview config={draft} />
+      {!draft ? (
+        <LoadingState minHeight="20rem" />
+      ) : (
+        <div className="space-y-6">
+          <ConfigEstimatePreview config={draft} />
 
-        {COST_CALCULATOR_CONFIG_GROUPS.map((group) => (
-          <ConfigGroupSection
-            key={group.title}
-            group={group}
-            config={draft}
-            onChange={handleChange}
-          />
-        ))}
+          {COST_CALCULATOR_CONFIG_GROUPS.map((group) => (
+            <ConfigGroupSection
+              key={group.title}
+              group={group}
+              config={draft}
+              onChange={handleChange}
+            />
+          ))}
 
-        {message && (
-          <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
-            {message}
-          </p>
-        )}
-        {justSaved && !message && (
-          <p className="text-sm font-bold text-green-700" role="status">
-            ההגדרות נשמרו.
-          </p>
-        )}
+          {message && (
+            <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
+              {message}
+            </p>
+          )}
+          {justSaved && !message && (
+            <p className="text-sm font-bold text-green-700" role="status">
+              ההגדרות נשמרו.
+            </p>
+          )}
 
-        <div className="flex flex-wrap gap-3">
-          <Button variant="primary" onClick={handleSave} disabled={isSaving}>
-            {isSaving ? 'שומר...' : 'שמירת הגדרות'}
-          </Button>
-          <Button
-            variant="light"
-            onClick={() => {
-              setJustSaved(false);
-              setValidationError(null);
-              setDraft(DEFAULT_COST_CALCULATOR_CONFIG);
-            }}
-          >
-            איפוס לברירת מחדל
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button variant="primary" onClick={handleSave} disabled={isSaving}>
+              {isSaving ? 'שומר...' : 'שמירת הגדרות'}
+            </Button>
+            <Button
+              variant="light"
+              onClick={() => {
+                setJustSaved(false);
+                setValidationError(null);
+                setDraft(DEFAULT_COST_CALCULATOR_CONFIG);
+              }}
+            >
+              איפוס לברירת מחדל
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

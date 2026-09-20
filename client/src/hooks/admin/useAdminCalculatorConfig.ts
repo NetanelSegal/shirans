@@ -33,6 +33,13 @@ export function useAdminCalculatorConfig() {
   return {
     /** Never null: an unsaved installation still has to price the wizard. */
     savedConfig: data ?? DEFAULT_COST_CALCULATOR_CONFIG,
+    /**
+     * Whether `savedConfig` is the server's answer rather than the placeholder
+     * default. The form seeds itself from this and must not seed early — doing
+     * so pinned the defaults into the draft before the real rates arrived, and
+     * the screen then showed defaults no matter what was stored.
+     */
+    isSettled: !isLoading,
     isLoading,
     loadError: error
       ? getClientErrorMessage(transformError(error).errorKey as ErrorKey)
