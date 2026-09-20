@@ -31,7 +31,7 @@ export function ResumeBanner({ onReset, onDismiss }: ResumeBannerProps) {
         <button
           type="button"
           onClick={onDismiss}
-          className={`${BUTTON_RESET} text-sm text-primary/60 underline`}
+          className={`${BUTTON_RESET} text-sm text-primary/70 underline`}
         >
           הבנתי
         </button>

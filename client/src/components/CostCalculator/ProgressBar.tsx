@@ -36,7 +36,10 @@ export function ProgressBar({
           className="h-full rounded-full bg-primary transition-[width] duration-[320ms] ease-out motion-reduce:transition-none"
           style={{ width: `${percent}%` }}
         />
-        <div className="absolute inset-0 flex">
+        {/* Taller than the bar it sits on: a 6px-high control is a miss with a
+            thumb and barely a target with a mouse. The extra height is invisible
+            and overlaps nothing else. */}
+        <div className="absolute -inset-y-3 inset-x-0 flex">
           {Array.from({ length: total }, (_, i) => {
             const reachable = i <= maxAllowedIndex;
             return (
@@ -45,8 +48,9 @@ export function ProgressBar({
                 type="button"
                 onClick={() => reachable && onJump(i)}
                 disabled={!reachable}
+                aria-current={i === current ? 'step' : undefined}
                 aria-label={`מעבר לשלב ${i + 1}`}
-                className={`${BUTTON_RESET} h-full flex-1 rounded-none ${
+                className={`${BUTTON_RESET} h-full flex-1 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   reachable ? 'cursor-pointer' : 'cursor-default'
                 }`}
               />

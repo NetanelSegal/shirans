@@ -22,6 +22,14 @@ const idleRing =
 const cardMotion =
   'transition-[transform,border-color,box-shadow] duration-200 ease-out active:scale-[0.98] active:duration-100 motion-reduce:transition-none motion-reduce:hover-capable:hover:translate-y-0 motion-reduce:active:scale-100';
 
+/**
+ * The browser's own focus ring is barely legible against a rounded white card,
+ * and these are the only controls on most steps — keyboard users need to see
+ * where they are. Offset in the card's own surface colour, not white.
+ */
+const FOCUS =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-secondary';
+
 export function ChoiceCard({
   option,
   selected,
@@ -35,7 +43,7 @@ export function ChoiceCard({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`${BUTTON_RESET} ${cardMotion} group overflow-hidden rounded-xl border bg-white text-right ${
+      className={`${BUTTON_RESET} ${cardMotion} ${FOCUS} group overflow-hidden rounded-xl border bg-white text-right ${
         selected ? selectedRing : idleRing
       } ${
         variant === 'row'
@@ -74,7 +82,7 @@ export function ChoiceCard({
       <div className={variant === 'image' ? 'p-3' : ''}>
         <span className="block font-bold text-primary">{option.label}</span>
         {option.sublabel && (
-          <span className="mt-0.5 block text-sm text-primary/60">
+          <span className="mt-0.5 block text-sm text-primary/70">
             {option.sublabel}
           </span>
         )}

@@ -66,7 +66,7 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
           {label}
         </label>
         {error && (
-          <span className="mt-1 text-sm text-red-500">{error.message}</span>
+          <span className="mt-1 block text-sm text-red-700">{error.message}</span>
         )}
       </div>
     );

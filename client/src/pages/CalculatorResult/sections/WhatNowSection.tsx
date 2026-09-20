@@ -35,9 +35,16 @@ export function WhatNowSection() {
         בואו נבדוק יחד אם הבית שאתם רוצים וההערכה שקיבלתם באמת מתחברים.
       </p>
 
+      {/* Logical properties, so each rule lands before its item in RTL rather
+          than after it. Drawn only at `lg`, where the four sit on one row — in
+          the 2x2 at `sm` a `first:` reset leaves a stray rule at the start of
+          the second row. */}
       <ul className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {ITEMS.map(({ icon: Icon, title, description }) => (
-          <li key={title} className="border-primary/10 sm:border-l sm:ps-6 sm:first:border-l-0">
+          <li
+            key={title}
+            className="border-primary/15 lg:border-s lg:ps-6 lg:first:border-s-0 lg:first:ps-0"
+          >
             <Icon className="size-8 text-primary" aria-hidden />
             <h3 className="mt-4 font-bold text-primary">{title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-primary/70">

@@ -33,7 +33,7 @@ export function ContactStep({
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
       <Input
         label="שם מלא"
-        borderColor="border-gray-300"
+        borderColor="border-primary/20"
         autoComplete="name"
         error={errors.name}
         {...register('name')}
@@ -42,7 +42,7 @@ export function ContactStep({
         label="טלפון"
         type="tel"
         inputMode="numeric"
-        borderColor="border-gray-300"
+        borderColor="border-primary/20"
         autoComplete="tel"
         error={errors.phoneNumber}
         {...register('phoneNumber')}
@@ -50,7 +50,7 @@ export function ContactStep({
       <Input
         label="אימייל"
         type="email"
-        borderColor="border-gray-300"
+        borderColor="border-primary/20"
         autoComplete="email"
         error={errors.email}
         {...register('email')}
@@ -75,8 +75,8 @@ export function ContactStep({
       />
 
       <div className="mt-2 flex flex-col items-center gap-2 text-center">
-        <Lock className="size-5 text-primary/60" aria-hidden />
-        <p className="text-sm text-primary/60">
+        <Lock className="size-5 text-primary/70" aria-hidden />
+        <p className="text-sm text-primary/70">
           הפרטים שלכם נשמרים אצלנו בלבד ולא יועברו לגורמים שלישיים.
         </p>
       </div>

@@ -1,5 +1,6 @@
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { BUTTON_RESET } from './buttonReset';
 
 /**
  * `index.css` grows every button by 5% on hover, which is a lot of movement for
@@ -30,10 +31,18 @@ export function StepNav({
 }: StepNavProps) {
   return (
     <div className="mt-8 flex items-center justify-between gap-3">
+      {/* Back is a quiet text control rather than a second filled pill: two pills
+          of equal weight make the visitor choose between them, and the shared
+          `light` variant is a cool grey that belongs to no part of this palette. */}
       {canGoBack ? (
-        <Button variant="light" onClick={onBack} className={`px-6 ${PRESS}`}>
+        <button
+          type="button"
+          onClick={onBack}
+          className={`${BUTTON_RESET} ${PRESS} flex items-center gap-1.5 rounded-lg px-2 py-2 text-primary/70 hover-capable:hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-secondary`}
+        >
+          <ArrowRight className="size-4" aria-hidden />
           חזרה
-        </Button>
+        </button>
       ) : (
         <span />
       )}
