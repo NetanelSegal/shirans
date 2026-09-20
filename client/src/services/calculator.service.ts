@@ -1,50 +1,53 @@
 import apiClient from '@/utils/apiClient';
 import { urls } from '@/constants/urls';
 import type {
-  CalculatorFormInput,
-  SubmitCalculatorLeadInput,
-  CalculatorConfigInput,
-  CalculatorLeadResponse,
+  CostCalculatorConfig,
+  CostCalculatorLeadResponse,
+  SubmitCostCalculatorLeadInput,
 } from '@shirans/shared';
 
 export const calculatorService = {
-  async submitLead(data: SubmitCalculatorLeadInput): Promise<CalculatorLeadResponse> {
-    const { data: lead } = await apiClient.post<CalculatorLeadResponse>(
+  /**
+   * Note there is no estimate in the payload. The server recomputes it from the
+   * stored rates, so what the wizard shows and what the lead records can only
+   * differ if the config changed between the two — not because the number took
+   * a detour through the browser.
+   */
+  async submitLead(
+    data: SubmitCostCalculatorLeadInput,
+  ): Promise<CostCalculatorLeadResponse> {
+    const { data: lead } = await apiClient.post<CostCalculatorLeadResponse>(
       urls.calculator.leads,
-      data
+      data,
     );
     return lead;
   },
 
-  async submitLeadFromForm(
-    data: CalculatorFormInput,
-    estimate: number
-  ): Promise<CalculatorLeadResponse> {
-    return this.submitLead({ ...data, priceDisplay: 'before_vat', estimate });
-  },
-
-  async getLeads(filters?: { isRead?: boolean }): Promise<CalculatorLeadResponse[]> {
+  async getLeads(filters?: {
+    isRead?: boolean;
+  }): Promise<CostCalculatorLeadResponse[]> {
     const params = new URLSearchParams();
-    if (filters?.isRead !== undefined) {
-      params.set('isRead', String(filters.isRead));
-    }
-    const { data } = await apiClient.get<CalculatorLeadResponse[]>(
-      `${urls.calculator.leads}?${params.toString()}`
+    if (filters?.isRead !== undefined) params.set('isRead', String(filters.isRead));
+    const { data } = await apiClient.get<CostCalculatorLeadResponse[]>(
+      `${urls.calculator.leads}?${params.toString()}`,
     );
     return data;
   },
 
-  async getLeadById(id: string): Promise<CalculatorLeadResponse> {
-    const { data } = await apiClient.get<CalculatorLeadResponse>(
-      urls.calculator.leadById(id)
+  async getLeadById(id: string): Promise<CostCalculatorLeadResponse> {
+    const { data } = await apiClient.get<CostCalculatorLeadResponse>(
+      urls.calculator.leadById(id),
     );
     return data;
   },
 
-  async updateLeadRead(id: string, isRead: boolean): Promise<CalculatorLeadResponse> {
-    const { data } = await apiClient.patch<CalculatorLeadResponse>(
+  async updateLeadRead(
+    id: string,
+    isRead: boolean,
+  ): Promise<CostCalculatorLeadResponse> {
+    const { data } = await apiClient.patch<CostCalculatorLeadResponse>(
       urls.calculator.leadRead(id),
-      { isRead }
+      { isRead },
     );
     return data;
   },
@@ -53,10 +56,13 @@ export const calculatorService = {
     await apiClient.delete(urls.calculator.leadById(id));
   },
 
-  async updateLeadReadBulk(ids: string[], isRead: boolean): Promise<{ count: number }> {
+  async updateLeadReadBulk(
+    ids: string[],
+    isRead: boolean,
+  ): Promise<{ count: number }> {
     const { data } = await apiClient.patch<{ count: number }>(
       urls.calculator.leadsBulkRead,
-      { ids, isRead }
+      { ids, isRead },
     );
     return data;
   },
@@ -64,22 +70,22 @@ export const calculatorService = {
   async deleteLeadsBulk(ids: string[]): Promise<{ count: number }> {
     const { data } = await apiClient.delete<{ count: number }>(
       urls.calculator.leadsBulkDelete,
-      { data: { ids } }
+      { data: { ids } },
     );
     return data;
   },
 
-  async getConfig(): Promise<CalculatorConfigInput | null> {
-    const { data } = await apiClient.get<CalculatorConfigInput | null>(
-      urls.calculator.config
-    );
-    return data;
-  },
-
-  async updateConfig(config: CalculatorConfigInput): Promise<CalculatorConfigInput> {
-    const { data } = await apiClient.put<CalculatorConfigInput>(
+  async getConfig(): Promise<CostCalculatorConfig | null> {
+    const { data } = await apiClient.get<CostCalculatorConfig | null>(
       urls.calculator.config,
-      config
+    );
+    return data;
+  },
+
+  async updateConfig(config: CostCalculatorConfig): Promise<CostCalculatorConfig> {
+    const { data } = await apiClient.put<CostCalculatorConfig>(
+      urls.calculator.config,
+      config,
     );
     return data;
   },

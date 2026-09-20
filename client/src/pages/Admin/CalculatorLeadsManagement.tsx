@@ -7,8 +7,9 @@ import { BulkActionBar } from '@/components/Admin/BulkActionBar';
 import { StatusBadge } from '@/components/Admin/StatusBadge';
 import { DataStateGuard } from '@/components/DataState';
 import Button from '@/components/ui/Button';
-import type { CalculatorLeadResponse } from '@shirans/shared';
-import { formatPrice, getLeadDisplayEstimate } from '@shirans/shared';
+import type { CostCalculatorLeadResponse } from '@shirans/shared';
+import { REGION_LABELS, formatShekels } from '@shirans/shared';
+import { CostCalculatorLeadDetails } from './components/CostCalculatorLeadDetails';
 
 type FilterTab = 'all' | 'unread' | 'read';
 
@@ -28,10 +29,12 @@ export default function CalculatorLeadsManagement() {
 
   const [filter, setFilter] = useState<FilterTab>('all');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [deleteTarget, setDeleteTarget] = useState<CalculatorLeadResponse | null>(
+  const [deleteTarget, setDeleteTarget] = useState<CostCalculatorLeadResponse | null>(
     null
   );
   const [bulkDeleteIds, setBulkDeleteIds] = useState<string[] | null>(null);
+  const [detailsTarget, setDetailsTarget] =
+    useState<CostCalculatorLeadResponse | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isBulkBusy, setIsBulkBusy] = useState(false);
 
@@ -105,12 +108,14 @@ export default function CalculatorLeadsManagement() {
     {
       key: 'name',
       header: 'שם',
-      render: (row: CalculatorLeadResponse) => row.name,
+      render: (row: CostCalculatorLeadResponse) => row.name,
+      sortValue: (row: CostCalculatorLeadResponse) => row.name,
+      searchValue: (row: CostCalculatorLeadResponse) => row.name,
     },
     {
       key: 'email',
       header: 'אימייל',
-      render: (row: CalculatorLeadResponse) => (
+      render: (row: CostCalculatorLeadResponse) => (
         <a
           href={`mailto:${row.email}`}
           className="text-primary underline hover-capable:hover:text-primary/80"
@@ -119,11 +124,12 @@ export default function CalculatorLeadsManagement() {
           {row.email}
         </a>
       ),
+      searchValue: (row: CostCalculatorLeadResponse) => row.email,
     },
     {
       key: 'phoneNumber',
       header: 'טלפון',
-      render: (row: CalculatorLeadResponse) => (
+      render: (row: CostCalculatorLeadResponse) => (
         <a
           href={`tel:${row.phoneNumber}`}
           className="text-primary underline hover-capable:hover:text-primary/80"
@@ -132,27 +138,50 @@ export default function CalculatorLeadsManagement() {
           {row.phoneNumber}
         </a>
       ),
+      searchValue: (row: CostCalculatorLeadResponse) => row.phoneNumber,
+    },
+    {
+      key: 'region',
+      header: 'אזור',
+      render: (row: CostCalculatorLeadResponse) => REGION_LABELS[row.region],
+      sortValue: (row: CostCalculatorLeadResponse) => REGION_LABELS[row.region],
+    },
+    {
+      key: 'builtAreaSqm',
+      header: 'שטח',
+      render: (row: CostCalculatorLeadResponse) => `${row.builtAreaSqm} מ״ר`,
+      sortValue: (row: CostCalculatorLeadResponse) => row.builtAreaSqm,
     },
     {
       key: 'estimate',
       header: 'אומדן',
-      render: (row: CalculatorLeadResponse) =>
-        `₪ ${formatPrice(getLeadDisplayEstimate(row))}`,
+      // Each amount is its own element so bidi can't move the dash to the wrong
+      // end of an RTL cell.
+      render: (row: CostCalculatorLeadResponse) => (
+        <span className="flex flex-wrap items-center gap-x-1.5 whitespace-nowrap">
+          <span>{formatShekels(row.estimateMin)} ₪</span>
+          <span aria-hidden>–</span>
+          <span>{formatShekels(row.estimateMax)} ₪</span>
+        </span>
+      ),
+      sortValue: (row: CostCalculatorLeadResponse) => row.estimateMin,
     },
     {
       key: 'isRead',
       header: 'סטטוס',
-      render: (row: CalculatorLeadResponse) => (
+      render: (row: CostCalculatorLeadResponse) => (
         <StatusBadge
           label={row.isRead ? 'נקרא' : 'לא נקרא'}
           variant={row.isRead ? 'read' : 'unread'}
         />
       ),
+      sortValue: (row: CostCalculatorLeadResponse) => (row.isRead ? 1 : 0),
     },
     {
       key: 'createdAt',
       header: 'תאריך',
-      render: (row: CalculatorLeadResponse) => formatDate(row.createdAt),
+      render: (row: CostCalculatorLeadResponse) => formatDate(row.createdAt),
+      sortValue: (row: CostCalculatorLeadResponse) => new Date(row.createdAt),
     },
   ];
 
@@ -227,11 +256,20 @@ export default function CalculatorLeadsManagement() {
                 isLoading={false}
                 emptyMessage="אין לידים"
                 getRowId={(row) => row.id}
+                searchPlaceholder="חיפוש לפי שם, אימייל או טלפון"
                 selectable
                 selectedIds={selectedIds}
                 onSelectionChange={setSelectedIds}
                 actions={(row) => (
                   <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setDetailsTarget(row)}
+                      className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover-capable:hover:bg-primary/90"
+                      aria-label={`צפייה בתשובות של ${row.name}`}
+                    >
+                      פרטים
+                    </button>
                     <button
                       type="button"
                       onClick={() =>
@@ -257,6 +295,10 @@ export default function CalculatorLeadsManagement() {
           );
         }}
       </DataStateGuard>
+      <CostCalculatorLeadDetails
+        lead={detailsTarget}
+        onClose={() => setDetailsTarget(null)}
+      />
       <ConfirmDialog
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}

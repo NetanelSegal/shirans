@@ -4,7 +4,8 @@ import EnterAnimation from '@/components/animations/EnterAnimation';
 import Image from '@/components/ui/Image';
 import heroImage from '@/assets/calculator/intro-hero.webp';
 import { CostCalculator, type CostCalculatorResult } from '@/components/CostCalculator';
-import { storeResult } from '@/pages/CalculatorResult/resultStorage';
+import { useCalculatorConfig } from '@/hooks/useCalculatorConfig';
+import { submitCalculatorLead } from './submitCalculatorLead';
 
 const BENEFITS = [
   {
@@ -27,9 +28,16 @@ const CALCULATOR_DESCRIPTION =
 
 export default function LandingCalculator() {
   const navigate = useNavigate();
+  // Shiran's rates from the admin screen. Until they arrive — or if the request
+  // fails — the wizard prices with the shared defaults rather than showing
+  // nothing.
+  const { config } = useCalculatorConfig();
 
-  const handleComplete = ({ answers, estimate }: CostCalculatorResult) => {
-    storeResult({ answers, estimate });
+  // Throwing here is deliberate: the wizard catches it and keeps the visitor on
+  // the contact step with a retry, rather than sending them to a result page
+  // for a lead that was never saved.
+  const handleComplete = async (result: CostCalculatorResult) => {
+    await submitCalculatorLead(result);
     navigate('/calculator/result');
   };
 
@@ -98,7 +106,11 @@ export default function LandingCalculator() {
           does that job — a landing page without its own hero can leave it on. */}
       <section className="py-12 md:py-16" aria-label="מחשבון עלות הבית">
         <div className="mx-auto max-w-3xl">
-          <CostCalculator showIntro={false} onComplete={handleComplete} />
+          <CostCalculator
+            config={config ?? undefined}
+            showIntro={false}
+            onComplete={handleComplete}
+          />
         </div>
       </section>
     </main>

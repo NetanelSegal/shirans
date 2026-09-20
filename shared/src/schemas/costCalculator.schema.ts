@@ -150,3 +150,64 @@ export const costCalculatorConfigSchema = z.object({
 });
 
 export type CostCalculatorConfig = z.infer<typeof costCalculatorConfigSchema>;
+
+/**
+ * What the wizard posts: the answers plus the contact details.
+ *
+ * Deliberately no estimate. The number is recomputed on the server from the
+ * stored config, so a lead in the database always reflects the rates Shiran
+ * actually set — not whatever a client chose to send.
+ */
+export const submitCostCalculatorLeadSchema = costCalculatorAnswersSchema
+  .extend(costCalculatorContactSchema.shape)
+  .strict();
+
+export type SubmitCostCalculatorLeadInput = z.input<
+  typeof submitCostCalculatorLeadSchema
+>;
+
+/** A stored lead, as the admin screens read it. */
+export interface CostCalculatorLeadResponse {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  marketingConsent: boolean;
+  projectStage: ProjectStage;
+  region: Region;
+  builtAreaSqm: number;
+  levels: Levels;
+  components: CalculatorComponent[];
+  finishLevel: FinishLevel;
+  carpentry: Carpentry;
+  interiorDesign: InteriorDesign;
+  timeline: Timeline;
+  estimateMin: number;
+  estimateMax: number;
+  isRead: boolean;
+  createdAt: string;
+}
+
+export const costCalculatorLeadsQuerySchema = z.object({
+  isRead: z
+    .enum(['true', 'false'])
+    .optional()
+    .transform((v) => (v === 'true' ? true : v === 'false' ? false : undefined)),
+});
+
+export const costCalculatorLeadIdSchema = z.object({
+  id: z.cuid('Lead ID must be a valid CUID'),
+});
+
+export const costCalculatorUpdateReadSchema = z.object({
+  isRead: z.boolean(),
+});
+
+export const costCalculatorBulkIdsSchema = z.object({
+  ids: z
+    .array(z.cuid('Lead ID must be a valid CUID'))
+    .min(1, 'At least one ID required'),
+});
+
+export const costCalculatorBulkUpdateReadSchema =
+  costCalculatorBulkIdsSchema.extend({ isRead: z.boolean() });
