@@ -106,7 +106,6 @@ export const COST_CALCULATOR_CONFIG_GROUPS: ConfigGroup[] = [
       shekels('componentAddons.decorative_pool', COMPONENT_LABELS.decorative_pool),
       shekels('componentAddons.large_openings', COMPONENT_LABELS.large_openings),
       shekels('componentAddons.landscaping', COMPONENT_LABELS.landscaping),
-      shekels('componentAddons.other', COMPONENT_LABELS.other),
     ],
   },
   {

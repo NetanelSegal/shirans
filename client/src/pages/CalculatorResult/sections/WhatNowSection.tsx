@@ -3,9 +3,9 @@ import { Compass, Home, Lightbulb, Users } from 'lucide-react';
 const ITEMS = [
   {
     icon: Users,
-    title: 'פגישה אישית וממוקדת',
+    title: 'שיחה אישית וממוקדת',
     description:
-      '15-20 דקות בזום או במשרד, שבהן נכיר את הפרויקט שלכם ונראה איך אפשר להתקדם.',
+      '15-20 דקות בטלפון או בזום, שבהן נכיר את הפרויקט שלכם ונראה איך אפשר להתקדם.',
   },
   {
     icon: Lightbulb,
@@ -29,23 +29,28 @@ const ITEMS = [
 
 export function WhatNowSection() {
   return (
-    <section className="py-section-all">
+    // On the warm surface rather than on white. The four points were true and
+    // completely cold — a page about someone's house shouldn't read like a
+    // specification sheet, and this palette already has the warmer of the two
+    // backgrounds.
+    <section className="breakout-x-padding bg-secondary px-page-all py-section-all">
       <h2 className="subheading text-center font-bold text-primary">מה עכשיו?</h2>
-      <p className="mt-3 text-center text-primary/70">
+      <p className="mx-auto mt-3 max-w-2xl text-center text-primary/70">
         בואו נבדוק יחד אם הבית שאתם רוצים וההערכה שקיבלתם באמת מתחברים.
       </p>
 
-      {/* Logical properties, so each rule lands before its item in RTL rather
-          than after it. Drawn only at `lg`, where the four sit on one row — in
-          the 2x2 at `sm` a `first:` reset leaves a stray rule at the start of
-          the second row. */}
-      <ul className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <ul className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {ITEMS.map(({ icon: Icon, title, description }) => (
           <li
             key={title}
-            className="border-primary/15 lg:border-s lg:ps-6 lg:first:border-s-0 lg:first:ps-0"
+            className="rounded-2xl bg-white p-6 transition-shadow duration-200 ease-out hover-capable:hover:shadow-md motion-reduce:transition-none"
           >
-            <Icon className="size-8 text-primary" aria-hidden />
+            <span
+              className="flex size-11 items-center justify-center rounded-full bg-secondary text-primary"
+              aria-hidden
+            >
+              <Icon className="size-5" />
+            </span>
             <h3 className="mt-4 font-bold text-primary">{title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-primary/70">
               {description}

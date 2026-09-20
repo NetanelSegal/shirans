@@ -4,7 +4,7 @@ import { PHONE_HREF } from '../contactLinks';
 
 const ASSURANCES = [
   { icon: Clock, label: '15-20 דקות של תשובות מדויקות' },
-  { icon: MonitorSmartphone, label: 'בזום או במשרד' },
+  { icon: MonitorSmartphone, label: 'בטלפון או בזום' },
   { icon: ShieldCheck, label: 'ללא התחייבות — רק שיחה מקצועית' },
 ];
 

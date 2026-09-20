@@ -46,8 +46,12 @@ export function ChoiceCard({
       className={`${BUTTON_RESET} ${cardMotion} ${FOCUS} group overflow-hidden rounded-xl border bg-white text-right ${
         selected ? selectedRing : idleRing
       } ${
+        // Picture above the label at every size. Side by side, the drawing had
+        // to stay small to leave room for the text, and three full-width rows
+        // scrolled; stacked and three across, the drawing gets the width and
+        // the step fits on one screen.
         variant === 'row'
-          ? 'flex w-full items-center gap-4 p-4 md:flex-col md:items-stretch md:gap-3'
+          ? 'flex flex-col gap-2 p-2.5 text-center md:gap-3 md:p-4'
           : ''
       } ${
         // Laid out as a column so the image stays pinned to the top. Browsers
@@ -56,7 +60,9 @@ export function ChoiceCard({
         // from the top edge.
         variant === 'image' ? 'flex flex-col' : ''
       } ${
-        variant === 'icon' ? 'flex flex-col items-center gap-3 p-6 text-center' : ''
+        variant === 'icon'
+          ? 'flex flex-col items-center gap-2 p-4 text-center md:gap-3 md:p-6'
+          : ''
       }`}
     >
       {variant === 'image' && option.image && (
@@ -72,7 +78,7 @@ export function ChoiceCard({
       {variant === 'row' && option.image && (
         // `contain`, not `cover` — these are line drawings, and cropping them
         // cuts off the very storeys the option is describing.
-        <div className="size-20 shrink-0 overflow-hidden rounded-lg md:h-28 md:w-full">
+        <div className="h-14 w-full overflow-hidden rounded-lg sm:h-20 md:h-28">
           <Image src={option.image} alt="" className="size-full object-contain" />
         </div>
       )}

@@ -28,6 +28,12 @@ export const COMPONENTS = [
   'decorative_pool',
   'large_openings',
   'landscaping',
+  /**
+   * No longer offered by the wizard, and deliberately still here: leads
+   * submitted before it was withdrawn hold this value, and dropping it from the
+   * enum would leave those rows unreadable in the admin. Removing it for good
+   * means migrating those rows first.
+   */
   'other',
 ] as const;
 
