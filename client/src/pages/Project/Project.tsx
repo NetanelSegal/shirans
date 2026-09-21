@@ -13,6 +13,7 @@ import { useProject } from '@/hooks/useProject';
 import {
   getMainImageUrl,
   getMediaUrlsByType,
+  cloudinaryShareImageUrl,
   optimizeCloudinaryImageUrl,
 } from '@shirans/shared';
 
@@ -56,7 +57,8 @@ export default function Project() {
   const videoUrls = getMediaUrlsByType(project.media, 'VIDEO');
   const galleryUrls = getMediaUrlsByType(project.media, 'IMAGE');
 
-  const ogImage = mainImageUrl;
+  // Shaped for a link preview, not for the page: 1200x630 JPEG.
+  const ogImage = cloudinaryShareImageUrl(getMainImageUrl(project.media));
   const description = project.description.split('\n')[0].substring(0, 160) + '...';
   const title = `${project.title} - שירן גלעד אדריכלות ועיצוב פנים`;
 

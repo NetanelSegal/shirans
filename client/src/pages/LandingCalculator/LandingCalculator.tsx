@@ -8,6 +8,9 @@ import { CostCalculator, type CostCalculatorResult } from '@/components/CostCalc
 import { useCalculatorConfig } from '@/hooks/useCalculatorConfig';
 import { ErrorState, LoadingState } from '@/components/DataState';
 import { submitCalculatorLead } from './submitCalculatorLead';
+import { getPageMeta } from '@/constants/pageMeta';
+
+const PAGE_META = getPageMeta('/calculator');
 
 const BENEFITS = [
   {
@@ -26,10 +29,6 @@ const BENEFITS = [
     description: 'גלו את טווח העלות לפני שמתקשרים.',
   },
 ];
-
-const CALCULATOR_TITLE = 'מחשבון אומדן עלות - שירן גלעד אדריכלות ועיצוב פנים';
-const CALCULATOR_DESCRIPTION =
-  'חשבו אומדן עלות לבנייה פרטית. ענו על כמה שאלות קצרות וקבלו טווח מחירים משוער.';
 
 export default function LandingCalculator() {
   const navigate = useNavigate();
@@ -62,8 +61,10 @@ export default function LandingCalculator() {
       aria-label="מחשבון אומדן עלות לבנייה פרטית"
     >
       <PageSeo
-        title={CALCULATOR_TITLE}
-        description={CALCULATOR_DESCRIPTION}
+        title={PAGE_META.title}
+        description={PAGE_META.description}
+        image={PAGE_META.image}
+        imageAlt={PAGE_META.imageAlt}
         path="/calculator"
       />
 

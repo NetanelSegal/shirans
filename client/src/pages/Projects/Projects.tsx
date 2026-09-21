@@ -1,33 +1,29 @@
 import { useProjects } from '@/hooks/useProjects';
 import type { ProjectResponse } from '@shirans/shared';
-import { getMainImageUrl, optimizeCloudinaryImageUrl } from '@shirans/shared';
+import { cloudinaryShareImageUrl, getMainImageUrl } from '@shirans/shared';
 import Project from './components/Project';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import PageSeo from '@/components/Seo/PageSeo';
 import { DEFAULT_OG_IMAGE } from '@/constants/seo';
 import { DataStateGuard } from '@/components/DataState';
 import { ProjectListSkeleton } from '@/components/skeletons';
+import { getPageMeta } from '@/constants/pageMeta';
 
-const PROJECTS_TITLE = 'פרויקטים - שירן גלעד אדריכלות ועיצוב פנים';
-const PROJECTS_DESCRIPTION =
-  'גלריית פרויקטים מרשימה של בתים פרטיים, דירות יוקרה, ופנטהאוזים. כל פרויקט מתוכנן בקפידה בהתאמה אישית ללקוח.';
+const PAGE_META = getPageMeta('/projects');
 
 export default function Projects() {
   const { projects, isLoading, error, retry } = useProjects();
 
   const ogImage =
     projects.length > 0
-      ? optimizeCloudinaryImageUrl(
-          getMainImageUrl(projects[0]!.media),
-          1200,
-        )
+      ? cloudinaryShareImageUrl(getMainImageUrl(projects[0]!.media))
       : DEFAULT_OG_IMAGE;
 
   return (
     <>
       <PageSeo
-        title={PROJECTS_TITLE}
-        description={PROJECTS_DESCRIPTION}
+        title={PAGE_META.title}
+        description={PAGE_META.description}
         path="/projects"
         image={ogImage}
       />

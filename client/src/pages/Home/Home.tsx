@@ -6,17 +6,16 @@ import ProcessSection from './sections/ProcessSection';
 import ServicesSection from './sections/ServicesSection';
 import FeedbackCarousel from '@/pages/Home/sections/TestimonialsSection';
 import PageSeo from '@/components/Seo/PageSeo';
+import { getPageMeta } from '@/constants/pageMeta';
 
-const HOME_TITLE = 'שירן גלעד - אדריכלות ועיצוב פנים | תכנון בתים פרטיים';
-const HOME_DESCRIPTION =
-  'שירן גלעד - מתמחה באדריכלות ועיצוב פנים מאז 2015. תכנון בתים פרטיים, דירות יוקרה, ופנטהאוזים בהתאמה אישית.';
+const PAGE_META = getPageMeta('/');
 
 export default function Home() {
   return (
     <>
       <PageSeo
-        title={HOME_TITLE}
-        description={HOME_DESCRIPTION}
+        title={PAGE_META.title}
+        description={PAGE_META.description}
         path="/"
       />
       <EnterAnimation translateY={false}>
