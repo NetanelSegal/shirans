@@ -142,9 +142,9 @@ model CostCalculatorLead {
   timeline       String
 
   /// Recomputed server-side from the config at submit time, so the row records
-  /// what was actually quoted even after the rates change.
-  estimateMin Int
-  estimateMax Int
+  /// what was actually quoted even after the rates change. A single figure
+  /// since the result page stopped showing a range.
+  estimate Int
 
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())

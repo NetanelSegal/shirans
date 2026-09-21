@@ -8,7 +8,6 @@ import type {
   Carpentry,
   CostCalculatorConfig,
   CostCalculatorLeadResponse,
-  CostRange,
   FinishLevel,
   InteriorDesign,
   Levels,
@@ -35,8 +34,7 @@ interface LeadRow {
   carpentry: string;
   interiorDesign: string;
   timeline: string;
-  estimateMin: number;
-  estimateMax: number;
+  estimate: number;
   isRead: boolean;
   createdAt: Date;
 }
@@ -62,8 +60,7 @@ function transformLead(lead: LeadRow): CostCalculatorLeadResponse {
     carpentry: lead.carpentry as Carpentry,
     interiorDesign: lead.interiorDesign as InteriorDesign,
     timeline: lead.timeline as Timeline,
-    estimateMin: lead.estimateMin,
-    estimateMax: lead.estimateMax,
+    estimate: lead.estimate,
     isRead: lead.isRead,
     createdAt: lead.createdAt.toISOString(),
   };
@@ -72,7 +69,7 @@ function transformLead(lead: LeadRow): CostCalculatorLeadResponse {
 export const calculatorRepository = {
   async createLead(
     data: SubmitCostCalculatorLeadInput,
-    estimate: CostRange,
+    estimate: number,
   ): Promise<CostCalculatorLeadResponse> {
     const lead = await prisma.costCalculatorLead.create({
       data: {
@@ -89,8 +86,7 @@ export const calculatorRepository = {
         carpentry: data.carpentry,
         interiorDesign: data.interiorDesign,
         timeline: data.timeline,
-        estimateMin: estimate.min,
-        estimateMax: estimate.max,
+        estimate,
       },
     });
     return transformLead(lead);

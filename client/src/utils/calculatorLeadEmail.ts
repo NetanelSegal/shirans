@@ -3,7 +3,7 @@ import type { CostCalculatorLeadResponse } from '@shirans/shared';
 import { envConfig, isEmailJsCalculatorConfigured } from '@/config/env';
 import { adminLeadUrl } from '@/utils/adminLeadUrl';
 import {
-  formatEstimateRange,
+  formatEstimate,
   summarizeAnswers,
 } from '@/utils/costCalculatorLeadSummary';
 
@@ -43,10 +43,7 @@ export async function sendCalculatorLeadNotification(
       // So hitting Reply answers the person who asked, not the sending account.
       reply_to: lead.email,
       marketing_consent: lead.marketingConsent ? 'כן' : 'לא',
-      estimate: formatEstimateRange({
-        min: lead.estimateMin,
-        max: lead.estimateMax,
-      }),
+      estimate: formatEstimate(lead.estimate),
       // One block rather than a field per question, so adding a question to the
       // wizard doesn't also mean editing the EmailJS template.
       answers: summarizeAnswers(lead)

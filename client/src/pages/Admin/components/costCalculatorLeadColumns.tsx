@@ -1,7 +1,7 @@
 import { REGION_LABELS } from '@shirans/shared';
 import type { CostCalculatorLeadResponse } from '@shirans/shared';
 import { StatusBadge } from '@/components/Admin/StatusBadge';
-import { ShekelRange } from '@/components/ui/ShekelRange';
+import { ShekelAmount } from '@/components/ui/ShekelAmount';
 import type { ColumnConfig } from '@/components/Admin/DataTable/types';
 
 function formatDate(value: string): string {
@@ -66,14 +66,8 @@ export const costCalculatorLeadColumns: ColumnConfig<CostCalculatorLeadResponse>
   {
     key: 'estimate',
     header: 'אומדן',
-    render: (row) => (
-      <ShekelRange
-        min={row.estimateMin}
-        max={row.estimateMax}
-        className="!justify-start gap-x-1.5"
-      />
-    ),
-    sortValue: (row) => row.estimateMin,
+    render: (row) => <ShekelAmount value={row.estimate} />,
+    sortValue: (row) => row.estimate,
   },
   {
     key: 'isRead',
