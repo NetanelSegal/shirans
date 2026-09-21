@@ -158,18 +158,26 @@ async function main() {
     throw new Error('dist/index.html already has preview tags — was this run twice?');
   }
 
+  const projectPages = await fetchProjectPages();
+
   const staticPages = Object.entries(META.pages).map(([path, page]) => ({
     path,
     ...page,
   }));
+
+  // The projects index leads with its first project's photo at runtime
+  // (pages/Projects/Projects.tsx); the preview should show the same one.
+  const projectsIndex = staticPages.find((page) => page.path === '/projects');
+  if (projectsIndex && projectPages[0]?.image) {
+    projectsIndex.image = projectPages[0].image;
+    projectsIndex.imageAlt = projectPages[0].imageAlt;
+  }
 
   // A shared result link can't show the sender's estimate — it lives in their
   // browser session — so the recipient lands on the calculator. The preview
   // should say so, and stay out of search results.
   const calculator = META.pages['/calculator'];
   const resultPage = { path: '/calculator/result', ...calculator, noIndex: true };
-
-  const projectPages = await fetchProjectPages();
 
   // Written last: dist/index.html is also the fallback for every route without
   // its own file, so the template must stay untouched until the others exist.
