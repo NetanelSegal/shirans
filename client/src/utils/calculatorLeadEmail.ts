@@ -25,10 +25,30 @@ import {
  * The template lives in the EmailJS dashboard; its source of truth is
  * docs/email-templates/calculator-lead-notification.html.
  */
+/**
+ * Domains reserved by RFC 2606 for testing and documentation. No real visitor
+ * has one, so a lead from one is a test — and Shiran shouldn't get an alert
+ * for it. Several did reach her inbox before this existed, from checks run
+ * against the live site.
+ */
+const TEST_EMAIL_DOMAINS = ['example.com', 'example.org', 'example.net', 'test', 'invalid'];
+
+function isTestAddress(email: string): boolean {
+  const domain = email.split('@').pop()?.toLowerCase() ?? '';
+  return TEST_EMAIL_DOMAINS.some((d) => domain === d || domain.endsWith(`.${d}`));
+}
+
 export async function sendCalculatorLeadNotification(
   lead: CostCalculatorLeadResponse,
 ): Promise<void> {
   if (!isEmailJsCalculatorConfigured()) return;
+
+  // A local build is someone working on the site, never a visitor. Its
+  // .env.development carries the real template, so without this every local
+  // test landed in Shiran's inbox as a lead.
+  if (import.meta.env.DEV) return;
+
+  if (isTestAddress(lead.email)) return;
 
   const { serviceId, calculatorTemplateId: templateId, publicKey } = envConfig.emailjs;
 
