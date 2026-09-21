@@ -55,7 +55,7 @@ export default function LandingCalculator() {
   };
 
   return (
-    <main
+    <div
       dir="rtl"
       className="min-h-screen"
       aria-label="מחשבון אומדן עלות לבנייה פרטית"
@@ -71,7 +71,7 @@ export default function LandingCalculator() {
       {/* Hero — the site leads with architecture everywhere else; this page was
           the one that led with a coloured rectangle. Shorter than the home
           hero so the wizard's top edge stays in view and invites the scroll. */}
-      <section className="breakout-x-padding relative h-[58dvh] min-h-[26rem] overflow-hidden 2xl:-mx-page-2xl">
+      <section className="relative h-[58dvh] min-h-[26rem] overflow-hidden">
         <Image
           src={heroImage}
           alt=""
@@ -80,10 +80,10 @@ export default function LandingCalculator() {
         />
         {/* Carries the white type over a bright photo; the home hero gets this
             from its own dark footage. */}
-        <div className="absolute inset-0 bg-primary/70" aria-hidden />
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-page-all text-center">
+        <div className="absolute inset-0 bg-primary-deep/70" aria-hidden />
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-gutter pt-nav text-center">
           <EnterAnimation delay={0.2} duration={1} translateY={false}>
-            <h1 className="mx-auto max-w-4xl text-balance text-4xl font-bold leading-[1.1] tracking-[-0.02em] text-on-dark md:text-5xl xl:text-6xl">
+            <h1 className="mx-auto max-w-4xl text-balance text-h1 text-on-dark">
               דמיינו את הבית החדש שלכם.
               <br />
               עכשיו גלו את טווח העלות האמיתי.
@@ -99,7 +99,7 @@ export default function LandingCalculator() {
           site already uses for a supporting row, and dropping the cards lets
           the wizard below be the loudest thing on the page. */}
       <section
-        className="breakout-x-padding bg-surface-sunken px-page-all py-10 md:py-14"
+        className="bg-surface-sunken px-gutter py-10 md:py-14"
         aria-label="מה תקבלו"
       >
         <ul className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-3 sm:gap-0">
@@ -135,6 +135,6 @@ export default function LandingCalculator() {
           )}
         </div>
       </section>
-    </main>
+    </div>
   );
 }

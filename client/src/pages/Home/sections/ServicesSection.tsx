@@ -1,110 +1,17 @@
-import { motion, useInView } from 'motion/react';
-import getIcon from '@/utils/icons.utils';
-import EnterAnimation from '@/components/animations/EnterAnimation';
-import { useRef } from 'react';
+import { Section } from '@/components/ui/Section';
+import { SectionHeading } from '@/components/ui/SectionHeading';
+import { ServicesGrid } from '@/components/Services/ServicesGrid';
 
-type Service = {
-  id: string;
-  title: string;
-  description: string;
-};
-
-const services: Service[] = [
-  {
-    id: 'private-construction',
-    title: 'בנייה פרטית',
-    description: 'רישוי מלא תכנון ואדריכלות',
-  },
-  {
-    id: 'commercial-design',
-    title: 'עיצוב מסחרי',
-    description: 'אדריכלות ועיצוב פנים לחללים מסחריים',
-  },
-  {
-    id: 'licensing',
-    title: 'תהליך רישוי',
-    description: 'ליווי מלא בתהליכי רישוי ולגליזציה',
-  },
-  {
-    id: 'residential-design',
-    title: 'עיצוב פנים',
-    description: 'ליווי מלא לעיצוב בתים פרטיים',
-  },
-  {
-    id: 'luxury-design',
-    title: 'דירות יוקרה',
-    description: 'עיצוב וליווי מלא לפנטהאוזים ודירות יוקרה',
-  },
-  {
-    id: 'consulting',
-    title: 'ייעוץ מקצועי',
-    description: 'ייעוץ מקצועי בתחומי אדריכלות ועיצוב פנים',
-  },
-];
-
-export type ServiceName = (typeof services)[number]['id'];
-
-export default function E_ServicesSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isSectionInView = useInView(ref, {
-    amount: 'some',
-    once: true,
-  });
-
+export default function ServicesSection() {
   return (
-    <section
-      className='py-section-all breakout-x-padding bg-surface-sunken'
-      aria-labelledby='services-heading'
-    >
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-        <motion.h2
-          className='text-h2 mb-4 text-center font-semibold'
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          id='services-heading'
-        >
-          השירותים שלי
-        </motion.h2>
-
-        <div
-          ref={ref}
-          className='mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'
-        >
-          {services.map(({ description, id, title }, i) => (
-            <EnterAnimation
-              key={id}
-              dontAnimateWhileInView
-              runAnimation={isSectionInView}
-              delay={i * 0.2}
-            >
-              <div
-                key={id}
-                className='flex h-full flex-col items-center rounded-card bg-surface-raised p-6 text-center shadow-raised'
-                tabIndex={0}
-                aria-labelledby={`${id}-title`}
-                role='article'
-              >
-                <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-ink transition-colors'>
-                  <img
-                    width='30'
-                    src={getIcon({ icon: id })}
-                    alt={`${id}-icon`}
-                  />
-                </div>
-                <h3
-                  id={`${id}-title`}
-                  className='mb-2 text-xl font-semibold text-ink'
-                >
-                  {title}
-                </h3>
-                <p className='text-ink-muted'>{description}</p>
-              </div>
-            </EnterAnimation>
-          ))}
-        </div>
-      </div>
-    </section>
+    <Section tone='soft' aria-labelledby='services-heading'>
+      <SectionHeading
+        id='services-heading'
+        title='השירותים שלי'
+        subtitle='מענה מקיף לכל שלב בדרך לבית שלכם'
+        className='mb-10 md:mb-14'
+      />
+      <ServicesGrid />
+    </Section>
   );
 }

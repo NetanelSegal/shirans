@@ -1,6 +1,6 @@
 import { CalendarDays, Clock, MessageCircle, MonitorSmartphone, ShieldCheck } from 'lucide-react';
 import Button from '@/components/ui/Button';
-import { PHONE_HREF } from '../contactLinks';
+import { PHONE_HREF } from '@/constants/contact';
 
 const ASSURANCES = [
   { icon: Clock, label: '15-20 דקות של תשובות מדויקות' },

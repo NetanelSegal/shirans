@@ -58,7 +58,7 @@ export function getProjectColumns(
         return (
           <Button
             type="button"
-            variant={row.favourite ? 'warning' : 'light'}
+            variant={row.favourite ? 'primary' : 'quiet'}
             onClick={() => void onToggleFavourite(row)}
             disabled={isPending}
             className={`${tableControlClass} ${row.favourite ? '' : '!text-ink-muted'}`}
@@ -82,7 +82,7 @@ export function getProjectColumns(
         return (
           <Button
             type="button"
-            variant={row.isCompleted ? 'success' : 'light'}
+            variant={row.isCompleted ? 'primary' : 'quiet'}
             onClick={() => void onToggleCompleted(row)}
             disabled={isPending}
             className={`${tableControlClass} ${row.isCompleted ? '' : '!text-ink-muted'}`}

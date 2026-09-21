@@ -1,5 +1,5 @@
 import { CalendarDays, MessageCircle } from 'lucide-react';
-import { PHONE_HREF } from '../contactLinks';
+import { PHONE_HREF } from '@/constants/contact';
 
 interface StickyContactBarProps {
   /** Hidden from the moment this element is reached — see useHideWhenReached. */

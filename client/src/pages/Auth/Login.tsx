@@ -59,13 +59,12 @@ export default function Login() {
         noIndex
       />
 
-      <div className="flex items-center justify-center py-section-all" dir="rtl">
+      <div className="flex items-center justify-center py-section" dir="rtl">
         <div className="w-full max-w-md">
           <h1 className="text-h2 mb-6 text-center">התחברות</h1>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <Input
-              borderColor="border-line"
               label="כתובת אימייל"
               type="email"
               {...register('email')}
@@ -74,7 +73,6 @@ export default function Login() {
             />
 
             <Input
-              borderColor="border-line"
               label="סיסמה"
               type="password"
               {...register('password')}

@@ -59,7 +59,7 @@ export function ConfirmDialog({
         <div className="flex justify-end gap-2">
           <Button
             type="button"
-            variant="light"
+            variant="quiet"
             onClick={onClose}
             disabled={isLoading}
           >
@@ -67,7 +67,7 @@ export function ConfirmDialog({
           </Button>
           <Button
             type="button"
-            variant={variant}
+            variant={variant === 'danger' ? 'danger' : 'primary'}
             onClick={handleConfirm}
             disabled={isLoading}
           >

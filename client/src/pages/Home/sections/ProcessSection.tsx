@@ -1,63 +1,30 @@
-import { content } from '@/data/process-info.ts';
-import ProcessItemSection from '../components/ProcessItemSection.tsx';
-import { Fragment, useRef } from 'react';
-import AnimatedProcessSectionPath from '../components/AnimatedProcessSectionPath.tsx';
-import useGetProcessCenters from '../hooks/useGetProcessCenters.tsx';
-import usePathPrecentageInView from '../hooks/usePathPrecentageInView.tsx';
-import { Link } from 'react-router-dom';
-import shapeSrc1 from '../assets/processShapes/1.svg';
-import shapeSrc2 from '../assets/processShapes/2.svg';
-import shapeSrc3 from '../assets/processShapes/3.svg';
-import shapeSrc4 from '../assets/processShapes/4.svg';
-import shapeSrc5 from '../assets/processShapes/5.svg';
+import { ButtonLink } from '@/components/ui/Button';
+import { Photo } from '@/components/ui/Photo';
+import { Section } from '@/components/ui/Section';
+import { SectionHeading } from '@/components/ui/SectionHeading';
+import { ProcessTimeline } from '@/components/Process/ProcessTimeline';
+import { SITE_IMAGES } from '@/constants/siteImages';
 
-const shapeSrcs = [shapeSrc1, shapeSrc2, shapeSrc3, shapeSrc4, shapeSrc5];
-
-export default function D_ProcessSection() {
-  const shapesRefs = useRef<HTMLDivElement[]>([]);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
-  const { centers } = useGetProcessCenters(shapesRefs.current, sectionRef);
-  const { pathsPrecentageInView } = usePathPrecentageInView(svgRef, [centers]);
-
+export default function ProcessSection() {
   return (
-    <section ref={sectionRef} className='py-section-all relative'>
-      <h2 className='text-h2 mb-4 font-semibold'>התהליך מתחילתו ועד סופו</h2>
-      {content.map((section, index) => (
-        <Fragment key={section.title}>
-          <ProcessItemSection
-            shapeSrc={shapeSrcs[index]}
-            i={index}
-            {...section}
-            key={section.title}
-            isLeft={index % 2 !== 0}
-            ref={(ref) => {
-              if (ref) {
-                shapesRefs.current[index] = ref;
-              }
-            }}
+    <Section tone='sunken' aria-labelledby='home-process-heading'>
+      <div className='grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20'>
+        <div className='flex flex-col gap-8'>
+          <SectionHeading id='home-process-heading' title='התהליך מתחילתו ועד סופו' align='start' />
+          <ProcessTimeline />
+          <ButtonLink to='/process' variant='primary' arrow className='self-start'>
+            עוד על התהליך
+          </ButtonLink>
+        </div>
+        <div className='relative hidden lg:block'>
+          <Photo
+            image={SITE_IMAGES.shiranKitchen}
+            sizes='45vw'
+            className='sticky top-[calc(var(--nav-height)+2rem)] aspect-[4/5] w-full rounded-card shadow-raised'
+            style={{ objectPosition: '62% center' }}
           />
-          {index === content.length - 1 && (
-            <Link to={'/process'}>
-              <button className='mt-2 bg-primary'>עוד על התהליך</button>
-            </Link>
-          )}
-        </Fragment>
-      ))}
-      {centers.length !== 0 && (
-        <svg ref={svgRef} className='absolute top-0 -z-10 size-full'>
-          {centers.map((c, i) => {
-            return i === centers.length - 1 ? null : (
-              <AnimatedProcessSectionPath
-                key={c.y}
-                startPoint={c}
-                endPoint={centers[i + 1]}
-                strokeDashoffsetPercentage={pathsPrecentageInView[i] || 0}
-              />
-            );
-          })}
-        </svg>
-      )}
-    </section>
+        </div>
+      </div>
+    </Section>
   );
 }

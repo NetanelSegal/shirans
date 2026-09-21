@@ -1,3 +1,5 @@
+import type { LineIconName } from '@/components/ui/LineIcon';
+
 export const aboutHero = {
   title: 'אודות',
   taglines: [
@@ -8,35 +10,39 @@ export const aboutHero = {
     'אני שירן גלעד, אדריכלית ומעצבת פנים המתמחה בבניה פרטית למשפחות וזוגות צעירים שרוצים לבנות בית מדויק, נעים, יוקרתי ונכון באמת לחיים שלהם.',
 };
 
-export const aboutVision = {
+export const aboutVision: {
+  title: string;
+  intro: string;
+  pillars: { id: string; icon: LineIconName; title: string; description: string }[];
+} = {
   title: 'החזון שלי',
   intro:
     'אני מאמינה שבית טוב הוא לא רק מרשים בתמונות - הוא צריך לעבוד נכון ביום־יום, להרגיש נעים, להיות פרקטי, להתאים לתקציב ולשקף את האנשים שחיים בו.',
   pillars: [
     {
       id: 'listening',
-      icon: 'fa-heart',
+      icon: 'heart',
       title: 'הקשבה אמיתית',
       description:
         'כל פרויקט מתחיל בהבנת איך אתם חיים, מה חשוב לכם, ואיך המשפחה שלכם מתנהלת.',
     },
     {
       id: 'planning',
-      icon: 'fa-compass-drafting',
+      icon: 'drafting',
       title: 'תכנון נכון',
       description:
         'בית טוב מתחיל בתכנון מדויק - לפני עיצוב, לפני בנייה, לפני כל החלטה.',
     },
     {
       id: 'home',
-      icon: 'fa-house-chimney',
+      icon: 'home',
       title: 'בית שעובד',
       description:
         'נעים, פרקטי, מותאם תקציב - בית שמרגיש מדויק גם אדריכלית וגם רגשית.',
     },
     {
       id: 'process',
-      icon: 'fa-clipboard-check',
+      icon: 'checklist',
       title: 'ליווי מלא',
       description:
         'תהליך ברור, מקצועי ומסודר - מהחלום, דרך התכנון וההיתרים, ועד הבית המוגמר.',
@@ -57,17 +63,20 @@ export const aboutStory = {
   ],
 };
 
-export const aboutServices = {
+export const aboutServices: {
+  title: string;
+  items: { id: string; icon: LineIconName; title: string }[];
+} = {
   title: 'השירותים שלי',
   items: [
-    { id: 'architectural', icon: 'fa-house', title: 'תכנון אדריכלי לבניה פרטית' },
-    { id: 'interior', icon: 'fa-couch', title: 'תכנון ועיצוב פנים מלא' },
-    { id: 'construction', icon: 'fa-hard-hat', title: 'ליווי תהליך בניה' },
-    { id: 'budget', icon: 'fa-calculator', title: 'תכנון מותאם תקציב' },
-    { id: 'facades', icon: 'fa-tree', title: 'תכנון חזיתות וחללי חוץ' },
-    { id: 'renderings', icon: 'fa-cube', title: 'הדמיות ותכנון נגרות אישית' },
-    { id: 'strategy', icon: 'fa-comments', title: 'פגישות אסטרטגיה לפני בניה' },
-    { id: 'licensing', icon: 'fa-file-signature', title: 'ליווי רישוי והיתר בניה' },
+    { id: 'architectural', icon: 'home', title: 'תכנון אדריכלי לבניה פרטית' },
+    { id: 'interior', icon: 'sofa', title: 'תכנון ועיצוב פנים מלא' },
+    { id: 'construction', icon: 'building', title: 'ליווי תהליך בניה' },
+    { id: 'budget', icon: 'gem', title: 'תכנון מותאם תקציב' },
+    { id: 'facades', icon: 'leaf', title: 'תכנון חזיתות וחללי חוץ' },
+    { id: 'renderings', icon: 'pencilRuler', title: 'הדמיות ותכנון נגרות אישית' },
+    { id: 'strategy', icon: 'chat', title: 'פגישות אסטרטגיה לפני בניה' },
+    { id: 'licensing', icon: 'document', title: 'ליווי רישוי והיתר בניה' },
   ],
 };
 

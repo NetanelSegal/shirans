@@ -105,7 +105,7 @@ export default function CalculatorConfigManagement() {
               {isSaving ? 'שומר...' : 'שמירת הגדרות'}
             </Button>
             <Button
-              variant="light"
+              variant="quiet"
               onClick={() => {
                 setJustSaved(false);
                 setValidationError(null);

@@ -5,27 +5,26 @@ import {
   TextareaHTMLAttributes,
   useId,
 } from 'react';
+import { cn } from '@/lib/cn';
 
-type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+interface FieldProps {
   label: string;
   error?: { message?: string };
-  borderColor?: string;
-  labelClassName?: string;
-  as?: 'input';
-};
+  /** `dark` for a field on the navy band: same shape, stronger edge. */
+  tone?: 'light' | 'dark';
+}
 
-type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
-  label: string;
-  error?: { message?: string };
-  borderColor?: string;
-  labelClassName?: string;
-  as: 'textarea';
-};
-
+type InputProps = InputHTMLAttributes<HTMLInputElement> & FieldProps & { as?: 'input' };
+type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & FieldProps & { as: 'textarea' };
 type Props = InputProps | TextareaProps;
 
+/**
+ * A text field whose label sits inside it like a placeholder and moves up to
+ * the edge once there's a value or focus — the quiet white field of the
+ * design, without losing a real <label>.
+ */
 export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
-  ({ label, error, borderColor, labelClassName, as = 'input', ...props }, ref) => {
+  ({ label, error, tone = 'light', as = 'input', className, ...props }, ref) => {
     const fallbackId = useId();
     const inputId =
       typeof props.id === 'string'
@@ -33,44 +32,62 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
         : typeof props.name === 'string'
           ? props.name
           : fallbackId;
+    const errorId = `${inputId}-error`;
 
-    const commonProps = {
+    const fieldClass = cn(
+      'peer block w-full rounded-field border bg-surface-raised px-4 pb-2 pt-6 text-body text-ink',
+      'transition-[border-color,box-shadow] duration-200 ease-out',
+      'focus:outline-none focus:ring-2 focus:ring-accent/25',
+      '[-webkit-tap-highlight-color:transparent]',
+      error
+        ? 'border-danger focus:border-danger'
+        : cn(tone === 'dark' ? 'border-transparent' : 'border-line/80', 'focus:border-accent'),
+      as === 'textarea' && 'min-h-28 resize-none',
+      className,
+    );
+
+    const common = {
       ...props,
       id: inputId,
       placeholder: ' ',
-      className: `peer w-full rounded-card p-2 [-webkit-tap-highlight-color:transparent] focus:outline-none focus:ring-2 focus:ring-offset-0 ${as === 'textarea' ? 'resize-none' : ''} ${error ? 'border border-danger focus:border-danger focus:ring-danger' : borderColor ? `border ${borderColor} focus:border-primary focus:ring-primary` : 'border border-line/70 focus:border-primary focus:ring-primary'
-        }`,
+      'aria-invalid': error ? true : undefined,
+      'aria-describedby': error ? errorId : undefined,
+      className: fieldClass,
     };
 
-    const labelClasses =
-      labelClassName ??
-      'absolute start-2 z-10 top-2 rounded-field px-2 font-bold shadow-card transition-all duration-150 ease-in-out peer-focus:-translate-y-3/4 peer-focus:top-2 peer-[:not(:placeholder-shown)]:-translate-y-3/4 peer-[:not(:placeholder-shown)]:top-2 text-dark bg-surface-sunken';
-
     return (
-      <div className="relative">
+      <div className='relative'>
         {as === 'textarea' ? (
           <textarea
-            {...(commonProps as TextareaHTMLAttributes<HTMLTextAreaElement>)}
+            {...(common as TextareaHTMLAttributes<HTMLTextAreaElement>)}
             ref={ref as Ref<HTMLTextAreaElement>}
           />
         ) : (
           <input
-            {...(commonProps as InputHTMLAttributes<HTMLInputElement>)}
+            {...(common as InputHTMLAttributes<HTMLInputElement>)}
             ref={ref as Ref<HTMLInputElement>}
           />
         )}
         <label
           htmlFor={inputId}
-          className={labelClasses}
+          className={cn(
+            'pointer-events-none absolute start-4 top-4 origin-[right_top] text-body text-ink-subtle',
+            'transition-[transform,color] duration-200 ease-out',
+            'peer-focus:-translate-y-2.5 peer-focus:scale-[0.8] peer-focus:text-accent-strong',
+            'peer-[:not(:placeholder-shown)]:-translate-y-2.5 peer-[:not(:placeholder-shown)]:scale-[0.8]',
+          )}
         >
           {label}
+          {props.required && <span aria-hidden> *</span>}
         </label>
-        {error && (
-          <span className="mt-1 block text-sm text-danger">{error.message}</span>
+        {error?.message && (
+          <span id={errorId} className='mt-1 block text-small text-danger'>
+            {error.message}
+          </span>
         )}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = 'Input';

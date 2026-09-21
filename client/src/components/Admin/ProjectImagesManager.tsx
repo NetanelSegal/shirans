@@ -215,7 +215,7 @@ function ImageThumbnail({
             <div className="flex flex-col">
               <Button
                 type="button"
-                variant="light"
+                variant="quiet"
                 ariaLabel={`הזז ${typeLabel} למעלה`}
                 disabled={!canMoveUp}
                 onClick={onMoveUp}
@@ -225,7 +225,7 @@ function ImageThumbnail({
               </Button>
               <Button
                 type="button"
-                variant="light"
+                variant="quiet"
                 ariaLabel={`הזז ${typeLabel} למטה`}
                 disabled={!canMoveDown}
                 onClick={onMoveDown}
@@ -565,7 +565,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
             ניהול תמונות - {project.title}
           </h2>
           <Button
-            variant="light"
+            variant="quiet"
             onClick={safeClose}
             disabled={uploadBlocked}
             className="!px-2 !py-1 text-lg leading-none"
@@ -669,7 +669,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
           {hasPendingBulkReorder && (
             <>
               <Button
-                variant="light"
+                variant="quiet"
                 onClick={handleDiscardBulkReorder}
                 disabled={uploadBlocked}
               >

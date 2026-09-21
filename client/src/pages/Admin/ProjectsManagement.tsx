@@ -162,7 +162,7 @@ export default function ProjectsManagement() {
                 <div className="flex gap-2">
                   <Button
                     type="button"
-                    variant="info"
+                    variant="quiet"
                     onClick={() => setImagesTargetId(row.id)}
                     className="!rounded-card !px-3 !py-1.5 text-sm font-medium"
                     ariaLabel={`תמונות ${row.title}`}

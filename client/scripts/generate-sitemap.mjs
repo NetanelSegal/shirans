@@ -12,6 +12,7 @@ const API_URL = process.env.SITEMAP_API_URL ?? DEFAULT_API_URL;
 
 const STATIC_PAGES = [
   { path: '/', priority: '1.0' },
+  { path: '/services', priority: '0.8' },
   { path: '/process', priority: '0.8' },
   { path: '/projects', priority: '0.9' },
   { path: '/about', priority: '0.8' },

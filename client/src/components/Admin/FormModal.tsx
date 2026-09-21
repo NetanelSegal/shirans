@@ -47,7 +47,7 @@ export function FormModal({
         <div className="flex justify-end gap-2">
           <Button
             type="button"
-            variant="light"
+            variant="quiet"
             onClick={onClose}
             disabled={isSubmitting}
           >

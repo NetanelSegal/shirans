@@ -85,7 +85,7 @@ export function BulkActionBar({
           </>
         )}
         <Button
-          variant="light"
+          variant="quiet"
           onClick={onDelete}
           disabled={isBusy}
           className="!bg-danger !text-on-dark hover:!bg-danger/90"
@@ -93,7 +93,7 @@ export function BulkActionBar({
         >
           מחיקה
         </Button>
-        <Button variant="light" onClick={onClearSelection} disabled={isBusy} aria-label="נקה בחירה">
+        <Button variant="quiet" onClick={onClearSelection} disabled={isBusy} aria-label="נקה בחירה">
           ביטול בחירה
         </Button>
       </div>

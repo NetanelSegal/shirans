@@ -33,7 +33,6 @@ export function ContactStep({
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
       <Input
         label="שם מלא"
-        borderColor="border-primary/20"
         autoComplete="name"
         error={errors.name}
         {...register('name')}
@@ -42,7 +41,6 @@ export function ContactStep({
         label="טלפון"
         type="tel"
         inputMode="numeric"
-        borderColor="border-primary/20"
         autoComplete="tel"
         error={errors.phoneNumber}
         {...register('phoneNumber')}
@@ -50,7 +48,6 @@ export function ContactStep({
       <Input
         label="אימייל"
         type="email"
-        borderColor="border-primary/20"
         autoComplete="email"
         error={errors.email}
         {...register('email')}

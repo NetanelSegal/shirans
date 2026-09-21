@@ -1,39 +1,89 @@
-import { ReactNode } from "react"
+import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { Link, LinkProps } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { buttonStyles, ButtonSize, ButtonVariant } from './buttonStyles';
 
-interface ButtonProps {
-  children: ReactNode
-  onClick?: () => void
-  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'info' | 'light' | 'dark'
-  className?: string
-  disabled?: boolean
-  type?: 'button' | 'submit' | 'reset'
-  /** For icon-only or short controls (accessibility). */
-  ariaLabel?: string
+interface CommonProps {
+  children: ReactNode;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  fullWidth?: boolean;
+  /** The trailing "forward" arrow. Points left, the reading direction in RTL. */
+  arrow?: boolean;
+  className?: string;
 }
 
-const variantClasses = {
-  primary: 'bg-primary text-on-dark hover-capable:hover:bg-primary/90',
-  secondary: 'bg-surface-sunken text-ink hover-capable:hover:bg-surface-sunken/80',
-  danger: 'bg-danger text-on-dark hover-capable:hover:bg-danger',
-  success: 'bg-success text-on-dark hover-capable:hover:bg-success/90',
-  warning: 'bg-warning text-on-dark hover-capable:hover:bg-warning/90',
-  info: 'bg-primary text-on-dark hover-capable:hover:bg-primary/90',
-  light: 'bg-surface-sunken text-ink hover-capable:hover:bg-surface-sunken',
-  dark: 'bg-primary text-on-dark hover-capable:hover:bg-primary',
-};
+function Content({ children, arrow }: Pick<CommonProps, 'children' | 'arrow'>) {
+  return (
+    <>
+      {children}
+      {arrow && <ArrowLeft className='size-[1.1em] shrink-0' strokeWidth={1.75} aria-hidden />}
+    </>
+  );
+}
 
-function Button({ children, onClick, variant = 'secondary', className, disabled, type = 'button', ariaLabel }: ButtonProps) {
+type ButtonProps = CommonProps &
+  Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className'> & {
+    /** @deprecated use aria-label */
+    ariaLabel?: string;
+  };
+
+/** An action. For navigation use <ButtonLink>. */
+function Button({
+  children,
+  variant = 'primary',
+  size,
+  fullWidth,
+  arrow,
+  className,
+  type = 'button',
+  ariaLabel,
+  ...rest
+}: ButtonProps) {
   return (
     <button
-      className={`rounded-card px-4 py-2 transition-all duration-200 ${variantClasses[variant]} ${className ?? ''}`}
-      disabled={disabled}
       type={type}
-      onClick={onClick}
       aria-label={ariaLabel}
+      className={buttonStyles({ variant, size, fullWidth, className })}
+      {...rest}
     >
-      {children}
+      <Content arrow={arrow}>{children}</Content>
     </button>
   );
 }
 
-export default Button
+type ButtonLinkProps = CommonProps & Omit<LinkProps, 'children' | 'className'>;
+
+/** Navigation that looks like a button. External URLs open in a new tab. */
+export function ButtonLink({
+  children,
+  variant = 'primary',
+  size,
+  fullWidth,
+  arrow,
+  className,
+  to,
+  ...rest
+}: ButtonLinkProps) {
+  const classes = buttonStyles({ variant, size, fullWidth, className });
+  if (typeof to === 'string' && /^(https?:|tel:|mailto:)/.test(to)) {
+    const external = to.startsWith('http');
+    return (
+      <a
+        href={to}
+        className={classes}
+        {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        {...(rest as object)}
+      >
+        <Content arrow={arrow}>{children}</Content>
+      </a>
+    );
+  }
+  return (
+    <Link to={to} className={classes} {...rest}>
+      <Content arrow={arrow}>{children}</Content>
+    </Link>
+  );
+}
+
+export default Button;

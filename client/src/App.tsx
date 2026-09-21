@@ -17,6 +17,7 @@ import { SITE_CONFIG } from './constants/siteConfig';
 
 const Home = lazy(() => import('./pages/Home'));
 const Process = lazy(() => import('./pages/Process'));
+const Services = lazy(() => import('./pages/Services'));
 const Projects = lazy(() => import('./pages/Projects'));
 const Project = lazy(() => import('./pages/Project'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
@@ -73,6 +74,11 @@ export const appRoutes = [
     path: '',
     title: 'בית',
     element: <Home />,
+  },
+  {
+    path: 'services',
+    title: 'שירותים',
+    element: <Services />,
   },
   {
     path: 'process',

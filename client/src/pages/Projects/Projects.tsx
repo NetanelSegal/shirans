@@ -8,6 +8,9 @@ import { DEFAULT_OG_IMAGE } from '@/constants/seo';
 import { DataStateGuard } from '@/components/DataState';
 import { ProjectListSkeleton } from '@/components/skeletons';
 import { getPageMeta } from '@/constants/pageMeta';
+import { SITE_IMAGES } from '@/constants/siteImages';
+import { PageHero } from '@/components/ui/PageHero';
+import { Section } from '@/components/ui/Section';
 
 const PAGE_META = getPageMeta('/projects');
 
@@ -27,31 +30,35 @@ export default function Projects() {
         path="/projects"
         image={ogImage}
       />
-      <div className='py-10 text-center'>
-        <h1 className='text-h2 mb-4 font-bold'>פרוייקטים</h1>
-        <p className='text-body px-[10vw] font-semibold'>
-          "אדריכלות היא תהליך שמחבר בין חזון אישי לתכנון מקצועי, במטרה ליצור
-          חללים יפים ומותאמים בדיוק לצרכים שלכם"
-        </p>
-      </div>
-      <DataStateGuard
-        data={projects}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="אין פרויקטים להצגה"
-        onRetry={retry}
-        loadingFallback={<ProjectListSkeleton count={3} />}
-      >
-        {(data) =>
-          data.map((e: ProjectResponse, i) => (
-            <EnterAnimation key={e.id}>
-              <div className={`${i !== 0 ? 'py-5 lg:py-10' : 'py-5 lg:pb-10'}`}>
-                <Project project={e} i={i} />
-              </div>
-            </EnterAnimation>
-          ))
-        }
-      </DataStateGuard>
+      <PageHero
+        titleId='projects-hero-title'
+        image={SITE_IMAGES.projectsHero}
+        title='פרויקטים'
+        subtitle='אדריכלות היא תהליך שמחבר בין חזון אישי לתכנון מקצועי, במטרה ליצור חללים יפים ומותאמים בדיוק לצרכים שלכם.'
+        tagline={['בתים', 'דירות', 'בין אנשים', 'למקומות', 'אמיתיים']}
+      />
+      <Section spacing='tight'>
+        <DataStateGuard
+          data={projects}
+          isLoading={isLoading}
+          error={error}
+          emptyMessage='אין פרויקטים להצגה'
+          onRetry={retry}
+          loadingFallback={<ProjectListSkeleton count={3} />}
+        >
+          {(data) => (
+            <ol className='flex flex-col gap-6 md:gap-8'>
+              {data.map((project: ProjectResponse, i) => (
+                <li key={project.id}>
+                  <EnterAnimation>
+                    <Project project={project} i={i} />
+                  </EnterAnimation>
+                </li>
+              ))}
+            </ol>
+          )}
+        </DataStateGuard>
+      </Section>
     </>
   );
 }

@@ -11,7 +11,7 @@ import { StickyContactBar } from './sections/StickyContactBar';
 import { WhatNowSection } from './sections/WhatNowSection';
 import { readResult, type StoredResult } from './resultStorage';
 import { useHideWhenReached } from './useHideWhenReached';
-import { buildWhatsAppHref } from './contactLinks';
+import { buildWhatsAppHref } from '@/constants/contact';
 import { buildLeadWhatsAppMessage } from './whatsappMessage';
 
 export default function CalculatorResult() {
@@ -34,14 +34,14 @@ export default function CalculatorResult() {
   return (
     // The page owns the space between its sections, as one gap. Each section
     // used to bring its own padding, and only some did: the photo panels had
-    // none, the rest had `py-section-all` — 16px on a phone, 128px on a
+    // none, the rest had `py-section` — 16px on a phone, 128px on a
     // desktop. So neighbours either touched or sat an arbitrary distance apart,
     // and the coloured "what now" band ran straight into the cards on both
     // sides of it. The bottom padding is deeper than the rhythm because the
     // floating bar overlays the end of the page.
-    <main
+    <div
       dir="rtl"
-      className="breakout-x-padding flex flex-col gap-14 bg-surface-raised px-page-all pb-32 pt-page-sm md:gap-20 lg:gap-24 lg:pt-page-lg"
+      className="flex flex-col gap-14 bg-surface-raised px-gutter pb-32 pt-10 md:gap-20 lg:gap-24 lg:pt-16"
     >
       <PageSeo
         title="ההערכה שלכם - מחשבון עלות הבית | שירן גלעד"
@@ -72,6 +72,6 @@ export default function CalculatorResult() {
       </ImagePanelSection>
 
       <StickyContactBar visible={showStickyBar} whatsappHref={whatsappHref} />
-    </main>
+    </div>
   );
 }

@@ -36,7 +36,7 @@ export function WhatNowSection() {
     // Its own padding is internal only — the band has a background, so its
     // content needs room from the band's edges. The space around the band
     // belongs to the page.
-    <section className="breakout-x-padding bg-surface-sunken px-page-all py-14 md:py-20">
+    <section className="bg-surface-sunken px-gutter py-14 md:py-20">
       <h2 className="text-h3 text-center font-bold text-ink">מה עכשיו?</h2>
       <p className="mx-auto mt-3 max-w-2xl text-center text-ink-muted">
         בואו נבדוק יחד אם הבית שאתם רוצים וההערכה שקיבלתם באמת מתחברים.

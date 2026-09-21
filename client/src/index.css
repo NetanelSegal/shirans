@@ -34,17 +34,3 @@
     outline-offset: 3px;
   }
 }
-
-@layer components {
-  .px-page-all {
-    @apply px-page-sm md:px-page-md lg:px-page-lg xl:px-page-xl 2xl:px-page-2xl;
-  }
-
-  .py-section-all {
-    @apply py-section;
-  }
-
-  .breakout-x-padding {
-    @apply -mx-page-sm md:-mx-page-md lg:-mx-page-lg xl:-mx-page-xl 2xl:-mx-page-2xl;
-  }
-}

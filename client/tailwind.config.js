@@ -64,18 +64,16 @@ export default {
         lead: ['var(--text-lead)', { lineHeight: '1.6' }],
         body: ['var(--text-body)', { lineHeight: '1.75' }],
         small: ['var(--text-small)', { lineHeight: '1.6' }],
-        eyebrow: ['var(--text-eyebrow)', { lineHeight: '1', letterSpacing: '0.24em', fontWeight: '600' }],
+        eyebrow: ['var(--text-eyebrow)', { lineHeight: '1.2', fontWeight: '600' }],
       },
       spacing: {
-        'page-sm': '1rem',
-        'page-md': '4rem',
-        'page-lg': '8rem',
-        'page-xl': '12rem',
-        'page-2xl': '20rem',
+        gutter: 'var(--gutter)',
+        nav: 'var(--nav-height)',
         section: 'var(--space-section)',
         'section-tight': 'var(--space-section-tight)',
       },
       maxWidth: {
+        container: 'var(--container)',
         measure: 'var(--measure)',
       },
       transitionTimingFunction: {
