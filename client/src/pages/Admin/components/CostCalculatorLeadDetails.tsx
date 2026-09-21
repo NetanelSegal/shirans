@@ -1,7 +1,7 @@
 import { X } from 'lucide-react';
 import Modal from '@/components/ui/Modal';
 import type { CostCalculatorLeadResponse } from '@shirans/shared';
-import { ShekelRange } from '@/components/ui/ShekelRange';
+import { ShekelAmount } from '@/components/ui/ShekelAmount';
 import { summarizeAnswers } from '@/utils/costCalculatorLeadSummary';
 
 interface CostCalculatorLeadDetailsProps {
@@ -52,10 +52,9 @@ export function CostCalculatorLeadDetails({
             </a>
           </div>
 
-          <ShekelRange
-            min={lead.estimateMin}
-            max={lead.estimateMax}
-            className="mt-5 rounded-xl bg-secondary px-4 py-4 text-xl font-bold text-primary"
+          <ShekelAmount
+            value={lead.estimate}
+            className="mt-5 block rounded-xl bg-secondary px-4 py-4 text-center text-xl font-bold text-primary"
           />
 
           <dl className="mt-5 divide-y divide-primary/10">

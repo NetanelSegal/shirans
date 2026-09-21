@@ -44,28 +44,29 @@ export const DEFAULT_COST_CALCULATOR_CONFIG: CostCalculatorConfig = {
     landscaping: 225_000,
     other: 0,
   },
-  rangeSpread: 0.08,
   vatMultiplier: 1.18,
 };
 
-export interface CostRange {
-  min: number;
-  max: number;
-}
-
-/** Round to the nearest 10k so the result reads as an estimate, not a quote. */
+/**
+ * Round to the nearest 10k.
+ *
+ * This is the only thing left signalling that the figure is an estimate rather
+ * than a quote, now that the result is a single number instead of a range — so
+ * it matters more than it looks. A figure like 4,017,350 reads as something
+ * that was priced; 4,020,000 reads as something that was assessed.
+ */
 function roundToNearest(value: number, step = 10_000): number {
   return Math.round(value / step) * step;
 }
 
 /**
- * Area × rate, scaled by the multiplier questions, plus the flat add-ons —
- * then widened once into the range the result page shows. Pre-VAT.
+ * Area × rate, scaled by the multiplier questions, plus the flat add-ons.
+ * Pre-VAT.
  */
-export function calculateCostRange(
+export function calculateCost(
   answers: CostCalculatorAnswers,
   config: CostCalculatorConfig,
-): CostRange {
+): number {
   const base = answers.builtAreaSqm * config.baseRatePerSqm;
 
   const scaled =
@@ -82,12 +83,7 @@ export function calculateCostRange(
       0,
     );
 
-  const total = scaled + addons;
-
-  return {
-    min: roundToNearest(total * (1 - config.rangeSpread)),
-    max: roundToNearest(total * (1 + config.rangeSpread)),
-  };
+  return roundToNearest(scaled + addons);
 }
 
 /** e.g. 3200000 -> "3,200,000" */

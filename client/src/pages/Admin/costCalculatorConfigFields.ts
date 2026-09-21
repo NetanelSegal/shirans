@@ -106,16 +106,14 @@ export const COST_CALCULATOR_CONFIG_GROUPS: ConfigGroup[] = [
       shekels('componentAddons.decorative_pool', COMPONENT_LABELS.decorative_pool),
       shekels('componentAddons.large_openings', COMPONENT_LABELS.large_openings),
       shekels('componentAddons.landscaping', COMPONENT_LABELS.landscaping),
-      shekels('componentAddons.other', COMPONENT_LABELS.other),
     ],
   },
   {
     title: 'הצגת התוצאה',
     description:
-      'רוחב הטווח מיושם פעם אחת בסוף. 0.08 = ±8% סביב התוצאה. האומדן שמוצג הוא לפני מע״מ.',
-    // No field for `vatMultiplier`: it is stored for reference and read by
-    // nothing, and an editable control invites changing a number that has no
-    // effect on any estimate.
-    fields: [{ path: 'rangeSpread', label: 'רוחב הטווח', step: 0.01 }],
+      'האומדן מעוגל לעשרת אלפים הקרובים ומוצג לפני מע״מ. אין כאן שדה לעריכה — העיגול קבוע, והוא מה שמבדיל בין אומדן להצעת מחיר.',
+    // No fields: `vatMultiplier` is stored for reference and read by nothing,
+    // and an editable control invites changing a number that has no effect.
+    fields: [],
   },
 ];

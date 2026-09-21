@@ -28,6 +28,12 @@ export const COMPONENTS = [
   'decorative_pool',
   'large_openings',
   'landscaping',
+  /**
+   * No longer offered by the wizard, and deliberately still here: leads
+   * submitted before it was withdrawn hold this value, and dropping it from the
+   * enum would leave those rows unreadable in the admin. Removing it for good
+   * means migrating those rows first.
+   */
   'other',
 ] as const;
 
@@ -106,10 +112,10 @@ const shekels = z.number().nonnegative();
 /**
  * Admin-editable pricing config.
  *
- * Deliberately one number per factor rather than a min/max pair: the range the
- * result page shows comes from `rangeSpread` applied once at the end. Carrying a
- * min and a max through every multiplier compounds the spread (a handful of
- * factors turns ±10% into ±60%) and produces a range too wide to be useful.
+ * One number per factor, and one number out. The result used to be a range
+ * produced by widening the total at the end; Shiran asked for a single figure,
+ * so the widening — and the setting behind it — are gone rather than left
+ * sitting in the config doing nothing.
  */
 export const costCalculatorConfigSchema = z.object({
   /**
@@ -152,8 +158,6 @@ export const costCalculatorConfigSchema = z.object({
     landscaping: shekels,
     other: shekels,
   }),
-  /** Half-width of the displayed range, as a fraction (0.08 = ±8%). */
-  rangeSpread: z.number().min(0).max(0.5),
   /** Kept for reference; the displayed estimate is pre-VAT. */
   vatMultiplier: multiplier,
 });
@@ -191,8 +195,7 @@ export interface CostCalculatorLeadResponse {
   carpentry: Carpentry;
   interiorDesign: InteriorDesign;
   timeline: Timeline;
-  estimateMin: number;
-  estimateMax: number;
+  estimate: number;
   isRead: boolean;
   createdAt: string;
 }

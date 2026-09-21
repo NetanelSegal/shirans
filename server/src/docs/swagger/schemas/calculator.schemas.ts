@@ -48,8 +48,10 @@ export const calculatorSchemas = {
       phoneNumber: { type: 'string' },
       marketingConsent: { type: 'boolean' },
       ...answerProperties,
-      estimateMin: { type: 'integer' },
-      estimateMax: { type: 'integer' },
+      estimate: {
+        type: 'integer',
+        description: 'Computed server-side and rounded to the nearest 10,000',
+      },
       isRead: { type: 'boolean' },
       createdAt: { type: 'string', format: 'date-time' },
     },
@@ -70,7 +72,7 @@ export const calculatorSchemas = {
   CalculatorConfig: {
     type: 'object',
     description:
-      'One number per factor. The displayed range comes from rangeSpread applied once at the end, rather than from carrying a min and max through every multiplier.',
+      'One number per factor, and one number out. The estimate is rounded to the nearest 10,000 and shown pre-VAT.',
     properties: {
       builtAreaSqmRange: {
         type: 'object',
@@ -84,12 +86,6 @@ export const calculatorSchemas = {
       carpentryAddons: multipliers(answerEnums.carpentry),
       interiorDesignAddons: multipliers(answerEnums.interiorDesign),
       componentAddons: multipliers(answerEnums.components),
-      rangeSpread: {
-        type: 'number',
-        minimum: 0,
-        maximum: 0.5,
-        description: 'Half-width of the displayed range as a fraction (0.08 = ±8%)',
-      },
       vatMultiplier: {
         type: 'number',
         description: 'Kept for reference; the displayed estimate is pre-VAT',

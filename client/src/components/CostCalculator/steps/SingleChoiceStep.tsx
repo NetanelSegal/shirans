@@ -7,12 +7,20 @@ interface SingleChoiceStepProps {
   onChange: (value: string) => void;
 }
 
+/**
+ * Two across on a phone, not one.
+ *
+ * A single column of full-width cards put 1,525px of options on the components
+ * step — nearly two phone screens of nothing but cards, before the visitor
+ * could reach the button. The options are recognised by their picture, and a
+ * half-width picture is still plainly legible.
+ */
 const layoutClasses: Record<SingleChoiceStepDefinition['layout'], string> = {
-  'icon-grid': 'grid grid-cols-1 gap-3 sm:grid-cols-2',
-  'image-grid': 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3',
-  // Stacked on phones, side-by-side boxes from tablet up — as full-width rows the
-  // desktop layout left most of the card empty.
-  'row-list': 'flex flex-col gap-3 md:grid md:auto-cols-fr md:grid-flow-col md:gap-4',
+  'icon-grid': 'grid grid-cols-2 gap-3',
+  'image-grid': 'grid grid-cols-2 gap-3 lg:grid-cols-3 lg:gap-4',
+  // Three across at every size: there are exactly three, and stacking them made
+  // the shortest step on the wizard scroll.
+  'row-list': 'grid grid-cols-3 gap-2 md:gap-4',
 };
 
 const cardVariant: Record<

@@ -21,6 +21,7 @@ export function ConfigGroupSection({
         <p className="mt-1 text-sm text-primary/70">{group.description}</p>
       )}
 
+      {group.fields.length > 0 && (
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {group.fields.map((field) => (
           <ConfigNumberField
@@ -33,6 +34,7 @@ export function ConfigGroupSection({
           />
         ))}
       </div>
+      )}
     </section>
   );
 }

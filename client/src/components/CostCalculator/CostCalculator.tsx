@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import {
-  calculateCostRange,
+  calculateCost,
   costCalculatorAnswersSchema,
   DEFAULT_COST_CALCULATOR_CONFIG,
 } from '@shirans/shared';
@@ -10,7 +10,6 @@ import type {
   CostCalculatorConfig,
   CostCalculatorContact,
   CostCalculatorAnswers,
-  CostRange,
 } from '@shirans/shared';
 import { ProgressBar } from './ProgressBar';
 import { ResumeBanner } from './ResumeBanner';
@@ -26,7 +25,7 @@ import { clearCostCalculatorDraft, useCostCalculator } from './useCostCalculator
 export interface CostCalculatorResult {
   answers: CostCalculatorAnswers;
   contact: CostCalculatorContact;
-  estimate: CostRange;
+  estimate: number;
 }
 
 interface CostCalculatorProps {
@@ -100,7 +99,7 @@ export function CostCalculator({
       await onComplete({
         answers: parsed.data,
         contact,
-        estimate: calculateCostRange(parsed.data, config),
+        estimate: calculateCost(parsed.data, config),
       });
       clearCostCalculatorDraft();
     } catch {

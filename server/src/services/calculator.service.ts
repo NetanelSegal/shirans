@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { calculatorRepository } from '../repositories/calculator.repository';
 import {
-  calculateCostRange,
+  calculateCost,
   costCalculatorAnswersSchema,
   HTTP_STATUS,
 } from '@shirans/shared';
@@ -43,7 +43,7 @@ export const calculatorService = {
       }
 
       const answers = costCalculatorAnswersSchema.parse(data);
-      const estimate = calculateCostRange(answers, config);
+      const estimate = calculateCost(answers, config);
 
       return await calculatorRepository.createLead(data, estimate);
     } catch (error) {

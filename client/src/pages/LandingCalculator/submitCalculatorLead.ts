@@ -28,7 +28,7 @@ export async function submitCalculatorLead({
   // was actually recorded, and the id lets a message link straight to it.
   storeResult({
     answers,
-    estimate: { min: lead.estimateMin, max: lead.estimateMax },
+    estimate: lead.estimate,
     leadId: lead.id,
   });
 }

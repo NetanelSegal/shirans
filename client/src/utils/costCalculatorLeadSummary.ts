@@ -10,7 +10,7 @@ import {
   TIMELINE_LABELS,
   formatShekels,
 } from '@shirans/shared';
-import type { CostCalculatorAnswers, CostRange } from '@shirans/shared';
+import type { CostCalculatorAnswers } from '@shirans/shared';
 
 export interface AnswerRow {
   label: string;
@@ -41,12 +41,7 @@ export function summarizeAnswers(answers: CostCalculatorAnswers): AnswerRow[] {
   ];
 }
 
-/**
- * Written with the currency sign inside each amount and the dash between them,
- * for places that can only take a plain string (an email field, a WhatsApp
- * message). Rendered UI splits the parts into elements instead, so bidi can't
- * move the dash.
- */
-export function formatEstimateRange(estimate: CostRange): string {
-  return `${formatShekels(estimate.min)} ₪ – ${formatShekels(estimate.max)} ₪`;
+/** For places that can only take a plain string: an email field, a WhatsApp message. */
+export function formatEstimate(estimate: number): string {
+  return `${formatShekels(estimate)} ₪`;
 }

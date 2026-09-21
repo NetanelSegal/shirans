@@ -1,10 +1,10 @@
-import type { CostCalculatorAnswers, CostRange } from '@shirans/shared';
+import type { CostCalculatorAnswers } from '@shirans/shared';
 
 const RESULT_KEY = 'costCalculator:result';
 
 export interface StoredResult {
   answers: CostCalculatorAnswers;
-  estimate: CostRange;
+  estimate: number;
   /**
    * The saved lead's id, so a message sent from this page can point Shiran
    * straight at the record. Absent on a result stored before this existed, and

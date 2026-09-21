@@ -96,7 +96,6 @@ export const COST_CALCULATOR_STEPS: StepDefinition[] = [
       { value: 'decorative_pool', label: 'בריכת נוי', image: componentDecorativePool },
       { value: 'large_openings', label: 'מפתחים גדולים', image: componentLargeOpenings },
       { value: 'landscaping', label: 'פיתוח חוץ מושקע מאוד', image: componentLandscaping },
-      { value: 'other', label: 'אחר', sublabel: 'נפרט בשיחה' },
     ],
   },
   {

@@ -1,5 +1,5 @@
 import {
-  formatEstimateRange,
+  formatEstimate,
   summarizeAnswers,
 } from '@/utils/costCalculatorLeadSummary';
 import { adminLeadUrl } from '@/utils/adminLeadUrl';
@@ -17,7 +17,7 @@ export function buildLeadWhatsAppMessage(result: StoredResult): string {
   const lines = [
     'היי שירן, סיימתי את מחשבון עלות הבית ואשמח לדבר על הפרויקט שלי.',
     '',
-    `אומדן שהתקבל: ${formatEstimateRange(result.estimate)}`,
+    `אומדן שהתקבל: ${formatEstimate(result.estimate)}`,
     '',
     'מה שמילאתי:',
     ...summarizeAnswers(result.answers).map(

@@ -1,3 +1,4 @@
+import { Building2, Eye, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageSeo from '@/components/Seo/PageSeo';
 import EnterAnimation from '@/components/animations/EnterAnimation';
@@ -10,14 +11,17 @@ import { submitCalculatorLead } from './submitCalculatorLead';
 
 const BENEFITS = [
   {
+    icon: Building2,
     title: 'אומדן מבוסס על מאות פרויקטים',
     description: 'נתוני עלות אמיתיים מפרויקטי בנייה פרטית.',
   },
   {
+    icon: Zap,
     title: 'תשובה מיידית — בלי לחכות',
     description: 'תוצאה תוך דקות, ללא טופסי צפייה או המתנה.',
   },
   {
+    icon: Eye,
     title: 'טווח מחירים שקוף לפני שיחה ראשונה',
     description: 'גלו את טווח העלות לפני שמתקשרים.',
   },
@@ -98,15 +102,16 @@ export default function LandingCalculator() {
         aria-label="מה תקבלו"
       >
         <ul className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-3 sm:gap-0">
-          {BENEFITS.map((item) => (
+          {BENEFITS.map(({ icon: Icon, title, description }) => (
             <li
-              key={item.title}
+              key={title}
               className="border-primary/15 sm:border-s sm:ps-8 sm:first:border-s-0 sm:first:ps-0"
             >
-              <h2 className="text-lg font-bold leading-snug text-primary">
-                {item.title}
+              <Icon className="size-6 text-primary" aria-hidden />
+              <h2 className="mt-3 text-lg font-bold leading-snug text-primary">
+                {title}
               </h2>
-              <p className="mt-2 text-primary/70">{item.description}</p>
+              <p className="mt-2 text-primary/70">{description}</p>
             </li>
           ))}
         </ul>
