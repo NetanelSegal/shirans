@@ -2,17 +2,16 @@ import EnterAnimation from '@/components/animations/EnterAnimation';
 import PageSeo from '@/components/Seo/PageSeo';
 import ContactInfo from '@/components/Footer/components/ContactInfo';
 import FooterForm from '@/components/Footer/components/FooterForm';
+import { getPageMeta } from '@/constants/pageMeta';
 
-const CONTACT_TITLE = 'צור קשר - שירן גלעד אדריכלות ועיצוב פנים';
-const CONTACT_DESCRIPTION =
-  'צרו קשר עם שירן גלעד לתכנון ועיצוב בית פרטי. השאירו פרטים ונחזור אליכם בהקדם.';
+const PAGE_META = getPageMeta('/contact');
 
 export default function Contact() {
   return (
     <>
       <PageSeo
-        title={CONTACT_TITLE}
-        description={CONTACT_DESCRIPTION}
+        title={PAGE_META.title}
+        description={PAGE_META.description}
         path="/contact"
       />
       <main dir="rtl">

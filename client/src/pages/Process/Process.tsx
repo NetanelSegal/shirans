@@ -2,6 +2,9 @@ import EnterAnimation from '@/components/animations/EnterAnimation';
 import SectionContent from './components/SectionContent';
 import { content } from '@/data/process-info';
 import PageSeo from '@/components/Seo/PageSeo';
+import { getPageMeta } from '@/constants/pageMeta';
+
+const PAGE_META = getPageMeta('/process');
 
 const svgs = [
   <svg overflow='visible' viewBox='0 0 1920 914.65'>
@@ -814,16 +817,12 @@ const svgs = [
   </svg>,
 ];
 
-const PROCESS_TITLE = 'התהליך - שירן גלעד אדריכלות ועיצוב פנים';
-const PROCESS_DESCRIPTION =
-  'גלו את התהליך המקצועי של תכנון ועיצוב הבית החלומות שלכם. מפגישה ראשונית ועד מסירת המפתח - כל השלבים בפירוט.';
-
 export default function Process() {
   return (
     <>
       <PageSeo
-        title={PROCESS_TITLE}
-        description={PROCESS_DESCRIPTION}
+        title={PAGE_META.title}
+        description={PAGE_META.description}
         path="/process"
       />
       <h1 className='heading py-10 text-center font-bold'>התהליך</h1>

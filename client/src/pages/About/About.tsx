@@ -5,17 +5,16 @@ import AboutVisionSection from './sections/AboutVisionSection';
 import AboutStorySection from './sections/AboutStorySection';
 import AboutServicesSection from './sections/AboutServicesSection';
 import AboutCtaSection from './sections/AboutCtaSection';
+import { getPageMeta } from '@/constants/pageMeta';
 
-const ABOUT_TITLE = 'אודות - שירן גלעד אדריכלות ועיצוב פנים';
-const ABOUT_DESCRIPTION =
-  'שירן גלעד — אדריכלית ומעצבת פנים לבניה פרטית. מעל 10 שנות ניסיון בליווי משפחות מתכנון נכון ועד הבית המוגמר.';
+const PAGE_META = getPageMeta('/about');
 
 export default function About() {
   return (
     <>
       <PageSeo
-        title={ABOUT_TITLE}
-        description={ABOUT_DESCRIPTION}
+        title={PAGE_META.title}
+        description={PAGE_META.description}
         path="/about"
       />
 
