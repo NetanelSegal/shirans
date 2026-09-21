@@ -32,13 +32,16 @@ export default function CalculatorResult() {
   const whatsappHref = buildWhatsAppHref(buildLeadWhatsAppMessage(result));
 
   return (
-    // Full-bleed background, the same idiom the rest of the site uses — no page
-    // here should depend on the browser's default page colour. The bottom
-    // padding is deeper than the section rhythm because the floating bar
-    // overlays the end of the page.
+    // The page owns the space between its sections, as one gap. Each section
+    // used to bring its own padding, and only some did: the photo panels had
+    // none, the rest had `py-section-all` — 16px on a phone, 128px on a
+    // desktop. So neighbours either touched or sat an arbitrary distance apart,
+    // and the coloured "what now" band ran straight into the cards on both
+    // sides of it. The bottom padding is deeper than the rhythm because the
+    // floating bar overlays the end of the page.
     <main
       dir="rtl"
-      className="breakout-x-padding bg-white px-page-all py-section-all pb-32"
+      className="breakout-x-padding flex flex-col gap-14 bg-white px-page-all pb-32 pt-page-sm md:gap-20 lg:gap-24 lg:pt-page-lg"
     >
       <PageSeo
         title="ההערכה שלכם - מחשבון עלות הבית | שירן גלעד"
@@ -53,7 +56,7 @@ export default function CalculatorResult() {
 
       <AboutShiranSection />
 
-      <section className="py-section-all">
+      <section>
         <h2 className="subheading text-center font-bold text-primary">
           כך מספרים על הדרך המשותפת
         </h2>
