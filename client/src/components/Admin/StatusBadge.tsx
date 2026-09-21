@@ -5,10 +5,10 @@ interface StatusBadgeProps {
 }
 
 const variantClasses = {
-  read: 'bg-green-100 text-green-800',
-  unread: 'bg-amber-100 text-amber-800',
-  published: 'bg-green-100 text-green-800',
-  draft: 'bg-gray-100 text-gray-800',
+  read: 'bg-success-soft text-success',
+  unread: 'bg-warning-soft text-warning',
+  published: 'bg-success-soft text-success',
+  draft: 'bg-surface-sunken text-ink-muted',
 };
 
 export function StatusBadge({

@@ -81,14 +81,14 @@ export function AreaStep({
 
   return (
     <div>
-      <p className="mb-4 text-sm text-primary/70">
+      <p className="mb-4 text-sm text-ink-muted">
         ניתן להזין מספר בין {min} ל-{max}.
       </p>
 
       {/* The ring lives on the frame rather than the field, because the field is
           the whole bordered box as far as the eye is concerned. */}
-      <div className="flex items-center gap-4 rounded-xl border border-primary/15 bg-white p-4 transition-colors focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/30">
-        <Home className="size-6 shrink-0 text-primary" aria-hidden />
+      <div className="flex items-center gap-4 rounded-card border border-primary/15 bg-surface-raised p-4 transition-colors focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/30">
+        <Home className="size-6 shrink-0 text-ink" aria-hidden />
         <div className="h-8 w-px bg-primary/10" />
         <input
           type="number"
@@ -101,9 +101,9 @@ export function AreaStep({
           aria-label="שטח הבית במטרים רבועים"
           // Spinners removed: the slider below is the nudge-by-one affordance,
           // and the arrows crowd a number set at this size.
-          className="w-full bg-transparent text-center text-4xl font-bold text-primary focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="w-full bg-transparent text-center text-4xl font-bold text-ink focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
-        <span className="shrink-0 font-bold text-primary/70">מ״ר</span>
+        <span className="shrink-0 font-bold text-ink-muted">מ״ר</span>
       </div>
 
       <input
@@ -116,15 +116,15 @@ export function AreaStep({
         aria-label="בחירת שטח הבית"
         className="mt-6 w-full accent-primary"
       />
-      <div className="mt-1 flex justify-between text-sm text-primary/70">
+      <div className="mt-1 flex justify-between text-sm text-ink-muted">
         <span>{min}</span>
         <span>{max}</span>
       </div>
 
       {hint && (
-        <div className="mt-8 flex items-start gap-3 rounded-xl bg-white p-4">
-          <Lightbulb className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden />
-          <p className="text-sm text-primary/70">{hint}</p>
+        <div className="mt-8 flex items-start gap-3 rounded-card bg-surface-raised p-4">
+          <Lightbulb className="mt-0.5 size-5 shrink-0 text-ink" aria-hidden />
+          <p className="text-sm text-ink-muted">{hint}</p>
         </div>
       )}
     </div>

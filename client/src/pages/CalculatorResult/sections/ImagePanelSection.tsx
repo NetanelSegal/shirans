@@ -37,7 +37,7 @@ export function ImagePanelSection({
     <section
       ref={sectionRef}
       aria-label={ariaLabel}
-      className={`grid grid-cols-1 overflow-hidden rounded-2xl ${columns} ${minHeight}`}
+      className={`grid grid-cols-1 overflow-hidden rounded-panel ${columns} ${minHeight}`}
     >
       <div className="relative min-h-64 lg:min-h-full">
         <Image
@@ -47,7 +47,7 @@ export function ImagePanelSection({
         />
       </div>
 
-      <div className="flex flex-col justify-center bg-secondary p-8 md:p-10 lg:p-8 xl:p-12">
+      <div className="flex flex-col justify-center bg-surface-sunken p-8 md:p-10 lg:p-8 xl:p-12">
         {children}
       </div>
     </section>

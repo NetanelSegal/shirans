@@ -116,14 +116,14 @@ export default function CalculatorLeadsManagement() {
 
       {actionError && (
         <div
-          className="mb-4 flex items-center justify-between gap-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900"
+          className="mb-4 flex items-center justify-between gap-4 rounded-card border border-warning/30 bg-warning-soft px-4 py-3 text-warning"
           role="alert"
         >
           <span>{actionError}</span>
           <button
             type="button"
             onClick={clearActionError}
-            className="rounded bg-transparent px-2 py-1 text-sm font-medium text-amber-900 hover-capable:hover:scale-100 hover-capable:hover:bg-amber-100"
+            className="rounded-field bg-transparent px-2 py-1 text-sm font-medium text-warning hover-capable:hover:scale-100 hover-capable:hover:bg-warning-soft"
             aria-label="סגירת ההודעה"
           >
             ✕
@@ -153,7 +153,7 @@ export default function CalculatorLeadsManagement() {
         !isLoading &&
         !leads.some((lead) => lead.id === requestedLeadId) && (
           <p
-            className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900"
+            className="mb-4 rounded-card border border-warning/30 bg-warning-soft px-4 py-3 text-warning"
             role="status"
           >
             הפנייה שהקישור הוביל אליה לא נמצאה — ייתכן שהיא נמחקה.
@@ -179,7 +179,7 @@ export default function CalculatorLeadsManagement() {
               <button
                 type="button"
                 onClick={() => setDetailsTarget(row)}
-                className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover-capable:hover:scale-100 hover-capable:hover:bg-primary/90"
+                className="rounded-card bg-primary px-3 py-1.5 text-sm font-medium text-on-dark transition-colors hover-capable:hover:scale-100 hover-capable:hover:bg-primary/90"
                 aria-label={`צפייה בתשובות של ${row.name}`}
               >
                 פרטים
@@ -190,7 +190,7 @@ export default function CalculatorLeadsManagement() {
                 onClick={() => {
                   void updateReadStatus(row.id, !row.isRead).catch(() => {});
                 }}
-                className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover-capable:hover:scale-100 hover-capable:hover:bg-secondary/80 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-card bg-surface-sunken px-3 py-1.5 text-sm font-medium text-ink transition-colors hover-capable:hover:scale-100 hover-capable:hover:bg-surface-sunken/80 disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label={row.isRead ? 'סימון כלא נקרא' : 'סימון כנקרא'}
               >
                 {row.isRead ? 'לא נקרא' : 'נקרא'}
@@ -198,7 +198,7 @@ export default function CalculatorLeadsManagement() {
               <button
                 type="button"
                 onClick={() => setDeleteTarget(row)}
-                className="rounded-lg bg-red-700 px-3 py-1.5 text-sm font-medium text-white transition-colors hover-capable:hover:scale-100 hover-capable:hover:bg-red-800"
+                className="rounded-card bg-danger/90 px-3 py-1.5 text-sm font-medium text-on-dark transition-colors hover-capable:hover:scale-100 hover-capable:hover:bg-danger/90"
                 aria-label={`מחיקת הליד של ${row.name}`}
               >
                 מחיקה

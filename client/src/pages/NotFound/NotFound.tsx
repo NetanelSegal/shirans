@@ -18,8 +18,8 @@ export default function NotFound() {
         noIndex
       />
       <div className='flex min-h-[60vh] flex-col items-center justify-center py-20 text-center'>
-        <h1 className='heading mb-4 font-bold'>404</h1>
-        <p className='paragraph mb-8'>הדף שביקשת לא נמצא</p>
+        <h1 className='text-h2 mb-4 font-bold'>404</h1>
+        <p className='text-body mb-8'>הדף שביקשת לא נמצא</p>
         <Button variant='secondary'>
           <Link to='/'>חזור לעמוד הבית</Link>
         </Button>

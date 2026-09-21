@@ -83,12 +83,12 @@ export default function LandingCalculator() {
         <div className="absolute inset-0 bg-primary/70" aria-hidden />
         <div className="absolute inset-0 flex flex-col items-center justify-center px-page-all text-center">
           <EnterAnimation delay={0.2} duration={1} translateY={false}>
-            <h1 className="mx-auto max-w-4xl text-balance text-4xl font-bold leading-[1.1] tracking-[-0.02em] text-white md:text-5xl xl:text-6xl">
+            <h1 className="mx-auto max-w-4xl text-balance text-4xl font-bold leading-[1.1] tracking-[-0.02em] text-on-dark md:text-5xl xl:text-6xl">
               דמיינו את הבית החדש שלכם.
               <br />
               עכשיו גלו את טווח העלות האמיתי.
             </h1>
-            <p className="paragraph mx-auto mt-5 max-w-xl text-white">
+            <p className="text-body mx-auto mt-5 max-w-xl text-on-dark">
               מחשבון אומדן עלות לבנייה פרטית — תוצאה תוך דקות. ללא התחייבות.
             </p>
           </EnterAnimation>
@@ -99,7 +99,7 @@ export default function LandingCalculator() {
           site already uses for a supporting row, and dropping the cards lets
           the wizard below be the loudest thing on the page. */}
       <section
-        className="breakout-x-padding bg-secondary px-page-all py-10 md:py-14"
+        className="breakout-x-padding bg-surface-sunken px-page-all py-10 md:py-14"
         aria-label="מה תקבלו"
       >
         <ul className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-3 sm:gap-0">
@@ -108,11 +108,11 @@ export default function LandingCalculator() {
               key={title}
               className="border-primary/15 sm:border-s sm:ps-8 sm:first:border-s-0 sm:first:ps-0"
             >
-              <Icon className="size-6 text-primary" aria-hidden />
-              <h2 className="mt-3 text-lg font-bold leading-snug text-primary">
+              <Icon className="size-6 text-ink" aria-hidden />
+              <h2 className="mt-3 text-lg font-bold leading-snug text-ink">
                 {title}
               </h2>
-              <p className="mt-2 text-primary/70">{description}</p>
+              <p className="mt-2 text-ink-muted">{description}</p>
             </li>
           ))}
         </ul>

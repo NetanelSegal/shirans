@@ -23,7 +23,7 @@ export default function ProjectImagePlanShowcase({
     min: 0,
   });
 
-  const singleImageClassname = `aspect-video cursor-pointer border-2 border-secondary rounded-xl object-cover ${imageClassname}`;
+  const singleImageClassname = `aspect-video cursor-pointer border-2 border-line rounded-card object-cover ${imageClassname}`;
   const transformRef = useRef<{ resetTransform: () => void } | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
   const swipeStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
@@ -232,7 +232,7 @@ export default function ProjectImagePlanShowcase({
                   key={arr[count]}
                   src={arr[count]}
                   alt={arr[count]}
-                  className='max-h-[90vh] max-w-[90vw] w-auto h-auto object-contain rounded-xl'
+                  className='max-h-[90vh] max-w-[90vw] w-auto h-auto object-contain rounded-card'
                 />
               </TransformComponent>
             </TransformWrapper>
@@ -241,7 +241,7 @@ export default function ProjectImagePlanShowcase({
             <div className='absolute bottom-2 left-0 right-0 z-40 flex items-center justify-center gap-1 sm:bottom-4 md:bottom-6'>
               {arr.map((_, index) => (
                 <div
-                  className={`size-2.5 rounded-full transition-all ${index === count ? 'bg-primary' : 'bg-white/60'}`}
+                  className={`size-2.5 rounded-full transition-all ${index === count ? 'bg-primary' : 'bg-surface-raised/60'}`}
                   key={index}
                 ></div>
               ))}

@@ -28,8 +28,8 @@ export default function Projects() {
         image={ogImage}
       />
       <div className='py-10 text-center'>
-        <h1 className='heading mb-4 font-bold'>פרוייקטים</h1>
-        <p className='paragraph px-[10vw] font-semibold'>
+        <h1 className='text-h2 mb-4 font-bold'>פרוייקטים</h1>
+        <p className='text-body px-[10vw] font-semibold'>
           "אדריכלות היא תהליך שמחבר בין חזון אישי לתכנון מקצועי, במטרה ליצור
           חללים יפים ומותאמים בדיוק לצרכים שלכם"
         </p>

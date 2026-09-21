@@ -22,7 +22,7 @@ export default function D_ProcessSection() {
 
   return (
     <section ref={sectionRef} className='py-section-all relative'>
-      <h2 className='heading mb-4 font-semibold'>התהליך מתחילתו ועד סופו</h2>
+      <h2 className='text-h2 mb-4 font-semibold'>התהליך מתחילתו ועד סופו</h2>
       {content.map((section, index) => (
         <Fragment key={section.title}>
           <ProcessItemSection

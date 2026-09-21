@@ -9,7 +9,7 @@ export default function HeroSection() {
       </div>
       <div className='pointer-events-none absolute inset-0 z-10 flex items-center justify-center'>
         <EnterAnimation delay={0.5} duration={1.2} translateY={false}>
-          <h1 className='px-page-all text-center text-5xl font-bold text-white drop-shadow-[0_0_5px_rgba(0,0,0,0.3)] md:text-6xl xl:text-7xl'>
+          <h1 className='px-page-all text-center text-5xl font-bold text-on-dark drop-shadow-[0_0_5px_rgba(0,0,0,0.3)] md:text-6xl xl:text-7xl'>
             שירן גלעד אדריכלות ועיצוב
           </h1>
         </EnterAnimation>

@@ -27,7 +27,7 @@ export function MobileCardList<T>({
         return (
           <article
             key={rowId}
-            className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+            className="rounded-card border border-line/70 bg-surface-raised p-4 shadow-card"
             role="listitem"
             aria-label={`פריט ${rowId}`}
           >
@@ -39,7 +39,7 @@ export function MobileCardList<T>({
                     checked={selectedIds.includes(rowId)}
                     onChange={() => onToggleRow(rowId)}
                     aria-label={`בחר שורה ${rowId}`}
-                    className="h-4 w-4 rounded"
+                    className="h-4 w-4 rounded-field"
                   />
                   <span className="text-sm">בחר</span>
                 </label>
@@ -48,17 +48,17 @@ export function MobileCardList<T>({
             <div className="flex flex-col gap-2">
               {columns.map((col) => (
                 <div key={col.key} className="flex flex-col gap-0.5">
-                  <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <span className="text-xs font-medium uppercase tracking-wider text-ink-subtle">
                     {col.header}
                   </span>
-                  <div className={`text-sm text-gray-900 ${col.className ?? ''}`}>
+                  <div className={`text-sm text-ink ${col.className ?? ''}`}>
                     {col.render(row)}
                   </div>
                 </div>
               ))}
             </div>
             {actions && (
-              <div className="mt-3 flex flex-wrap gap-2 border-t border-gray-100 pt-3">
+              <div className="mt-3 flex flex-wrap gap-2 border-t border-line/50 pt-3">
                 {actions(row)}
               </div>
             )}

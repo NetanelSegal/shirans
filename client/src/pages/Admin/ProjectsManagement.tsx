@@ -145,7 +145,7 @@ export default function ProjectsManagement() {
             />
             {rowActionError && (
               <div
-                className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700"
+                className="mb-4 rounded-card bg-danger-soft p-3 text-sm text-danger"
                 role="alert"
               >
                 {rowActionError}
@@ -164,7 +164,7 @@ export default function ProjectsManagement() {
                     type="button"
                     variant="info"
                     onClick={() => setImagesTargetId(row.id)}
-                    className="!rounded-lg !px-3 !py-1.5 text-sm font-medium"
+                    className="!rounded-card !px-3 !py-1.5 text-sm font-medium"
                     ariaLabel={`תמונות ${row.title}`}
                   >
                     תמונות
@@ -173,7 +173,7 @@ export default function ProjectsManagement() {
                     type="button"
                     variant="primary"
                     onClick={() => handleOpenEdit(row)}
-                    className="!rounded-lg !px-3 !py-1.5 text-sm font-medium"
+                    className="!rounded-card !px-3 !py-1.5 text-sm font-medium"
                     ariaLabel={`ערוך ${row.title}`}
                   >
                     עריכה
@@ -182,7 +182,7 @@ export default function ProjectsManagement() {
                     type="button"
                     variant="danger"
                     onClick={() => setDeleteTargetId(row.id)}
-                    className="!rounded-lg !px-3 !py-1.5 text-sm font-medium"
+                    className="!rounded-card !px-3 !py-1.5 text-sm font-medium"
                     ariaLabel={`מחק ${row.title}`}
                   >
                     מחיקה

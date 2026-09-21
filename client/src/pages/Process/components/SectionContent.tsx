@@ -19,11 +19,11 @@ export default function SectionContent({
     >
       {/* text container */}
       <div
-        className={`relative flex w-full flex-col gap-1 rounded-2xl p-5 shadow-lg backdrop-blur-sm md:w-2/3 xl:w-1/2 ${i % 2 === 0 ? 'ml-auto' : 'mr-auto'}`}
+        className={`relative flex w-full flex-col gap-1 rounded-panel p-5 shadow-raised backdrop-blur-sm md:w-2/3 xl:w-1/2 ${i % 2 === 0 ? 'ml-auto' : 'mr-auto'}`}
       >
-        <div className='absolute inset-0 -z-10 rounded-2xl bg-secondary opacity-50'></div>
-        <h2 className='subheading font-semibold'>{heading}</h2>
-        <p className='paragraph'>{createParagraphWithBold(paragraph)}</p>
+        <div className='absolute inset-0 -z-10 rounded-panel bg-surface-sunken opacity-50'></div>
+        <h2 className='text-h3 font-semibold'>{heading}</h2>
+        <p className='text-body'>{createParagraphWithBold(paragraph)}</p>
       </div>
 
       {/* svg container */}
@@ -41,7 +41,7 @@ const createParagraphWithBold = (p: string) => {
     word = word.trim();
     if (word.startsWith('**')) {
       return (
-        <span key={word} className='font-semibold text-primary'>
+        <span key={word} className='font-semibold text-ink'>
           {' '}
           {word.slice(2, -2)}{' '}
         </span>

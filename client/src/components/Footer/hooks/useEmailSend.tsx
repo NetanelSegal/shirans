@@ -3,6 +3,7 @@ import emailjs, { EmailJSResponseStatus } from '@emailjs/browser';
 import { ERROR_KEYS } from '@shirans/shared';
 import { getClientErrorMessage } from '@/constants/errorMessages';
 import { envConfig, isEmailJsContactConfigured } from '@/config/env';
+import { assertLiveSubmission } from '@/utils/previewDeploy';
 
 interface IReturnUseEmailSend {
   error: string;
@@ -20,6 +21,7 @@ export default function useEmailSend(): IReturnUseEmailSend {
     setLoading(true);
     setError('');
     try {
+      assertLiveSubmission();
       const { serviceId, templateId, publicKey } = envConfig.emailjs;
       if (!isEmailJsContactConfigured()) {
         throw new Error('EmailJS environment variables are not configured');

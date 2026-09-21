@@ -28,11 +28,11 @@ export function BulkActionBar({
   return (
     <div
       dir="rtl"
-      className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3"
+      className="mb-4 flex flex-wrap items-center gap-2 rounded-card border border-primary/30 bg-primary/5 px-4 py-3"
       role="toolbar"
       aria-label="פעולות קבוצתיות"
     >
-      <span className="text-sm font-medium text-gray-700">
+      <span className="text-sm font-medium text-ink-muted">
         נבחרו {selectedCount} פריטים
       </span>
       <div className="flex flex-wrap gap-2">
@@ -88,7 +88,7 @@ export function BulkActionBar({
           variant="light"
           onClick={onDelete}
           disabled={isBusy}
-          className="!bg-red-500 !text-white hover:!bg-red-600"
+          className="!bg-danger !text-on-dark hover:!bg-danger/90"
           aria-label="מחק נבחרים"
         >
           מחיקה

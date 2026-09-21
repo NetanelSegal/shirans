@@ -28,7 +28,7 @@ export function StickyContactBar({ visible, whatsappHref }: StickyContactBarProp
       {...(visible ? {} : { inert: '' })}
     >
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-        <p className="hidden text-sm text-white/80 sm:block">
+        <p className="hidden text-sm text-on-dark/80 sm:block">
           יש שאלה על ההערכה? דברו עם שירן.
         </p>
 
@@ -37,14 +37,14 @@ export function StickyContactBar({ visible, whatsappHref }: StickyContactBarProp
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-white px-5 py-2.5 font-bold text-primary transition-colors duration-150 ease-out hover-capable:hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary sm:flex-none"
+            className="flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-card bg-surface-raised px-5 py-2.5 font-bold text-ink transition-colors duration-150 ease-out hover-capable:hover:bg-surface-raised/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-raised focus-visible:ring-offset-2 focus-visible:ring-offset-primary sm:flex-none"
           >
             <MessageCircle className="size-5 shrink-0" aria-hidden />
             וואטסאפ
           </a>
           <a
             href={PHONE_HREF}
-            className="flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-white/30 px-5 py-2.5 font-bold text-white transition-colors duration-150 ease-out hover-capable:hover:border-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary sm:flex-none"
+            className="flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-card border border-white/30 px-5 py-2.5 font-bold text-on-dark transition-colors duration-150 ease-out hover-capable:hover:border-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-raised focus-visible:ring-offset-2 focus-visible:ring-offset-primary sm:flex-none"
           >
             <CalendarDays className="size-5 shrink-0" aria-hidden />
             שיחה

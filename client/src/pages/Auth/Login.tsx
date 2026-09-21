@@ -61,11 +61,11 @@ export default function Login() {
 
       <div className="flex items-center justify-center py-section-all" dir="rtl">
         <div className="w-full max-w-md">
-          <h1 className="heading mb-6 text-center">התחברות</h1>
+          <h1 className="text-h2 mb-6 text-center">התחברות</h1>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <Input
-              borderColor="border-gray-300"
+              borderColor="border-line"
               label="כתובת אימייל"
               type="email"
               {...register('email')}
@@ -74,7 +74,7 @@ export default function Login() {
             />
 
             <Input
-              borderColor="border-gray-300"
+              borderColor="border-line"
               label="סיסמה"
               type="password"
               {...register('password')}
@@ -87,13 +87,13 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full rounded-xl bg-primary p-3 font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+              className="w-full rounded-card bg-primary p-3 font-bold text-on-dark transition-opacity hover:opacity-90 disabled:opacity-50"
             >
               {isLoading ? 'מתחבר...' : 'התחבר'}
             </button>
 
             <div className="text-center">
-              <Link to="/register" className="text-primary underline">
+              <Link to="/register" className="text-ink underline">
                 אין לך חשבון? הירשם כאן
               </Link>
             </div>

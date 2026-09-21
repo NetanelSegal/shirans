@@ -43,7 +43,7 @@ const AnimatedProcessSectionPath = ({
         />
       </mask>
       <path
-        className='stroke-secondary'
+        className='stroke-line'
         d={initialPathData}
         strokeWidth='4'
         strokeDasharray={'10'}

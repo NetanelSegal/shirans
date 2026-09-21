@@ -10,7 +10,7 @@ export default function FooterNavigation() {
     2,
   );
   return (
-    <div className='gap-5 text-white underline sm:mx-0 sm:flex sm:items-end md:pb-2'>
+    <div className='gap-5 text-on-dark underline sm:mx-0 sm:flex sm:items-end md:pb-2'>
       {chunks.map((chunk, chunkIndex) => (
         <div
           key={chunkIndex}

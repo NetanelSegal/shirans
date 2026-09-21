@@ -12,7 +12,7 @@ export default function AboutStorySection() {
     >
       <div className="w-full shrink-0 md:w-[380px] lg:w-[440px]">
         <EnterAnimation delay={0.1} translateY={false}>
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl md:aspect-[2/3]">
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-panel md:aspect-[2/3]">
             <Image
               className="absolute inset-0 block h-full w-full object-cover md:hidden"
               src={livingRoomImageMobile}
@@ -29,12 +29,12 @@ export default function AboutStorySection() {
 
       <div className="flex min-w-0 flex-1 flex-col gap-2 p-5">
         <EnterAnimation delay={0.2}>
-          <h2 id="about-story-heading" className="heading font-semibold">
+          <h2 id="about-story-heading" className="text-h2 font-semibold">
             {aboutStory.title}
           </h2>
           <div className="mt-4 flex flex-col gap-4">
             {aboutStory.paragraphs.map((paragraph) => (
-              <p key={paragraph.slice(0, 24)} className="paragraph text-slate-700">
+              <p key={paragraph.slice(0, 24)} className="text-body text-ink-muted">
                 {paragraph}
               </p>
             ))}

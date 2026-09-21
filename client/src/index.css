@@ -1,59 +1,50 @@
+@import './styles/tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-* {
-  font-family: 'Assistant', sans-serif;
-}
+@layer base {
+  /* Every page assumes the cream canvas. Setting it here also keeps a
+     dark-themed browser or webview from painting sections without their own
+     background black. */
+  body {
+    @apply bg-surface font-sans text-body text-ink antialiased;
+  }
 
-/* Every page assumes a white canvas but nothing ever set one, so the page
-   inherited whatever the browser defaults to — which renders dark in a
-   dark-themed browser or webview, turning any section without its own
-   background black. */
-body {
-  @apply bg-white;
-}
+  /* Fix blurry images when scaled/transformed */
+  img {
+    image-rendering: auto; /* Smooth rendering for photos */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0); /* Force GPU acceleration */
+    -webkit-transform: translateZ(0);
+  }
 
-/* Fix blurry images when scaled/transformed */
-img {
-  image-rendering: auto; /* Smooth rendering for photos */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform: translateZ(0); /* Force GPU acceleration */
-  -webkit-transform: translateZ(0);
-}
+  /* Buttons carry no look of their own: components/ui/Button owns it. */
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
 
-button {
-  @apply rounded-xl bg-slate-500 px-6 py-2 text-lg font-semibold text-white transition-all duration-150 ease-in-out;
-}
-
-/* Hover only on devices with hover capability - prevents sticky hover on mobile */
-@media (hover: hover) {
-  button:hover {
-    @apply scale-105;
+  :focus-visible {
+    outline: 2px solid rgb(var(--color-accent));
+    outline-offset: 3px;
   }
 }
 
-.px-page-all {
-  @apply px-page-sm md:px-page-md lg:px-page-lg xl:px-page-xl 2xl:px-page-2xl;
-}
+@layer components {
+  .px-page-all {
+    @apply px-page-sm md:px-page-md lg:px-page-lg xl:px-page-xl 2xl:px-page-2xl;
+  }
 
-.py-section-all {
-  @apply py-page-sm lg:py-page-lg;
-}
+  .py-section-all {
+    @apply py-section;
+  }
 
-.breakout-x-padding {
-  @apply -mx-page-sm md:-mx-page-md lg:-mx-page-lg xl:-mx-page-xl 2xl:-mx-page-2xl;
-}
-
-.heading {
-  @apply text-4xl md:text-5xl lg:text-6xl;
-}
-
-.subheading {
-  @apply text-2xl md:text-3xl lg:text-4xl;
-}
-
-.paragraph {
-  @apply text-lg leading-tight;
+  .breakout-x-padding {
+    @apply -mx-page-sm md:-mx-page-md lg:-mx-page-lg xl:-mx-page-xl 2xl:-mx-page-2xl;
+  }
 }

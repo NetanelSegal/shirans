@@ -73,11 +73,11 @@ export default function Project() {
       {/* main image */}
       <EnterAnimation translateY={false} duration={0.8}>
         <div className='breakout-x-padding relative mb-10'>
-          <h1 className='px-page-all heading absolute bottom-5 z-20 font-semibold text-white drop-shadow-[0_0_8px_rgba(0,0,0,0.8)]'>
+          <h1 className='px-page-all text-h2 absolute bottom-5 z-20 font-semibold text-on-dark drop-shadow-[0_0_8px_rgba(0,0,0,0.8)]'>
             {project.title}
           </h1>
           <ImageScaleHover
-            containerClassName='w-full h-[75vh] shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
+            containerClassName='w-full h-[75vh] shadow-card grow'
             src={mainImageUrl}
             alt={project.title}
             width={1600}
@@ -90,9 +90,9 @@ export default function Project() {
       <EnterAnimation delay={0.2}>
         <div className='py-10'>
           <div className='flex flex-col items-center'>
-            <table className='mb-12 w-full max-w-3xl border-collapse rounded-2xl text-lg'>
+            <table className='mb-12 w-full max-w-3xl border-collapse rounded-panel text-lg'>
               <tbody>
-                <tr className='border-b-2 border-secondary'>
+                <tr className='border-b-2 border-line'>
                   <td className='p-2 text-right'>תגיות: </td>
                   <th className='p-2 text-right'>
                     <div className='flex gap-2'>
@@ -105,17 +105,17 @@ export default function Project() {
                     </div>
                   </th>
                 </tr>
-                <tr className='border-b-2 border-secondary'>
+                <tr className='border-b-2 border-line'>
                   <td className='p-2 text-right'>לקוח: </td>
                   <th className='p-2 text-right'>{project.client}</th>
                 </tr>
-                <tr className='border-b-2 border-secondary'>
+                <tr className='border-b-2 border-line'>
                   <td className='p-2 text-right'>סטטוס:</td>
                   <th className='p-2 text-right'>
                     {project.isCompleted ? 'הושלם' : 'בתהליך'}
                   </th>
                 </tr>
-                <tr className='border-b-2 border-secondary'>
+                <tr className='border-b-2 border-line'>
                   <td className='p-2 text-right'>שטח בנייה:</td>
                   <th className='p-2 text-right'>
                     {project.constructionArea} מ"ר
@@ -143,7 +143,7 @@ export default function Project() {
       {planUrls.length > 0 && (
         <EnterAnimation delay={0.1}>
           <div className='py-10'>
-            <h3 className='subheading mb-5'>תוכניות</h3>
+            <h3 className='text-h3 mb-5'>תוכניות</h3>
             <ProjectImagePlanShowcase
               imageClassname='shrink-0 overflow-hidden sm:basis-[calc(50%-4px)]'
               containerClassname='flex w-full flex-wrap justify-start gap-2 md:flex-row md:overflow-x-auto justify-between'
@@ -157,13 +157,13 @@ export default function Project() {
       {videoUrls.length > 0 && (
         <EnterAnimation delay={0.1}>
           <div className='py-10'>
-            <h3 className='subheading mb-5'>סרטונים</h3>
+            <h3 className='text-h3 mb-5'>סרטונים</h3>
             <div className='flex w-full flex-wrap justify-center gap-2 sm:flex-row'>
               {videoUrls.map((src, i) => (
                 <EnterAnimation key={src} delay={i * 0.1} translateY={false}>
                   <iframe
                     src={`${src}?autoplay=1&mute=1&controls=0&loop=1`}
-                    className='aspect-[9/16] w-72 rounded-2xl border-2 border-secondary shadow-[0_0_5px_0_rgba(0,0,0,0.2)]'
+                    className='aspect-[9/16] w-72 rounded-panel border-2 border-line shadow-card'
                     title='YouTube video player'
                   ></iframe>
                 </EnterAnimation>
@@ -176,7 +176,7 @@ export default function Project() {
       {/* תמונות */}
       <EnterAnimation delay={0.1}>
         <div className='py-10'>
-          <h3 className='subheading mb-5'>תמונות</h3>
+          <h3 className='text-h3 mb-5'>תמונות</h3>
           <ProjectImagePlanShowcase
             imageClassname='shrink-0 overflow-hidden sm:basis-[calc(50%-4px)]'
             containerClassname='flex w-full flex-wrap justify-start gap-2 md:flex-row md:overflow-x-auto justify-between'

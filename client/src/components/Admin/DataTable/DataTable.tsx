@@ -45,7 +45,7 @@ export function DataTable<T extends RowData>({
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-gray-200 bg-white p-8">
+      <div className="flex min-h-[200px] items-center justify-center rounded-card border border-line/70 bg-surface-raised p-8">
         <Loader />
       </div>
     );

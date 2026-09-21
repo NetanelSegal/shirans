@@ -19,10 +19,10 @@ export default function WhoIsShiranSection() {
       {/* text container */}
       <div className='flex basis-1/2 flex-col gap-2 p-5'>
         <EnterAnimation delay={0.2}>
-          <h2 id='who-is-shiran-heading' className='heading font-semibold'>
+          <h2 id='who-is-shiran-heading' className='text-h2 font-semibold'>
             שירן גלעד
           </h2>
-          <p className='paragraph'>
+          <p className='text-body'>
             עוסקת באדריכלות ועיצוב פנים משנת 2015. <br />
             מתמחה בתכנון בתים פרטיים, דירות יוקרה, ופנטהאוזים. המטרה שלי היא לתכנן
             עבורכם את הבית שתמיד חלמתם עליו, עם דגש על הפרטים הקטנים ביותר, שילוב

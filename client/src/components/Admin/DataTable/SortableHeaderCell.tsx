@@ -14,7 +14,7 @@ export function SortableHeaderCell({ label, sortState }: SortableHeaderCellProps
     <button
       type="button"
       onClick={sortState.toggle}
-      className="flex items-center gap-1 hover:text-gray-800"
+      className="flex items-center gap-1 hover:text-ink-muted"
     >
       {label}
       <i
@@ -24,7 +24,7 @@ export function SortableHeaderCell({ label, sortState }: SortableHeaderCellProps
             ? 'fa-sort-up'
             : sortState.isSorted === 'desc'
               ? 'fa-sort-down'
-              : 'fa-sort text-gray-300'
+              : 'fa-sort text-ink-subtle'
         }`}
       />
     </button>

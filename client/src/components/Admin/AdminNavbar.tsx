@@ -31,7 +31,7 @@ export default function AdminNavbar({ onMenuToggle }: AdminNavbarProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between gap-4 bg-white p-4 shadow-md" dir="rtl">
+    <header className="sticky top-0 z-40 flex items-center justify-between gap-4 bg-surface-raised p-4 shadow-card" dir="rtl">
       {/* Back to site + Mobile menu toggle */}
       <div className="flex items-center gap-3">
         <Link
@@ -41,7 +41,7 @@ export default function AdminNavbar({ onMenuToggle }: AdminNavbarProps) {
             setShowUserMenu(false);
             startTransition(() => navigate('/'));
           }}
-          className="flex items-center gap-2 rounded-xl bg-secondary px-4 py-2 text-primary transition-colors hover:bg-secondary/80"
+          className="flex items-center gap-2 rounded-card bg-surface-sunken px-4 py-2 text-ink transition-colors hover:bg-surface-sunken/80"
           aria-label="חזרה לאתר"
         >
           <i className="fa-solid fa-arrow-right" aria-hidden />
@@ -53,7 +53,7 @@ export default function AdminNavbar({ onMenuToggle }: AdminNavbarProps) {
             className="bg-none p-0"
             aria-label="תפריט"
           >
-            <i className="fa-solid fa-bars flex size-8 items-center justify-center rounded-xl bg-secondary text-black" aria-hidden />
+            <i className="fa-solid fa-bars flex size-8 items-center justify-center rounded-card bg-surface-sunken text-ink" aria-hidden />
           </button>
         )}
       </div>
@@ -65,7 +65,7 @@ export default function AdminNavbar({ onMenuToggle }: AdminNavbarProps) {
       <div className="relative flex-shrink-0" ref={menuRef}>
         <button
           onClick={() => setShowUserMenu(!showUserMenu)}
-          className="flex items-center gap-2 rounded-xl bg-secondary px-4 py-2 text-black hover:bg-secondary/80 transition-all duration-200"
+          className="flex items-center gap-2 rounded-card bg-surface-sunken px-4 py-2 text-ink hover:bg-surface-sunken/80 transition-all duration-200"
           aria-expanded={showUserMenu}
           aria-haspopup="true"
         >
@@ -75,16 +75,16 @@ export default function AdminNavbar({ onMenuToggle }: AdminNavbarProps) {
 
         {showUserMenu && (
           <div
-            className="absolute left-0 top-full z-50 mt-2 w-56 max-w-[calc(100vw-2rem)] origin-top-left rounded-xl border border-gray-200 bg-white p-4 shadow-lg"
+            className="absolute left-0 top-full z-50 mt-2 w-56 max-w-[calc(100vw-2rem)] origin-top-left rounded-card border border-line/70 bg-surface-raised p-4 shadow-raised"
             role="menu"
           >
-            <div className="mb-3 border-b border-gray-200 pb-3 text-right">
-              <p className="font-bold text-primary">{user?.name || 'מנהל'}</p>
-              <p className="truncate text-sm text-gray-600" title={user?.email || ''}>
+            <div className="mb-3 border-b border-line/70 pb-3 text-right">
+              <p className="font-bold text-ink">{user?.name || 'מנהל'}</p>
+              <p className="truncate text-sm text-ink-muted" title={user?.email || ''}>
                 {user?.email || ''}
               </p>
               {user?.role && (
-                <span className="mt-1 inline-block rounded-full bg-primary px-2 py-0.5 text-xs text-white">
+                <span className="mt-1 inline-block rounded-full bg-primary px-2 py-0.5 text-xs text-on-dark">
                   {user.role === 'ADMIN' ? 'מנהל' : 'משתמש'}
                 </span>
               )}
@@ -96,7 +96,7 @@ export default function AdminNavbar({ onMenuToggle }: AdminNavbarProps) {
                   setShowUserMenu(false);
                   startTransition(() => navigate('/'));
                 }}
-                className="flex w-full items-center justify-between gap-2 rounded-xl px-4 py-2 text-right transition-colors hover:bg-gray-100"
+                className="flex w-full items-center justify-between gap-2 rounded-card px-4 py-2 text-right transition-colors hover:bg-surface-sunken"
                 role="menuitem"
               >
                 <i className="fa-solid fa-home" aria-hidden />
@@ -104,7 +104,7 @@ export default function AdminNavbar({ onMenuToggle }: AdminNavbarProps) {
               </button>
               <button
                 onClick={handleLogout}
-                className="flex w-full items-center justify-between rounded-xl bg-red-500 px-4 py-2 text-white transition-colors hover:bg-red-600 disabled:opacity-50"
+                className="flex w-full items-center justify-between rounded-card bg-danger px-4 py-2 text-on-dark transition-colors hover:bg-danger disabled:opacity-50"
                 disabled={isLoading}
                 role="menuitem"
               >

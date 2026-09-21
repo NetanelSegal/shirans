@@ -2,7 +2,7 @@ import type { ColumnConfig } from '@/components/Admin/DataTable';
 import Button from '@/components/ui/Button';
 import type { CategoryResponse, ProjectResponse } from '@shirans/shared';
 
-const tableControlClass = '!rounded-lg !px-3 !py-1.5 text-sm font-medium';
+const tableControlClass = '!rounded-card !px-3 !py-1.5 text-sm font-medium';
 
 function getCategoryTitles(
   project: ProjectResponse,
@@ -61,7 +61,7 @@ export function getProjectColumns(
             variant={row.favourite ? 'warning' : 'light'}
             onClick={() => void onToggleFavourite(row)}
             disabled={isPending}
-            className={`${tableControlClass} ${row.favourite ? '' : '!text-gray-600'}`}
+            className={`${tableControlClass} ${row.favourite ? '' : '!text-ink-muted'}`}
             ariaLabel={row.favourite ? 'הסר ממועדפים' : 'הוסף למועדפים'}
           >
             {isPending ? (
@@ -85,7 +85,7 @@ export function getProjectColumns(
             variant={row.isCompleted ? 'success' : 'light'}
             onClick={() => void onToggleCompleted(row)}
             disabled={isPending}
-            className={`${tableControlClass} ${row.isCompleted ? '' : '!text-gray-700'}`}
+            className={`${tableControlClass} ${row.isCompleted ? '' : '!text-ink-muted'}`}
             ariaLabel={row.isCompleted ? 'סמן כלא הושלם' : 'סמן כהושלם'}
           >
             {isPending ? (

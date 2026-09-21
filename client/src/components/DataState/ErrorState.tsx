@@ -19,7 +19,7 @@ export function ErrorState({
       dir="rtl"
       data-testid="error-state"
     >
-      <p className="paragraph text-lg font-medium text-red-600">{message}</p>
+      <p className="text-body text-lg font-medium text-danger">{message}</p>
       {onRetry && (
         <Button
           onClick={() => {

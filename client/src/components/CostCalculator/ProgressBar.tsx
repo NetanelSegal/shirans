@@ -18,7 +18,7 @@ export function ProgressBar({
 
   return (
     <div className="mb-8 flex items-center gap-3">
-      <span className="shrink-0 text-sm font-bold text-primary/70">
+      <span className="shrink-0 text-sm font-bold text-ink-muted">
         {current + 1}/{total}
       </span>
       <div

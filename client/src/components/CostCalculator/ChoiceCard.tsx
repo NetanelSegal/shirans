@@ -11,7 +11,7 @@ interface ChoiceCardProps {
 
 const selectedRing = 'border-primary ring-2 ring-primary';
 const idleRing =
-  'border-primary/15 hover-capable:hover:border-primary/40 hover-capable:hover:shadow-md hover-capable:hover:-translate-y-0.5';
+  'border-primary/15 hover-capable:hover:border-primary/40 hover-capable:hover:shadow-card hover-capable:hover:-translate-y-0.5';
 
 /**
  * Named properties rather than `all`, so the hover lift and the selection ring
@@ -28,7 +28,7 @@ const cardMotion =
  * where they are. Offset in the card's own surface colour, not white.
  */
 const FOCUS =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-secondary';
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-sunken';
 
 export function ChoiceCard({
   option,
@@ -43,7 +43,7 @@ export function ChoiceCard({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`${BUTTON_RESET} ${cardMotion} ${FOCUS} group overflow-hidden rounded-xl border bg-white text-right ${
+      className={`${BUTTON_RESET} ${cardMotion} ${FOCUS} group overflow-hidden rounded-card border bg-surface-raised text-right ${
         selected ? selectedRing : idleRing
       } ${
         // Picture above the label at every size. Side by side, the drawing had
@@ -78,17 +78,17 @@ export function ChoiceCard({
       {variant === 'row' && option.image && (
         // `contain`, not `cover` — these are line drawings, and cropping them
         // cuts off the very storeys the option is describing.
-        <div className="h-14 w-full overflow-hidden rounded-lg sm:h-20 md:h-28">
+        <div className="h-14 w-full overflow-hidden rounded-card sm:h-20 md:h-28">
           <Image src={option.image} alt="" className="size-full object-contain" />
         </div>
       )}
 
-      {Icon && <Icon className="size-7 text-primary" aria-hidden />}
+      {Icon && <Icon className="size-7 text-ink" aria-hidden />}
 
       <div className={variant === 'image' ? 'p-3' : ''}>
-        <span className="block font-bold text-primary">{option.label}</span>
+        <span className="block font-bold text-ink">{option.label}</span>
         {option.sublabel && (
-          <span className="mt-0.5 block text-sm text-primary/70">
+          <span className="mt-0.5 block text-sm text-ink-muted">
             {option.sublabel}
           </span>
         )}

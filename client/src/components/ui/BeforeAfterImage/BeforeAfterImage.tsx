@@ -15,7 +15,7 @@ export default function BeforeAfterImage({
   beforeSrc,
   afterSrc,
   containerClassName = 'aspect-video',
-  sliderColor = '#ffffff',
+  sliderColor = 'rgb(var(--white))',
   initialPosition = 50,
   alt = 'Before and after comparison',
   beforeLabel = 'לפני',
@@ -109,7 +109,7 @@ export default function BeforeAfterImage({
           className='h-full w-full object-cover object-center'
         />
         {/* After label */}
-        <div className='absolute bottom-2 right-2 z-50 bg-black/50 px-2 py-1 text-xs text-white'>
+        <div className='absolute bottom-2 right-2 z-50 bg-black/50 px-2 py-1 text-xs text-on-dark'>
           {afterLabel}
         </div>
       </div>
@@ -127,7 +127,7 @@ export default function BeforeAfterImage({
           className='h-full w-full object-cover object-center'
         />
         {/* Before label */}
-        <div className='absolute bottom-2 left-2 z-50 bg-black/50 px-2 py-1 text-xs text-white'>
+        <div className='absolute bottom-2 left-2 z-50 bg-black/50 px-2 py-1 text-xs text-on-dark'>
           {beforeLabel}
         </div>
       </div>
@@ -148,12 +148,12 @@ export default function BeforeAfterImage({
           onTouchStart={handleTouchStart}
         >
           <div
-            className='flex h-10 w-10 items-center justify-center rounded-full shadow-md'
+            className='flex h-10 w-10 items-center justify-center rounded-full shadow-card'
             style={{ backgroundColor: sliderColor }}
           >
             <div className='flex items-center justify-center gap-[2px]'>
-              <div className='h-4 w-[1px] bg-gray-500'></div>
-              <div className='h-4 w-[1px] bg-gray-500'></div>
+              <div className='h-4 w-[1px] bg-ink-subtle'></div>
+              <div className='h-4 w-[1px] bg-ink-subtle'></div>
             </div>
           </div>
         </div>

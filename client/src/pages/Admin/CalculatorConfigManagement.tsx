@@ -90,12 +90,12 @@ export default function CalculatorConfigManagement() {
           ))}
 
           {message && (
-            <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
+            <p className="rounded-card bg-danger-soft p-3 text-sm text-danger" role="alert">
               {message}
             </p>
           )}
           {justSaved && !message && (
-            <p className="text-sm font-bold text-green-700" role="status">
+            <p className="text-sm font-bold text-success" role="status">
               ההגדרות נשמרו.
             </p>
           )}

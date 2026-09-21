@@ -825,7 +825,7 @@ export default function Process() {
         description={PAGE_META.description}
         path="/process"
       />
-      <h1 className='heading py-10 text-center font-bold'>התהליך</h1>
+      <h1 className='text-h2 py-10 text-center font-bold'>התהליך</h1>
       {content.map(({ title, longText }, i) => (
         <EnterAnimation key={title}>
           <div className={`${i !== 0 ? 'py-5 lg:py-10' : 'py-5 lg:pb-10'}`}>

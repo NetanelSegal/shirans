@@ -53,12 +53,12 @@ export default function E_ServicesSection() {
 
   return (
     <section
-      className='py-section-all breakout-x-padding bg-secondary'
+      className='py-section-all breakout-x-padding bg-surface-sunken'
       aria-labelledby='services-heading'
     >
       <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
         <motion.h2
-          className='heading mb-4 text-center font-semibold'
+          className='text-h2 mb-4 text-center font-semibold'
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -81,12 +81,12 @@ export default function E_ServicesSection() {
             >
               <div
                 key={id}
-                className='flex h-full flex-col items-center rounded-xl bg-white p-6 text-center shadow-lg'
+                className='flex h-full flex-col items-center rounded-card bg-surface-raised p-6 text-center shadow-raised'
                 tabIndex={0}
                 aria-labelledby={`${id}-title`}
                 role='article'
               >
-                <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors'>
+                <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-ink transition-colors'>
                   <img
                     width='30'
                     src={getIcon({ icon: id })}
@@ -95,11 +95,11 @@ export default function E_ServicesSection() {
                 </div>
                 <h3
                   id={`${id}-title`}
-                  className='mb-2 text-xl font-semibold text-gray-900'
+                  className='mb-2 text-xl font-semibold text-ink'
                 >
                   {title}
                 </h3>
-                <p className='text-gray-600'>{description}</p>
+                <p className='text-ink-muted'>{description}</p>
               </div>
             </EnterAnimation>
           ))}

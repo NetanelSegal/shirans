@@ -38,13 +38,13 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
       ...props,
       id: inputId,
       placeholder: ' ',
-      className: `peer w-full rounded-xl p-2 [-webkit-tap-highlight-color:transparent] focus:outline-none focus:ring-2 focus:ring-offset-0 ${as === 'textarea' ? 'resize-none' : ''} ${error ? 'border border-red-500 focus:border-red-500 focus:ring-red-500' : borderColor ? `border ${borderColor} focus:border-primary focus:ring-primary` : 'border border-gray-200 focus:border-primary focus:ring-primary'
+      className: `peer w-full rounded-card p-2 [-webkit-tap-highlight-color:transparent] focus:outline-none focus:ring-2 focus:ring-offset-0 ${as === 'textarea' ? 'resize-none' : ''} ${error ? 'border border-danger focus:border-danger focus:ring-danger' : borderColor ? `border ${borderColor} focus:border-primary focus:ring-primary` : 'border border-line/70 focus:border-primary focus:ring-primary'
         }`,
     };
 
     const labelClasses =
       labelClassName ??
-      'absolute start-2 z-10 top-2 rounded-md px-2 font-bold shadow-md transition-all duration-150 ease-in-out peer-focus:-translate-y-3/4 peer-focus:top-2 peer-[:not(:placeholder-shown)]:-translate-y-3/4 peer-[:not(:placeholder-shown)]:top-2 text-dark bg-secondary';
+      'absolute start-2 z-10 top-2 rounded-field px-2 font-bold shadow-card transition-all duration-150 ease-in-out peer-focus:-translate-y-3/4 peer-focus:top-2 peer-[:not(:placeholder-shown)]:-translate-y-3/4 peer-[:not(:placeholder-shown)]:top-2 text-dark bg-surface-sunken';
 
     return (
       <div className="relative">
@@ -66,7 +66,7 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
           {label}
         </label>
         {error && (
-          <span className="mt-1 block text-sm text-red-700">{error.message}</span>
+          <span className="mt-1 block text-sm text-danger">{error.message}</span>
         )}
       </div>
     );

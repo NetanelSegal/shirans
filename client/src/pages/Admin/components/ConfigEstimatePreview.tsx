@@ -31,10 +31,10 @@ export function ConfigEstimatePreview({
   const estimate = calculateCost(SAMPLE_HOUSE, config);
 
   return (
-    <aside className="rounded-xl bg-secondary p-5" aria-live="polite">
-      <h3 className="font-bold text-primary">בית לדוגמה</h3>
-      <p className="mt-1 text-sm text-primary/70">{SAMPLE_DESCRIPTION}</p>
-      <ShekelAmount value={estimate} className="mt-3 block text-xl font-bold text-primary" />
+    <aside className="rounded-card bg-surface-sunken p-5" aria-live="polite">
+      <h3 className="font-bold text-ink">בית לדוגמה</h3>
+      <p className="mt-1 text-sm text-ink-muted">{SAMPLE_DESCRIPTION}</p>
+      <ShekelAmount value={estimate} className="mt-3 block text-xl font-bold text-ink" />
     </aside>
   );
 }

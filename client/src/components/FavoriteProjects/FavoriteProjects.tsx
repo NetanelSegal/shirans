@@ -23,7 +23,7 @@ export default function FavoriteProjects() {
 
   return (
     <>
-      <h2 className='heading mb-4 text-center font-semibold'>
+      <h2 className='text-h2 mb-4 text-center font-semibold'>
         פרוייקטים נבחרים
       </h2>
       <DataCarousel
@@ -31,7 +31,7 @@ export default function FavoriteProjects() {
         dataArray={data}
         containerClassname='max-w-[900px] mx-auto'
         singleItem={(project, index) => (
-          <div className='relative mb-2 aspect-video size-full overflow-hidden rounded-xl'>
+          <div className='relative mb-2 aspect-video size-full overflow-hidden rounded-card'>
             <Link to={`/projects/${project.id}`} state={{ project: data[index] }}>
               <Image
                 key={project.id}
@@ -50,8 +50,8 @@ export default function FavoriteProjects() {
         )}
         carouselNavigation={({ title }, incrementIndex, decrementIndex) => (
           <div className='mt-2 flex flex-wrap gap-1'>
-            <div className='flex h-10 grow basis-1/2 items-center rounded-xl bg-primary px-6 text-white'>
-              <span className='paragraph'>{title}</span>
+            <div className='flex h-10 grow basis-1/2 items-center rounded-card bg-primary px-6 text-on-dark'>
+              <span className='text-body'>{title}</span>
             </div>
             <div className='mx-auto flex w-fit items-center gap-2'>
               <button
@@ -71,7 +71,7 @@ export default function FavoriteProjects() {
                 <ChevronLeft className='size-5' aria-hidden />
               </button>
               <button
-                className='w-fit shrink text-nowrap bg-secondary text-black'
+                className='w-fit shrink text-nowrap bg-surface-sunken text-ink'
                 onClick={() => nav('/projects')}
               >
                 כל הפרוייקטים

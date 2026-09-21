@@ -36,9 +36,9 @@ export function WhatNowSection() {
     // Its own padding is internal only — the band has a background, so its
     // content needs room from the band's edges. The space around the band
     // belongs to the page.
-    <section className="breakout-x-padding bg-secondary px-page-all py-14 md:py-20">
-      <h2 className="subheading text-center font-bold text-primary">מה עכשיו?</h2>
-      <p className="mx-auto mt-3 max-w-2xl text-center text-primary/70">
+    <section className="breakout-x-padding bg-surface-sunken px-page-all py-14 md:py-20">
+      <h2 className="text-h3 text-center font-bold text-ink">מה עכשיו?</h2>
+      <p className="mx-auto mt-3 max-w-2xl text-center text-ink-muted">
         בואו נבדוק יחד אם הבית שאתם רוצים וההערכה שקיבלתם באמת מתחברים.
       </p>
 
@@ -46,16 +46,16 @@ export function WhatNowSection() {
         {ITEMS.map(({ icon: Icon, title, description }) => (
           <li
             key={title}
-            className="rounded-2xl bg-white p-6 transition-shadow duration-200 ease-out hover-capable:hover:shadow-md motion-reduce:transition-none"
+            className="rounded-panel bg-surface-raised p-6 transition-shadow duration-200 ease-out hover-capable:hover:shadow-card motion-reduce:transition-none"
           >
             <span
-              className="flex size-11 items-center justify-center rounded-full bg-secondary text-primary"
+              className="flex size-11 items-center justify-center rounded-full bg-surface-sunken text-ink"
               aria-hidden
             >
               <Icon className="size-5" />
             </span>
-            <h3 className="mt-4 font-bold text-primary">{title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-primary/70">
+            <h3 className="mt-4 font-bold text-ink">{title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-ink-muted">
               {description}
             </p>
           </li>

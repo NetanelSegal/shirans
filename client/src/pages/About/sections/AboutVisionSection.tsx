@@ -4,16 +4,16 @@ export default function AboutVisionSection() {
   return (
     <section
       aria-labelledby="about-vision-heading"
-      className="breakout-x-padding bg-secondary py-section-all"
+      className="breakout-x-padding bg-surface-sunken py-section-all"
     >
       <div className="px-page-all">
         <h2
           id="about-vision-heading"
-          className="heading mb-4 text-center font-semibold"
+          className="text-h2 mb-4 text-center font-semibold"
         >
           {aboutVision.title}
         </h2>
-        <p className="paragraph mx-auto mb-12 max-w-3xl text-center text-slate-700">
+        <p className="text-body mx-auto mb-12 max-w-3xl text-center text-ink-muted">
           {aboutVision.intro}
         </p>
 
@@ -22,14 +22,14 @@ export default function AboutVisionSection() {
             <div key={id} className="flex flex-col items-center text-center">
               <div className="mb-4 flex h-16 w-16 items-center justify-center">
                 <i
-                  className={`fa-solid ${icon} text-3xl text-[#B5967A]`}
+                  className={`fa-solid ${icon} text-3xl text-accent`}
                   aria-hidden
                 />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-primary">
+              <h3 className="mb-2 text-lg font-semibold text-ink">
                 {title}
               </h3>
-              <p className="text-slate-600">{description}</p>
+              <p className="text-ink-muted">{description}</p>
             </div>
           ))}
         </div>

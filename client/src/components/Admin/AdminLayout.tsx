@@ -24,10 +24,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }, [location, isSmallScreen]);
 
   return (
-    <div className="flex min-h-screen bg-gray-50" dir="rtl">
+    <div className="flex min-h-screen bg-surface-soft" dir="rtl">
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 z-50 h-full bg-primary text-white transition-all duration-300 ease-in-out ${
+        className={`fixed top-0 z-50 h-full bg-primary text-on-dark transition-all duration-300 ease-in-out ${
           isSmallScreen
             ? isSidebarOpen
               ? 'right-0 w-64'
@@ -42,7 +42,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           {isSmallScreen && (
             <button
               onClick={() => setIsSidebarOpen(false)}
-              className="text-white text-2xl"
+              className="text-on-dark text-2xl"
               aria-label="סגור תפריט"
             >
               <i className="fa-solid fa-times" aria-hidden />

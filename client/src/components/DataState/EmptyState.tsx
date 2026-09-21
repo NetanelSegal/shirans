@@ -10,7 +10,7 @@ export function EmptyState({ message, className = '' }: EmptyStateProps) {
       dir="rtl"
       data-testid="empty-state"
     >
-      <p className="paragraph text-lg font-medium text-gray-600">{message}</p>
+      <p className="text-body text-lg font-medium text-ink-muted">{message}</p>
     </div>
   );
 }

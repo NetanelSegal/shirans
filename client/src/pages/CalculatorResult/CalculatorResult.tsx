@@ -41,7 +41,7 @@ export default function CalculatorResult() {
     // floating bar overlays the end of the page.
     <main
       dir="rtl"
-      className="breakout-x-padding flex flex-col gap-14 bg-white px-page-all pb-32 pt-page-sm md:gap-20 lg:gap-24 lg:pt-page-lg"
+      className="breakout-x-padding flex flex-col gap-14 bg-surface-raised px-page-all pb-32 pt-page-sm md:gap-20 lg:gap-24 lg:pt-page-lg"
     >
       <PageSeo
         title="ההערכה שלכם - מחשבון עלות הבית | שירן גלעד"
@@ -57,7 +57,7 @@ export default function CalculatorResult() {
       <AboutShiranSection />
 
       <section>
-        <h2 className="subheading text-center font-bold text-primary">
+        <h2 className="text-h3 text-center font-bold text-ink">
           כך מספרים על הדרך המשותפת
         </h2>
         <Testimonials />

@@ -11,23 +11,23 @@ export default function AboutHeroSection() {
     >
       <div className="flex basis-1/2 flex-col gap-2 px-5 pb-5 pt-0">
         <EnterAnimation delay={0.1}>
-          <h1 id="about-hero-heading" className="heading font-bold">
+          <h1 id="about-hero-heading" className="text-h2 font-bold">
             {aboutHero.title}
           </h1>
           <div className="mt-4 flex flex-col gap-1">
             {aboutHero.taglines.map((line) => (
-              <p key={line} className="paragraph font-medium">
+              <p key={line} className="text-body font-medium">
                 {line}
               </p>
             ))}
           </div>
-          <p className="paragraph mt-4 text-slate-700">{aboutHero.intro}</p>
+          <p className="text-body mt-4 text-ink-muted">{aboutHero.intro}</p>
         </EnterAnimation>
       </div>
 
       <div className="basis-1/2 self-start">
         <EnterAnimation delay={0.1} translateY={false}>
-          <div className="max-h-[700px] overflow-hidden rounded-3xl">
+          <div className="max-h-[700px] overflow-hidden rounded-panel">
             <Image
               className="size-full object-cover"
               src={srcShiranImage}

@@ -55,7 +55,7 @@ const Project = ({ project, i }: IProjectProps) => {
             state={{ project, other: 'other' }}
           >
             <ImageScaleHover
-              containerClassName='rounded-xl shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
+              containerClassName='rounded-card shadow-card grow'
               src={optimizeCloudinaryImageUrl(
                 getMainImageUrl(project.media),
                 800,
@@ -72,7 +72,7 @@ const Project = ({ project, i }: IProjectProps) => {
       </div>
       <div className='my-1 px-2 lg:w-1/3'>
         <EnterAnimation delay={i * 0.1 + 0.1}>
-          <h2 className='subheading font-semibold'>{project.title}</h2>
+          <h2 className='text-h3 font-semibold'>{project.title}</h2>
           <div className='my-1 flex flex-wrap gap-1'>
             {project.categories?.map((catCode) => (
               <CategoryLabel

@@ -41,7 +41,7 @@ export function ConfirmDialog({
       containerClassName="w-full max-w-md"
     >
       <div
-        className="rounded-xl bg-white p-6 shadow-xl"
+        className="rounded-card bg-surface-raised p-6 shadow-raised"
         dir="rtl"
         role="alertdialog"
         aria-labelledby="confirm-dialog-title"
@@ -49,11 +49,11 @@ export function ConfirmDialog({
       >
         <h2
           id="confirm-dialog-title"
-          className="mb-2 text-xl font-bold text-primary"
+          className="mb-2 text-xl font-bold text-ink"
         >
           {title}
         </h2>
-        <p id="confirm-dialog-message" className="mb-6 text-gray-600">
+        <p id="confirm-dialog-message" className="mb-6 text-ink-muted">
           {message}
         </p>
         <div className="flex justify-end gap-2">

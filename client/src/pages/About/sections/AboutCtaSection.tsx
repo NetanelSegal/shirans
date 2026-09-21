@@ -11,12 +11,12 @@ export default function AboutCtaSection() {
   return (
     <section
       aria-labelledby="about-cta-heading"
-      className="breakout-x-padding bg-secondary py-section-all"
+      className="breakout-x-padding bg-surface-sunken py-section-all"
     >
       <div className="px-page-all flex flex-col items-end justify-center gap-8 md:flex-row">
         <div className="basis-1/2 self-center">
           <EnterAnimation delay={0.1} translateY={false}>
-            <div className="max-h-[500px] overflow-hidden rounded-3xl md:max-h-[400px]">
+            <div className="max-h-[500px] overflow-hidden rounded-panel md:max-h-[400px]">
               <Image
                 className="size-full object-cover"
                 src={houseExteriorImage}
@@ -28,14 +28,14 @@ export default function AboutCtaSection() {
 
         <div className="flex basis-1/2 flex-col gap-2 p-5">
           <EnterAnimation delay={0.2}>
-            <h2 id="about-cta-heading" className="heading font-semibold">
+            <h2 id="about-cta-heading" className="text-h2 font-semibold">
               {aboutCta.title}
             </h2>
-            <p className="paragraph mt-4 text-slate-700">{aboutCta.description}</p>
+            <p className="text-body mt-4 text-ink-muted">{aboutCta.description}</p>
             <div className="mt-6">
               <Button
                 variant="primary"
-                className="inline-flex items-center gap-2 bg-[#B5967A] px-8 py-3 text-lg hover-capable:hover:bg-[#a3856b]"
+                className="inline-flex items-center gap-2 bg-accent px-8 py-3 text-lg hover-capable:hover:bg-accent-strong"
                 onClick={() => navigate('/contact')}
               >
                 {aboutCta.buttonText}

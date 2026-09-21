@@ -227,7 +227,7 @@ export default function TestimonialsManagement() {
                     <button
                       type="button"
                       onClick={() => handleMoveUp(row)}
-                      className="rounded-lg bg-gray-300 px-2 py-1.5 text-sm font-medium text-black transition-colors hover:bg-gray-400 disabled:opacity-50"
+                      className="rounded-card bg-line px-2 py-1.5 text-sm font-medium text-ink transition-colors hover:bg-ink-subtle disabled:opacity-50"
                       aria-label="העלה"
                       disabled={sorted.findIndex((x) => x.id === row.id) <= 0}
                     >
@@ -236,7 +236,7 @@ export default function TestimonialsManagement() {
                     <button
                       type="button"
                       onClick={() => handleMoveDown(row)}
-                      className="rounded-lg bg-gray-300 px-2 py-1.5 text-sm font-medium text-black transition-colors hover:bg-gray-400 disabled:opacity-50"
+                      className="rounded-card bg-line px-2 py-1.5 text-sm font-medium text-ink transition-colors hover:bg-ink-subtle disabled:opacity-50"
                       aria-label="הורד"
                       disabled={
                         sorted.findIndex((x) => x.id === row.id) >=
@@ -248,7 +248,7 @@ export default function TestimonialsManagement() {
                     <button
                       type="button"
                       onClick={() => handleOpenEdit(row)}
-                      className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary/90"
+                      className="rounded-card bg-primary px-3 py-1.5 text-sm font-medium text-on-dark transition-colors hover:bg-primary/90"
                       aria-label={`ערוך ${row.name}`}
                     >
                       עריכה
@@ -256,7 +256,7 @@ export default function TestimonialsManagement() {
                     <button
                       type="button"
                       onClick={() => setDeleteTarget(row)}
-                      className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                      className="rounded-card bg-danger px-3 py-1.5 text-sm font-medium text-on-dark transition-colors hover:bg-danger"
                       aria-label={`מחק ${row.name}`}
                     >
                       מחיקה
@@ -283,11 +283,11 @@ export default function TestimonialsManagement() {
             id="name"
             type="text"
             {...form.register('name')}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
+            className="w-full rounded-card border border-line px-3 py-2"
             aria-invalid={!!form.formState.errors.name}
           />
           {form.formState.errors.name && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-danger">
               {form.formState.errors.name.message}
             </p>
           )}
@@ -300,11 +300,11 @@ export default function TestimonialsManagement() {
             id="message"
             rows={4}
             {...form.register('message')}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
+            className="w-full rounded-card border border-line px-3 py-2"
             aria-invalid={!!form.formState.errors.message}
           />
           {form.formState.errors.message && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-danger">
               {form.formState.errors.message.message}
             </p>
           )}
@@ -314,7 +314,7 @@ export default function TestimonialsManagement() {
             id="isPublished"
             type="checkbox"
             {...form.register('isPublished')}
-            className="h-4 w-4 rounded"
+            className="h-4 w-4 rounded-field"
           />
           <label htmlFor="isPublished" className="text-sm font-medium">
             פורסם
@@ -329,17 +329,17 @@ export default function TestimonialsManagement() {
             type="number"
             min={0}
             {...form.register('order', { valueAsNumber: true })}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
+            className="w-full rounded-card border border-line px-3 py-2"
             aria-invalid={!!form.formState.errors.order}
           />
           {form.formState.errors.order && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-danger">
               {form.formState.errors.order.message}
             </p>
           )}
         </div>
         {formError && (
-          <p className="text-sm text-red-600" role="alert">
+          <p className="text-sm text-danger" role="alert">
             {formError}
           </p>
         )}

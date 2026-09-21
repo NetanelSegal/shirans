@@ -113,7 +113,7 @@ export function CostCalculator({
     return (
       <div
         ref={rootRef}
-        className="scroll-mt-24 rounded-2xl bg-secondary p-6 md:p-10"
+        className="scroll-mt-24 rounded-panel bg-surface-sunken p-6 md:p-10"
         dir="rtl"
       >
         <IntroStep onStart={() => goToStep(0)} />
@@ -124,7 +124,7 @@ export function CostCalculator({
   return (
     <div
       ref={rootRef}
-      className="scroll-mt-24 rounded-2xl bg-secondary p-6 md:p-10"
+      className="scroll-mt-24 rounded-panel bg-surface-sunken p-6 md:p-10"
       dir="rtl"
     >
       {wasRestored && (

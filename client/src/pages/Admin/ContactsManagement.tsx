@@ -102,7 +102,7 @@ export default function ContactsManagement() {
       render: (row: ContactResponse) => (
         <a
           href={`mailto:${row.email}`}
-          className="text-primary underline hover:text-primary/80"
+          className="text-ink underline hover:text-ink-muted"
           aria-label={`שלח מייל ל${row.email}`}
         >
           {row.email}
@@ -115,7 +115,7 @@ export default function ContactsManagement() {
       render: (row: ContactResponse) => (
         <a
           href={`tel:${row.phoneNumber}`}
-          className="text-primary underline hover:text-primary/80"
+          className="text-ink underline hover:text-ink-muted"
           aria-label={`התקשר ל${row.phoneNumber}`}
         >
           {row.phoneNumber}
@@ -222,7 +222,7 @@ export default function ContactsManagement() {
                       onClick={() =>
                         setExpandedId(expandedId === row.id ? null : row.id)
                       }
-                      className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary/90"
+                      className="rounded-card bg-primary px-3 py-1.5 text-sm font-medium text-on-dark transition-colors hover:bg-primary/90"
                       aria-label={expandedId === row.id ? 'צמצם' : 'הרחב'}
                     >
                       {expandedId === row.id ? 'צמצם' : 'הצג'}
@@ -232,7 +232,7 @@ export default function ContactsManagement() {
                       onClick={() =>
                         updateReadStatus(row.id, !row.isRead)
                       }
-                      className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-secondary/80"
+                      className="rounded-card bg-surface-sunken px-3 py-1.5 text-sm font-medium text-ink transition-colors hover:bg-surface-sunken/80"
                       aria-label={row.isRead ? 'סמן כלא נקרא' : 'סמן כנקרא'}
                     >
                       {row.isRead ? 'לא נקרא' : 'נקרא'}
@@ -240,7 +240,7 @@ export default function ContactsManagement() {
                     <button
                       type="button"
                       onClick={() => setDeleteTarget(row)}
-                      className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                      className="rounded-card bg-danger px-3 py-1.5 text-sm font-medium text-on-dark transition-colors hover:bg-danger"
                       aria-label={`מחק פנייה מ${row.name}`}
                     >
                       מחיקה

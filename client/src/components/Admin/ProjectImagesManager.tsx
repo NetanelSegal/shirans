@@ -82,13 +82,13 @@ function ImageUploadZone({
         onDragOver={(e) => e.preventDefault()}
         role="region"
         aria-label="אזור גרירת קבצים להעלאה"
-        className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 transition-colors ${disabled ? 'border-gray-200 bg-gray-100' : 'border-gray-300 bg-gray-50'}`}
+        className={`flex flex-col items-center justify-center rounded-card border-2 border-dashed p-8 transition-colors ${disabled ? 'border-line/70 bg-surface-sunken' : 'border-line bg-surface-soft'}`}
       >
-        <i className="fa-solid fa-cloud-arrow-up mb-2 text-3xl text-gray-400" aria-hidden />
-        <p className="text-sm text-gray-600">
+        <i className="fa-solid fa-cloud-arrow-up mb-2 text-3xl text-ink-subtle" aria-hidden />
+        <p className="text-sm text-ink-muted">
           {uploading ? 'מעלה ומעבד תמונות...' : 'גרור קבצים לכאן'}
         </p>
-        <p className="mt-1 mb-3 text-xs text-gray-400">
+        <p className="mt-1 mb-3 text-xs text-ink-subtle">
           JPEG, PNG, WebP, HEIC · עד 20 קבצים
         </p>
         <Button
@@ -168,13 +168,13 @@ function ImageThumbnail({
           ? `${typeLabel} — מיקום ${indexInType + 1}, ניתן לגרור או להזיז עם החצים`
           : undefined
       }
-      className={`relative overflow-hidden rounded-lg border bg-white transition-all ${
+      className={`relative overflow-hidden rounded-card border bg-surface-raised transition-all ${
         isDragging ? 'scale-[0.98] opacity-40' : ''
-      } ${isDropTarget ? 'border-primary ring-2 ring-primary/30' : 'border-gray-200'}`}
+      } ${isDropTarget ? 'border-primary ring-2 ring-primary/30' : 'border-line/70'}`}
     >
       {item.type === 'VIDEO' ? (
-        <div className="flex aspect-video items-center justify-center bg-gray-100">
-          <i className="fa-solid fa-video text-2xl text-gray-400" aria-hidden />
+        <div className="flex aspect-video items-center justify-center bg-surface-sunken">
+          <i className="fa-solid fa-video text-2xl text-ink-subtle" aria-hidden />
         </div>
       ) : (
         <Image
@@ -184,11 +184,11 @@ function ImageThumbnail({
           draggable={false}
         />
       )}
-      <span className="absolute top-1 right-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-white">
+      <span className="absolute top-1 right-1 rounded-field bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-on-dark">
         {typeLabel}
       </span>
       {reorderable && (
-        <span className="absolute bottom-1 right-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-white">
+        <span className="absolute bottom-1 right-1 rounded-field bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-on-dark">
           {indexInType + 1}
         </span>
       )}
@@ -208,7 +208,7 @@ function ImageThumbnail({
       </Button>
       {showDragHandle && (
         <div
-          className="absolute bottom-1 left-1 flex cursor-grab items-center gap-1 rounded bg-white/90 px-1 py-1 text-gray-600 shadow-sm active:cursor-grabbing"
+          className="absolute bottom-1 left-1 flex cursor-grab items-center gap-1 rounded-field bg-surface-raised/90 px-1 py-1 text-ink-muted shadow-card active:cursor-grabbing"
         >
           <i className="fa-solid fa-grip-lines px-1 text-sm" aria-hidden />
           {(onMoveUp || onMoveDown) && (
@@ -284,9 +284,9 @@ function MediaSection({
   return (
     <section>
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
+        <h3 className="text-sm font-semibold text-ink-muted">{title}</h3>
         {canDrag && (
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-ink-subtle">
             {reorderMode === 'bulk'
               ? 'גרור — השינויים יישמרו בלחיצה על "שמור סדר"'
               : 'גרור כדי לשנות סדר'}
@@ -559,9 +559,9 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
       center
       containerClassName="w-full max-w-3xl"
     >
-      <div className="rounded-xl bg-white p-6 shadow-xl" dir="rtl">
+      <div className="rounded-card bg-surface-raised p-6 shadow-raised" dir="rtl">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-primary">
+          <h2 className="text-xl font-bold text-ink">
             ניהול תמונות - {project.title}
           </h2>
           <Button
@@ -576,7 +576,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
         </div>
 
         {error && (
-          <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">
+          <div className="mb-4 rounded-card bg-danger-soft p-3 text-sm text-danger" role="alert">
             {error}
           </div>
         )}
@@ -599,10 +599,10 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
         />
 
         {!hasMedia ? (
-          <p className="py-8 text-center text-sm text-gray-500">אין תמונות</p>
+          <p className="py-8 text-center text-sm text-ink-subtle">אין תמונות</p>
         ) : (
           <div className="space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-line/70 bg-surface-soft px-4 py-3">
               <Checkbox
                 id="project-images-bulk-reorder"
                 label="שמירת סדר מרוכזת (גרור מספר פעמים, שמור פעם אחת)"
@@ -611,7 +611,7 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
                 disabled={uploadBlocked}
               />
               {hasPendingBulkReorder && (
-                <span className="text-xs font-medium text-amber-700">
+                <span className="text-xs font-medium text-warning">
                   יש שינויי סדר שלא נשמרו
                 </span>
               )}
@@ -619,10 +619,10 @@ export function ProjectImagesManager({ project, onClose }: ProjectImagesManagerP
             <div className="relative space-y-6">
             {isReordering && (
               <div
-                className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/60"
+                className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-card bg-surface-raised/60"
                 aria-live="polite"
               >
-                <span className="flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm text-gray-700 shadow-sm">
+                <span className="flex items-center gap-2 rounded-card bg-surface-raised px-3 py-2 text-sm text-ink-muted shadow-card">
                   <i className="fa-solid fa-spinner fa-spin" aria-hidden />
                   שומר סדר...
                 </span>

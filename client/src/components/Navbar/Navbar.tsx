@@ -63,15 +63,15 @@ export default function Navbar() {
             aria-expanded={toggle}
             onClick={() => setToggle((prev) => !prev)}
           >
-            <span className='flex size-8 items-center justify-center rounded-xl bg-secondary text-black'>
+            <span className='flex size-8 items-center justify-center rounded-card bg-surface-sunken text-ink'>
               <Menu className='size-5' aria-hidden />
             </span>
           </button>
         )}
         <ul
           className={`flex items-center gap-5 ${isSmallScreen
-            ? `fixed left-0 right-0 top-14 -z-20 ${!toggle && '-translate-y-[150%]'} flex-col bg-white p-5 text-primary transition-all duration-300 ease-in-out`
-            : 'text-white'
+            ? `fixed left-0 right-0 top-14 -z-20 ${!toggle && '-translate-y-[150%]'} flex-col bg-surface-raised p-5 text-ink transition-all duration-300 ease-in-out`
+            : 'text-on-dark'
             }`}
         >
           {appRoutes.map(

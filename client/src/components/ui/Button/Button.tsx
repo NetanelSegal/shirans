@@ -12,20 +12,20 @@ interface ButtonProps {
 }
 
 const variantClasses = {
-  primary: 'bg-primary text-white hover-capable:hover:bg-primary/90',
-  secondary: 'bg-secondary text-black hover-capable:hover:bg-secondary/80',
-  danger: 'bg-red-500 text-white hover-capable:hover:bg-red-600',
-  success: 'bg-green-500 text-white hover-capable:hover:bg-green-600',
-  warning: 'bg-yellow-500 text-white hover-capable:hover:bg-yellow-600',
-  info: 'bg-blue-500 text-white hover-capable:hover:bg-blue-600',
-  light: 'bg-gray-100 text-black hover-capable:hover:bg-gray-200',
-  dark: 'bg-gray-800 text-white hover-capable:hover:bg-gray-700',
+  primary: 'bg-primary text-on-dark hover-capable:hover:bg-primary/90',
+  secondary: 'bg-surface-sunken text-ink hover-capable:hover:bg-surface-sunken/80',
+  danger: 'bg-danger text-on-dark hover-capable:hover:bg-danger',
+  success: 'bg-success text-on-dark hover-capable:hover:bg-success/90',
+  warning: 'bg-warning text-on-dark hover-capable:hover:bg-warning/90',
+  info: 'bg-primary text-on-dark hover-capable:hover:bg-primary/90',
+  light: 'bg-surface-sunken text-ink hover-capable:hover:bg-surface-sunken',
+  dark: 'bg-primary text-on-dark hover-capable:hover:bg-primary',
 };
 
 function Button({ children, onClick, variant = 'secondary', className, disabled, type = 'button', ariaLabel }: ButtonProps) {
   return (
     <button
-      className={`rounded-xl px-4 py-2 transition-all duration-200 ${variantClasses[variant]} ${className ?? ''}`}
+      className={`rounded-card px-4 py-2 transition-all duration-200 ${variantClasses[variant]} ${className ?? ''}`}
       disabled={disabled}
       type={type}
       onClick={onClick}

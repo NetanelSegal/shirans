@@ -28,9 +28,9 @@ export function DesktopTable<T>({
   sortStateByKey,
 }: DesktopTableProps<T>) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
-      <table className="min-w-full divide-y divide-gray-200" role="table">
-        <thead className="bg-gray-50">
+    <div className="overflow-x-auto rounded-card border border-line/70 bg-surface-raised shadow-card">
+      <table className="min-w-full divide-y divide-line/70" role="table">
+        <thead className="bg-surface-soft">
           <tr>
             {selectable && (
               <th scope="col" className="px-4 py-4 text-right">
@@ -43,9 +43,9 @@ export function DesktopTable<T>({
                     }
                     onChange={onToggleAll}
                     aria-label="בחר הכל"
-                    className="h-4 w-4 rounded"
+                    className="h-4 w-4 rounded-field"
                   />
-                  <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <span className="text-xs font-medium uppercase tracking-wider text-ink-subtle">
                     בחר
                   </span>
                 </label>
@@ -55,7 +55,7 @@ export function DesktopTable<T>({
               <th
                 key={col.key}
                 scope="col"
-                className={`px-6 py-4 text-right text-xs font-medium uppercase tracking-wider text-gray-500 ${col.className ?? ''}`}
+                className={`px-6 py-4 text-right text-xs font-medium uppercase tracking-wider text-ink-subtle ${col.className ?? ''}`}
               >
                 <SortableHeaderCell label={col.header} sortState={sortStateByKey.get(col.key)} />
               </th>
@@ -63,18 +63,18 @@ export function DesktopTable<T>({
             {actions && (
               <th
                 scope="col"
-                className="px-6 py-4 text-right text-xs font-medium uppercase tracking-wider text-gray-500"
+                className="px-6 py-4 text-right text-xs font-medium uppercase tracking-wider text-ink-subtle"
               >
                 {actionsHeader}
               </th>
             )}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className="divide-y divide-line/70 bg-surface-raised">
           {rows.map((row) => {
             const rowId = getRowId(row);
             return (
-              <tr key={rowId} className="hover:bg-gray-50">
+              <tr key={rowId} className="hover:bg-surface-soft">
                 {selectable && (
                   <td className="whitespace-nowrap px-4 py-4">
                     <input
@@ -82,14 +82,14 @@ export function DesktopTable<T>({
                       checked={selectedIds.includes(rowId)}
                       onChange={() => onToggleRow(rowId)}
                       aria-label={`בחר שורה ${rowId}`}
-                      className="h-4 w-4 rounded"
+                      className="h-4 w-4 rounded-field"
                     />
                   </td>
                 )}
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className={`whitespace-nowrap px-6 py-4 text-sm text-gray-900 ${col.className ?? ''}`}
+                    className={`whitespace-nowrap px-6 py-4 text-sm text-ink ${col.className ?? ''}`}
                   >
                     {col.render(row)}
                   </td>

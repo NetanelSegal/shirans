@@ -1,0 +1,102 @@
+/*
+ * Design tokens — the single source for every color, type size, radius, shadow
+ * and rhythm value on the site. tailwind.config.js exposes these and nothing
+ * else, so a class like `bg-gray-500` produces no style, and `npm run
+ * lint:design` rejects hard-coded values like `text-[#ccbebc]`. A new color
+ * starts here or it doesn't exist.
+ *
+ * Two layers:
+ *   1. Palette — raw values, named for what they are. Only this file uses them.
+ *   2. Roles — what a value is for (page surface, body text, hairline…).
+ *      Components use roles, so retuning the palette never means editing a page.
+ *
+ * Colors are stored as RGB channels so Tailwind's opacity modifier works:
+ * `bg-primary/80` → rgb(var(--color-primary) / 0.8).
+ */
+:root {
+  /* ── 1. Palette ─────────────────────────────────────────────────────────── */
+  --navy-950: 14 27 45; /* #0e1b2d — deepest panels, photo scrims */
+  --navy-900: 19 36 59; /* #13243b — dark bands (contact, footer bar) */
+  --navy-800: 26 45 72; /* #1a2d48 — brand navy: headings, primary action */
+  --navy-600: 72 86 108; /* #48566c — secondary text */
+  --navy-400: 128 138 152; /* #808a98 — tertiary text, placeholders */
+
+  --cream-50: 250 248 245; /* #faf8f5 — soft raised surfaces */
+  --cream-100: 245 241 235; /* #f5f1eb — page background */
+  --cream-200: 237 230 221; /* #ede6dd — sunken panels */
+  --sand-300: 223 211 198; /* #dfd3c6 — soft action, chips */
+  --sand-400: 205 189 172; /* #cdbdac — hairlines and borders on cream */
+  --bronze-500: 169 128 95; /* #a9805f — icons, rules: the accent */
+  --bronze-600: 140 104 75; /* #8c684b — accent text, AA on cream */
+
+  --white: 255 255 255;
+  --black: 0 0 0;
+
+  --red-600: 178 58 58; /* #b23a3a */
+  --red-50: 250 236 234;
+  --green-700: 61 122 74; /* #3d7a4a */
+  --green-50: 233 244 235;
+  --amber-700: 150 101 24; /* #966518 */
+  --amber-50: 250 242 224;
+
+  /* ── 2. Roles ───────────────────────────────────────────────────────────── */
+  --color-primary: var(--navy-800);
+  --color-primary-deep: var(--navy-900);
+
+  --color-ink: var(--navy-800);
+  --color-ink-muted: var(--navy-600);
+  --color-ink-subtle: var(--navy-400);
+
+  --color-surface: var(--cream-100);
+  --color-surface-raised: var(--white);
+  --color-surface-soft: var(--cream-50);
+  --color-surface-sunken: var(--cream-200);
+
+  --color-on-dark: var(--cream-100);
+
+  --color-accent: var(--bronze-500);
+  --color-accent-strong: var(--bronze-600);
+  --color-accent-soft: var(--sand-300);
+
+  --color-line: var(--sand-400);
+
+  --color-danger: var(--red-600);
+  --color-danger-soft: var(--red-50);
+  --color-success: var(--green-700);
+  --color-success-soft: var(--green-50);
+  --color-warning: var(--amber-700);
+  --color-warning-soft: var(--amber-50);
+
+  /* ── Type ───────────────────────────────────────────────────────────────── */
+  --font-sans: 'Assistant', system-ui, sans-serif;
+
+  /* Fluid: the minimum at phone width, the maximum from about 1440px. */
+  --text-display: clamp(2.75rem, 1.6rem + 4.2vw, 5.25rem);
+  --text-h1: clamp(2.5rem, 1.6rem + 3.4vw, 4.5rem);
+  --text-h2: clamp(1.875rem, 1.35rem + 1.9vw, 3rem);
+  --text-h3: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  --text-lead: clamp(1.125rem, 1.02rem + 0.4vw, 1.375rem);
+  --text-body: 1.0625rem;
+  --text-small: 0.9375rem;
+  --text-eyebrow: 0.75rem;
+
+  /* ── Shape ──────────────────────────────────────────────────────────────── */
+  --radius-field: 0.375rem;
+  --radius-card: 0.5rem;
+  --radius-panel: 0.75rem;
+
+  --shadow-card: 0 1px 2px rgb(var(--navy-900) / 0.04),
+    0 8px 24px -12px rgb(var(--navy-900) / 0.14);
+  --shadow-raised: 0 2px 4px rgb(var(--navy-900) / 0.05),
+    0 24px 48px -20px rgb(var(--navy-900) / 0.28);
+  --shadow-overlay: 0 30px 80px -24px rgb(var(--navy-950) / 0.5);
+
+  /* ── Rhythm ─────────────────────────────────────────────────────────────── */
+  --space-section: clamp(3.5rem, 2.2rem + 5vw, 7rem);
+  --space-section-tight: clamp(2.5rem, 1.8rem + 3vw, 4.5rem);
+  --measure: 38rem; /* a comfortable Hebrew line length */
+
+  /* ── Motion ─────────────────────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}

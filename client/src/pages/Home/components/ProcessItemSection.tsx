@@ -22,10 +22,10 @@ const ProcessItemSection = forwardRef<
     >
       <div className='w-1/2 lg:w-2/5'>
         <div className='flex flex-col items-start gap-1 lg:flex-row lg:gap-2'>
-          <h3 className='subheading font-semibold'>{title}</h3>
+          <h3 className='text-h3 font-semibold'>{title}</h3>
           {time && <ProcessItemSectionTime time={time} />}
         </div>
-        <p className='paragraph'>{shortText}</p>
+        <p className='text-body'>{shortText}</p>
       </div>
       <img
         ref={ref}
@@ -44,7 +44,7 @@ const ProcessItemSectionTime = ({
   time: { min: number; max: number };
 }) => {
   return (
-    <span className='text-nowrap rounded-2xl bg-primary px-2 py-1 text-center text-sm text-white lg:mt-2'>
+    <span className='text-nowrap rounded-panel bg-primary px-2 py-1 text-center text-sm text-on-dark lg:mt-2'>
       {time.min} - {time.max} חודשים
     </span>
   );

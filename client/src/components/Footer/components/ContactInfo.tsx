@@ -18,11 +18,11 @@ export default function ContactInfo() {
               href={url}
               aria-label={linkAriaLabels[icon] ?? text}
             >
-              <p className='font-semibold text-white'>{text}</p>
+              <p className='font-semibold text-on-dark'>{text}</p>
             </a>
           ) : (
             <ClickToCopy>
-              <p className='font-semibold text-white'>{text}</p>
+              <p className='font-semibold text-on-dark'>{text}</p>
             </ClickToCopy>
           )}
           <img

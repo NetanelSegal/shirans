@@ -106,13 +106,13 @@ export function ProjectFormFields({
           }}
         />
         {errors.categoryIds && (
-          <p id="categoryIds-error" className="mt-1 text-sm text-red-500">
+          <p id="categoryIds-error" className="mt-1 text-sm text-danger">
             {errors.categoryIds.message}
           </p>
         )}
       </fieldset>
       {formError && (
-        <p className="text-sm text-red-500" role="alert">
+        <p className="text-sm text-danger" role="alert">
           {formError}
         </p>
       )}
