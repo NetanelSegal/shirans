@@ -33,7 +33,10 @@ export function WhatNowSection() {
     // completely cold — a page about someone's house shouldn't read like a
     // specification sheet, and this palette already has the warmer of the two
     // backgrounds.
-    <section className="breakout-x-padding bg-secondary px-page-all py-section-all">
+    // Its own padding is internal only — the band has a background, so its
+    // content needs room from the band's edges. The space around the band
+    // belongs to the page.
+    <section className="breakout-x-padding bg-secondary px-page-all py-14 md:py-20">
       <h2 className="subheading text-center font-bold text-primary">מה עכשיו?</h2>
       <p className="mx-auto mt-3 max-w-2xl text-center text-primary/70">
         בואו נבדוק יחד אם הבית שאתם רוצים וההערכה שקיבלתם באמת מתחברים.
