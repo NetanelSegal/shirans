@@ -8,7 +8,7 @@
  * at runtime never reached a crawler. Every shared link showed as a plain URL.
  *
  * Runs after `vite build`. For each route it copies dist/index.html to
- * dist/<route>/index.html with that route's tags in <head>. Netlify serves an
+ * dist/<route>.html with that route's tags in <head>. Netlify serves an
  * existing file before applying the `/* /index.html 200` fallback, so a crawler
  * gets the right tags and a browser gets the same app as before.
  *
@@ -97,11 +97,21 @@ function buildHead({ path, title, description, image, imageAlt, noIndex }) {
   ].join('\n');
 }
 
+/**
+ * `/calculator` is written as `calculator.html`, not `calculator/index.html`.
+ * Netlify serves `/calculator` straight from `calculator.html`, but a folder
+ * with an index makes it 301 to `/calculator/` — an extra round trip for every
+ * visitor and a changed URL on every existing link, including the lead links
+ * in Shiran's alerts. Found on the deploy preview; `vite preview` hid it.
+ */
 function writeRoute(template, page) {
   const html = template.replace('</head>', `${buildHead(page)}\n  </head>`);
-  const outDir = page.path === '/' ? DIST_DIR : join(DIST_DIR, page.path);
-  mkdirSync(outDir, { recursive: true });
-  writeFileSync(join(outDir, 'index.html'), html, 'utf8');
+  const file =
+    page.path === '/'
+      ? join(DIST_DIR, 'index.html')
+      : join(DIST_DIR, `${page.path.slice(1)}.html`);
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, html, 'utf8');
 }
 
 /**
