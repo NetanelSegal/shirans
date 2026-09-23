@@ -23,7 +23,7 @@ export default function ProjectImagePlanShowcase({
     min: 0,
   });
 
-  const singleImageClassname = `aspect-video cursor-pointer border-2 border-line rounded-card object-cover ${imageClassname}`;
+  const singleImageClassname = `aspect-video cursor-pointer border-2 border-line object-cover ${imageClassname}`;
   const transformRef = useRef<{ resetTransform: () => void } | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
   const swipeStartRef = useRef<{ x: number; y: number; time: number } | null>(null);

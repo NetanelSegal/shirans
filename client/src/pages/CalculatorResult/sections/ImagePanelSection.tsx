@@ -37,7 +37,7 @@ export function ImagePanelSection({
     <section
       ref={sectionRef}
       aria-label={ariaLabel}
-      className={`grid grid-cols-1 overflow-hidden rounded-panel ${columns} ${minHeight}`}
+      className={`grid grid-cols-1 overflow-hidden ${columns} ${minHeight}`}
     >
       <div className="relative min-h-64 lg:min-h-full">
         <Image

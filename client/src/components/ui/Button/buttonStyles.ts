@@ -32,7 +32,12 @@ export const BUTTON_VARIANTS = {
 export const BUTTON_SIZES = {
   sm: 'min-h-9 gap-1.5 px-4 text-small',
   md: 'min-h-11 gap-2 px-6 text-body',
-  lg: 'min-h-14 gap-2.5 px-8 text-lead',
+  /**
+   * The hero action. It only reaches its full size from `sm` up: at 375px a
+   * 56px-tall pill with 2rem of padding ran most of the way across the screen
+   * and read as a banner rather than a button.
+   */
+  lg: 'min-h-12 gap-2 px-6 text-body sm:min-h-14 sm:gap-2.5 sm:px-8 sm:text-lead',
 } as const;
 
 export type ButtonVariant = keyof typeof BUTTON_VARIANTS;

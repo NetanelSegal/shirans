@@ -16,7 +16,7 @@ export function ProjectRowSkeleton({ reversed = false }: ProjectRowSkeletonProps
       aria-hidden
     >
       <div className="lg:w-2/3">
-        <Skeleton className="aspect-video w-full rounded-card shadow-card" />
+        <Skeleton className="aspect-video w-full rounded-none shadow-card" />
       </div>
       <div className="my-1 flex flex-col gap-3 px-2 lg:w-1/3">
         <SkeletonText variant="title" lines={1} />

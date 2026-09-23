@@ -45,7 +45,7 @@ export default function HeroSection() {
             </Eyebrow>
           </motion.div>
           <motion.h1 {...rise(0.3)} id='home-hero-title' className='text-display text-balance text-on-dark'>
-            בית יפה מתחיל בתכנון נכון
+            אדריכלות ועיצוב פנים לבית שמרגיש בדיוק שלכם
           </motion.h1>
           <motion.p {...rise(0.45)} className='max-w-measure text-lead text-on-dark/85'>
             אדריכלות ועיצוב פנים בהתאמה אישית — לאנשים, למקום ולסיפור שלהם.

@@ -20,8 +20,7 @@ export default function ProcessSection() {
           <Photo
             image={SITE_IMAGES.shiranKitchen}
             sizes='45vw'
-            className='sticky top-[calc(var(--nav-height)+2rem)] aspect-[4/5] w-full rounded-card shadow-raised'
-            style={{ objectPosition: '62% center' }}
+            className='sticky top-[calc(var(--nav-height)+2rem)] aspect-[4/5] w-full shadow-raised'
           />
         </div>
       </div>

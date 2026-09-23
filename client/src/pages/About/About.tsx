@@ -58,9 +58,9 @@ export default function About() {
             <Photo
               image={SITE_IMAGES.shiranPortrait}
               sizes='(min-width: 1024px) 40vw, 100vw'
-              className='aspect-[4/5] w-full rounded-card shadow-raised'
+              className='aspect-[4/5] w-full shadow-raised'
             />
-            <figure className='relative overflow-hidden rounded-card'>
+            <figure className='relative overflow-hidden'>
               <Photo image={SITE_IMAGES.serviceResidential} sizes='(min-width: 1024px) 40vw, 100vw' className='aspect-[16/9] w-full' />
               <div aria-hidden className='absolute inset-0 bg-gradient-to-l from-primary-deep/85 to-primary-deep/20' />
               <blockquote className='absolute inset-0 flex flex-col justify-center gap-3 p-7 text-h3 font-normal text-on-dark'>

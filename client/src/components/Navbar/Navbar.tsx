@@ -49,59 +49,67 @@ export default function Navbar({ overPhoto }: { overPhoto: boolean }) {
   const isSolid = !overPhoto || isScrolled || isOpen;
 
   return (
-    <header
-      dir='rtl'
-      className={cn(
-        'fixed inset-x-0 top-0 z-50 text-on-dark transition-[background-color,box-shadow] duration-300 ease-out',
-        isSolid ? 'bg-primary-deep/95 shadow-card backdrop-blur-md' : 'bg-transparent',
-      )}
-    >
-      <Container className='flex h-nav items-center justify-between gap-6'>
-        <Link to='/' className='shrink-0' aria-label='שירן גלעד — דף הבית'>
-          <Logo className='h-10 md:h-11' />
-        </Link>
+    <header dir='rtl' className='fixed inset-x-0 top-0 z-50 text-on-dark'>
+      {/*
+       * The bar's blur lives here and not on <header>. `backdrop-filter` makes
+       * an element the containing block for its `position: fixed` descendants,
+       * so with it on <header> the mobile sheet below resolved `top: nav` and
+       * `bottom: 0` against the 4.5rem bar — a zero-height panel that painted
+       * no background at all while its links spilled over the page.
+       */}
+      <div
+        className={cn(
+          'transition-[background-color,box-shadow] duration-300 ease-out',
+          isSolid ? 'bg-primary-deep/95 shadow-card backdrop-blur-md' : 'bg-transparent',
+        )}
+      >
+        <Container className='flex h-nav items-center justify-between gap-6'>
+          <Link to='/' className='shrink-0' aria-label='שירן גלעד — דף הבית'>
+            <Logo className='h-10 md:h-11' />
+          </Link>
 
-        <nav aria-label='ראשי' className='hidden lg:block'>
-          <ul className='flex items-center gap-8'>
-            {NAV_ITEMS.map(({ label, to }) => (
-              <li key={to}>
-                <NavLink
-                  to={to}
-                  end={to === '/'}
-                  className={({ isActive }) =>
-                    cn(
-                      'relative py-2 text-small font-semibold transition-colors',
-                      'after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-center after:bg-on-dark after:transition-transform after:duration-300 after:ease-out',
-                      isActive
-                        ? 'text-on-dark after:scale-x-100'
-                        : 'text-on-dark/80 after:scale-x-0 hover-capable:hover:text-on-dark',
-                    )
-                  }
-                >
-                  {label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          <nav aria-label='ראשי' className='hidden lg:block'>
+            <ul className='flex items-center gap-8'>
+              {NAV_ITEMS.map(({ label, to }) => (
+                <li key={to}>
+                  <NavLink
+                    to={to}
+                    end={to === '/'}
+                    className={({ isActive }) =>
+                      cn(
+                        'relative py-2 text-small font-semibold transition-colors',
+                        'after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-center after:bg-on-dark after:transition-transform after:duration-300 after:ease-out',
+                        isActive
+                          ? 'text-on-dark after:scale-x-100'
+                          : 'text-on-dark/80 after:scale-x-0 hover-capable:hover:text-on-dark',
+                      )
+                    }
+                  >
+                    {label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-        <div className='flex items-center gap-3'>
-          <ButtonLink to='/contact' variant='light' size='sm' arrow className='hidden sm:inline-flex'>
-            קביעת שיחה
-          </ButtonLink>
-          <UserMenu />
-          <button
-            type='button'
-            className='inline-flex size-10 items-center justify-center rounded-full text-on-dark lg:hidden'
-            aria-label={isOpen ? 'סגירת תפריט' : 'תפריט'}
-            aria-expanded={isOpen}
-            aria-controls='mobile-menu'
-            onClick={() => setIsOpen((open) => !open)}
-          >
-            {isOpen ? <X className='size-6' strokeWidth={1.5} /> : <Menu className='size-6' strokeWidth={1.5} />}
-          </button>
-        </div>
-      </Container>
+          <div className='flex items-center gap-3'>
+            <ButtonLink to='/contact' variant='light' size='sm' arrow className='hidden sm:inline-flex'>
+              קביעת שיחה
+            </ButtonLink>
+            <UserMenu />
+            <button
+              type='button'
+              className='inline-flex size-10 items-center justify-center rounded-full text-on-dark lg:hidden'
+              aria-label={isOpen ? 'סגירת תפריט' : 'תפריט'}
+              aria-expanded={isOpen}
+              aria-controls='mobile-menu'
+              onClick={() => setIsOpen((open) => !open)}
+            >
+              {isOpen ? <X className='size-6' strokeWidth={1.5} /> : <Menu className='size-6' strokeWidth={1.5} />}
+            </button>
+          </div>
+        </Container>
+      </div>
 
       {/* Mobile menu: a full-height navy sheet under the bar. */}
       <div

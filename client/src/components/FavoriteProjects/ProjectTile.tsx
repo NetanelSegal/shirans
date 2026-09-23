@@ -22,7 +22,7 @@ export function ProjectTile({
     <Link
       to={`/projects/${project.id}`}
       state={{ project }}
-      className={cn('group relative block aspect-[4/3] overflow-hidden rounded-card bg-surface-sunken', className)}
+      className={cn('group relative block aspect-[4/3] overflow-hidden bg-surface-sunken', className)}
     >
       <Image
         draggable='false'

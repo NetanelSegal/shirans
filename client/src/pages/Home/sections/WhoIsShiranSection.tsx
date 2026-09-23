@@ -25,11 +25,11 @@ export default function WhoIsShiranSection() {
       </div>
 
       <div className='relative md:order-first'>
-        <div aria-hidden className='absolute -bottom-4 -start-4 hidden h-2/3 w-2/3 rounded-card border border-accent/50 md:block' />
+        <div aria-hidden className='absolute -bottom-4 -start-4 hidden h-2/3 w-2/3 border border-accent/50 md:block' />
         <Photo
           image={SITE_IMAGES.shiranPortrait}
           sizes='(min-width: 768px) 45vw, 100vw'
-          className='relative aspect-[4/5] w-full rounded-card shadow-raised'
+          className='relative aspect-[4/5] w-full shadow-raised'
         />
       </div>
     </Section>

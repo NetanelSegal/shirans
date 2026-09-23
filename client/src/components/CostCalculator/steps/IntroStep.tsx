@@ -38,7 +38,7 @@ export function IntroStep({ onStart }: { onStart: () => void }) {
         <ArrowLeft className="size-4" aria-hidden />
       </Button>
 
-      <div className="mt-8 aspect-[3/2] overflow-hidden rounded-card">
+      <div className="mt-8 aspect-[3/2] overflow-hidden">
         <Image src={introHero} alt="" className="size-full object-cover" />
       </div>
     </div>

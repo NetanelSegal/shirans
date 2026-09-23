@@ -78,7 +78,7 @@ export function ChoiceCard({
       {variant === 'row' && option.image && (
         // `contain`, not `cover` — these are line drawings, and cropping them
         // cuts off the very storeys the option is describing.
-        <div className="h-14 w-full overflow-hidden rounded-card sm:h-20 md:h-28">
+        <div className="h-14 w-full overflow-hidden sm:h-20 md:h-28">
           <Image src={option.image} alt="" className="size-full object-contain" />
         </div>
       )}

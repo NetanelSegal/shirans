@@ -1,7 +1,7 @@
 import type { LineIconName } from '@/components/ui/LineIcon';
 
 export const aboutHero = {
-  title: 'אודות',
+  title: 'נעים להכיר, אני שירן גלעד',
   taglines: [
     'בית טוב לא מתחיל רק בעיצוב יפה.',
     'הוא מתחיל בתכנון נכון.',

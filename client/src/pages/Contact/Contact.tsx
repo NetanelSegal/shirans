@@ -18,7 +18,7 @@ export default function Contact() {
       <PageHero
         titleId='contact-hero-title'
         image={SITE_IMAGES.contactHero}
-        title='צור קשר'
+        title='בואו נדבר על הבית שלכם'
         subtitle='מוזמנים להשאיר פרטים ונחזור אליכם לשיחת ייעוץ ראשונית — ללא התחייבות.'
       />
 
