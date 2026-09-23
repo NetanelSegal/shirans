@@ -22,7 +22,7 @@ export default function Footer() {
                   target='_blank'
                   rel='noopener noreferrer'
                   aria-label={ariaLabel}
-                  className='block text-ink transition-colors hover-capable:hover:text-accent-strong'
+                  className='block text-ink underline-offset-4 hover-capable:hover:underline'
                 >
                   <LineIcon name={icon} className='size-6' strokeWidth={1.5} />
                 </a>

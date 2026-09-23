@@ -30,7 +30,7 @@ export function ContactDetails({ tone = 'light' }: { tone?: 'light' | 'dark' }) 
                 'text-lead transition-colors',
                 isDark
                   ? 'text-on-dark group-hover:text-on-dark/70'
-                  : 'text-ink group-hover:text-accent-strong',
+                  : 'text-ink underline-offset-4 group-hover:underline',
               )}
             >
               {label}

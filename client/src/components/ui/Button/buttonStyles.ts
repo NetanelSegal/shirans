@@ -10,9 +10,13 @@ export const BUTTON_VARIANTS = {
   /** Navy pill — the main action on a light surface. */
   primary:
     'bg-primary text-on-dark hover-capable:hover:bg-primary-deep active:bg-primary-deep',
-  /** Blue pill — a secondary action on a light surface, beside the navy one. */
+  /**
+   * Outlined navy pill — a secondary action on a light surface. The site has
+   * one blue, so it is told apart from the filled primary by weight, not by a
+   * second colour; it fills on hover.
+   */
   secondary:
-    'bg-accent text-on-dark hover-capable:hover:bg-accent-strong active:bg-accent-strong',
+    'border border-primary text-ink hover-capable:hover:bg-primary hover-capable:hover:text-on-dark active:bg-primary active:text-on-dark',
   /** Cream pill — the main action over a photo or a dark band. */
   light:
     'bg-surface text-ink hover-capable:hover:bg-surface-raised active:bg-surface-raised',

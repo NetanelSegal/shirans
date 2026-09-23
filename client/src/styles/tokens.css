@@ -15,21 +15,20 @@
  */
 :root {
   /* ── 1. Palette ─────────────────────────────────────────────────────────── */
-  --navy-950: 14 27 45; /* #0e1b2d — deepest panels, photo scrims */
-  --navy-900: 19 36 59; /* #13243b — dark bands (contact, footer bar) */
-  --navy-800: 26 45 72; /* #1a2d48 — brand navy: headings, primary action */
-  --navy-600: 72 86 108; /* #48566c — secondary text */
-  --navy-400: 128 138 152; /* #808a98 — tertiary text, placeholders */
+  /*
+   * Six colours and a hairline. The brand is navy on cream and nothing else:
+   * there is no second blue beside the navy, and no shade that sits a step
+   * from its neighbour. Several roles below share a value on purpose — the
+   * role names stay, so giving one of them its own shade later is one line.
+   */
+  --navy-900: 19 36 59; /* #13243b — dark bands, footer, photo scrims */
+  --navy-800: 26 45 72; /* #1a2d48 — brand navy: headings, actions, icons, rules */
+  --navy-600: 72 86 108; /* #48566c — secondary and tertiary text */
 
-  --cream-50: 250 248 245; /* #faf8f5 — soft raised surfaces */
   --cream-100: 245 241 235; /* #f5f1eb — page background */
   --cream-200: 237 230 221; /* #ede6dd — sunken panels */
-  /* Deep blues only: a pale "sky" blue is not in the brand, so the accent sits
-     close to the navy rather than beside it. */
-  --blue-600: 38 92 150; /* #265c96 — icons, rules, filled actions: the accent */
-  --blue-700: 30 74 122; /* #1e4a7a — accent text and hover, AAA on cream */
 
-  --stone-300: 207 200 191; /* #cfc8bf — hairlines: neutral, neither blue nor sand */
+  --stone-300: 207 200 191; /* #cfc8bf — hairlines */
 
   --white: 255 255 255;
   --black: 0 0 0;
@@ -47,17 +46,18 @@
 
   --color-ink: var(--navy-800);
   --color-ink-muted: var(--navy-600);
-  --color-ink-subtle: var(--navy-400);
+  --color-ink-subtle: var(--navy-600);
 
   --color-surface: var(--cream-100);
   --color-surface-raised: var(--white);
-  --color-surface-soft: var(--cream-50);
+  --color-surface-soft: var(--cream-100);
   --color-surface-sunken: var(--cream-200);
 
   --color-on-dark: var(--cream-100);
 
-  --color-accent: var(--blue-600);
-  --color-accent-strong: var(--blue-700);
+  /* The accent is the navy itself. */
+  --color-accent: var(--navy-800);
+  --color-accent-strong: var(--navy-800);
 
   --color-line: var(--stone-300);
 
@@ -90,7 +90,7 @@
     0 8px 24px -12px rgb(var(--navy-900) / 0.14);
   --shadow-raised: 0 2px 4px rgb(var(--navy-900) / 0.05),
     0 24px 48px -20px rgb(var(--navy-900) / 0.28);
-  --shadow-overlay: 0 30px 80px -24px rgb(var(--navy-950) / 0.5);
+  --shadow-overlay: 0 30px 80px -24px rgb(var(--navy-900) / 0.55);
 
   /* ── Rhythm ─────────────────────────────────────────────────────────────── */
   --space-section: clamp(3.5rem, 2.2rem + 5vw, 7rem);

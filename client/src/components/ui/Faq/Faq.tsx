@@ -19,7 +19,7 @@ export function Faq({ items }: { items: FaqItem[] }) {
           {({ open }) => (
             <>
               <dt>
-                <DisclosureButton className='flex w-full items-center justify-between gap-6 py-5 text-start text-h3 text-ink transition-colors hover-capable:hover:text-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'>
+                <DisclosureButton className='flex w-full items-center justify-between gap-6 py-5 text-start text-h3 text-ink underline-offset-4 decoration-1 hover-capable:hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'>
                   <span>{question}</span>
                   <Plus
                     aria-hidden
