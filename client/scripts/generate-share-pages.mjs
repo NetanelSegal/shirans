@@ -42,9 +42,11 @@ const META = JSON.parse(
 
 const BASE_URL = 'https://shiran-gilad.com';
 const OG_LOCALE = 'he_IL';
-const PROJECTS_API_URL =
-  process.env.SHARE_PAGES_API_URL ??
-  'https://server-production-a5a6.up.railway.app/api/projects';
+const API_ORIGIN =
+  process.env.SHARE_PAGES_API_ORIGIN ??
+  'https://server-production-a5a6.up.railway.app';
+const PROJECTS_API_URL = process.env.SHARE_PAGES_API_URL ?? `${API_ORIGIN}/api/projects`;
+const ARTICLES_API_URL = `${API_ORIGIN}/api/articles/published`;
 
 const log = (message) => console.log(`[share-pages] ${message}`);
 
@@ -106,10 +108,19 @@ function buildHead({ path, title, description, image, imageAlt, noIndex }) {
  */
 function writeRoute(template, page) {
   const html = template.replace('</head>', `${buildHead(page)}\n  </head>`);
+  /*
+   * `filePath` exists for Hebrew slugs. A canonical URL has to be
+   * percent-encoded, but the server decodes the request path before it looks
+   * for a file — so a file named "%D7%9B….html" is never found and the route
+   * falls back to index.html carrying the home page's preview tags. The file is
+   * therefore written under the raw characters while the tags keep the encoded
+   * URL. Caught on `vite preview`, which serves the same way Netlify does.
+   */
+  const diskPath = page.filePath ?? page.path;
   const file =
-    page.path === '/'
+    diskPath === '/'
       ? join(DIST_DIR, 'index.html')
-      : join(DIST_DIR, `${page.path.slice(1)}.html`);
+      : join(DIST_DIR, `${diskPath.slice(1)}.html`);
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, html, 'utf8');
 }
@@ -152,13 +163,50 @@ async function fetchProjectPages() {
   }
 }
 
+/**
+ * Each published article gets its own HTML file, so a link shared in WhatsApp
+ * shows that article's title, excerpt and cover rather than the site-wide card.
+ * This is why publishing from the admin triggers a rebuild — see
+ * server/src/services/siteRebuild.service.ts.
+ */
+async function fetchArticlePages() {
+  try {
+    const response = await fetch(ARTICLES_API_URL, { headers: { Accept: 'application/json' } });
+    if (!response.ok) throw new Error(`API responded with ${response.status}`);
+    const payload = await response.json();
+    if (!Array.isArray(payload)) throw new Error('API response is not an array');
+
+    return payload
+      .filter((article) => article?.slug && article?.title)
+      .map((article) => {
+        const plain = String(article.excerpt ?? '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        return {
+          // Encoded for the canonical and og:url tags…
+          path: `/blog/${encodeURIComponent(article.slug)}`,
+          // …but written to disk under the raw slug the server will look up.
+          filePath: `/blog/${article.slug}`,
+          title: article.seoTitle || `${article.title} | ${META.siteName}`,
+          description: (article.seoDescription || plain).slice(0, 160),
+          image: article.coverImage || undefined,
+          imageAlt: article.coverImageAlt || article.title,
+        };
+      });
+  } catch (error) {
+    console.warn(`[share-pages] Articles API unavailable (${error.message}); article routes use the site-wide preview.`);
+    return [];
+  }
+}
+
 async function main() {
   const template = readFileSync(join(DIST_DIR, 'index.html'), 'utf8');
   if (template.includes('property="og:title"')) {
     throw new Error('dist/index.html already has preview tags — was this run twice?');
   }
 
-  const projectPages = await fetchProjectPages();
+  const [projectPages, articlePages] = await Promise.all([
+    fetchProjectPages(),
+    fetchArticlePages(),
+  ]);
 
   const staticPages = Object.entries(META.pages).map(([path, page]) => ({
     path,
@@ -186,13 +234,14 @@ async function main() {
     ...staticPages.filter((page) => page.path !== '/'),
     resultPage,
     ...projectPages,
+    ...articlePages,
   ];
 
   for (const page of others) writeRoute(template, page);
   writeRoute(template, home);
 
   log(
-    `Wrote ${others.length + 1} pages: ${staticPages.length} static, 1 result, ${projectPages.length} projects.`,
+    `Wrote ${others.length + 1} pages: ${staticPages.length} static, 1 result, ${projectPages.length} projects, ${articlePages.length} articles.`,
   );
 }
 

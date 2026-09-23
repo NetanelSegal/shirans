@@ -5,6 +5,7 @@ import { FeatureStrip, Feature } from '@/components/ui/FeatureStrip';
 import { Photo } from '@/components/ui/Photo';
 import { SITE_IMAGES } from '@/constants/siteImages';
 import { aboutCta } from '@/data/about-content';
+import { SERVICE_PAGES } from '@/data/service-pages';
 import { ContactForm } from './ContactForm';
 
 interface BandCopy {
@@ -28,6 +29,9 @@ const COPY_BY_PATH: Record<string, BandCopy> = {
   '/projects': SHOWCASE_COPY,
   '/process': SHOWCASE_COPY,
   '/services': SHOWCASE_COPY,
+  ...Object.fromEntries(
+    SERVICE_PAGES.map((page) => [`/${page.slug}`, { title: page.cta.title, subtitle: page.cta.subtitle }]),
+  ),
 };
 
 const PROMISES: Feature[] = [

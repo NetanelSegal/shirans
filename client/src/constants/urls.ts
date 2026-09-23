@@ -59,6 +59,19 @@ export const urls = {
     bulkDelete: `${BACKEND_URL}/api/testimonials/bulk`,
   },
 
+  // Article endpoints. `getAll` lists drafts too and is admin-only.
+  articles: {
+    published: `${BACKEND_URL}/api/articles/published`,
+    bySlug: (slug: string) => `${BACKEND_URL}/api/articles/slug/${encodeURIComponent(slug)}`,
+    getAll: `${BACKEND_URL}/api/articles`,
+    create: `${BACKEND_URL}/api/articles`,
+    getById: (id: string) => `${BACKEND_URL}/api/articles/${id}`,
+    update: (id: string) => `${BACKEND_URL}/api/articles/${id}`,
+    delete: (id: string) => `${BACKEND_URL}/api/articles/${id}`,
+    bulkUpdate: `${BACKEND_URL}/api/articles/bulk`,
+    bulkDelete: `${BACKEND_URL}/api/articles/bulk`,
+  },
+
   // Admin user endpoints
   adminUsers: {
     getAll: `${BACKEND_URL}/api/users`,

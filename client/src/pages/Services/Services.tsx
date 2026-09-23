@@ -21,7 +21,7 @@ export default function Services() {
       <PageHero
         titleId='services-hero-title'
         image={SITE_IMAGES.servicesHero}
-        title='שירותים'
+        title='שירותי אדריכלות ועיצוב פנים'
         subtitle='מענה מקיף לכל שלב בדרך לבית שלכם'
       />
 
@@ -30,7 +30,7 @@ export default function Services() {
           {SERVICES.map((service, index) => (
             <li key={service.id} id={service.id} className='scroll-mt-[calc(var(--nav-height)+1.5rem)]'>
               <EnterAnimation>
-                <article className='grid items-center overflow-hidden rounded-card bg-surface-soft shadow-card md:grid-cols-2'>
+                <article className='grid items-center overflow-hidden bg-surface-soft shadow-card md:grid-cols-2'>
                   <Photo
                     image={service.image}
                     sizes='(min-width: 768px) 50vw, 100vw'
@@ -40,8 +40,8 @@ export default function Services() {
                     <LineIcon name={service.icon} className='size-9 text-accent' />
                     <h2 className='text-h2 text-ink'>{service.title}</h2>
                     <p className='text-lead text-ink-muted'>{service.description}</p>
-                    <ButtonLink to='/contact' variant='secondary' size='sm' arrow className='mt-2'>
-                      לשיחת היכרות
+                    <ButtonLink to={service.href} variant='secondary' size='sm' arrow className='mt-2'>
+                      לעמוד השירות
                     </ButtonLink>
                   </div>
                 </article>

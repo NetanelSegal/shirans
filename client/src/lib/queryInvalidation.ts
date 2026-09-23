@@ -24,3 +24,11 @@ export function invalidateAfterAdminTestimonialsChange(
   void queryClient.invalidateQueries({ queryKey: queryKeys.admin.testimonials });
   void queryClient.invalidateQueries({ queryKey: queryKeys.testimonials });
 }
+
+/** Admin article mutations affect the public blog listing and every article page. */
+export function invalidateAfterAdminArticlesChange(
+  queryClient: QueryClient
+): void {
+  void queryClient.invalidateQueries({ queryKey: queryKeys.admin.articles });
+  void queryClient.invalidateQueries({ queryKey: queryKeys.articles });
+}

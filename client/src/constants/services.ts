@@ -1,8 +1,12 @@
 import type { LineIconName } from '@/components/ui/LineIcon';
-import { SITE_IMAGES, SiteImage } from './siteImages';
+import { SERVICE_PAGES } from '@/data/service-pages';
+import type { SiteImage } from './siteImages';
 
 export interface Service {
+  /** The slug of the service's own page; also its anchor id. */
   id: string;
+  /** Where the card links. */
+  href: string;
   title: string;
   description: string;
   icon: LineIconName;
@@ -11,49 +15,14 @@ export interface Service {
 
 /**
  * What Shiran offers — the one list the home page, About and the services page
- * all render, so a service is added or reworded in one place.
+ * all render. It is derived from the service pages themselves, so a service
+ * and the page behind it can never disagree about its name, photo or URL.
  */
-export const SERVICES: Service[] = [
-  {
-    id: 'private-construction',
-    title: 'בנייה פרטית',
-    description: 'רישוי מלא תכנון ואדריכלות',
-    icon: 'home',
-    image: SITE_IMAGES.servicePrivate,
-  },
-  {
-    id: 'residential-design',
-    title: 'עיצוב פנים',
-    description: 'ליווי מלא לעיצוב בתים פרטיים',
-    icon: 'armchair',
-    image: SITE_IMAGES.serviceResidential,
-  },
-  {
-    id: 'luxury-design',
-    title: 'דירות יוקרה',
-    description: 'עיצוב וליווי מלא לפנטהאוזים ודירות יוקרה',
-    icon: 'gem',
-    image: SITE_IMAGES.serviceLuxury,
-  },
-  {
-    id: 'commercial-design',
-    title: 'עיצוב מסחרי',
-    description: 'אדריכלות ועיצוב פנים לחללים מסחריים',
-    icon: 'building',
-    image: SITE_IMAGES.serviceCommercial,
-  },
-  {
-    id: 'licensing',
-    title: 'תהליך רישוי',
-    description: 'ליווי מלא בתהליכי רישוי ולגליזציה',
-    icon: 'document',
-    image: SITE_IMAGES.serviceLicensing,
-  },
-  {
-    id: 'consulting',
-    title: 'ייעוץ מקצועי',
-    description: 'ייעוץ מקצועי בתחומי אדריכלות ועיצוב פנים',
-    icon: 'chat',
-    image: SITE_IMAGES.serviceConsulting,
-  },
-];
+export const SERVICES: Service[] = SERVICE_PAGES.map((page) => ({
+  id: page.slug,
+  href: `/${page.slug}`,
+  title: page.title,
+  description: page.cardDescription,
+  icon: page.icon,
+  image: page.cardImage,
+}));

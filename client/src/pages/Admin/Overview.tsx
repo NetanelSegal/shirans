@@ -98,6 +98,12 @@ export default function Overview() {
             צפה בפניות
           </Link>
           <Link
+            to="/admin/articles"
+            className="rounded-card bg-surface-sunken px-4 py-2 text-ink transition-colors hover:bg-surface-sunken/80"
+          >
+            מאמר חדש
+          </Link>
+          <Link
             to="/admin/testimonials"
             className="rounded-card bg-surface-sunken px-4 py-2 text-ink transition-colors hover:bg-surface-sunken/80"
           >

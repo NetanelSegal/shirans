@@ -34,3 +34,67 @@
     outline-offset: 3px;
   }
 }
+
+@layer components {
+  /*
+   * Article bodies are HTML from the admin editor, so the elements inside carry
+   * no classes. The site's type scale is applied here instead, which is also
+   * why this is the one place tag selectors are used.
+   */
+  .article-body > * + * {
+    @apply mt-5;
+  }
+  .article-body h2 {
+    @apply mt-12 text-h2 text-ink;
+  }
+  .article-body h3 {
+    @apply mt-10 text-h3 text-ink;
+  }
+  .article-body h4 {
+    @apply mt-8 text-body font-semibold text-ink;
+  }
+  .article-body p {
+    @apply max-w-measure;
+  }
+  .article-body strong {
+    @apply font-semibold text-ink;
+  }
+  .article-body a {
+    @apply text-accent-strong underline underline-offset-4;
+  }
+  .article-body ul,
+  .article-body ol {
+    @apply max-w-measure ps-6;
+  }
+  .article-body ul {
+    @apply list-disc;
+  }
+  .article-body ol {
+    @apply list-decimal;
+  }
+  .article-body li + li {
+    @apply mt-2;
+  }
+  .article-body blockquote {
+    @apply border-s-2 border-accent bg-surface-soft py-4 pe-4 ps-6 text-lead text-ink;
+  }
+  .article-body img {
+    @apply w-full;
+  }
+  .article-body figcaption {
+    @apply mt-2 text-small text-ink-subtle;
+  }
+  .article-body hr {
+    @apply my-10 border-line;
+  }
+  .article-body table {
+    @apply w-full border-collapse text-small;
+  }
+  .article-body th,
+  .article-body td {
+    @apply border border-line px-3 py-2 text-start;
+  }
+  .article-body th {
+    @apply bg-surface-sunken font-semibold text-ink;
+  }
+}

@@ -11,11 +11,11 @@ import type { Service } from '@/constants/services';
  */
 export function ServiceCard({ service }: { service: Service }) {
   return (
-    <Card as='article' interactive className='group relative flex h-full flex-col'>
+    <Card as='article' interactive className='group relative flex h-full flex-col rounded-none'>
       <div className='aspect-[4/3] overflow-hidden'>
         <Photo
           image={service.image}
-          sizes='(min-width: 1024px) 18vw, (min-width: 640px) 45vw, 90vw'
+          sizes='(min-width: 768px) 25vw, 50vw'
           className='size-full transition-transform duration-700 ease-out group-hover:scale-[1.04]'
         />
       </div>
@@ -23,7 +23,7 @@ export function ServiceCard({ service }: { service: Service }) {
         <LineIcon name={service.icon} className='mb-1 size-7 text-accent' />
         <h3 className='text-h3 text-ink'>
           <Link
-            to={`/services#${service.id}`}
+            to={service.href}
             className='after:absolute after:inset-0 focus-visible:outline-none'
           >
             {service.title}
