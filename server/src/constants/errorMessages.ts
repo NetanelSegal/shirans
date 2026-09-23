@@ -24,6 +24,7 @@ export const errorMessagesMap = {
   'VALIDATION.PASSWORD_WEAK': 'Password weak',
   'VALIDATION.IMAGES_NOT_BELONG_TO_PROJECT': `Images do not belong to project`,
   'VALIDATION.BUILT_AREA_OUT_OF_RANGE': 'Built area is out of configured range',
+  'VALIDATION.NO_IMAGE_SUPPLIED': 'No image supplied',
   'VALIDATION.INVALID_FILE_TYPE':
     'File type not allowed. Accepted: JPEG, PNG, WebP, HEIC, HEIF',
   'VALIDATION.FILE_TOO_LARGE': 'File exceeds the maximum allowed size (50 MB)',
@@ -42,6 +43,7 @@ export const errorMessagesMap = {
   'NOT_FOUND.PAGE_NOT_FOUND': 'Page not found',
   'NOT_FOUND.RESOURCE_NOT_FOUND': 'Resource not found',
   'NOT_FOUND.TESTIMONIAL_NOT_FOUND': 'Testimonial not found',
+  'NOT_FOUND.ARTICLE_NOT_FOUND': 'Article not found',
 
   'CONFLICT.EMAIL_ALREADY_EXISTS': 'Email already registered',
   'CONFLICT.PROJECT_TITLE_EXISTS': 'A project with this title already exists',
@@ -92,6 +94,12 @@ export const errorMessagesMap = {
   'SERVER.PROJECT.CLOUDINARY_DELETE_FAILED':
     'Failed to delete image from cloud storage',
 
+  'SERVER.ARTICLE.CREATE_FAILED': 'Failed to create article',
+  'SERVER.ARTICLE.SLUG_FAILED': 'Cannot build a URL slug from this title',
+  'SERVER.ARTICLE.UPDATE_FAILED': 'Failed to update article',
+  'SERVER.ARTICLE.DELETE_FAILED': 'Failed to delete article',
+  'SERVER.ARTICLE.FETCHS_FAILED': 'Failed to fetch articles',
+  'SERVER.ARTICLE.FETCH_BY_ID_FAILED': 'Failed to fetch article',
   'SERVER.TESTIMONIAL.CREATE_FAILED': 'Failed to create testimonial',
   'SERVER.TESTIMONIAL.DELETE_FAILED': 'Failed to delete testimonial',
   'SERVER.TESTIMONIAL.UPDATE_FAILED': 'Failed to update testimonial',

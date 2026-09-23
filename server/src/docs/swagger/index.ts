@@ -8,6 +8,7 @@ import { categorySchemas } from './schemas/category.schemas';
 import { contactSchemas } from './schemas/contact.schemas';
 import { testimonialSchemas } from './schemas/testimonial.schemas';
 import { calculatorSchemas } from './schemas/calculator.schemas';
+import { articleSchemas } from './schemas/article.schemas';
 
 import { healthPaths } from './paths/health.paths';
 import { authPaths } from './paths/auth.paths';
@@ -17,6 +18,7 @@ import { contactPaths } from './paths/contact.paths';
 import { testimonialsPaths } from './paths/testimonials.paths';
 import { usersPaths } from './paths/users.paths';
 import { calculatorPaths } from './paths/calculator.paths';
+import { articlesPaths } from './paths/articles.paths';
 
 const swaggerDocument = {
   openapi: '3.0.3',
@@ -44,6 +46,7 @@ const swaggerDocument = {
     },
     { name: 'Users', description: 'User management (admin only)' },
     { name: 'Calculator', description: 'Calculator leads and config (admin only)' },
+    { name: 'Articles', description: 'Knowledge-centre articles' },
   ],
   paths: {
     ...healthPaths,
@@ -54,6 +57,7 @@ const swaggerDocument = {
     ...testimonialsPaths,
     ...usersPaths,
     ...calculatorPaths,
+    ...articlesPaths,
   },
   components: {
     schemas: {
@@ -64,6 +68,7 @@ const swaggerDocument = {
       ...contactSchemas,
       ...testimonialSchemas,
       ...calculatorSchemas,
+      ...articleSchemas,
     },
     securitySchemes: {
       bearerAuth: {

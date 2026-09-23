@@ -50,6 +50,35 @@ export interface ContactResponse {
   createdAt: string;
 }
 
+export interface ArticleFaqResponse {
+  question: string;
+  answer: string;
+}
+
+export interface ArticleResponse {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  /** HTML. Sanitised on the server before it was stored. */
+  body: string;
+  coverImage: string;
+  coverImageAlt: string | null;
+  coverImagePublicId: string | null;
+  category: string | null;
+  readingMinutes: number;
+  faq: ArticleFaqResponse[];
+  seoTitle: string | null;
+  seoDescription: string | null;
+  published: boolean;
+  publishedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** The list view: everything but the body, which no listing needs. */
+export type ArticleSummaryResponse = Omit<ArticleResponse, 'body' | 'faq'>;
+
 export interface TestimonialResponse {
   id: string;
   name: string;
