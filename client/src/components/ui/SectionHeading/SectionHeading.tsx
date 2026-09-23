@@ -35,7 +35,7 @@ export function Eyebrow({
         className,
       )}
     >
-      {rule && <Rule className='w-8' />}
+      {rule && <Rule className={cn('w-8', tone === 'dark' && 'bg-on-dark/60')} />}
       {children}
     </p>
   );

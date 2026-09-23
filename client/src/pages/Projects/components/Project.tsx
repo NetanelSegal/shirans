@@ -21,13 +21,19 @@ const Project = ({ project, i }: { project: ProjectResponse; i: number }) => {
   return (
     <article
       className={cn(
-        'group relative isolate overflow-hidden rounded-card shadow-card md:flex md:min-h-[22rem]',
+        'group relative isolate overflow-hidden shadow-card md:flex md:min-h-[22rem]',
         isDark ? 'bg-primary-deep text-on-dark' : 'bg-surface-soft text-ink',
       )}
     >
       <div
         className={cn(
-          'relative aspect-[16/10] md:absolute md:inset-y-0 md:aspect-auto md:w-[66%]',
+          /*
+           * `overflow-hidden` keeps the hover zoom inside the photo's own box.
+           * Without it the image scaled past this wrapper's inner edge — out
+           * from under the fade, which doesn't scale with it — and a hard, un-
+           * faded sliver of photo slid over the text panel.
+           */
+          'relative aspect-[16/10] overflow-hidden md:absolute md:inset-y-0 md:aspect-auto md:w-[66%]',
           // Light rows: photo on the far (left) side. Dark rows: the near side.
           isDark ? 'md:start-0' : 'md:end-0',
         )}
