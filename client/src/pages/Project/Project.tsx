@@ -114,7 +114,7 @@ export default function Project() {
         <Section tone='soft' spacing='tight' aria-labelledby='plans-heading'>
           <SectionHeading id='plans-heading' title='תוכניות' align='start' className='mb-8' />
           <ProjectImagePlanShowcase
-            imageClassname='shrink-0 overflow-hidden rounded-card sm:basis-[calc(50%-0.5rem)]'
+            imageClassname='shrink-0 overflow-hidden sm:basis-[calc(50%-0.5rem)]'
             containerClassname='flex w-full flex-wrap justify-between gap-4'
             arr={planUrls}
           />
@@ -129,7 +129,7 @@ export default function Project() {
               <iframe
                 key={src}
                 src={`${src}?autoplay=1&mute=1&controls=0&loop=1`}
-                className='aspect-[9/16] w-72 rounded-card shadow-card'
+                className='aspect-[9/16] w-72 shadow-card'
                 title='סרטון מהפרויקט'
               />
             ))}
@@ -141,7 +141,7 @@ export default function Project() {
         <Section spacing='tight' aria-labelledby='gallery-heading'>
           <SectionHeading id='gallery-heading' title='תמונות' align='start' className='mb-8' />
           <ProjectImagePlanShowcase
-            imageClassname='shrink-0 overflow-hidden rounded-card sm:basis-[calc(50%-0.5rem)]'
+            imageClassname='shrink-0 overflow-hidden sm:basis-[calc(50%-0.5rem)]'
             containerClassname='flex w-full flex-wrap justify-between gap-4'
             arr={galleryUrls}
           />

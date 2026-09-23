@@ -1,8 +1,8 @@
-import { Building2, Eye, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import PageSeo from '@/components/Seo/PageSeo';
-import EnterAnimation from '@/components/animations/EnterAnimation';
-import Image from '@/components/ui/Image';
+import { PageHero } from '@/components/ui/PageHero';
+import { Section } from '@/components/ui/Section';
+import { FeatureStrip, type Feature } from '@/components/ui/FeatureStrip';
 import heroImage from '@/assets/calculator/intro-hero.webp';
 import { CostCalculator, type CostCalculatorResult } from '@/components/CostCalculator';
 import { useCalculatorConfig } from '@/hooks/useCalculatorConfig';
@@ -12,19 +12,19 @@ import { getPageMeta } from '@/constants/pageMeta';
 
 const PAGE_META = getPageMeta('/calculator');
 
-const BENEFITS = [
+const BENEFITS: Feature[] = [
   {
-    icon: Building2,
+    icon: 'building',
     title: 'אומדן מבוסס על מאות פרויקטים',
     description: 'נתוני עלות אמיתיים מפרויקטי בנייה פרטית.',
   },
   {
-    icon: Zap,
+    icon: 'clock',
     title: 'תשובה מיידית — בלי לחכות',
     description: 'תוצאה תוך דקות, ללא טופסי צפייה או המתנה.',
   },
   {
-    icon: Eye,
+    icon: 'checklist',
     title: 'טווח מחירים שקוף לפני שיחה ראשונה',
     description: 'גלו את טווח העלות לפני שמתקשרים.',
   },
@@ -55,11 +55,7 @@ export default function LandingCalculator() {
   };
 
   return (
-    <div
-      dir="rtl"
-      className="min-h-screen"
-      aria-label="מחשבון אומדן עלות לבנייה פרטית"
-    >
+    <>
       <PageSeo
         title={PAGE_META.title}
         description={PAGE_META.description}
@@ -68,73 +64,35 @@ export default function LandingCalculator() {
         path="/calculator"
       />
 
-      {/* Hero — the site leads with architecture everywhere else; this page was
-          the one that led with a coloured rectangle. Shorter than the home
-          hero so the wizard's top edge stays in view and invites the scroll. */}
-      <section className="relative h-[58dvh] min-h-[26rem] overflow-hidden">
-        <Image
-          src={heroImage}
-          alt=""
-          className="absolute inset-0 size-full object-cover"
-          fadeIn={false}
-        />
-        {/* Carries the white type over a bright photo; the home hero gets this
-            from its own dark footage. */}
-        <div className="absolute inset-0 bg-primary-deep/70" aria-hidden />
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-gutter pt-nav text-center">
-          <EnterAnimation delay={0.2} duration={1} translateY={false}>
-            <h1 className="mx-auto max-w-4xl text-balance text-h1 text-on-dark">
-              דמיינו את הבית החדש שלכם.
-              <br />
-              עכשיו גלו את טווח העלות האמיתי.
-            </h1>
-            <p className="text-body mx-auto mt-5 max-w-xl text-on-dark">
-              מחשבון אומדן עלות לבנייה פרטית — תוצאה תוך דקות. ללא התחייבות.
-            </p>
-          </EnterAnimation>
-        </div>
-      </section>
+      <PageHero
+        titleId="calculator-hero-title"
+        image={heroImage}
+        title={
+          <>
+            דמיינו את הבית החדש שלכם.
+            <br />
+            עכשיו גלו את טווח העלות האמיתי.
+          </>
+        }
+        subtitle="מחשבון אומדן עלות לבנייה פרטית — תוצאה תוך דקות. ללא התחייבות."
+      />
 
-      {/* Three claims, not three boxes. Hairline columns are the device this
-          site already uses for a supporting row, and dropping the cards lets
-          the wizard below be the loudest thing on the page. */}
-      <section
-        className="bg-surface-sunken px-gutter py-10 md:py-14"
-        aria-label="מה תקבלו"
-      >
-        <ul className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-3 sm:gap-0">
-          {BENEFITS.map(({ icon: Icon, title, description }) => (
-            <li
-              key={title}
-              className="border-primary/15 sm:border-s sm:ps-8 sm:first:border-s-0 sm:first:ps-0"
-            >
-              <Icon className="size-6 text-ink" aria-hidden />
-              <h2 className="mt-3 text-lg font-bold leading-snug text-ink">
-                {title}
-              </h2>
-              <p className="mt-2 text-ink-muted">{description}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {/* Three claims on the site's own hairline strip, not three boxes. */}
+      <Section tone="sunken" spacing="tight" aria-label="מה תקבלו">
+        <FeatureStrip items={BENEFITS} />
+      </Section>
 
-      {/* The wizard itself. `showIntro` is off because this page's hero already
-          does that job — a landing page without its own hero can leave it on. */}
-      <section className="py-12 md:py-16" aria-label="מחשבון עלות הבית">
-        <div className="mx-auto max-w-3xl">
-          {configError ? (
-            <ErrorState message={configError} onRetry={refreshConfig} />
-          ) : isConfigLoading || !config ? (
-            <LoadingState minHeight="28rem" />
-          ) : (
-            <CostCalculator
-              config={config}
-              showIntro={false}
-              onComplete={handleComplete}
-            />
-          )}
-        </div>
-      </section>
-    </div>
+      {/* The wizard. `showIntro` is off because the hero above already does
+          that job — a landing page without its own hero can leave it on. */}
+      <Section aria-label="מחשבון עלות הבית" container="narrow">
+        {configError ? (
+          <ErrorState message={configError} onRetry={refreshConfig} />
+        ) : isConfigLoading || !config ? (
+          <LoadingState minHeight="28rem" />
+        ) : (
+          <CostCalculator config={config} showIntro={false} onComplete={handleComplete} />
+        )}
+      </Section>
+    </>
   );
 }

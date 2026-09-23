@@ -29,11 +29,7 @@ export default {
         sunken: role('surface-sunken'),
       },
       'on-dark': role('on-dark'),
-      accent: {
-        DEFAULT: role('accent'),
-        strong: role('accent-strong'),
-        soft: role('accent-soft'),
-      },
+      accent: { DEFAULT: role('accent'), strong: role('accent-strong') },
       line: role('line'),
       danger: { DEFAULT: role('danger'), soft: role('danger-soft') },
       success: { DEFAULT: role('success'), soft: role('success-soft') },

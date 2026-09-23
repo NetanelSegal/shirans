@@ -15,7 +15,7 @@ export function AboutShiranSection() {
       // The text earns the wider share here: it is the only thing in the block.
       columns="lg:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]"
     >
-      <h2 className="text-2xl font-bold text-ink md:text-3xl">שירן גלעד</h2>
+      <h2 className="text-h2 text-ink">שירן גלעד</h2>
       <p className="mt-1 text-ink-muted">אדריכלית ומעצבת פנים</p>
       <p className="mt-5 max-w-prose leading-relaxed text-ink-muted">
         אני מלווה משפחות בתכנון ובנייה של בתים פרטיים — מהשלבים הראשונים של

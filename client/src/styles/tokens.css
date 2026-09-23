@@ -24,10 +24,12 @@
   --cream-50: 250 248 245; /* #faf8f5 — soft raised surfaces */
   --cream-100: 245 241 235; /* #f5f1eb — page background */
   --cream-200: 237 230 221; /* #ede6dd — sunken panels */
-  --blue-200: 202 214 231; /* #cad6e7 — soft action, chips */
-  --blue-300: 179 193 212; /* #b3c1d4 — hairlines and borders on cream */
-  --blue-500: 90 140 194; /* #5a8cc2 — icons, rules: the accent */
-  --blue-600: 63 111 158; /* #3f6f9e — accent text, AA on cream */
+  /* Deep blues only: a pale "sky" blue is not in the brand, so the accent sits
+     close to the navy rather than beside it. */
+  --blue-600: 38 92 150; /* #265c96 — icons, rules, filled actions: the accent */
+  --blue-700: 30 74 122; /* #1e4a7a — accent text and hover, AAA on cream */
+
+  --stone-300: 207 200 191; /* #cfc8bf — hairlines: neutral, neither blue nor sand */
 
   --white: 255 255 255;
   --black: 0 0 0;
@@ -54,11 +56,10 @@
 
   --color-on-dark: var(--cream-100);
 
-  --color-accent: var(--blue-500);
-  --color-accent-strong: var(--blue-600);
-  --color-accent-soft: var(--blue-200);
+  --color-accent: var(--blue-600);
+  --color-accent-strong: var(--blue-700);
 
-  --color-line: var(--blue-300);
+  --color-line: var(--stone-300);
 
   --color-danger: var(--red-600);
   --color-danger-soft: var(--red-50);

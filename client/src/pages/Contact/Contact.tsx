@@ -20,18 +20,29 @@ export default function Contact() {
         image={SITE_IMAGES.contactHero}
         title='בואו נדבר על הבית שלכם'
         subtitle='מוזמנים להשאיר פרטים ונחזור אליכם לשיחת ייעוץ ראשונית — ללא התחייבות.'
+        size='tall'
+        tagline={['שיחה אחת', 'לפני', 'ההחלטה הגדולה']}
       />
 
-      <Section containerClassName='grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20'>
+      {/*
+        The page used to put a cream card on the cream page: two tones a shade
+        apart, so nothing held the eye and the form barely read as a form. The
+        band is navy now, which gives the white card something to sit against
+        and makes this page as loud as the closing band everywhere else.
+      */}
+      <Section
+        tone='dark'
+        containerClassName='grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20'
+      >
         <div className='flex flex-col gap-6'>
           <div className='flex flex-col gap-4'>
-            <h2 className='text-h1 text-ink'>פרטי התקשרות</h2>
-            <Rule />
+            <h2 className='text-h1 text-on-dark'>פרטי התקשרות</h2>
+            <Rule className='bg-on-dark/50' />
           </div>
-          <ContactDetails />
+          <ContactDetails tone='dark' />
         </div>
 
-        <Card className='bg-surface-soft p-6 md:p-10'>
+        <Card className='p-6 shadow-overlay md:p-10'>
           <h2 className='text-h2 text-ink'>להשארת פרטים</h2>
           <p className='mb-6 mt-2 text-body text-ink-muted'>מלאו את הפרטים ונחזור אליכם בהקדם.</p>
           <ContactForm />

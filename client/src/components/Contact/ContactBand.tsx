@@ -53,10 +53,18 @@ export function ContactBand({ path }: { path: string }) {
       aria-labelledby='contact-band-title'
       className='relative isolate overflow-hidden bg-primary-deep text-on-dark'
     >
-      {/* The photo fills the far half on desktop and sits behind the form card. */}
-      <div className='absolute inset-y-0 end-0 -z-10 hidden w-1/2 lg:block'>
-        <Photo image={SITE_IMAGES.ctaHouse} sizes='50vw' className='size-full' />
-        <div aria-hidden className='absolute inset-0 bg-primary-deep/25' />
+      {/*
+        The photo runs the full width of the band. It used to fill only the far
+        half, which drew a hard seam down the middle — navy on one side, a house
+        on the other. A navy wash over the whole photo carries the cream type
+        instead, heaviest on the text side and clearing toward the form.
+      */}
+      <div className='absolute inset-0 -z-10'>
+        <Photo image={SITE_IMAGES.ctaHouse} sizes='100vw' className='size-full' priority={false} />
+        <div
+          aria-hidden
+          className='absolute inset-0 bg-gradient-to-l from-primary-deep/95 via-primary-deep/80 to-primary-deep/60'
+        />
       </div>
 
       <Container className='grid items-center gap-10 py-section lg:grid-cols-2 lg:gap-16'>

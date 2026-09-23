@@ -21,7 +21,7 @@ export interface Service {
 export const SERVICES: Service[] = SERVICE_PAGES.map((page) => ({
   id: page.slug,
   href: `/${page.slug}`,
-  title: page.title,
+  title: page.cardTitle ?? page.title,
   description: page.cardDescription,
   icon: page.icon,
   image: page.cardImage,

@@ -22,7 +22,7 @@ export function ContactCtaSection({
 }: ContactCtaSectionProps) {
   return (
     <div>
-      <h2 className="text-h3 font-bold text-ink">{title}</h2>
+      <h2 className="text-h3 text-ink">{title}</h2>
       <p className="mt-3 text-ink-muted">{subtitle}</p>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -53,7 +53,7 @@ export function ContactCtaSection({
 
       <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
         {ASSURANCES.map(({ icon: Icon, label }) => (
-          <li key={label} className="flex items-center gap-2 text-sm text-ink-muted">
+          <li key={label} className="flex items-center gap-2 text-small text-ink-muted">
             <Icon className="size-4 shrink-0" aria-hidden />
             {label}
           </li>

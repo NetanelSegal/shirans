@@ -15,7 +15,7 @@ export function ServiceCard({ service }: { service: Service }) {
       <div className='aspect-[4/3] overflow-hidden'>
         <Photo
           image={service.image}
-          sizes='(min-width: 768px) 25vw, 50vw'
+          sizes='(min-width: 1024px) 20vw, (min-width: 768px) 33vw, 50vw'
           className='size-full transition-transform duration-700 ease-out group-hover:scale-[1.04]'
         />
       </div>

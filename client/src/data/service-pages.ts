@@ -34,8 +34,10 @@ export interface ServiceFaq {
 export interface ServicePage {
   /** The URL, without a leading slash. Also the key used everywhere else. */
   slug: string;
-  /** H1, and the label on the services grid. */
+  /** The page's H1. */
   title: string;
+  /** The label on a service card, where the full H1 is too long. */
+  cardTitle?: string;
   /** Under the H1 in the hero. */
   subtitle: string;
   /** The short vertical tagline at the far edge of the hero, one line each. */
@@ -137,7 +139,7 @@ export const SERVICE_PAGES: ServicePage[] = [
       {
         question: 'כמה זמן לוקח הליך התכנון וההיתר?',
         answer:
-          'משך ההליך משתנה לפי המגרש, הוועדה המקומית והיקף התכנון. בפגישת ההיכרות נעבור יחד על לוח הזמנים הצפוי בפרויקט שלכם.',
+          'מינימום של שנה. משך ההליך תלוי ברשות המקומית, במורכבות התכנון ובדרישות שיעלו.',
       },
       {
         question: 'מה העלות של תכנון אדריכלי לבית פרטי?',
@@ -497,6 +499,7 @@ export const SERVICE_PAGES: ServicePage[] = [
   {
     slug: 'architecture-permits',
     title: 'אדריכלות, רישוי והיתרים',
+    cardTitle: 'רישוי והיתרים',
     subtitle: 'תכנון אדריכלי מלא שמחבר בין הבית שאתם רוצים לבין דרישות התכנון והרישוי.',
     tagline: ['תכנון', 'רישוי', 'ביצוע עתידי', 'בית אחד, תהליך אחד'],
     hero: SITE_IMAGES.serviceLicensing,
@@ -587,7 +590,7 @@ export const SERVICE_PAGES: ServicePage[] = [
       {
         question: 'כמה זמן לוקח לקבל היתר בנייה?',
         answer:
-          'משך ההליך תלוי ברשות המקומית, במורכבות התכנון ובדרישות שיעלו. נעבור על לוח הזמנים הצפוי כבר בתחילת הדרך.',
+          'מינימום של שנה. משך ההליך תלוי ברשות המקומית, במורכבות התכנון ובדרישות שיעלו.',
       },
       {
         question: 'האם את מטפלת גם בהגשה להיתר?',

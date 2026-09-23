@@ -10,9 +10,9 @@ export const BUTTON_VARIANTS = {
   /** Navy pill — the main action on a light surface. */
   primary:
     'bg-primary text-on-dark hover-capable:hover:bg-primary-deep active:bg-primary-deep',
-  /** Sand pill — a secondary action on a light surface. */
+  /** Blue pill — a secondary action on a light surface, beside the navy one. */
   secondary:
-    'bg-accent-soft text-ink hover-capable:hover:bg-line active:bg-line',
+    'bg-accent text-on-dark hover-capable:hover:bg-accent-strong active:bg-accent-strong',
   /** Cream pill — the main action over a photo or a dark band. */
   light:
     'bg-surface text-ink hover-capable:hover:bg-surface-raised active:bg-surface-raised',
@@ -25,8 +25,11 @@ export const BUTTON_VARIANTS = {
   /** Destructive — admin only. */
   danger:
     'bg-danger text-on-dark hover-capable:hover:bg-danger/90 active:bg-danger/90',
-  /** A text link with an arrow, no pill. */
-  text: 'text-ink underline-offset-4 hover-capable:hover:underline',
+  /**
+   * A text link with an arrow, no pill. Underlined at rest: without it the
+   * link read as a label rather than something to press.
+   */
+  text: 'text-accent-strong underline underline-offset-4 decoration-1 hover-capable:hover:decoration-2',
 } as const;
 
 export const BUTTON_SIZES = {

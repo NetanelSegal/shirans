@@ -37,7 +37,7 @@ export function WhatNowSection() {
     // content needs room from the band's edges. The space around the band
     // belongs to the page.
     <section className="bg-surface-sunken px-gutter py-14 md:py-20">
-      <h2 className="text-h3 text-center font-bold text-ink">מה עכשיו?</h2>
+      <h2 className="text-h3 text-center text-ink">מה עכשיו?</h2>
       <p className="mx-auto mt-3 max-w-2xl text-center text-ink-muted">
         בואו נבדוק יחד אם הבית שאתם רוצים וההערכה שקיבלתם באמת מתחברים.
       </p>
@@ -54,8 +54,8 @@ export function WhatNowSection() {
             >
               <Icon className="size-5" />
             </span>
-            <h3 className="mt-4 font-bold text-ink">{title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+            <h3 className="mt-4 font-semibold text-ink">{title}</h3>
+            <p className="mt-2 text-small leading-relaxed text-ink-muted">
               {description}
             </p>
           </li>

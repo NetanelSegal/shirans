@@ -28,7 +28,7 @@ export function StickyContactBar({ visible, whatsappHref }: StickyContactBarProp
       {...(visible ? {} : { inert: '' })}
     >
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-        <p className="hidden text-sm text-on-dark/80 sm:block">
+        <p className="hidden text-small text-on-dark/80 sm:block">
           יש שאלה על ההערכה? דברו עם שירן.
         </p>
 
