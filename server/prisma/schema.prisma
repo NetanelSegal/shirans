@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 // Enums
@@ -24,13 +24,13 @@ enum ProjectImageType {
 
 // Models
 model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  password     String
-  name         String
-  role         UserRole      @default(USER)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id            String         @id @default(cuid())
+  email         String         @unique
+  password      String
+  name          String
+  role          UserRole       @default(USER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   refreshTokens RefreshToken[]
 
   @@index([email])
@@ -38,12 +38,12 @@ model User {
 }
 
 model RefreshToken {
-  id        String   @id @default(cuid())
-  token     String   @unique
+  id        String    @id @default(cuid())
+  token     String    @unique
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   revokedAt DateTime?
 
   @@index([token])
@@ -53,11 +53,11 @@ model RefreshToken {
 }
 
 model Category {
-  id        String         @id @default(cuid())
+  id        String    @id @default(cuid())
   title     String
-  urlCode   String          @unique
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  urlCode   String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   projects  Project[]
 
   @@index([urlCode])
@@ -93,6 +93,35 @@ model ProjectImage {
 
   @@index([projectId])
   @@map("project_images")
+}
+
+/// An article in the knowledge centre ("מרכז הידע").
+/// `body` and `excerpt` hold HTML written in the admin editor and sanitised
+/// server-side; `faq` is an array of { question, answer } rendered both as an
+/// accordion and as FAQPage structured data.
+model Article {
+  id                 String    @id @default(cuid())
+  title              String
+  slug               String    @unique
+  excerpt            String    @db.Text
+  body               String    @db.Text
+  coverImage         String
+  coverImageAlt      String?
+  coverImagePublicId String?
+  category           String?
+  readingMinutes     Int       @default(1)
+  faq                Json      @default("[]")
+  seoTitle           String?
+  seoDescription     String?
+  published          Boolean   @default(false)
+  /// Set the first time the article is published, and never moved afterwards.
+  publishedAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([published, publishedAt])
+  @@index([category])
+  @@map("articles")
 }
 
 model Testimonial {

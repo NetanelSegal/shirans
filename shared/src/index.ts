@@ -10,6 +10,7 @@ export * from './schemas/category.schema';
 export * from './schemas/contact.schema';
 export * from './schemas/footer.schema';
 export * from './schemas/testimonial.schema';
+export * from './schemas/article.schema';
 export * from './schemas/costCalculator.schema';
 export * from './constants/costCalculatorLabels';
 export * from './utils/costCalculator';
