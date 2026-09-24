@@ -128,6 +128,11 @@ export default function ProjectsManagement() {
 
   return (
     <div dir="rtl">
+      <AdminPageHeader
+        title="ניהול פרויקטים"
+        actionLabel="הוסף פרויקט"
+        onAction={handleOpenCreate}
+      />
       <DataStateGuard
         data={projects}
         isLoading={isLoading}
@@ -138,11 +143,6 @@ export default function ProjectsManagement() {
       >
         {(data) => (
           <>
-            <AdminPageHeader
-              title="ניהול פרויקטים"
-              actionLabel="הוסף פרויקט"
-              onAction={handleOpenCreate}
-            />
             {rowActionError && (
               <div
                 className="mb-4 rounded-card bg-danger-soft p-3 text-sm text-danger"

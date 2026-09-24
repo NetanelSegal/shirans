@@ -129,6 +129,11 @@ export default function CategoriesManagement() {
 
   return (
     <div dir="rtl">
+      <AdminPageHeader
+        title="ניהול קטגוריות"
+        actionLabel="הוסף קטגוריה"
+        onAction={handleOpenCreate}
+      />
       <DataStateGuard
         data={categories}
         isLoading={isLoading}
@@ -139,11 +144,6 @@ export default function CategoriesManagement() {
       >
         {(data) => (
           <>
-            <AdminPageHeader
-              title="ניהול קטגוריות"
-              actionLabel="הוסף קטגוריה"
-              onAction={handleOpenCreate}
-            />
             <DataTable
               columns={columns}
               data={data}

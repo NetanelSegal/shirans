@@ -203,6 +203,7 @@ export default function ArticlesManagement() {
 
   return (
     <div dir='rtl'>
+      <AdminPageHeader title='ניהול מאמרים' actionLabel='מאמר חדש' onAction={openCreate} />
       <DataStateGuard
         data={articles}
         isLoading={isLoading}
@@ -213,7 +214,6 @@ export default function ArticlesManagement() {
       >
         {(data) => (
           <>
-            <AdminPageHeader title='ניהול מאמרים' actionLabel='מאמר חדש' onAction={openCreate} />
             <BulkActionBar
               selectedCount={selectedIds.length}
               onPublish={() => runBulk(() => updateBulk(selectedIds, true))}

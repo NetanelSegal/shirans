@@ -187,6 +187,11 @@ export default function TestimonialsManagement() {
 
   return (
     <div dir="rtl">
+      <AdminPageHeader
+        title="ניהול המלצות"
+        actionLabel="הוסף המלצה"
+        onAction={handleOpenCreate}
+      />
       <DataStateGuard
         data={testimonials}
         isLoading={isLoading}
@@ -199,11 +204,6 @@ export default function TestimonialsManagement() {
           const sorted = [...data].sort((a, b) => a.order - b.order);
           return (
             <>
-              <AdminPageHeader
-                title="ניהול המלצות"
-                actionLabel="הוסף המלצה"
-                onAction={handleOpenCreate}
-              />
               <BulkActionBar
                 selectedCount={selectedIds.length}
                 onPublish={handleBulkPublish}
