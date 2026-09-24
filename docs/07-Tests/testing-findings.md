@@ -81,7 +81,7 @@ All routes rendered; no runtime crashes observed. RTL, layout, and animations vi
 | TriviaShareCard      | **Not verified** | Appears after trivia completion. Requires completing trivia and opening share modal. Manual QA needed.                                 |
 
 
-**Fix:** [Modal.tsx](src/components/ui/Modal.tsx) uses `createPortal(modalContent, document.body)` so the modal overlays the viewport, not the navbar. **Recommendation:** Manual QA: click ShareButton, confirm modal overlays correctly; complete trivia, verify QR.
+**Fix:** [Modal.tsx](../../client/src/components/ui/Modal/Modal.tsx) uses `createPortal(modalContent, document.body)` so the modal overlays the viewport, not the navbar. **Recommendation:** Manual QA: click ShareButton, confirm modal overlays correctly; complete trivia, verify QR.
 
 ---
 

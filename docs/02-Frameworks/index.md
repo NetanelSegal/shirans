@@ -7,6 +7,8 @@
 - **Language:** TypeScript (~5.9.3)
 - **Animations:** Motion 12.29.2 (Framer Motion)
 - **Forms:** React Hook Form + Zod
+- **Rich text:** TipTap 3 (the admin article editor)
+- **Design system:** token layer in `client/src/styles/tokens.css`, exposed to Tailwind — see the [brand guide](../05-Design/brand-guide.md)
 
 ## Backend & Infrastructure
 - **Platform:** Node.js (Express 4.21.1)
@@ -14,7 +16,7 @@
 - **Database:** PostgreSQL
 - **Authentication:** JWT (JSON Web Tokens) with Bcrypt password hashing
 - **Security:** Helmet, CORS, Express Rate Limit, Isomorphic DOMPurify
-- **Hosting:** Render (Server), Netlify (Client)
+- **Hosting:** Railway (Server), Supabase (PostgreSQL), Netlify (Client), Cloudinary (images)
 
 ## Monorepo Setup
 - **Workspaces:** `client`, `server`, `shared`.

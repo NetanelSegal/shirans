@@ -27,7 +27,7 @@ Deployment history for that service:
 
 ## Why the homepage still looks fine (and why that's a problem)
 
-The client has a resilience pattern already built in: [`fetchWithFallback`](client/src/utils/fetchWithFallback.ts) wraps the projects/categories/testimonials GET calls ([projects.service.ts](client/src/services/projects.service.ts), [testimonials.service.ts](client/src/services/testimonials.service.ts), [categories.service.ts](client/src/services/categories.service.ts)). If the live API call throws, it silently falls back to a static snapshot bundled into the client build ([`data/shiran.projects.ts`](client/src/data/shiran.projects.ts), [`data/shiran.testimonials.ts`](client/src/data/shiran.testimonials.ts)).
+The client has a resilience pattern already built in: [`fetchWithFallback`](../../client/src/utils/fetchWithFallback.ts) wraps the projects/categories/testimonials GET calls ([projects.service.ts](../../client/src/services/projects.service.ts), [testimonials.service.ts](../../client/src/services/testimonials.service.ts), [categories.service.ts](../../client/src/services/categories.service.ts)). If the live API call throws, it silently falls back to a static snapshot bundled into the client build ([`data/shiran.projects.ts`](../../client/src/data/shiran.projects.ts), [`data/shiran.testimonials.ts`](../../client/src/data/shiran.testimonials.ts)).
 
 This is why the homepage, projects list, and testimonials all render content despite the backend being fully down — visitors have no way to tell anything is wrong. Two consequences worth knowing:
 - Any project or testimonial added/edited via the admin panel **since the last Netlify build** will not show — visitors are seeing a frozen snapshot, silently, with no indication it's stale.
@@ -36,14 +36,14 @@ This is why the homepage, projects list, and testimonials all render content des
 ## What's actually broken for real users right now
 
 No fallback exists for these — they are direct `POST`/mutation calls to the dead backend, so they fail outright:
-- **Contact form** ([contact.service.ts](client/src/services/contact.service.ts)) — `POST /api/contact` fails. Note: the EmailJS notification itself is a separate client-side call and may still fire, but the lead is never recorded in the database.
-- **Cost Calculator lead submission** ([calculator.service.ts](client/src/services/calculator.service.ts)) — `POST /api/calculator/leads` fails. Calculator config (`GET`) also has no fallback, so the calculator page likely fails to load its config entirely.
+- **Contact form** ([contact.service.ts](../../client/src/services/contact.service.ts)) — `POST /api/contact` fails. Note: the EmailJS notification itself is a separate client-side call and may still fire, but the lead is never recorded in the database.
+- **Cost Calculator lead submission** ([calculator.service.ts](../../client/src/services/calculator.service.ts)) — `POST /api/calculator/leads` fails. Calculator config (`GET`) also has no fallback, so the calculator page likely fails to load its config entirely.
 - **Admin login and the entire admin dashboard** — authentication and all CRUD operations require the live backend; there's no (and shouldn't be a) offline fallback for these.
 
 ## Not affected
 
 - The Netlify-built static site itself (HTML/JS/CSS/fonts/images) — fully up.
-- The Netlify build/deploy pipeline — [`generate-sitemap.mjs`](client/scripts/generate-sitemap.mjs) already degrades gracefully if the Railway API is unreachable at build time (falls back to project IDs already in the last-built `sitemap.xml`), so this outage won't break future Netlify deploys.
+- The Netlify build/deploy pipeline — [`generate-sitemap.mjs`](../../client/scripts/generate-sitemap.mjs) already degrades gracefully if the Railway API is unreachable at build time (falls back to project IDs already in the last-built `sitemap.xml`), so this outage won't break future Netlify deploys.
 
 ## Docs discrepancy found along the way
 
