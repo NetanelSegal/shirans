@@ -129,6 +129,11 @@ export default function CategoriesManagement() {
 
   return (
     <div dir="rtl">
+      <AdminPageHeader
+        title="ניהול קטגוריות"
+        actionLabel="הוסף קטגוריה"
+        onAction={handleOpenCreate}
+      />
       <DataStateGuard
         data={categories}
         isLoading={isLoading}
@@ -139,11 +144,6 @@ export default function CategoriesManagement() {
       >
         {(data) => (
           <>
-            <AdminPageHeader
-              title="ניהול קטגוריות"
-              actionLabel="הוסף קטגוריה"
-              onAction={handleOpenCreate}
-            />
             <DataTable
               columns={columns}
               data={data}
@@ -155,7 +155,7 @@ export default function CategoriesManagement() {
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(row)}
-                    className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary/90"
+                    className="rounded-card bg-primary px-3 py-1.5 text-sm font-medium text-on-dark transition-colors hover:bg-primary/90"
                     aria-label={`ערוך ${row.title}`}
                   >
                     עריכה
@@ -163,7 +163,7 @@ export default function CategoriesManagement() {
                   <button
                     type="button"
                     onClick={() => setDeleteTarget(row)}
-                    className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                    className="rounded-card bg-danger px-3 py-1.5 text-sm font-medium text-on-dark transition-colors hover:bg-danger"
                     aria-label={`מחק ${row.title}`}
                   >
                     מחיקה
@@ -189,11 +189,11 @@ export default function CategoriesManagement() {
             id="title"
             type="text"
             {...Form.register('title')}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
+            className="w-full rounded-card border border-line px-3 py-2"
             aria-invalid={!!Form.formState.errors.title}
           />
           {Form.formState.errors.title && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-danger">
               {Form.formState.errors.title.message}
             </p>
           )}
@@ -205,7 +205,7 @@ export default function CategoriesManagement() {
           <select
             id="urlCode"
             {...Form.register('urlCode')}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2"
+            className="w-full rounded-card border border-line px-3 py-2"
             aria-invalid={!!Form.formState.errors.urlCode}
           >
             {CATEGORY_URL_OPTIONS.map((opt) => (
@@ -215,13 +215,13 @@ export default function CategoriesManagement() {
             ))}
           </select>
           {Form.formState.errors.urlCode && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-danger">
               {Form.formState.errors.urlCode.message}
             </p>
           )}
         </div>
         {formError && (
-          <p className="text-sm text-red-600" role="alert">
+          <p className="text-sm text-danger" role="alert">
             {formError}
           </p>
         )}

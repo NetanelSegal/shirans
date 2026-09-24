@@ -18,6 +18,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
   { to: '/admin', label: 'סקירה כללית', icon: 'fa-home', end: true },
   { to: '/admin/projects', label: 'פרויקטים', icon: 'fa-folder' },
   { to: '/admin/categories', label: 'קטגוריות', icon: 'fa-tags' },
+  { to: '/admin/articles', label: 'מאמרים', icon: 'fa-newspaper' },
   { to: '/admin/testimonials', label: 'המלצות', icon: 'fa-star' },
   { to: '/admin/contacts', label: 'פניות צור קשר', icon: 'fa-envelope' },
   { to: '/admin/users', label: 'משתמשים', icon: 'fa-users' },

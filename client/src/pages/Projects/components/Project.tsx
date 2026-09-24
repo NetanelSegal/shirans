@@ -1,109 +1,89 @@
 import { Link } from 'react-router-dom';
 import type { ProjectResponse } from '@shirans/shared';
 import { getMainImageUrl, optimizeCloudinaryImageUrl } from '@shirans/shared';
-import ImageScaleHover from '@/components/ui/ImageScaleHover';
-import { CategoryLabel } from '@/components/CategoryLabel';
-import { useCategoriesMap } from '@/hooks/useCategories';
-import EnterAnimation from '@/components/animations/EnterAnimation';
+import Image from '@/components/ui/Image';
+import { buttonStyles } from '@/components/ui/Button';
+import { ArrowLeft } from 'lucide-react';
+import { cn } from '@/lib/cn';
+import { splitProjectTitle } from '@/utils/projectTitle';
 
-/** Words shown on the projects list; full text is on `/projects/:id`. */
-const DESCRIPTION_PREVIEW_MAX_WORDS = 25;
+const pad = (n: number) => String(n).padStart(2, '0');
 
-/** Single paragraph for list preview (multi-line source becomes one block). */
-function projectDescriptionPreviewText(description: string): string {
-  return description
-    .trim()
-    .split(/\s*\n+\s*/)
-    .filter(Boolean)
-    .join(' ')
-    .replace(/\s+/g, ' ');
-}
-
-function truncateWords(
-  text: string,
-  maxWords: number
-): { preview: string; truncated: boolean } {
-  const words = text.trim().split(/\s+/).filter(Boolean);
-  if (words.length <= maxWords) {
-    return { preview: text.trim(), truncated: false };
-  }
-  return {
-    preview: `${words.slice(0, maxWords).join(' ')}…`,
-    truncated: true,
-  };
-}
-
-interface IProjectProps {
-  project: ProjectResponse;
-  i: number;
-}
-
-const Project = ({ project, i }: IProjectProps) => {
-  const { categoriesMap } = useCategoriesMap();
-  const descriptionNormalized = projectDescriptionPreviewText(project.description);
-  const { preview: descriptionListPreview, truncated: descriptionTruncated } =
-    truncateWords(descriptionNormalized, DESCRIPTION_PREVIEW_MAX_WORDS);
+/**
+ * One project as a wide row: a text panel and the main photo, the photo fading
+ * into the panel. Rows alternate side and tone (cream, then navy).
+ */
+const Project = ({ project, i }: { project: ProjectResponse; i: number }) => {
+  const { name, tagline } = splitProjectTitle(project.title);
+  const isDark = i % 2 === 1;
+  const href = `/projects/${project.id}`;
 
   return (
-    <div
-      className={`flex flex-col gap-5 lg:flex-row ${i % 2 === 0 ? '' : 'lg:flex-row-reverse'}`}
+    <article
+      className={cn(
+        'group relative isolate overflow-hidden shadow-card md:flex md:min-h-[22rem]',
+        isDark ? 'bg-primary-deep text-on-dark' : 'bg-surface-soft text-ink',
+      )}
     >
-      <div className='lg:w-2/3'>
-        <EnterAnimation delay={i * 0.1} translateY={false}>
-          <Link
-            to={`/projects/${project.id}`}
-            state={{ project, other: 'other' }}
-          >
-            <ImageScaleHover
-              containerClassName='rounded-xl shadow-[0_0_5px_0_rgba(0,0,0,0.2)] grow'
-              src={optimizeCloudinaryImageUrl(
-                getMainImageUrl(project.media),
-                800,
-              )}
-              alt={`${project.title} — תמונת פרויקט`}
-              width={1600}
-              height={900}
-              fadeIn={false}
-              fetchPriority={i === 0 ? 'high' : undefined}
-              loading={i === 0 ? 'eager' : 'lazy'}
-            />
-          </Link>
-        </EnterAnimation>
+      <div
+        className={cn(
+          /*
+           * `overflow-hidden` keeps the hover zoom inside the photo's own box.
+           * Without it the image scaled past this wrapper's inner edge — out
+           * from under the fade, which doesn't scale with it — and a hard, un-
+           * faded sliver of photo slid over the text panel.
+           */
+          'relative aspect-[16/10] overflow-hidden md:absolute md:inset-y-0 md:aspect-auto md:w-[66%]',
+          // Light rows: photo on the far (left) side. Dark rows: the near side.
+          isDark ? 'md:start-0' : 'md:end-0',
+        )}
+      >
+        <Image
+          className='size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]'
+          src={optimizeCloudinaryImageUrl(getMainImageUrl(project.media), 1400)}
+          alt=''
+          width={1400}
+          height={875}
+          fadeIn={false}
+          loading={i === 0 ? 'eager' : 'lazy'}
+        />
+        {/* Fade the photo into the panel it sits against. */}
+        <div
+          aria-hidden
+          className={cn(
+            'absolute inset-y-0 hidden w-2/5 md:block',
+            isDark
+              ? 'end-0 bg-gradient-to-r from-primary-deep to-transparent'
+              : 'start-0 bg-gradient-to-l from-surface-soft to-transparent',
+          )}
+        />
       </div>
-      <div className='my-1 px-2 lg:w-1/3'>
-        <EnterAnimation delay={i * 0.1 + 0.1}>
-          <h2 className='subheading font-semibold'>{project.title}</h2>
-          <div className='my-1 flex flex-wrap gap-1'>
-            {project.categories?.map((catCode) => (
-              <CategoryLabel
-                key={catCode}
-                label={categoriesMap[catCode]}
-              />
-            ))}
-          </div>
-          <p>
-            <strong>סטטוס: </strong>
-            {project.isCompleted ? 'הושלם' : 'בתהליך'}
-          </p>
-          <p className='break-words'>
-            <strong>תיאור הפרוייקט: </strong>
-            <span
-              className='mt-1 block text-pretty'
-              title={descriptionTruncated ? descriptionNormalized : undefined}
-            >
-              {descriptionListPreview}
-            </span>
-            <Link
-              to={`/projects/${project.id}`}
-              state={{ project, other: 'other' }}
-              className='mt-2 inline-block font-semibold underline'
-            >
-              עוד על הפרויקט
-            </Link>
-          </p>
-        </EnterAnimation>
+
+      <div
+        className={cn(
+          'relative z-10 flex flex-col items-start justify-center gap-4 p-7 md:w-[42%] md:p-10 lg:p-14',
+          isDark && 'md:ms-auto',
+        )}
+      >
+        <p className={cn('flex items-center gap-3 text-small', isDark ? 'text-on-dark/70' : 'text-ink-subtle')}>
+          <span dir='ltr'>{pad(i + 1)}</span>
+          <span aria-hidden className={cn('h-px w-12', isDark ? 'bg-on-dark/40' : 'bg-accent/60')} />
+        </p>
+        <h2 className={cn('text-h2 text-balance', isDark ? 'text-on-dark' : 'text-ink')}>{name}</h2>
+        {tagline && <p className={cn('text-body', isDark ? 'text-on-dark/75' : 'text-ink-muted')}>{tagline}</p>}
+        <Link
+          to={href}
+          state={{ project }}
+          className={cn(
+            buttonStyles({ variant: isDark ? 'outline' : 'secondary', size: 'sm' }),
+            'mt-2 after:absolute after:inset-0',
+          )}
+        >
+          עוד על הפרויקט
+          <ArrowLeft className='size-4' strokeWidth={1.75} aria-hidden />
+        </Link>
       </div>
-    </div>
+    </article>
   );
 };
 

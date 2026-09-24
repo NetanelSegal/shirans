@@ -9,14 +9,24 @@ const SITEMAP_PATH = join(PUBLIC_DIR, 'sitemap.xml');
 const BASE_URL = 'https://shiran-gilad.com';
 const DEFAULT_API_URL = 'https://server-production-a5a6.up.railway.app/api/projects';
 const API_URL = process.env.SITEMAP_API_URL ?? DEFAULT_API_URL;
+const ARTICLES_API_URL =
+  process.env.SITEMAP_ARTICLES_API_URL ??
+  'https://server-production-a5a6.up.railway.app/api/articles/published';
 
 const STATIC_PAGES = [
   { path: '/', priority: '1.0' },
+  { path: '/services', priority: '0.8' },
+  { path: '/private-house-architecture', priority: '0.8' },
+  { path: '/interior-design', priority: '0.8' },
+  { path: '/architectural-consulting', priority: '0.7' },
+  { path: '/online-architecture-consulting', priority: '0.7' },
+  { path: '/architecture-permits', priority: '0.7' },
   { path: '/process', priority: '0.8' },
   { path: '/projects', priority: '0.9' },
   { path: '/about', priority: '0.8' },
   { path: '/contact', priority: '0.7' },
   { path: '/calculator', priority: '0.8' },
+  { path: '/blog', priority: '0.8' },
 ];
 
 const today = new Date().toISOString().slice(0, 10);
@@ -57,6 +67,28 @@ async function fetchProjectIds() {
   }
 }
 
+/**
+ * Published article slugs. Unlike projects there is no fallback list: an
+ * article that can't be fetched is simply left out of this build's sitemap,
+ * which is safer than guessing at URLs that may no longer exist.
+ */
+async function fetchArticleSlugs() {
+  try {
+    const response = await fetch(ARTICLES_API_URL, { headers: { Accept: 'application/json' } });
+    if (!response.ok) throw new Error(`API responded with ${response.status}`);
+    const articles = await response.json();
+    if (!Array.isArray(articles)) throw new Error('API response is not an array');
+    const slugs = articles
+      .map((article) => article?.slug)
+      .filter((slug) => typeof slug === 'string' && slug.length > 0);
+    console.log(`[sitemap] Fetched ${slugs.length} article slugs`);
+    return slugs;
+  } catch (error) {
+    console.warn(`[sitemap] Articles fetch failed: ${error.message}`);
+    return [];
+  }
+}
+
 function buildUrlEntry(loc, priority, changefreq = 'monthly') {
   return `  <url>
     <loc>${loc}</loc>
@@ -68,6 +100,7 @@ function buildUrlEntry(loc, priority, changefreq = 'monthly') {
 
 async function main() {
   let projectIds = await fetchProjectIds();
+  const articleSlugs = await fetchArticleSlugs();
 
   if (!projectIds) {
     try {
@@ -90,6 +123,10 @@ async function main() {
     buildUrlEntry(`${BASE_URL}/projects/${id}`, '0.6'),
   );
 
+  const articleEntries = articleSlugs.map((slug) =>
+    buildUrlEntry(`${BASE_URL}/blog/${encodeURIComponent(slug)}`, '0.6', 'weekly'),
+  );
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Static Pages -->
@@ -97,12 +134,15 @@ ${staticEntries.join('\n')}
 
   <!-- Dynamic Project Pages -->
 ${projectEntries.join('\n')}
+
+  <!-- Articles -->
+${articleEntries.join('\n')}
 </urlset>
 `;
 
   writeFileSync(SITEMAP_PATH, xml, 'utf8');
   console.log(
-    `[sitemap] Wrote ${STATIC_PAGES.length + projectIds.length} URLs to ${SITEMAP_PATH}`,
+    `[sitemap] Wrote ${STATIC_PAGES.length + projectIds.length + articleSlugs.length} URLs to ${SITEMAP_PATH}`,
   );
 }
 

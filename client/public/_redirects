@@ -1,1 +1,7 @@
-/* /index.html  200
+# API proxy for non-production deploys (branch deploys, deploy previews).
+# The API only accepts browser requests from the production domain, so a preview
+# calls it through this same-origin path instead (see config/env.ts). Production
+# builds call the API directly and never hit this rule.
+/api/*  https://server-production-a5a6.up.railway.app/api/:splat  200
+
+/*  /index.html  200

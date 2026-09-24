@@ -13,10 +13,12 @@ import { AdminTableSkeleton } from './components/skeletons';
 import apiClient from './utils/apiClient';
 import { urls } from './constants/urls';
 import { USE_FILE_DATA } from './constants/dataSource';
+import { SERVICE_PAGES } from './data/service-pages';
 import { SITE_CONFIG } from './constants/siteConfig';
 
 const Home = lazy(() => import('./pages/Home'));
 const Process = lazy(() => import('./pages/Process'));
+const Services = lazy(() => import('./pages/Services'));
 const Projects = lazy(() => import('./pages/Projects'));
 const Project = lazy(() => import('./pages/Project'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
@@ -33,6 +35,10 @@ const LandingCalculator = lazy(() => import('./pages/LandingCalculator'));
 const CalculatorResult = lazy(() => import('./pages/CalculatorResult'));
 const About = lazy(() => import('./pages/About'));
 const Contact = lazy(() => import('./pages/Contact'));
+const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
+const Blog = lazy(() => import('./pages/Blog'));
+const Article = lazy(() => import('./pages/Article'));
+const ArticlesManagement = lazy(() => import('./pages/Admin/ArticlesManagement'));
 const CalculatorLeadsManagement = lazy(
   () => import('./pages/Admin/CalculatorLeadsManagement')
 );
@@ -75,6 +81,11 @@ export const appRoutes = [
     element: <Home />,
   },
   {
+    path: 'services',
+    title: 'שירותים',
+    element: <Services />,
+  },
+  {
     path: 'process',
     title: 'התהליך',
     element: <Process />,
@@ -99,6 +110,23 @@ export const appRoutes = [
     title: 'צור קשר',
     element: <Contact />,
   },
+  {
+    path: 'blog',
+    title: 'מרכז הידע',
+    element: <Blog />,
+  },
+  {
+    path: 'blog/:slug',
+    element: <Article />,
+    notNavigateable: true,
+  },
+  // A page per service, at its own top-level URL (see data/service-pages.ts).
+  ...SERVICE_PAGES.map((page) => ({
+    path: page.slug,
+    title: page.title,
+    element: <ServiceDetail />,
+    notNavigateable: true,
+  })),
   {
     path: '*',
     title: '404',
@@ -179,6 +207,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <TestimonialsManagement />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'articles',
+        element: (
+          <Suspense fallback={<AdminTableSkeleton searchable />}>
+            <ArticlesManagement />
           </Suspense>
         ),
       },

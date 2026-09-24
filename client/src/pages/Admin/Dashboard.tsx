@@ -11,7 +11,7 @@ export default function Dashboard() {
         path="/admin"
         noIndex
       />
-      <div className="min-h-screen bg-gray-50" dir="rtl">
+      <div className="min-h-screen bg-surface-soft" dir="rtl">
         <AdminLayout>
           <Outlet />
         </AdminLayout>

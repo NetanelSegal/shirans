@@ -38,7 +38,7 @@ export function StepNav({
         <button
           type="button"
           onClick={onBack}
-          className={`${BUTTON_RESET} ${PRESS} flex items-center gap-1.5 rounded-lg px-2 py-2 text-primary/70 hover-capable:hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-secondary`}
+          className={`${BUTTON_RESET} ${PRESS} flex items-center gap-1.5 rounded-card px-2 py-2 text-ink-muted hover-capable:hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-sunken`}
         >
           <ArrowRight className="size-4" aria-hidden />
           חזרה

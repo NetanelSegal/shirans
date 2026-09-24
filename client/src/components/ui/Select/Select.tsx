@@ -76,10 +76,10 @@ export function Select<T extends string>({
   };
 
   const baseInputClasses =
-    'peer w-full rounded-xl border p-2 bg-white text-sm font-medium text-primary active:scale-100 [-webkit-tap-highlight-color:transparent] focus:outline-none focus:ring-2 focus:ring-offset-0';
+    'peer w-full rounded-card border p-2 bg-surface-raised text-sm font-medium text-ink active:scale-100 [-webkit-tap-highlight-color:transparent] focus:outline-none focus:ring-2 focus:ring-offset-0';
   const borderClasses = error
-    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-    : 'border-gray-200 focus:border-primary focus:ring-primary';
+    ? 'border-danger focus:border-danger focus:ring-danger'
+    : 'border-line/70 focus:border-primary focus:ring-primary';
   const hasValue = !!selectedOption;
   const labelFloated = hasValue || isOpen;
 
@@ -123,7 +123,7 @@ export function Select<T extends string>({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className={`shrink-0 text-primary transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`shrink-0 text-ink transition-transform ${isOpen ? 'rotate-180' : ''}`}
           aria-hidden
         >
           <path d="m6 9 6 6 6-6" />
@@ -131,7 +131,7 @@ export function Select<T extends string>({
       </button>
       <label
         htmlFor={selectId}
-        className={`absolute start-2 z-10 top-2 rounded-md px-2 font-bold shadow-md transition-all duration-150 ease-in-out text-dark bg-secondary ${labelFloated ? '-translate-y-3/4' : ''
+        className={`absolute start-2 z-10 top-2 rounded-field px-2 font-bold shadow-card transition-all duration-150 ease-in-out text-dark bg-surface-sunken ${labelFloated ? '-translate-y-3/4' : ''
           }`}
       >
         {label}
@@ -139,7 +139,7 @@ export function Select<T extends string>({
       {isOpen && (
         <ul
           role="listbox"
-          className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-xl border bg-white py-1 shadow-lg"
+          className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-card border bg-surface-raised py-1 shadow-raised"
           dir="rtl"
         >
           {options.map((opt) => (
@@ -147,7 +147,7 @@ export function Select<T extends string>({
               key={opt.value}
               role="option"
               aria-selected={opt.value === value}
-              className={`flex cursor-pointer items-center gap-2 px-3 py-2 text-sm font-normal text-primary ${opt.value === value ? 'bg-primary/10 font-medium' : ''}`}
+              className={`flex cursor-pointer items-center gap-2 px-3 py-2 text-sm font-normal text-ink ${opt.value === value ? 'bg-primary/10 font-medium' : ''}`}
               onClick={() => {
                 onChange(opt.value);
                 setIsOpen(false);
@@ -164,7 +164,7 @@ export function Select<T extends string>({
         </ul>
       )}
       {error && (
-        <span id={`${selectId}-error`} className="mt-1 block text-sm text-red-500">
+        <span id={`${selectId}-error`} className="mt-1 block text-sm text-danger">
           {error.message}
         </span>
       )}

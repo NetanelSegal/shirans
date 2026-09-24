@@ -8,7 +8,8 @@
     "prebuild": "node scripts/generate-sitemap.mjs",
     "build": "tsc -b && vite build",
     "postbuild": "node scripts/generate-share-pages.mjs",
-    "lint": "eslint .",
+    "lint": "eslint . && npm run lint:design",
+    "lint:design": "node scripts/lint-design.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -19,6 +20,12 @@
     "@shirans/shared": "*",
     "@tanstack/react-query": "^5.91.2",
     "@tanstack/react-table": "^9.2.4",
+    "@tiptap/extension-image": "^3.31.3",
+    "@tiptap/extension-link": "^3.31.3",
+    "@tiptap/extension-text-align": "^3.31.3",
+    "@tiptap/pm": "^3.31.3",
+    "@tiptap/react": "^3.31.3",
+    "@tiptap/starter-kit": "^3.31.3",
     "axios": "^1.16.1",
     "caniuse-lite": "^1.0.30001766",
     "classnames": "^2.5.1",

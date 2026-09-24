@@ -40,10 +40,10 @@ export function ConfigNumberField({
 
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-primary">
+      <label htmlFor={id} className="block text-sm font-medium text-ink">
         {label}
       </label>
-      <div className="mt-1 flex items-center gap-2 rounded-lg border border-primary/20 bg-white px-3 transition-colors focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/30">
+      <div className="mt-1 flex items-center gap-2 rounded-card border border-primary/20 bg-surface-raised px-3 transition-colors focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/30">
         <input
           id={id}
           // `text` with a numeric inputMode rather than `type="number"`: the
@@ -54,10 +54,10 @@ export function ConfigNumberField({
           value={typed ?? String(value)}
           onChange={(e) => handleChange(e.target.value)}
           onBlur={handleBlur}
-          className="w-full bg-transparent py-2 text-primary focus:outline-none"
+          className="w-full bg-transparent py-2 text-ink focus:outline-none"
         />
         {suffix && (
-          <span className="shrink-0 text-sm text-primary/70" aria-hidden>
+          <span className="shrink-0 text-sm text-ink-muted" aria-hidden>
             {suffix}
           </span>
         )}

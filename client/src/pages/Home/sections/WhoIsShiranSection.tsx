@@ -1,43 +1,37 @@
-import { useNavigate } from 'react-router-dom';
-import WhoIsShiranImage from '../components/B_WhoIsShiranImage';
-import EnterAnimation from '@/components/animations/EnterAnimation';
-import Button from '@/components/ui/Button';
+import { ButtonLink } from '@/components/ui/Button';
+import { Photo } from '@/components/ui/Photo';
+import { Section } from '@/components/ui/Section';
+import { Eyebrow } from '@/components/ui/SectionHeading';
+import { SITE_IMAGES } from '@/constants/siteImages';
 
 export default function WhoIsShiranSection() {
-  const nav = useNavigate();
   return (
-    <section
-      aria-labelledby='who-is-shiran-heading'
-      className='py-section-all flex w-full flex-col items-end justify-center md:flex-row'
-    >
-      {/* image container */}
-      <div className='basis-1/2 self-center'>
-        <EnterAnimation delay={0.1} translateY={false}>
-          <WhoIsShiranImage />
-        </EnterAnimation>
+    <Section aria-labelledby='who-is-shiran-heading' containerClassName='grid items-center gap-10 md:grid-cols-2 lg:gap-20'>
+      <div className='flex flex-col items-start gap-4'>
+        <Eyebrow rule>נעים להכיר</Eyebrow>
+        <h2 id='who-is-shiran-heading' className='text-h1 text-ink'>
+          שירן גלעד
+        </h2>
+        <p className='text-lead text-ink-muted'>אדריכלית ומעצבת פנים</p>
+        <p className='max-w-measure text-body text-ink-muted'>
+          עוסקת באדריכלות ועיצוב פנים משנת 2015. מתמחה בתכנון בתים פרטיים, דירות
+          יוקרה, ופנטהאוזים. המטרה שלי היא לתכנן עבורכם את הבית שתמיד חלמתם עליו,
+          עם דגש על הפרטים הקטנים ביותר, שילוב בין חללים מדוייקים המתאימים לצרכים
+          שלכם עם אסטטיקה עיצובית ופרקטיקה.
+        </p>
+        <ButtonLink to='/about' variant='secondary' arrow className='mt-2'>
+          קראו עוד עליי
+        </ButtonLink>
       </div>
-      {/* text container */}
-      <div className='flex basis-1/2 flex-col gap-2 p-5'>
-        <EnterAnimation delay={0.2}>
-          <h2 id='who-is-shiran-heading' className='heading font-semibold'>
-            שירן גלעד
-          </h2>
-          <p className='paragraph'>
-            עוסקת באדריכלות ועיצוב פנים משנת 2015. <br />
-            מתמחה בתכנון בתים פרטיים, דירות יוקרה, ופנטהאוזים. המטרה שלי היא לתכנן
-            עבורכם את הבית שתמיד חלמתם עליו, עם דגש על הפרטים הקטנים ביותר, שילוב
-            בין חללים מדוייקים המתאימים לצרכים שלכם עם אסטטיקה עיצובית ופרקטיקה.
-          </p>
-          <div className='mt-2 flex flex-wrap gap-2'>
-            <Button variant='primary' onClick={() => nav('/projects')}>
-              פרוייקטים
-            </Button>
-            <Button variant='secondary' onClick={() => nav('/about')}>
-              אודות
-            </Button>
-          </div>
-        </EnterAnimation>
+
+      <div className='relative md:order-first'>
+        <div aria-hidden className='absolute -bottom-4 -start-4 hidden h-2/3 w-2/3 border border-accent/50 md:block' />
+        <Photo
+          image={SITE_IMAGES.shiranPortrait}
+          sizes='(min-width: 768px) 45vw, 100vw'
+          className='relative aspect-[4/5] w-full shadow-raised'
+        />
       </div>
-    </section>
+    </Section>
   );
 }

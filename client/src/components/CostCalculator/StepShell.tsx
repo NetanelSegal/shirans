@@ -10,9 +10,9 @@ interface StepShellProps {
 export function StepShell({ title, subtitle, children }: StepShellProps) {
   return (
     <div>
-      <h2 className="subheading font-bold text-primary">{title}</h2>
+      <h2 className="text-h3 font-bold text-ink">{title}</h2>
       {subtitle && (
-        <p className="mt-2 text-primary/70">{subtitle}</p>
+        <p className="mt-2 text-ink-muted">{subtitle}</p>
       )}
       <div className="mt-6">{children}</div>
     </div>

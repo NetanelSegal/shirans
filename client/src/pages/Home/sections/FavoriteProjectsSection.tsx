@@ -1,9 +1,10 @@
 import FavoriteProjects from '@/components/FavoriteProjects';
+import { Section } from '@/components/ui/Section';
 
 export default function FavoriteProjectsSection() {
   return (
-    <section className='py-section-all'>
+    <Section aria-label='פרויקטים נבחרים'>
       <FavoriteProjects />
-    </section>
+    </Section>
   );
 }

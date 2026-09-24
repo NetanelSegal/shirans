@@ -29,7 +29,7 @@ export const costCalculatorLeadColumns: ColumnConfig<CostCalculatorLeadResponse>
     render: (row) => (
       <a
         href={`mailto:${row.email}`}
-        className="text-primary underline hover-capable:hover:text-primary/80"
+        className="text-ink underline hover-capable:hover:text-ink-muted"
         aria-label={`שלח מייל ל${row.email}`}
       >
         {row.email}
@@ -43,7 +43,7 @@ export const costCalculatorLeadColumns: ColumnConfig<CostCalculatorLeadResponse>
     render: (row) => (
       <a
         href={`tel:${row.phoneNumber}`}
-        className="text-primary underline hover-capable:hover:text-primary/80"
+        className="text-ink underline hover-capable:hover:text-ink-muted"
         aria-label={`התקשר ל${row.phoneNumber}`}
       >
         {row.phoneNumber}

@@ -15,10 +15,10 @@ export function ConfigGroupSection({
   onChange,
 }: ConfigGroupSectionProps) {
   return (
-    <section className="rounded-xl border border-primary/15 bg-white p-5">
-      <h3 className="font-bold text-primary">{group.title}</h3>
+    <section className="rounded-card border border-primary/15 bg-surface-raised p-5">
+      <h3 className="font-bold text-ink">{group.title}</h3>
       {group.description && (
-        <p className="mt-1 text-sm text-primary/70">{group.description}</p>
+        <p className="mt-1 text-sm text-ink-muted">{group.description}</p>
       )}
 
       {group.fields.length > 0 && (

@@ -9,7 +9,7 @@ export function Skeleton({ className }: SkeletonProps) {
     <div
       aria-hidden
       className={classNames(
-        'rounded-xl bg-secondary/70 motion-reduce:animate-none animate-pulse',
+        'rounded-card bg-surface-sunken/70 motion-reduce:animate-none animate-pulse',
         className,
       )}
     />

@@ -24,9 +24,21 @@ export function normalizeHeroVideoUrl(url: string): string {
   return url.replace('/video/upload/', '/video/upload/f_auto,q_auto,w_1280/');
 }
 
+/**
+ * A Netlify build that isn't production: the redesign branch deploy or a PR
+ * preview. It runs against the live API and database, so it must not look or
+ * act like the real site to the people behind that data.
+ */
+export const isPreviewDeploy =
+  !!env.VITE_DEPLOY_CONTEXT && env.VITE_DEPLOY_CONTEXT !== 'production';
+
 export const envConfig = {
-  /** API base URL (e.g. http://localhost:3000) */
-  apiUrl: env.VITE_API_URL ?? '',
+  /**
+   * API base URL (e.g. http://localhost:3000). A preview deploy uses its own
+   * origin: the API only accepts the production domain, so public/_redirects
+   * proxies /api/* for it.
+   */
+  apiUrl: isPreviewDeploy ? '' : (env.VITE_API_URL ?? ''),
 
   /** Use static file data instead of API (dev) */
   useFileData: env.VITE_USE_FILE_DATA === 'true',

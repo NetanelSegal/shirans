@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 export function TableStatusMessage({ children }: { children: ReactNode }) {
   return (
     <div
-      className="rounded-xl border border-gray-200 bg-white p-12 text-center text-gray-500"
+      className="rounded-card border border-line/70 bg-surface-raised p-12 text-center text-ink-subtle"
       role="status"
       aria-live="polite"
     >

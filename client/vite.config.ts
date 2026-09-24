@@ -5,6 +5,13 @@ import path from 'path';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  define: {
+    // Netlify sets CONTEXT at build time: production, deploy-preview or
+    // branch-deploy. Empty for local builds.
+    'import.meta.env.VITE_DEPLOY_CONTEXT': JSON.stringify(
+      process.env.CONTEXT ?? '',
+    ),
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

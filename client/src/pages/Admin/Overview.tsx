@@ -39,7 +39,7 @@ export default function Overview() {
 
   return (
     <div dir="rtl">
-      <h1 className="mb-6 text-2xl font-bold text-primary">סקירה כללית</h1>
+      <h1 className="mb-6 text-2xl font-bold text-ink">סקירה כללית</h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Link to="/admin/projects" className="block">
           <StatsCard
@@ -81,25 +81,31 @@ export default function Overview() {
         </Link>
       </div>
       <section className="mt-8" aria-labelledby="quick-actions-heading">
-        <h2 id="quick-actions-heading" className="mb-4 text-lg font-semibold text-primary">
+        <h2 id="quick-actions-heading" className="mb-4 text-lg font-semibold text-ink">
           פעולות מהירות
         </h2>
         <div className="flex flex-wrap gap-4">
           <Link
             to="/admin/projects"
-            className="rounded-xl bg-primary px-4 py-2 text-white transition-colors hover:bg-primary/90"
+            className="rounded-card bg-primary px-4 py-2 text-on-dark transition-colors hover:bg-primary/90"
           >
             הוסף פרויקט
           </Link>
           <Link
             to="/admin/contacts"
-            className="rounded-xl bg-secondary px-4 py-2 text-primary transition-colors hover:bg-secondary/80"
+            className="rounded-card bg-surface-sunken px-4 py-2 text-ink transition-colors hover:bg-surface-sunken/80"
           >
             צפה בפניות
           </Link>
           <Link
+            to="/admin/articles"
+            className="rounded-card bg-surface-sunken px-4 py-2 text-ink transition-colors hover:bg-surface-sunken/80"
+          >
+            מאמר חדש
+          </Link>
+          <Link
             to="/admin/testimonials"
-            className="rounded-xl bg-secondary px-4 py-2 text-primary transition-colors hover:bg-secondary/80"
+            className="rounded-card bg-surface-sunken px-4 py-2 text-ink transition-colors hover:bg-surface-sunken/80"
           >
             הוסף המלצה
           </Link>

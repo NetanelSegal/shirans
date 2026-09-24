@@ -1,5 +1,6 @@
 import apiClient from '@/utils/apiClient';
 import { urls } from '@/constants/urls';
+import { assertLiveSubmission } from '@/utils/previewDeploy';
 import type {
   CostCalculatorConfig,
   CostCalculatorLeadResponse,
@@ -16,6 +17,7 @@ export const calculatorService = {
   async submitLead(
     data: SubmitCostCalculatorLeadInput,
   ): Promise<CostCalculatorLeadResponse> {
+    assertLiveSubmission();
     const { data: lead } = await apiClient.post<CostCalculatorLeadResponse>(
       urls.calculator.leads,
       data,

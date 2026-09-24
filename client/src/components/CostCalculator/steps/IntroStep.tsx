@@ -12,10 +12,10 @@ const BADGES = [
 export function IntroStep({ onStart }: { onStart: () => void }) {
   return (
     <div>
-      <h2 className="subheading font-bold text-primary">
+      <h2 className="text-h3 font-bold text-ink">
         כמה באמת יעלה לבנות את הבית שלכם?
       </h2>
-      <p className="mt-3 text-primary/70">
+      <p className="mt-3 text-ink-muted">
         מתכננים בית פרטי ורוצים להבין את סדר הגודל של ההשקעה? ענו על כמה שאלות
         קצרות וקבלו הערכה ראשונית בהתאמה לבית שאתם מתכננים.
       </p>
@@ -23,8 +23,8 @@ export function IntroStep({ onStart }: { onStart: () => void }) {
       <ul className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-4">
         {BADGES.map(({ icon: Icon, label }) => (
           <li key={label} className="flex items-center gap-2">
-            <Icon className="size-5 text-primary" aria-hidden />
-            <span className="text-sm font-bold text-primary">{label}</span>
+            <Icon className="size-5 text-ink" aria-hidden />
+            <span className="text-sm font-bold text-ink">{label}</span>
           </li>
         ))}
       </ul>
@@ -38,7 +38,7 @@ export function IntroStep({ onStart }: { onStart: () => void }) {
         <ArrowLeft className="size-4" aria-hidden />
       </Button>
 
-      <div className="mt-8 aspect-[3/2] overflow-hidden rounded-xl">
+      <div className="mt-8 aspect-[3/2] overflow-hidden">
         <Image src={introHero} alt="" className="size-full object-cover" />
       </div>
     </div>

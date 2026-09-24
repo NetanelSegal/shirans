@@ -36,18 +36,18 @@ export function FormModal({
     >
       <form
         onSubmit={onSubmit}
-        className="rounded-xl bg-white p-6 shadow-xl"
+        className="rounded-card bg-surface-raised p-6 shadow-raised"
         dir="rtl"
         aria-labelledby="form-modal-title"
       >
-        <h2 id="form-modal-title" className="mb-4 text-xl font-bold text-primary">
+        <h2 id="form-modal-title" className="mb-4 text-xl font-bold text-ink">
           {title}
         </h2>
         <div className="mb-6 space-y-4">{children}</div>
         <div className="flex justify-end gap-2">
           <Button
             type="button"
-            variant="light"
+            variant="quiet"
             onClick={onClose}
             disabled={isSubmitting}
           >
