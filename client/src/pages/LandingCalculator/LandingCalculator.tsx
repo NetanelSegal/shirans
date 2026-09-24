@@ -50,7 +50,8 @@ export default function LandingCalculator() {
   // the contact step with a retry, rather than sending them to a result page
   // for a lead that was never saved.
   const handleComplete = async (result: CostCalculatorResult) => {
-    await submitCalculatorLead(result);
+    // The wizard only renders once `config` has loaded, so it is set here.
+    await submitCalculatorLead(result, config!);
     navigate('/calculator/result');
   };
 
