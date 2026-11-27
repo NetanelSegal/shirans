@@ -6,6 +6,7 @@ import PageLoader from '@/components/Loader/PageLoader';
 import { ContactBand } from '@/components/Contact/ContactBand';
 import { MOBILE_CONTACT_BAR_SPACE, MobileContactBar } from '@/components/Contact/QuickContactLinks';
 import { PreviewBanner } from '@/components/PreviewBanner';
+import { BusinessStructuredData } from '@/components/Seo/StructuredData';
 import { hasPhotoHero } from '@/constants/navigation';
 import { cn } from '@/lib/cn';
 
@@ -22,6 +23,7 @@ export default function Layout() {
 
   return (
     <>
+      <BusinessStructuredData />
       <PreviewBanner />
       <Navbar overPhoto={overPhoto} />
       <main className={cn('min-h-[60svh] overflow-x-clip', !overPhoto && 'pt-nav')}>
