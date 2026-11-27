@@ -56,6 +56,8 @@ export const projectRepository = {
 
     return await prisma.project.findMany({
       where,
+      // Newest first, so the latest project leads the home-page carousel.
+      orderBy: { createdAt: 'desc' },
       include: {
         categories: true,
         images: {
