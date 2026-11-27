@@ -16,6 +16,9 @@ import {
   type JsonLd,
 } from '@/lib/structuredData';
 
+/** Articles that live in code; the build writes their pages like the API's. */
+export { BUILTIN_ARTICLES } from '@/data/builtin-articles';
+
 /**
  * Build-time HTML for crawlers.
  *
@@ -264,7 +267,7 @@ export function staticPages(): PrerenderedPage[] {
         <h1 className='text-h1'>שירותי אדריכלות ועיצוב פנים</h1>
         <p className='text-lead text-ink-muted'>{getPageMeta('/services').description}</p>
         <ServiceLinks />
-        <a href='/architect-fees'>כמה עולה אדריכל לבית פרטי?</a>
+        <a href='/blog/architect-fees'>כמה עולה אדריכל לבית פרטי?</a>
       </>,
     ),
     simplePage(

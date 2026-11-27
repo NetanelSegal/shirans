@@ -51,9 +51,9 @@ export default function Footer() {
               ))}
             </ul>
           </nav>
-          {/* A guide page with no place in the main menu; linked from every page so it gets found. */}
+          {/* A magazine article people search for; linked from every page so it gets found. */}
           <Link
-            to='/architect-fees'
+            to='/blog/architect-fees'
             className='text-small text-ink-muted underline-offset-4 hover-capable:hover:text-ink hover-capable:hover:underline'
           >
             כמה עולה אדריכל לבית פרטי?

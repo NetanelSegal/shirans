@@ -273,7 +273,22 @@ async function main() {
 
   const prerender = await loadPrerender();
   if (prerender) {
-    await attachArticleBodies(articlePages);
+    // Articles kept in code (src/data/builtin-articles.ts) get a page like the
+    // API's, unless the admin already published one under the same slug.
+    const apiSlugs = new Set(articlePages.map((p) => p.summary.slug));
+    for (const article of prerender.BUILTIN_ARTICLES.filter((a) => !apiSlugs.has(a.slug))) {
+      articlePages.push({
+        path: `/blog/${encodeURIComponent(article.slug)}`,
+        filePath: `/blog/${article.slug}`,
+        title: article.seoTitle || `${article.title} | ${META.siteName}`,
+        description: (article.seoDescription || article.excerpt).slice(0, 160),
+        image: article.coverImage,
+        imageAlt: article.coverImageAlt || article.title,
+        builtin: true,
+        summary: { slug: article.slug, title: article.title, excerpt: article.excerpt, body: article.body },
+      });
+    }
+    await attachArticleBodies(articlePages.filter((p) => !p.builtin));
     const byPath = new Map(prerender.staticPages().map((p) => [p.path, p]));
     byPath.set('/projects', prerender.projectsIndexPage(projectPages.map((p) => p.summary)));
     byPath.set('/blog', prerender.blogIndexPage(articlePages.map((p) => p.summary)));
