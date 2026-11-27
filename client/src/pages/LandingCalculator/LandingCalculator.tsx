@@ -9,6 +9,7 @@ import { useCalculatorConfig } from '@/hooks/useCalculatorConfig';
 import { ErrorState, LoadingState } from '@/components/DataState';
 import { submitCalculatorLead } from './submitCalculatorLead';
 import { getPageMeta } from '@/constants/pageMeta';
+import { trackLead } from '@/lib/analytics';
 
 const PAGE_META = getPageMeta('/calculator');
 
@@ -52,6 +53,7 @@ export default function LandingCalculator() {
   const handleComplete = async (result: CostCalculatorResult) => {
     // The wizard only renders once `config` has loaded, so it is set here.
     await submitCalculatorLead(result, config!);
+    trackLead('cost_calculator');
     navigate('/calculator/result');
   };
 
