@@ -18,6 +18,8 @@
 5. **Pre-push** — Run build and tests. Fix any failures before pushing.
 6. **Merge** — Merge to `main` via PR only after review.
 
+The full process (pull request contents, how reviews work, answering comments, and what to document) is in [Git and pull requests](06-Development/git-and-pull-requests.md).
+
 ## Client Code Structure
 
 - **Hooks** (`client/src/hooks/`): Reusable logic — data fetching, form state, API calls.

@@ -20,8 +20,9 @@ The project rules were written for Cursor. They apply here too, and are loaded b
 ## Workflow
 
 @docs/PROJECT_WORKFLOW_GUIDE.md
+@docs/06-Development/git-and-pull-requests.md
 
-- Every change goes on its own branch and ends in a pull request to `main`. Never commit or push to `main` directly.
+- Every change goes on its own branch and ends in a pull request to `main`, using `.github/pull_request_template.md`. Never commit or push to `main` directly, and never merge your own pull request.
 - Run `npm run lint` before committing a change in `client/` or `server/`.
 
 ## Read when relevant
