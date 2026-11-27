@@ -64,7 +64,7 @@ export const SITE_IMAGES = {
     [1600, shiranKitchen1600],
   ),
   processHero: image('מרפסת מקורה עם פינת ישיבה וצמחייה', [1000, processHero1000], [2000, processHero2000]),
-  projectsHero: image('סלון בהיר עם וילונות ותאורה נסתרת', [1000, projectsHero1000], [2000, projectsHero2000]),
+  projectsHero: image('וילה מחופה אבן עם בריכה בכרתים בשעת דמדומים', [1000, projectsHero1000], [2000, projectsHero2000]),
   contactHero: image('בית פרטי עם בריכה וגינה בשעת ערב', [700, contactHero700], [1400, contactHero1400]),
   servicesHero: image('מטבח עם אי מעץ ותאורה תלויה', [1000, servicesHero1000], [2000, servicesHero2000]),
   ctaHouse: image('בית עץ עם גינה', [900, ctaHouse900], [1600, ctaHouse1600]),
