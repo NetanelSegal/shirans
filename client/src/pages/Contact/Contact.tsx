@@ -47,7 +47,7 @@ export default function Contact() {
                 בואו נדבר על הבית שלכם
               </h1>
               <p className='max-w-measure text-lead text-on-dark/85'>
-                התקשרו, שלחו הודעה או השאירו פרטים ונחזור אליכם לשיחת ייעוץ ראשונית, ללא התחייבות.
+                התקשרו, שלחו הודעה או השאירו פרטים ואחזור אליכם לשיחת ייעוץ ראשונית, ללא התחייבות.
               </p>
             </div>
 
@@ -76,10 +76,10 @@ export default function Contact() {
 
           <Card className='w-full p-6 text-ink shadow-overlay md:p-8'>
             <h2 className='text-h3 text-ink'>להשארת פרטים</h2>
-            <p className='mb-5 mt-1 text-small text-ink-muted'>מלאו את הפרטים ונחזור אליכם בהקדם.</p>
+            <p className='mb-5 mt-1 text-small text-ink-muted'>מלאו את הפרטים ואחזור אליכם בהקדם.</p>
             <ContactForm />
             <p className='text-center text-small text-ink-subtle'>
-              הפרטים שלכם שמורים אצלנו ולא יועברו לגורם אחר.
+              הפרטים שלכם שמורים אצלי ולא יועברו לאף אחד אחר.
             </p>
           </Card>
         </Container>

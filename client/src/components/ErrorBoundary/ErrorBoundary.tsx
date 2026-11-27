@@ -30,7 +30,7 @@ export class ErrorBoundary extends Component<Props, State> {
       return this.props.fallback || (
         <div dir="rtl">
           <h1>אירעה שגיאה</h1>
-          <p>אנא רענן את הדף או נסה שוב מאוחר יותר.</p>
+          <p>אפשר לרענן את הדף או לנסות שוב בעוד כמה דקות.</p>
         </div>
       );
     }

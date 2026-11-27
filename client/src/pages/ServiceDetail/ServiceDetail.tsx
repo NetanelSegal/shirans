@@ -6,6 +6,7 @@ import EnterAnimation from '@/components/animations/EnterAnimation';
 import FavoriteProjects from '@/components/FavoriteProjects';
 import { buttonStyles } from '@/components/ui/Button';
 import { Faq } from '@/components/ui/Faq';
+import { EXPERIENCE_STATS } from '@/data/home-content';
 import { IconCircle, LineIcon } from '@/components/ui/LineIcon';
 import { PageHero } from '@/components/ui/PageHero';
 import { Photo } from '@/components/ui/Photo';
@@ -17,12 +18,6 @@ import { getServiceGuide } from '@/data/service-guides';
 import { cn } from '@/lib/cn';
 
 const pad = (n: number) => String(n).padStart(2, '0');
-
-/** Shiran's own numbers (27.11.2026). */
-const EXPERIENCE_STATS = [
-  { value: '10', label: 'שנות ניסיון' },
-  { value: '+40', label: 'לקוחות מרוצים' },
-];
 
 /**
  * The layout every service page shares. Which blocks appear is decided by the

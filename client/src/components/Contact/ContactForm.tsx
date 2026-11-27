@@ -60,7 +60,7 @@ export function ContactForm({
 
   const message =
     status === 'sent'
-      ? 'תודה! הפרטים התקבלו ונחזור אליכם בהקדם.'
+      ? 'תודה! הפרטים התקבלו ואחזור אליכם בהקדם.'
       : status === 'failed'
         ? isPreviewDeploy
           ? PREVIEW_NOTICE

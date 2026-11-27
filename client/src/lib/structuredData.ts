@@ -101,15 +101,21 @@ export function serviceJsonLd({ name, description, path, faq }: ServiceJsonLdInp
       { name, path },
     ]),
   ];
-  if (faq.length > 0) {
-    graph.push({
-      '@type': 'FAQPage',
-      mainEntity: faq.map((item) => ({
-        '@type': 'Question',
-        name: item.question,
-        acceptedAnswer: { '@type': 'Answer', text: item.answer },
-      })),
-    });
-  }
+  if (faq.length > 0) graph.push(faqPage(faq));
   return withContext({ '@graph': graph });
 }
+
+/** A list of questions and answers, as search engines read an FAQ. */
+function faqPage(faq: { question: string; answer: string }[]): JsonLd {
+  return {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  };
+}
+
+/** A page with its own FAQ that is not a service page (the home page). */
+export const faqJsonLd = (faq: { question: string; answer: string }[]): JsonLd => withContext(faqPage(faq));

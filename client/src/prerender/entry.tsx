@@ -7,12 +7,14 @@ import { SERVICE_PAGES, type ServicePage } from '@/data/service-pages';
 import { getServiceGuide } from '@/data/service-guides';
 import { PRIVACY_INTRO, PRIVACY_SECTIONS, PRIVACY_UPDATED } from '@/data/privacy-policy';
 import { fallbackTestimonials } from '@/data/shiran.testimonials';
+import { EXPERIENCE_STATS, homeAbout, homeFaq, homeHero } from '@/data/home-content';
 import { SERVICES } from '@/constants/services';
 import { EMAIL, PHONE_DISPLAY, PHONE_HREF } from '@/constants/contact';
 import { getPageMeta, type StaticPagePath } from '@/constants/pageMeta';
 import {
   breadcrumbJsonLd,
   businessJsonLd,
+  faqJsonLd,
   serviceJsonLd,
   type JsonLd,
 } from '@/lib/structuredData';
@@ -109,6 +111,9 @@ function ServiceLinks() {
   );
 }
 
+/** '10 שנות ניסיון · +40 לקוחות מרוצים' */
+const STATS_LINE = EXPERIENCE_STATS.map((stat) => `${stat.value} ${stat.label}`).join(' · ');
+
 const render = (node: ReactNode) => renderToStaticMarkup(<Shell>{node}</Shell>);
 
 function homePage(): PrerenderedPage {
@@ -117,14 +122,13 @@ function homePage(): PrerenderedPage {
     html: render(
       <>
         <header className='flex flex-col gap-4'>
-          <p className='text-small'>שירן גלעד · אדריכלות ועיצוב פנים</p>
-          <h1 className='text-h1'>אדריכלות ועיצוב פנים לבית פרטי שמרגיש בדיוק שלכם</h1>
-          <p className='text-lead text-ink-muted'>
-            אדריכלות ועיצוב פנים בהתאמה אישית — לאנשים, למקום ולסיפור שלהם.
-          </p>
+          <p className='text-small'>{homeHero.eyebrow}</p>
+          <h1 className='text-h1'>{homeHero.title}</h1>
+          <p className='text-lead text-ink-muted'>{homeHero.subtitle}</p>
+          <p className='text-body'>{STATS_LINE}</p>
         </header>
-        <Block title='שירן גלעד'>
-          <p className='text-body text-ink-muted'>{aboutHero.intro}</p>
+        <Block title={homeAbout.title}>
+          <p className='text-body text-ink-muted'>{homeAbout.body}</p>
           <Paragraphs items={aboutStory.paragraphs.slice(0, 2)} />
           <a href='/about'>עוד עליי</a>
         </Block>
@@ -149,6 +153,15 @@ function homePage(): PrerenderedPage {
             </blockquote>
           ))}
         </Block>
+        <Block title={homeFaq.title}>
+          {homeFaq.items.map((item) => (
+            <div key={item.question}>
+              <h3 className='text-h3'>{item.question}</h3>
+              <p className='text-body text-ink-muted'>{item.answer}</p>
+              {item.link && <a href={item.link.href}>{item.link.label}</a>}
+            </div>
+          ))}
+        </Block>
         <Block title='מתחילים לתכנן את הבית שלכם?'>
           <p className='text-body text-ink-muted'>
             <a href='/contact'>השאירו פרטים</a> או התקשרו <a href={PHONE_HREF}>{PHONE_DISPLAY}</a>.
@@ -156,7 +169,7 @@ function homePage(): PrerenderedPage {
         </Block>
       </>,
     ),
-    jsonLd: [businessJsonLd()],
+    jsonLd: [businessJsonLd(), faqJsonLd(homeFaq.items)],
   };
 }
 
@@ -171,7 +184,7 @@ function servicePage(page: ServicePage): PrerenderedPage {
         <header className='flex flex-col gap-4'>
           <h1 className='text-h1'>{page.title}</h1>
           <p className='text-lead text-ink-muted'>{page.subtitle}</p>
-          <p className='text-body'>10 שנות ניסיון · +40 לקוחות מרוצים</p>
+          <p className='text-body'>{STATS_LINE}</p>
         </header>
         <Block title={page.intro.title}>
           <Paragraphs items={page.intro.body} />

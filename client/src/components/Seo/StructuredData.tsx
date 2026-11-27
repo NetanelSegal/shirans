@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import {
   breadcrumbJsonLd,
   businessJsonLd,
+  faqJsonLd,
   serviceJsonLd,
   type Crumb,
   type JsonLd,
@@ -31,4 +32,8 @@ export function BreadcrumbStructuredData({ crumbs }: { crumbs: Crumb[] }) {
 
 export function ServiceStructuredData(props: ServiceJsonLdInput) {
   return <JsonLdTag data={serviceJsonLd(props)} />;
+}
+
+export function FaqStructuredData({ faq }: { faq: { question: string; answer: string }[] }) {
+  return <JsonLdTag data={faqJsonLd(faq)} />;
 }
