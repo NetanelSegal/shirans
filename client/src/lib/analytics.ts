@@ -70,6 +70,23 @@ export function initAnalytics(): void {
   startGtag([ga4Id, adsId].filter(Boolean));
 }
 
+export type ContactChannelKind = 'whatsapp' | 'phone';
+
+/**
+ * Report a tap on a WhatsApp or call button. Not a lead by itself (the chat or
+ * call may never happen), so it is its own event: in GTM/GA4 it can be marked
+ * as a secondary conversion.
+ */
+export function trackContactClick(channel: ContactChannelKind, placement: string): void {
+  if (!isEnabled()) return;
+  const params = { contact_channel: channel, placement };
+  if (envConfig.analytics.gtmId) {
+    window.dataLayer?.push({ event: 'contact_click', ...params });
+    return;
+  }
+  window.gtag?.('event', 'contact_click', params);
+}
+
 /**
  * Report a lead. Call only after the form was really received, never on
  * click or on a failed send, so Google Ads counts real leads only.

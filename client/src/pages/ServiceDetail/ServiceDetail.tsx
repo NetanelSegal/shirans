@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import PageSeo from '@/components/Seo/PageSeo';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import FavoriteProjects from '@/components/FavoriteProjects';
+import { buttonStyles } from '@/components/ui/Button';
 import { Faq } from '@/components/ui/Faq';
 import { IconCircle, LineIcon } from '@/components/ui/LineIcon';
 import { PageHero } from '@/components/ui/PageHero';
@@ -14,6 +15,12 @@ import { getServicePage, type ServicePage } from '@/data/service-pages';
 import { cn } from '@/lib/cn';
 
 const pad = (n: number) => String(n).padStart(2, '0');
+
+/** Shiran's own numbers (27.11.2026). */
+const EXPERIENCE_STATS = [
+  { value: '10', label: 'שנות ניסיון' },
+  { value: '+40', label: 'לקוחות מרוצים' },
+];
 
 /**
  * The layout every service page shares. Which blocks appear is decided by the
@@ -33,7 +40,20 @@ function ServiceDetailPage({ page }: { page: ServicePage }) {
         title={page.title}
         subtitle={page.subtitle}
         tagline={page.tagline}
-      />
+      >
+        {/* Visitors from an ad decide on the first screen: proof and a way to act, right here. */}
+        <ul className='mt-2 flex flex-wrap gap-x-6 gap-y-2'>
+          {EXPERIENCE_STATS.map((stat) => (
+            <li key={stat.label} className='flex items-baseline gap-2 text-on-dark'>
+              <span className='text-h3 font-semibold' dir='ltr'>{stat.value}</span>
+              <span className='text-small text-on-dark/85'>{stat.label}</span>
+            </li>
+          ))}
+        </ul>
+        <a href='#contact' className={buttonStyles({ variant: 'light', className: 'mt-3 self-start' })}>
+          לקביעת שיחת היכרות
+        </a>
+      </PageHero>
 
       {/* Who it's for. */}
       <Section aria-labelledby={`${page.slug}-intro-heading`}>

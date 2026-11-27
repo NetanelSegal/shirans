@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { Logo } from '@/components/Brand/Logo';
+import { NavQuickContact } from '@/components/Contact/QuickContactLinks';
 import { ButtonLink } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Section';
 import { NAV_ITEMS } from '@/constants/navigation';
@@ -69,7 +70,7 @@ export default function Navbar({ overPhoto }: { overPhoto: boolean }) {
           </Link>
 
           <nav aria-label='ראשי' className='hidden lg:block'>
-            <ul className='flex items-center gap-8'>
+            <ul className='flex items-center gap-5 xl:gap-8'>
               {NAV_ITEMS.map(({ label, to }) => (
                 <li key={to}>
                   <NavLink
@@ -77,7 +78,7 @@ export default function Navbar({ overPhoto }: { overPhoto: boolean }) {
                     end={to === '/'}
                     className={({ isActive }) =>
                       cn(
-                        'relative py-2 text-small font-semibold transition-colors',
+                        'relative whitespace-nowrap py-2 text-small font-semibold transition-colors',
                         'after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-center after:bg-on-dark after:transition-transform after:duration-300 after:ease-out',
                         isActive
                           ? 'text-on-dark after:scale-x-100'
@@ -92,7 +93,8 @@ export default function Navbar({ overPhoto }: { overPhoto: boolean }) {
             </ul>
           </nav>
 
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-2 sm:gap-3'>
+            <NavQuickContact />
             <ButtonLink to='/contact' variant='light' size='sm' arrow className='hidden sm:inline-flex'>
               קביעת שיחה
             </ButtonLink>

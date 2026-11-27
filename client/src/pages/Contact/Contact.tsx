@@ -8,12 +8,10 @@ import { Photo } from '@/components/ui/Photo';
 import { Container } from '@/components/ui/Section';
 import { Rule } from '@/components/ui/SectionHeading';
 import { getPageMeta } from '@/constants/pageMeta';
-import { buildWhatsAppHref, PHONE_HREF } from '@/constants/contact';
+import { PHONE_HREF, WHATSAPP_HREF } from '@/constants/contact';
 import { SITE_IMAGES } from '@/constants/siteImages';
 
 const PAGE_META = getPageMeta('/contact');
-
-const WHATSAPP_HREF = buildWhatsAppHref('היי שירן, הגעתי מהאתר ואשמח לשמוע פרטים על תכנון הבית שלי.');
 
 /**
  * The whole page is one screen: the photo header carries the ways to reach
