@@ -9,8 +9,13 @@
  *
  * Runs after `vite build`. For each route it copies dist/index.html to
  * dist/<route>.html with that route's tags in <head>. Netlify serves an
- * existing file before applying the `/* /index.html 200` fallback, so a crawler
+ * existing file before applying the rules in public/_redirects, so a crawler
  * gets the right tags and a browser gets the same app as before.
+ *
+ * Search engines get more than tags: each file also carries the page's text
+ * inside <div id="root"> and its schema.org JSON-LD in <head>, both from
+ * src/prerender/entry.tsx (see there). It also writes 404.html, served with a
+ * 404 status for any URL that isn't a page.
  *
  * Tags carry `data-rh="true"`, the marker react-helmet-async uses for tags it
  * owns, so at runtime it replaces them instead of adding duplicates.
@@ -18,9 +23,9 @@
  * The page copy comes from src/constants/pageMeta.json — the same file the
  * pages read — so a preview can't disagree with the page it links to.
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
@@ -49,6 +54,23 @@ const PROJECTS_API_URL = process.env.SHARE_PAGES_API_URL ?? `${API_ORIGIN}/api/p
 const ARTICLES_API_URL = `${API_ORIGIN}/api/articles/published`;
 
 const log = (message) => console.log(`[share-pages] ${message}`);
+
+/**
+ * The page text for crawlers, rendered from src/prerender/entry.tsx (built by
+ * `vite build --ssr` into dist-prerender). Without it the pages still build,
+ * with the link-preview tags only.
+ */
+const PRERENDER_ENTRY = join(CLIENT_DIR, 'dist-prerender', 'entry.js');
+async function loadPrerender() {
+  if (!existsSync(PRERENDER_ENTRY)) {
+    console.warn('[share-pages] dist-prerender/entry.js not found; pages get preview tags only.');
+    return null;
+  }
+  return import(pathToFileURL(PRERENDER_ENTRY).href);
+}
+
+/** `<` escaped so article text can never close the script tag early. */
+const jsonForScript = (data) => JSON.stringify(data).replace(/</g, '\\u003c');
 
 function escapeAttr(value) {
   return String(value)
@@ -107,7 +129,19 @@ function buildHead({ path, title, description, image, imageAlt, noIndex }) {
  * in Shiran's alerts. Found on the deploy preview; `vite preview` hid it.
  */
 function writeRoute(template, page) {
-  const html = template.replace('</head>', `${buildHead(page)}\n  </head>`);
+  const { prerendered } = page;
+  // Marked like the meta tags, so react-helmet-async replaces them at runtime
+  // instead of adding its own copies beside them.
+  const jsonLd = (prerendered?.jsonLd ?? []).map(
+    (data) => `    <script type="application/ld+json" data-rh="true">${jsonForScript(data)}</script>`,
+  );
+  let html = template.replace('</head>', `${[buildHead(page), ...jsonLd].join('\n')}\n  </head>`);
+  if (prerendered?.html) {
+    if (!html.includes('<div id="root"></div>')) {
+      throw new Error('dist/index.html has no empty <div id="root"></div> to fill.');
+    }
+    html = html.replace('<div id="root"></div>', () => `<div id="root">${prerendered.html}</div>`);
+  }
   /*
    * `filePath` exists for Hebrew slugs. A canonical URL has to be
    * percent-encoded, but the server decodes the request path before it looks
@@ -155,6 +189,12 @@ async function fetchProjectPages() {
               : firstParagraph,
           image: imageUrl || undefined,
           imageAlt: project.title,
+          summary: {
+            id: project.id,
+            title: project.title,
+            description: project.description,
+            imageUrl: imageUrl || undefined,
+          },
         };
       });
   } catch (error) {
@@ -189,12 +229,30 @@ async function fetchArticlePages() {
           description: (article.seoDescription || plain).slice(0, 160),
           image: article.coverImage || undefined,
           imageAlt: article.coverImageAlt || article.title,
+          summary: { slug: article.slug, title: article.title, excerpt: article.excerpt },
         };
       });
   } catch (error) {
     console.warn(`[share-pages] Articles API unavailable (${error.message}); article routes use the site-wide preview.`);
     return [];
   }
+}
+
+/** The list endpoint has no bodies, so each published article is fetched by slug. */
+async function attachArticleBodies(articlePages) {
+  await Promise.all(
+    articlePages.map(async (page) => {
+      try {
+        const url = `${API_ORIGIN}/api/articles/slug/${encodeURIComponent(page.summary.slug)}`;
+        const response = await fetch(url, { headers: { Accept: 'application/json' } });
+        if (!response.ok) throw new Error(`API responded with ${response.status}`);
+        const article = await response.json();
+        page.summary.body = article.body ?? '';
+      } catch (error) {
+        console.warn(`[share-pages] Body of "${page.summary.slug}" unavailable (${error.message}).`);
+      }
+    }),
+  );
 }
 
 async function main() {
@@ -212,6 +270,19 @@ async function main() {
     path,
     ...page,
   }));
+
+  const prerender = await loadPrerender();
+  if (prerender) {
+    await attachArticleBodies(articlePages);
+    const byPath = new Map(prerender.staticPages().map((p) => [p.path, p]));
+    byPath.set('/projects', prerender.projectsIndexPage(projectPages.map((p) => p.summary)));
+    byPath.set('/blog', prerender.blogIndexPage(articlePages.map((p) => p.summary)));
+    for (const page of staticPages) page.prerendered = byPath.get(page.path);
+    for (const page of projectPages) page.prerendered = prerender.projectPage(page.summary);
+    for (const page of articlePages) page.prerendered = prerender.articlePage(page.summary);
+    const missing = staticPages.filter((p) => !p.prerendered).map((p) => p.path);
+    log(`Prerendered page text${missing.length ? `; none for ${missing.join(', ')}` : ' for every page'}.`);
+  }
 
   // The projects index leads with its first project's photo at runtime
   // (pages/Projects/Projects.tsx); the preview should show the same one.
@@ -236,6 +307,16 @@ async function main() {
     ...projectPages,
     ...articlePages,
   ];
+
+  // Served with a real 404 status for any URL that is not a page (see public/_redirects),
+  // so search engines drop dead links instead of indexing them as copies of the home page.
+  const notFound = {
+    path: '/404',
+    title: '404 - דף לא נמצא | שירן גלעד אדריכלות ועיצוב פנים',
+    description: 'הדף שביקשת לא נמצא. חזור לעמוד הבית או עיין בפרויקטים שלנו.',
+    noIndex: true,
+  };
+  writeRoute(template, notFound);
 
   for (const page of others) writeRoute(template, page);
   writeRoute(template, home);

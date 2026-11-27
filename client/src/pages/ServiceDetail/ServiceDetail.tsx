@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react';
 import { Navigate, useLocation } from 'react-router-dom';
 import PageSeo from '@/components/Seo/PageSeo';
+import { ServiceStructuredData } from '@/components/Seo/StructuredData';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import FavoriteProjects from '@/components/FavoriteProjects';
 import { buttonStyles } from '@/components/ui/Button';
@@ -12,6 +13,7 @@ import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { getPageMeta, type StaticPagePath } from '@/constants/pageMeta';
 import { getServicePage, type ServicePage } from '@/data/service-pages';
+import { getServiceGuide } from '@/data/service-guides';
 import { cn } from '@/lib/cn';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -30,10 +32,12 @@ const EXPERIENCE_STATS = [
 function ServiceDetailPage({ page }: { page: ServicePage }) {
   const path = `/${page.slug}`;
   const meta = getPageMeta(path as StaticPagePath);
+  const guide = getServiceGuide(page.slug);
 
   return (
     <>
       <PageSeo title={meta.title} description={meta.description} path={path} />
+      <ServiceStructuredData name={page.title} description={meta.description} path={path} faq={page.faq} />
       <PageHero
         titleId={`${page.slug}-hero-title`}
         image={page.hero}
@@ -131,6 +135,27 @@ function ServiceDetailPage({ page }: { page: ServicePage }) {
           </ol>
         </EnterAnimation>
       </Section>
+
+      {/* The longer read: what to know before choosing this service. */}
+      {guide && (
+        <Section tone='soft' container='narrow' aria-labelledby={`${page.slug}-guide-heading`}>
+          <EnterAnimation>
+            <SectionHeading id={`${page.slug}-guide-heading`} title={guide.title} align='start' className='mb-8' />
+            <div className='flex flex-col gap-10'>
+              {guide.sections.map((section) => (
+                <div key={section.heading} className='flex flex-col gap-4'>
+                  <h3 className='text-h3 text-ink'>{section.heading}</h3>
+                  {section.paragraphs.map((paragraph) => (
+                    <p key={paragraph} className='max-w-measure text-body text-ink-muted'>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </EnterAnimation>
+        </Section>
+      )}
 
       {/* The ticked list, where the page has one. */}
       {page.checklist && (
