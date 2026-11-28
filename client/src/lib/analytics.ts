@@ -27,7 +27,8 @@ declare global {
 
 let started = false;
 
-function isEnabled(): boolean {
+/** Whether Google measurement runs on this build (an ID is set and it isn't a preview). */
+export function isEnabled(): boolean {
   const { gtmId, ga4Id } = envConfig.analytics;
   return !isPreviewDeploy && !!(gtmId || ga4Id);
 }
