@@ -50,6 +50,12 @@ import houseEvening800 from '@/assets/site/house-evening-800.webp';
 import houseEvening1500 from '@/assets/site/house-evening-1500.webp';
 import bedroom800 from '@/assets/site/bedroom-800.webp';
 import bedroom1500 from '@/assets/site/bedroom-1500.webp';
+import gableHouse800 from '@/assets/site/gable-house-800.webp';
+import gableHouse1500 from '@/assets/site/gable-house-1500.webp';
+import loftLiving800 from '@/assets/site/loft-living-800.webp';
+import loftLiving1500 from '@/assets/site/loft-living-1500.webp';
+import bedroomView800 from '@/assets/site/bedroom-view-800.webp';
+import bedroomView1500 from '@/assets/site/bedroom-view-1500.webp';
 
 export interface SiteImage {
   /** Width → URL, smallest first. */
@@ -98,6 +104,9 @@ export const SITE_IMAGES = {
   houseDay: image('בית פרטי מודרני עם חזית אבן, עץ וחלונות גדולים', [800, houseDay800], [1500, houseDay1500]),
   houseEvening: image('בית פרטי מואר בערב עם שביל כניסה וגינה', [800, houseEvening800], [1500, houseEvening1500]),
   bedroom: image('חדר שינה הורים בגוונים חמים עם חלון לגינה', [800, bedroom800], [1500, bedroom1500]),
+  gableHouse: image('בית פרטי עם גג רעפים, חזית זכוכית ומרפסת לגינה בשקיעה', [800, gableHouse800], [1500, gableHouse1500]),
+  loftLiving: image('סלון בגובה כפול עם קמין וחלונות גבוהים לגינה', [800, loftLiving800], [1500, loftLiving1500]),
+  bedroomView: image('חדר שינה בגווני עץ עם חלון גדול לנוף', [800, bedroomView800], [1500, bedroomView1500]),
 } as const;
 
 export type SiteImageName = keyof typeof SITE_IMAGES;
