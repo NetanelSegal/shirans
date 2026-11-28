@@ -1,9 +1,12 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { Plus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export interface FaqItem {
   question: string;
   answer: string;
+  /** Where to read more — shown under the answer. */
+  link?: { href: string; label: string };
 }
 
 /**
@@ -14,7 +17,7 @@ export interface FaqItem {
 export function Faq({ items }: { items: FaqItem[] }) {
   return (
     <dl className='border-t border-line/70'>
-      {items.map(({ question, answer }) => (
+      {items.map(({ question, answer, link }) => (
         <Disclosure key={question} as='div' className='border-b border-line/70'>
           {({ open }) => (
             <>
@@ -32,6 +35,14 @@ export function Faq({ items }: { items: FaqItem[] }) {
               </dt>
               <DisclosurePanel static as='dd' hidden={!open} className='pb-6 text-body text-ink-muted'>
                 <p className='max-w-measure'>{answer}</p>
+                {link && (
+                  <Link
+                    to={link.href}
+                    className='mt-3 inline-block text-small font-semibold text-accent-strong underline underline-offset-4'
+                  >
+                    {link.label}
+                  </Link>
+                )}
               </DisclosurePanel>
             </>
           )}

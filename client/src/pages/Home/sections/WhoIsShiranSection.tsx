@@ -3,6 +3,7 @@ import { Photo } from '@/components/ui/Photo';
 import { Section } from '@/components/ui/Section';
 import { Eyebrow } from '@/components/ui/SectionHeading';
 import { SITE_IMAGES } from '@/constants/siteImages';
+import { homeAbout } from '@/data/home-content';
 
 export default function WhoIsShiranSection() {
   return (
@@ -10,15 +11,10 @@ export default function WhoIsShiranSection() {
       <div className='flex flex-col items-start gap-4'>
         <Eyebrow rule>נעים להכיר</Eyebrow>
         <h2 id='who-is-shiran-heading' className='text-h1 text-ink'>
-          שירן גלעד
+          {homeAbout.title}
         </h2>
-        <p className='text-lead text-ink-muted'>אדריכלית ומעצבת פנים</p>
-        <p className='max-w-measure text-body text-ink-muted'>
-          עוסקת באדריכלות ועיצוב פנים משנת 2015. מתמחה בתכנון בתים פרטיים, דירות
-          יוקרה, ופנטהאוזים. המטרה שלי היא לתכנן עבורכם את הבית שתמיד חלמתם עליו,
-          עם דגש על הפרטים הקטנים ביותר, שילוב בין חללים מדוייקים המתאימים לצרכים
-          שלכם עם אסטטיקה עיצובית ופרקטיקה.
-        </p>
+        <p className='text-lead text-ink-muted'>{homeAbout.role}</p>
+        <p className='max-w-measure text-body text-ink-muted'>{homeAbout.body}</p>
         <ButtonLink to='/about' variant='secondary' arrow className='mt-2'>
           קראו עוד עליי
         </ButtonLink>

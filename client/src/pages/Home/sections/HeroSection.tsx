@@ -1,16 +1,10 @@
 import { motion, useReducedMotion } from 'motion/react';
 import { ButtonLink } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Section';
-import { FeatureStrip, Feature } from '@/components/ui/FeatureStrip';
+import { FeatureStrip } from '@/components/ui/FeatureStrip';
 import { Eyebrow } from '@/components/ui/SectionHeading';
 import HeroVideo from '../components/HeroVideo';
-
-const PROMISES: Feature[] = [
-  { icon: 'home', title: 'ליווי אישי ומקצועי' },
-  { icon: 'gem', title: 'תכנון חכם וחיסכון בעלויות' },
-  { icon: 'heart', title: 'עיצוב שמתאים לאנשים' },
-  { icon: 'leaf', title: 'בתים שמרגישים נכון' },
-];
+import { EXPERIENCE_STATS, homeHero, homePromises } from '@/data/home-content';
 
 export default function HeroSection() {
   const reduceMotion = useReducedMotion();
@@ -41,18 +35,29 @@ export default function HeroSection() {
         <div className='flex max-w-2xl flex-col items-start gap-6'>
           <motion.div {...rise(0.2)}>
             <Eyebrow tone='dark' rule>
-              שירן גלעד · אדריכלות ועיצוב פנים
+              {homeHero.eyebrow}
             </Eyebrow>
           </motion.div>
           <motion.h1 {...rise(0.3)} id='home-hero-title' className='text-display text-balance text-on-dark'>
-            אדריכלות ועיצוב פנים לבית שמרגיש בדיוק שלכם
+            {homeHero.title}
           </motion.h1>
           <motion.p {...rise(0.45)} className='max-w-measure text-lead text-on-dark/85'>
-            אדריכלות ועיצוב פנים בהתאמה אישית — לאנשים, למקום ולסיפור שלהם.
+            {homeHero.subtitle}
           </motion.p>
+          {/* Proof on the first screen, the same numbers as the service pages. */}
+          <motion.ul {...rise(0.52)} className='flex flex-wrap gap-x-8 gap-y-2'>
+            {EXPERIENCE_STATS.map((stat) => (
+              <li key={stat.label} className='flex items-baseline gap-2 text-on-dark'>
+                <span className='text-h2 font-semibold' dir='ltr'>
+                  {stat.value}
+                </span>
+                <span className='text-small text-on-dark/85'>{stat.label}</span>
+              </li>
+            ))}
+          </motion.ul>
           <motion.div {...rise(0.6)}>
             <ButtonLink to='/contact' variant='light' size='lg' arrow>
-              בואו נתחיל יחד
+              {homeHero.cta}
             </ButtonLink>
           </motion.div>
         </div>
@@ -60,7 +65,7 @@ export default function HeroSection() {
 
       <div className='border-t border-on-dark/15 bg-primary-deep/55 backdrop-blur-sm'>
         <Container>
-          <FeatureStrip items={PROMISES} tone='dark' size='sm' />
+          <FeatureStrip items={homePromises} tone='dark' size='sm' />
         </Container>
       </div>
     </section>

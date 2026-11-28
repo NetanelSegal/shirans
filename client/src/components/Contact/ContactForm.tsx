@@ -8,6 +8,7 @@ import { submitContact } from '@/services/contact.service';
 import { Input } from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
+import { trackLead } from '@/lib/analytics';
 import useEmailSend from './useEmailSend';
 
 type Status = 'idle' | 'sending' | 'sent' | 'failed';
@@ -49,6 +50,7 @@ export function ContactForm({
     ]);
 
     if (results.some((result) => result.status === 'fulfilled')) {
+      trackLead('contact_form');
       setStatus('sent');
       reset();
     } else {
@@ -58,7 +60,7 @@ export function ContactForm({
 
   const message =
     status === 'sent'
-      ? 'תודה! הפרטים התקבלו ונחזור אליכם בהקדם.'
+      ? 'תודה! הפרטים התקבלו ואחזור אליכם בהקדם.'
       : status === 'failed'
         ? isPreviewDeploy
           ? PREVIEW_NOTICE

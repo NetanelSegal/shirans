@@ -28,7 +28,7 @@ export function ProjectTile({
         draggable='false'
         className='size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]'
         src={optimizeCloudinaryImageUrl(getMainImageUrl(project.media), 1100)}
-        alt=''
+        alt={project.title}
         width={1100}
         height={825}
       />

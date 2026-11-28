@@ -9,10 +9,13 @@ import '@fontsource/assistant/700.css';
 import './index.css';
 import App from './App.tsx';
 import { envConfig } from '@/config/env';
+import { initAnalytics } from '@/lib/analytics';
 
 MotionGlobalConfig.skipAnimations =
   envConfig.skipAnimations ||
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+initAnalytics();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -50,8 +50,9 @@ export function ContactBand({ path }: { path: string }) {
     COPY_BY_PATH[path] ?? (path.startsWith('/projects/') ? SHOWCASE_COPY : DEFAULT_COPY);
   return (
     <section
+      id='contact'
       aria-labelledby='contact-band-title'
-      className='relative isolate overflow-hidden bg-primary-deep text-on-dark'
+      className='relative isolate scroll-mt-nav overflow-hidden bg-primary-deep text-on-dark'
     >
       {/*
         The photo runs the full width of the band. It used to fill only the far

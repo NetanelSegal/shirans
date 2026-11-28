@@ -4,4 +4,18 @@
 # builds call the API directly and never hit this rule.
 /api/*  https://server-production-a5a6.up.railway.app/api/:splat  200
 
-/*  /index.html  200
+# App routes with no page file of their own. Every public page has one, written
+# at build time by scripts/generate-share-pages.mjs, and Netlify serves an existing
+# file before these rules. Project and article routes fall back here when the build
+# could not reach the API, and for anything published since the last build.
+/admin    /index.html  200
+/admin/*  /index.html  200
+/login    /index.html  200
+/register /index.html  200
+/projects/*    /index.html  200
+/blog/*        /index.html  200
+/calculator/*  /index.html  200
+
+# Anything else is not a page: the app still shows its "not found" screen, but with
+# a 404 status, so search engines stop indexing made-up URLs as copies of the home page.
+/*  /404.html  404

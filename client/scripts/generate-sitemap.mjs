@@ -21,12 +21,20 @@ const STATIC_PAGES = [
   { path: '/architectural-consulting', priority: '0.7' },
   { path: '/online-architecture-consulting', priority: '0.7' },
   { path: '/architecture-permits', priority: '0.7' },
+  { path: '/moshav-house-planning', priority: '0.8' },
+  { path: '/home-extension', priority: '0.8' },
+  // An article that lives in code (src/data/builtin-articles.ts), not the API.
+  { path: '/blog/architect-fees', priority: '0.7' },
+  { path: '/blog/private-house-build-cost', priority: '0.7' },
+  { path: '/blog/building-info-file', priority: '0.7' },
+  { path: '/blog/next-generation-house-nachala', priority: '0.7' },
   { path: '/process', priority: '0.8' },
   { path: '/projects', priority: '0.9' },
   { path: '/about', priority: '0.8' },
   { path: '/contact', priority: '0.7' },
   { path: '/calculator', priority: '0.8' },
   { path: '/blog', priority: '0.8' },
+  { path: '/privacy', priority: '0.3' },
 ];
 
 const today = new Date().toISOString().slice(0, 10);

@@ -17,6 +17,11 @@ export function buildWhatsAppHref(message: string): string {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
+/** The WhatsApp link for buttons that aren't tied to one page's context. */
+export const WHATSAPP_HREF = buildWhatsAppHref(
+  'היי שירן, הגעתי מהאתר ואשמח לשמוע פרטים על תכנון הבית שלי.',
+);
+
 export interface ContactChannel {
   icon: LineIconName;
   label: string;

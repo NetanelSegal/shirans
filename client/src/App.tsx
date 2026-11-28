@@ -38,6 +38,7 @@ const Contact = lazy(() => import('./pages/Contact'));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
 const Blog = lazy(() => import('./pages/Blog'));
 const Article = lazy(() => import('./pages/Article'));
+const Privacy = lazy(() => import('./pages/Privacy'));
 const ArticlesManagement = lazy(() => import('./pages/Admin/ArticlesManagement'));
 const CalculatorLeadsManagement = lazy(
   () => import('./pages/Admin/CalculatorLeadsManagement')
@@ -118,6 +119,12 @@ export const appRoutes = [
   {
     path: 'blog/:slug',
     element: <Article />,
+    notNavigateable: true,
+  },
+  {
+    path: 'privacy',
+    title: 'מדיניות פרטיות',
+    element: <Privacy />,
     notNavigateable: true,
   },
   // A page per service, at its own top-level URL (see data/service-pages.ts).

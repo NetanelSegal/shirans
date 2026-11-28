@@ -51,6 +51,19 @@ export default function Footer() {
               ))}
             </ul>
           </nav>
+          {/* A magazine article people search for; linked from every page so it gets found. */}
+          <Link
+            to='/blog/architect-fees'
+            className='text-small text-ink-muted underline-offset-4 hover-capable:hover:text-ink hover-capable:hover:underline'
+          >
+            כמה עולה אדריכל לבית פרטי?
+          </Link>
+          <Link
+            to='/privacy'
+            className='text-small text-ink-muted underline-offset-4 hover-capable:hover:text-ink hover-capable:hover:underline'
+          >
+            מדיניות פרטיות
+          </Link>
           <p className='text-small text-ink-subtle'>
             © {new Date().getFullYear()} כל הזכויות שמורות | שירן גלעד — אדריכלות ועיצוב פנים
           </p>

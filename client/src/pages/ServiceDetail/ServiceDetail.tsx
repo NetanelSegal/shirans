@@ -1,9 +1,12 @@
 import { Check } from 'lucide-react';
 import { Navigate, useLocation } from 'react-router-dom';
 import PageSeo from '@/components/Seo/PageSeo';
+import { ServiceStructuredData } from '@/components/Seo/StructuredData';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import FavoriteProjects from '@/components/FavoriteProjects';
+import { buttonStyles } from '@/components/ui/Button';
 import { Faq } from '@/components/ui/Faq';
+import { EXPERIENCE_STATS } from '@/data/home-content';
 import { IconCircle, LineIcon } from '@/components/ui/LineIcon';
 import { PageHero } from '@/components/ui/PageHero';
 import { Photo } from '@/components/ui/Photo';
@@ -11,6 +14,7 @@ import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { getPageMeta, type StaticPagePath } from '@/constants/pageMeta';
 import { getServicePage, type ServicePage } from '@/data/service-pages';
+import { getServiceGuide } from '@/data/service-guides';
 import { cn } from '@/lib/cn';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -23,17 +27,32 @@ const pad = (n: number) => String(n).padStart(2, '0');
 function ServiceDetailPage({ page }: { page: ServicePage }) {
   const path = `/${page.slug}`;
   const meta = getPageMeta(path as StaticPagePath);
+  const guide = getServiceGuide(page.slug);
 
   return (
     <>
       <PageSeo title={meta.title} description={meta.description} path={path} />
+      <ServiceStructuredData name={page.title} description={meta.description} path={path} faq={page.faq} />
       <PageHero
         titleId={`${page.slug}-hero-title`}
         image={page.hero}
         title={page.title}
         subtitle={page.subtitle}
         tagline={page.tagline}
-      />
+      >
+        {/* Visitors from an ad decide on the first screen: proof and a way to act, right here. */}
+        <ul className='mt-2 flex flex-wrap gap-x-6 gap-y-2'>
+          {EXPERIENCE_STATS.map((stat) => (
+            <li key={stat.label} className='flex items-baseline gap-2 text-on-dark'>
+              <span className='text-h3 font-semibold' dir='ltr'>{stat.value}</span>
+              <span className='text-small text-on-dark/85'>{stat.label}</span>
+            </li>
+          ))}
+        </ul>
+        <a href='#contact' className={buttonStyles({ variant: 'light', className: 'mt-3 self-start' })}>
+          לקביעת שיחת היכרות
+        </a>
+      </PageHero>
 
       {/* Who it's for. */}
       <Section aria-labelledby={`${page.slug}-intro-heading`}>
@@ -111,6 +130,27 @@ function ServiceDetailPage({ page }: { page: ServicePage }) {
           </ol>
         </EnterAnimation>
       </Section>
+
+      {/* The longer read: what to know before choosing this service. */}
+      {guide && (
+        <Section tone='soft' container='narrow' aria-labelledby={`${page.slug}-guide-heading`}>
+          <EnterAnimation>
+            <SectionHeading id={`${page.slug}-guide-heading`} title={guide.title} align='start' className='mb-8' />
+            <div className='flex flex-col gap-10'>
+              {guide.sections.map((section) => (
+                <div key={section.heading} className='flex flex-col gap-4'>
+                  <h3 className='text-h3 text-ink'>{section.heading}</h3>
+                  {section.paragraphs.map((paragraph) => (
+                    <p key={paragraph} className='max-w-measure text-body text-ink-muted'>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </EnterAnimation>
+        </Section>
+      )}
 
       {/* The ticked list, where the page has one. */}
       {page.checklist && (

@@ -4,6 +4,7 @@ import ServicesSection from './sections/ServicesSection';
 import FavoriteProjectsSection from './sections/FavoriteProjectsSection';
 import ProcessSection from './sections/ProcessSection';
 import TestimonialsSection from '@/pages/Home/sections/TestimonialsSection';
+import HomeFaqSection from './sections/HomeFaqSection';
 import EnterAnimation from '@/components/animations/EnterAnimation';
 import PageSeo from '@/components/Seo/PageSeo';
 import { getPageMeta } from '@/constants/pageMeta';
@@ -29,6 +30,9 @@ export default function Home() {
       </EnterAnimation>
       <EnterAnimation>
         <TestimonialsSection />
+      </EnterAnimation>
+      <EnterAnimation>
+        <HomeFaqSection />
       </EnterAnimation>
     </>
   );

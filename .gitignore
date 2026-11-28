@@ -36,6 +36,7 @@ node_modules/
 
 */dist
 dist/
+dist-prerender/
 not_optimized_images
 .cursorignore
 

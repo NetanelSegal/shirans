@@ -55,6 +55,22 @@ export const envConfig = {
   },
 
   /**
+   * Google measurement for ad campaigns (see lib/analytics.ts). Set either a
+   * GTM container ID, or a GA4 measurement ID (optionally with a Google Ads
+   * conversion ID and label). All empty means no tracking loads.
+   */
+  analytics: {
+    /** Google Tag Manager container, e.g. GTM-XXXXXXX. Wins over the rest. */
+    gtmId: env.VITE_GTM_ID?.trim() ?? '',
+    /** GA4 measurement ID, e.g. G-XXXXXXXXXX. */
+    ga4Id: env.VITE_GA4_MEASUREMENT_ID?.trim() ?? '',
+    /** Google Ads conversion ID, e.g. AW-123456789. */
+    adsId: env.VITE_GOOGLE_ADS_ID?.trim() ?? '',
+    /** Label of the Google Ads "lead" conversion action. */
+    adsLeadLabel: env.VITE_GOOGLE_ADS_LEAD_LABEL?.trim() ?? '',
+  },
+
+  /**
    * Home hero background videos (Cloudinary delivery URLs in production).
    * Falls back to local public assets when unset (local dev only).
    */

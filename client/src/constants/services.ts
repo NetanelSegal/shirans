@@ -18,7 +18,7 @@ export interface Service {
  * all render. It is derived from the service pages themselves, so a service
  * and the page behind it can never disagree about its name, photo or URL.
  */
-export const SERVICES: Service[] = SERVICE_PAGES.map((page) => ({
+export const SERVICES: Service[] = SERVICE_PAGES.filter((page) => page.listed !== false).map((page) => ({
   id: page.slug,
   href: `/${page.slug}`,
   title: page.cardTitle ?? page.title,

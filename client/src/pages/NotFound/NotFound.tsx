@@ -6,7 +6,7 @@ import { Eyebrow } from '@/components/ui/SectionHeading';
 
 const NOT_FOUND_TITLE = '404 - דף לא נמצא | שירן גלעד אדריכלות ועיצוב פנים';
 const NOT_FOUND_DESCRIPTION =
-  'הדף שביקשת לא נמצא. חזור לעמוד הבית או עיין בפרויקטים שלנו.';
+  'הדף שחיפשתם לא נמצא. אפשר לחזור לעמוד הבית או לראות את הפרויקטים.';
 
 /**
  * On the site's own shell like every other page. It used to wrap a <Link> in a

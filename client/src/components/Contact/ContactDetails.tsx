@@ -8,7 +8,14 @@ import { cn } from '@/lib/cn';
  * `tone` follows the band it sits on: the contact page puts these on navy, so
  * the type, the hairlines and the discs all have to flip with it.
  */
-export function ContactDetails({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
+export function ContactDetails({
+  tone = 'light',
+  compact = false,
+}: {
+  tone?: 'light' | 'dark';
+  /** Tighter rows, for when the list shares the first screen with a form. */
+  compact?: boolean;
+}) {
   const isDark = tone === 'dark';
   return (
     <ul className='flex flex-col'>
@@ -21,13 +28,14 @@ export function ContactDetails({ tone = 'light' }: { tone?: 'light' | 'dark' }) 
             href={href}
             aria-label={ariaLabel}
             {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-            className='group flex items-center gap-4 py-4'
+            className={cn('group flex items-center gap-4', compact ? 'py-2.5' : 'py-4')}
           >
             <IconCircle icon={icon} size='sm' variant={isDark ? 'outline' : 'accent'} />
             <span
               dir='ltr'
               className={cn(
-                'text-lead transition-colors',
+                'min-w-0 break-words transition-colors',
+                compact ? 'text-body' : 'text-lead',
                 isDark
                   ? 'text-on-dark group-hover:text-on-dark/70'
                   : 'text-ink underline-offset-4 group-hover:underline',

@@ -13,8 +13,19 @@ async function getFileProjects(): Promise<ProjectResponse[]> {
   return projects;
 }
 
+/** When the API sent the project; it does, though the shared type leaves it out. */
+const createdAt = (project: LegacyProjectPayload) =>
+  (project as LegacyProjectPayload & { createdAt?: string }).createdAt ?? '';
+
+/**
+ * Newest first, so the latest project (Greece, 23.9.2026) leads the home page
+ * and the projects page. The server sorts the same way, but this also holds
+ * while a server change waits to deploy.
+ */
 function normalizeProjects(projects: LegacyProjectPayload[]): ProjectResponse[] {
-  return projects.map(normalizeProjectResponse);
+  return [...projects]
+    .sort((a, b) => createdAt(b).localeCompare(createdAt(a)))
+    .map(normalizeProjectResponse);
 }
 
 export async function fetchProjects(): Promise<ProjectResponse[]> {

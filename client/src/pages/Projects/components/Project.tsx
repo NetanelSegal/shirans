@@ -41,7 +41,7 @@ const Project = ({ project, i }: { project: ProjectResponse; i: number }) => {
         <Image
           className='size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]'
           src={optimizeCloudinaryImageUrl(getMainImageUrl(project.media), 1400)}
-          alt=''
+          alt={project.title}
           width={1400}
           height={875}
           fadeIn={false}
