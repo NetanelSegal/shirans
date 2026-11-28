@@ -56,6 +56,10 @@ import loftLiving800 from '@/assets/site/loft-living-800.webp';
 import loftLiving1500 from '@/assets/site/loft-living-1500.webp';
 import bedroomView800 from '@/assets/site/bedroom-view-800.webp';
 import bedroomView1500 from '@/assets/site/bedroom-view-1500.webp';
+import stoneGableHouse800 from '@/assets/site/stone-gable-house-800.webp';
+import stoneGableHouse1500 from '@/assets/site/stone-gable-house-1500.webp';
+import openPlanLiving800 from '@/assets/site/open-plan-living-800.webp';
+import openPlanLiving1500 from '@/assets/site/open-plan-living-1500.webp';
 
 export interface SiteImage {
   /** Width → URL, smallest first. */
@@ -107,6 +111,8 @@ export const SITE_IMAGES = {
   gableHouse: image('בית פרטי עם גג רעפים, חזית זכוכית ומרפסת לגינה בשקיעה', [800, gableHouse800], [1500, gableHouse1500]),
   loftLiving: image('סלון בגובה כפול עם קמין וחלונות גבוהים לגינה', [800, loftLiving800], [1500, loftLiving1500]),
   bedroomView: image('חדר שינה בגווני עץ עם חלון גדול לנוף', [800, bedroomView800], [1500, bedroomView1500]),
+  stoneGableHouse: image('בית פרטי מאבן ועץ עם מרפסת אוכל מקורה וגינה', [800, stoneGableHouse800], [1500, stoneGableHouse1500]),
+  openPlanLiving: image('חלל פתוח עם סלון, מטבח ופינת אוכל מול חלונות לגינה', [800, openPlanLiving800], [1500, openPlanLiving1500]),
 } as const;
 
 export type SiteImageName = keyof typeof SITE_IMAGES;
