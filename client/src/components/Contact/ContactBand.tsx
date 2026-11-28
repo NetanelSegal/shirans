@@ -61,7 +61,7 @@ export function ContactBand({ path }: { path: string }) {
         instead, heaviest on the text side and clearing toward the form.
       */}
       <div className='absolute inset-0 -z-10'>
-        <Photo image={SITE_IMAGES.ctaHouse} sizes='100vw' className='size-full' priority={false} />
+        <Photo image={SITE_IMAGES.houseEvening} sizes='100vw' className='size-full' priority={false} />
         <div
           aria-hidden
           className='absolute inset-0 bg-gradient-to-l from-primary-deep/95 via-primary-deep/80 to-primary-deep/60'

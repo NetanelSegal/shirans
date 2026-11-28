@@ -1,28 +1,22 @@
 import { ButtonLink } from '@/components/ui/Button';
-import { Photo } from '@/components/ui/Photo';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { ProcessTimeline } from '@/components/Process/ProcessTimeline';
-import { SITE_IMAGES } from '@/constants/siteImages';
+import { ProcessStepper } from '../components/ProcessStepper';
 
 export default function ProcessSection() {
   return (
     <Section tone='sunken' aria-labelledby='home-process-heading'>
-      <div className='grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20'>
-        <div className='flex flex-col gap-8'>
-          <SectionHeading id='home-process-heading' title='התהליך מתחילתו ועד סופו' align='start' />
-          <ProcessTimeline />
-          <ButtonLink to='/process' variant='primary' arrow className='self-start'>
-            עוד על התהליך
-          </ButtonLink>
-        </div>
-        <div className='relative hidden lg:block'>
-          <Photo
-            image={SITE_IMAGES.shiranKitchen}
-            sizes='45vw'
-            className='sticky top-[calc(var(--nav-height)+2rem)] aspect-[4/5] w-full shadow-raised'
-          />
-        </div>
+      <div className='mx-auto flex max-w-5xl flex-col gap-8'>
+        <SectionHeading
+          id='home-process-heading'
+          title='התהליך מתחילתו ועד סופו'
+          subtitle='חמישה שלבים מהפגישה הראשונה ועד המפתח. בחרו שלב ותראו כמה זמן הוא לוקח.'
+          align='start'
+        />
+        <ProcessStepper />
+        <ButtonLink to='/process' variant='primary' arrow className='self-start'>
+          כל הפרטים על התהליך
+        </ButtonLink>
       </div>
     </Section>
   );
