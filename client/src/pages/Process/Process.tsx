@@ -31,6 +31,7 @@ export default function Process() {
       <Section aria-label='שלבי התהליך'>
         <ProcessTimeline
           variant='full'
+          animated
           aside={(index) => (
             <Photo
               image={STEP_PHOTOS[index]}
