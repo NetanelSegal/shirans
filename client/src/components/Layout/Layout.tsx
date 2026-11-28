@@ -13,8 +13,12 @@ import { cn } from '@/lib/cn';
 /** Pages that end without the contact band: they have their own form or are a funnel. */
 const NO_CONTACT_BAND_PATHS = ['/contact', '/calculator', '/calculator/result', '/login', '/register'];
 const NO_FOOTER_PATHS = ['/login', '/register', '/calculator'];
-/** The calculator funnel and its result have their own contact bar; sign-in pages need none. */
-const NO_CONTACT_BAR_PATHS = ['/calculator', '/calculator/result', '/login', '/register'];
+/**
+ * The calculator funnel and its result have their own contact bar; sign-in pages need none.
+ * The contact page already shows WhatsApp and call buttons on its first screen, and the
+ * bar covered the top of its form on phones.
+ */
+const NO_CONTACT_BAR_PATHS = ['/contact', '/calculator', '/calculator/result', '/login', '/register'];
 
 export default function Layout() {
   const { pathname } = useLocation();
