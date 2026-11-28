@@ -1,5 +1,6 @@
 import type { ArticleResponse } from '@shirans/shared';
 import { SITE_IMAGES, type SiteImage } from '@/constants/siteImages';
+import { GUIDE_ARTICLES } from './guide-articles';
 
 /**
  * Magazine articles that live in the code rather than the admin.
@@ -90,6 +91,7 @@ export const BUILTIN_ARTICLES: ArticleResponse[] = [
     createdAt: '2026-11-27T00:00:00.000Z',
     updatedAt: '2026-11-27T00:00:00.000Z',
   },
+  ...GUIDE_ARTICLES,
 ];
 
 export const getBuiltinArticle = (slug: string | undefined) =>

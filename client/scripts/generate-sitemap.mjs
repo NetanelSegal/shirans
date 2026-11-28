@@ -25,6 +25,9 @@ const STATIC_PAGES = [
   { path: '/home-extension', priority: '0.8' },
   // An article that lives in code (src/data/builtin-articles.ts), not the API.
   { path: '/blog/architect-fees', priority: '0.7' },
+  { path: '/blog/private-house-build-cost', priority: '0.7' },
+  { path: '/blog/building-info-file', priority: '0.7' },
+  { path: '/blog/next-generation-house-nachala', priority: '0.7' },
   { path: '/process', priority: '0.8' },
   { path: '/projects', priority: '0.9' },
   { path: '/about', priority: '0.8' },
