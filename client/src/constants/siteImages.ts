@@ -20,8 +20,6 @@ import contactHero700 from '@/assets/site/contact-hero-700.webp';
 import contactHero1400 from '@/assets/site/contact-hero-1400.webp';
 import servicesHero1000 from '@/assets/site/services-hero-1000.webp';
 import servicesHero2000 from '@/assets/site/services-hero-2000.webp';
-import ctaHouse900 from '@/assets/site/cta-house-900.webp';
-import ctaHouse1600 from '@/assets/site/cta-house-1600.webp';
 import servicePrivate700 from '@/assets/site/service-private-700.webp';
 import servicePrivate1400 from '@/assets/site/service-private-1400.webp';
 import serviceResidential700 from '@/assets/site/service-residential-700.webp';
@@ -40,6 +38,40 @@ import processStep4700 from '@/assets/site/process-step-4-700.webp';
 import processStep41400 from '@/assets/site/process-step-4-1400.webp';
 import processStep5700 from '@/assets/site/process-step-5-700.webp';
 import processStep51400 from '@/assets/site/process-step-5-1400.webp';
+import kitchenIsland800 from '@/assets/site/kitchen-island-800.webp';
+import kitchenIsland1500 from '@/assets/site/kitchen-island-1500.webp';
+import masterBath800 from '@/assets/site/master-bath-800.webp';
+import masterBath1500 from '@/assets/site/master-bath-1500.webp';
+import livingRoom800 from '@/assets/site/living-room-800.webp';
+import livingRoom1500 from '@/assets/site/living-room-1500.webp';
+import houseDay800 from '@/assets/site/house-day-800.webp';
+import houseDay1500 from '@/assets/site/house-day-1500.webp';
+import houseEvening800 from '@/assets/site/house-evening-800.webp';
+import houseEvening1500 from '@/assets/site/house-evening-1500.webp';
+import bedroom800 from '@/assets/site/bedroom-800.webp';
+import bedroom1500 from '@/assets/site/bedroom-1500.webp';
+import gableHouse800 from '@/assets/site/gable-house-800.webp';
+import gableHouse1500 from '@/assets/site/gable-house-1500.webp';
+import loftLiving800 from '@/assets/site/loft-living-800.webp';
+import loftLiving1500 from '@/assets/site/loft-living-1500.webp';
+import bedroomView800 from '@/assets/site/bedroom-view-800.webp';
+import bedroomView1500 from '@/assets/site/bedroom-view-1500.webp';
+import stoneGableHouse800 from '@/assets/site/stone-gable-house-800.webp';
+import stoneGableHouse1500 from '@/assets/site/stone-gable-house-1500.webp';
+import openPlanLiving800 from '@/assets/site/open-plan-living-800.webp';
+import openPlanLiving1500 from '@/assets/site/open-plan-living-1500.webp';
+import poolHouse800 from '@/assets/site/pool-house-800.webp';
+import poolHouse1500 from '@/assets/site/pool-house-1500.webp';
+import singleStoreyHouse800 from '@/assets/site/single-storey-house-800.webp';
+import singleStoreyHouse1500 from '@/assets/site/single-storey-house-1500.webp';
+import gardenFacade800 from '@/assets/site/garden-facade-800.webp';
+import gardenFacade1500 from '@/assets/site/garden-facade-1500.webp';
+import terraceHouse800 from '@/assets/site/terrace-house-800.webp';
+import terraceHouse1500 from '@/assets/site/terrace-house-1500.webp';
+import balconyHouse800 from '@/assets/site/balcony-house-800.webp';
+import balconyHouse1500 from '@/assets/site/balcony-house-1500.webp';
+import entrancePathHouse800 from '@/assets/site/entrance-path-house-800.webp';
+import entrancePathHouse1500 from '@/assets/site/entrance-path-house-1500.webp';
 
 export interface SiteImage {
   /** Width → URL, smallest first. */
@@ -67,7 +99,6 @@ export const SITE_IMAGES = {
   projectsHero: image('וילה מחופה אבן עם בריכה בכרתים בשעת דמדומים', [1000, projectsHero1000], [2000, projectsHero2000]),
   contactHero: image('בית פרטי עם בריכה וגינה בשעת ערב', [700, contactHero700], [1400, contactHero1400]),
   servicesHero: image('מטבח עם אי מעץ ותאורה תלויה', [1000, servicesHero1000], [2000, servicesHero2000]),
-  ctaHouse: image('בית עץ עם גינה', [900, ctaHouse900], [1600, ctaHouse1600]),
 
   /* Services — one photo per service Shiran offers. */
   servicePrivate: image('בית פרטי מחופה אבן עם גינה', [700, servicePrivate700], [1400, servicePrivate1400]),
@@ -81,6 +112,25 @@ export const SITE_IMAGES = {
   processStep3: image('תכנון המבנה', [700, processStep3700], [1400, processStep31400]),
   processStep4: image('הגשת התוכניות לוועדה', [700, processStep4700], [1400, processStep41400]),
   processStep5: image('שלב הבנייה באתר', [700, processStep5700], [1400, processStep51400]),
+
+  /* Shiran's renders (28.11.2026). Article covers must not repeat: one image, one article. */
+  kitchenIsland: image('מטבח בגווני בז׳ עם אי משיש ופינת ישיבה', [800, kitchenIsland800], [1500, kitchenIsland1500]),
+  masterBath: image('חדר רחצה הורים עם אמבטיה חופשית וחלון לגינה', [800, masterBath800], [1500, masterBath1500]),
+  livingRoom: image('סלון פתוח לגינה עם מדרגות מרחפות', [800, livingRoom800], [1500, livingRoom1500]),
+  houseDay: image('בית פרטי מודרני עם חזית אבן, עץ וחלונות גדולים', [800, houseDay800], [1500, houseDay1500]),
+  houseEvening: image('בית פרטי מואר בערב עם שביל כניסה וגינה', [800, houseEvening800], [1500, houseEvening1500]),
+  bedroom: image('חדר שינה הורים בגוונים חמים עם חלון לגינה', [800, bedroom800], [1500, bedroom1500]),
+  gableHouse: image('בית פרטי עם גג רעפים, חזית זכוכית ומרפסת לגינה בשקיעה', [800, gableHouse800], [1500, gableHouse1500]),
+  loftLiving: image('סלון בגובה כפול עם קמין וחלונות גבוהים לגינה', [800, loftLiving800], [1500, loftLiving1500]),
+  bedroomView: image('חדר שינה בגווני עץ עם חלון גדול לנוף', [800, bedroomView800], [1500, bedroomView1500]),
+  stoneGableHouse: image('בית פרטי מאבן ועץ עם מרפסת אוכל מקורה וגינה', [800, stoneGableHouse800], [1500, stoneGableHouse1500]),
+  openPlanLiving: image('חלל פתוח עם סלון, מטבח ופינת אוכל מול חלונות לגינה', [800, openPlanLiving800], [1500, openPlanLiving1500]),
+  poolHouse: image('בית פרטי עם בריכה, מרפסת אוכל מקורה וחלונות גדולים', [800, poolHouse800], [1500, poolHouse1500]),
+  singleStoreyHouse: image('בית פרטי בקומה אחת עם חצר, פינת ישיבה ופינת מדורה', [800, singleStoreyHouse800], [1500, singleStoreyHouse1500]),
+  gardenFacade: image('חזית אחורית של בית פרטי עם סלון ומטבח הפתוחים לגינה', [800, gardenFacade800], [1500, gardenFacade1500]),
+  terraceHouse: image('בית פרטי עם מרפסת גג, פינת אוכל וסלון חוץ', [800, terraceHouse800], [1500, terraceHouse1500]),
+  balconyHouse: image('בית פרטי לבן עם מרפסת זכוכית ופינת אוכל מקורה', [800, balconyHouse800], [1500, balconyHouse1500]),
+  entrancePathHouse: image('כניסה לבית פרטי עם שביל מואר ועץ זית', [800, entrancePathHouse800], [1500, entrancePathHouse1500]),
 } as const;
 
 export type SiteImageName = keyof typeof SITE_IMAGES;
