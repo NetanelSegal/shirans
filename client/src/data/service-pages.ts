@@ -645,8 +645,8 @@ export const SERVICE_PAGES: ServicePage[] = [
     cardTitle: 'בית בנחלה ובמושב',
     subtitle: 'בית למשפחה, בית לדור ההמשך או בית שלישי בנחלה: מתכננים נכון מהיום הראשון.',
     tagline: ['בית שמתאים', 'למשפחה,', 'למגרש', 'ולתקנון', 'של המושב'],
-    hero: SITE_IMAGES.ctaHouse,
-    cardImage: SITE_IMAGES.ctaHouse,
+    hero: SITE_IMAGES.houseDay,
+    cardImage: SITE_IMAGES.houseDay,
     cardDescription: 'בדיקת זכויות, תכנון והיתר לבית בנחלה ובמושב',
     icon: 'leaf',
     intro: {
