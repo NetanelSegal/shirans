@@ -10,7 +10,7 @@ export default function ProcessSection() {
         <SectionHeading
           id='home-process-heading'
           title='התהליך מתחילתו ועד סופו'
-          subtitle='בחרו שלב ותראו מה קורה בו וכמה זמן הוא לוקח.'
+          subtitle='חמישה שלבים מהפגישה הראשונה ועד המפתח. בחרו שלב ותראו כמה זמן הוא לוקח.'
           align='start'
         />
         <ProcessStepper />

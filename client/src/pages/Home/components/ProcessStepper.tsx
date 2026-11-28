@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { content as PROCESS_STEPS } from '@/data/process-info';
-import { RichText } from '@/components/Process/ProcessTimeline';
+import { Link } from 'react-router-dom';
 import { Photo } from '@/components/ui/Photo';
 import { SITE_IMAGES, type SiteImage } from '@/constants/siteImages';
 import { cn } from '@/lib/cn';
@@ -140,24 +140,19 @@ export function ProcessStepper() {
               sizes='(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 100vw'
               className='aspect-[4/3] w-full sm:aspect-auto sm:h-full sm:min-h-72'
             />
-            <div className='flex flex-col gap-3 p-6 md:p-8'>
+            {/* Only the name and the time here; the explanation lives on /process. */}
+            <div className='flex flex-col justify-center gap-3 p-6 md:p-8'>
               <p className='text-eyebrow font-semibold tracking-wide text-ink-muted'>
-                שלב <span dir='ltr'>{pad(active + 1)}</span> מתוך <span dir='ltr'>{pad(PROCESS_STEPS.length)}</span> ·{' '}
-                {duration(step.time)}
+                שלב <span dir='ltr'>{pad(active + 1)}</span> מתוך <span dir='ltr'>{pad(PROCESS_STEPS.length)}</span>
               </p>
-              <h3 className='text-h3 text-ink'>{step.title}</h3>
-              <p className='text-body text-ink-muted'>
-                <RichText text={step.shortText} />
-              </p>
-              {active < PROCESS_STEPS.length - 1 && (
-                <button
-                  type='button'
-                  onClick={() => setActive(active + 1)}
-                  className='mt-2 self-start text-small font-semibold text-ink underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
-                >
-                  לשלב הבא: {PROCESS_STEPS[active + 1].title} ←
-                </button>
-              )}
+              <h3 className='text-h2 text-ink'>{step.title}</h3>
+              <p className='text-lead text-ink-muted'>{duration(step.time)}</p>
+              <Link
+                to='/process'
+                className='mt-2 self-start text-small font-semibold text-ink underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
+              >
+                מה קורה בשלב הזה ←
+              </Link>
             </div>
           </motion.div>
         </AnimatePresence>
