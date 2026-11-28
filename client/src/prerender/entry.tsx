@@ -5,6 +5,7 @@ import { aboutHero, aboutServices, aboutStory, aboutVision } from '@/data/about-
 import { content as processSteps } from '@/data/process-info';
 import { SERVICE_PAGES, type ServicePage } from '@/data/service-pages';
 import { getServiceGuide } from '@/data/service-guides';
+import { PRIVACY_INTRO, PRIVACY_SECTIONS, PRIVACY_UPDATED } from '@/data/privacy-policy';
 import { fallbackTestimonials } from '@/data/shiran.testimonials';
 import { SERVICES } from '@/constants/services';
 import { EMAIL, PHONE_DISPLAY, PHONE_HREF } from '@/constants/contact';
@@ -334,6 +335,27 @@ export function staticPages(): PrerenderedPage[] {
       <>
         <h1 className='text-h1'>מחשבון אומדן עלות לבניית בית פרטי</h1>
         <p className='text-lead text-ink-muted'>{getPageMeta('/calculator').description}</p>
+      </>,
+    ),
+    simplePage(
+      '/privacy',
+      'מדיניות פרטיות',
+      <>
+        <h1 className='text-h1'>מדיניות פרטיות</h1>
+        <p className='text-small'>עודכן ב-{PRIVACY_UPDATED}</p>
+        <p className='text-lead text-ink-muted'>{PRIVACY_INTRO}</p>
+        {PRIVACY_SECTIONS.map((section) => (
+          <Block key={section.id} title={section.title}>
+            {section.paragraphs && <Paragraphs items={section.paragraphs} />}
+            {section.items && (
+              <ul className='flex flex-col gap-2'>
+                {section.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            )}
+          </Block>
+        ))}
       </>,
     ),
   ];

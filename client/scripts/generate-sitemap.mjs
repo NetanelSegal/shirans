@@ -31,6 +31,7 @@ const STATIC_PAGES = [
   { path: '/contact', priority: '0.7' },
   { path: '/calculator', priority: '0.8' },
   { path: '/blog', priority: '0.8' },
+  { path: '/privacy', priority: '0.3' },
 ];
 
 const today = new Date().toISOString().slice(0, 10);
