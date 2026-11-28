@@ -133,20 +133,20 @@ export function ProcessStepper() {
             animate={{ opacity: 1, transform: 'translateY(0px)' }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className='grid sm:grid-cols-[1fr_1.1fr]'
+            className='grid grid-cols-[6.5rem_1fr] sm:grid-cols-[1fr_1.1fr]'
           >
             <Photo
               image={STEP_IMAGES[active]}
-              sizes='(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 100vw'
-              className='aspect-[4/3] w-full sm:aspect-auto sm:h-full sm:min-h-72'
+              sizes='(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 30vw'
+              className='h-full min-h-32 w-full sm:min-h-72'
             />
             {/* Only the name and the time here; the explanation lives on /process. */}
-            <div className='flex flex-col justify-center gap-3 p-6 md:p-8'>
+            <div className='flex flex-col justify-center gap-1 p-4 sm:gap-3 sm:p-6 md:p-8'>
               <p className='text-eyebrow font-semibold tracking-wide text-ink-muted'>
                 שלב <span dir='ltr'>{pad(active + 1)}</span> מתוך <span dir='ltr'>{pad(PROCESS_STEPS.length)}</span>
               </p>
-              <h3 className='text-h2 text-ink'>{step.title}</h3>
-              <p className='text-lead text-ink-muted'>{duration(step.time)}</p>
+              <h3 className='text-h3 text-ink sm:text-h2'>{step.title}</h3>
+              <p className='text-body text-ink-muted sm:text-lead'>{duration(step.time)}</p>
               <Link
                 to='/process'
                 className='mt-2 self-start text-small font-semibold text-ink underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
